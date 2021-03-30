@@ -5,7 +5,11 @@ Anonymous Blockchain-Based Forum
 https://gradle.org/install/
 
 # How to build
+```
 gradle build
+```
 
 # How to run
+```
 gradle run
+```

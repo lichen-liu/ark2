@@ -9,6 +9,6 @@ public class Conf {
 
     @Override
     public String toString() {
-        return String.format("Java JRE Version: %s", this.javaVersion);
+        return String.format("JRE Version: %s", this.javaVersion);
     }
 }

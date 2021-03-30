@@ -32,6 +32,4 @@ build
 .gitattributes
 
 # Others
-.classpath
 .project
-.settings
