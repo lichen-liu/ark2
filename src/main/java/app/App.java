@@ -6,6 +6,8 @@ import org.hyperledger.fabric.contract.annotation.Property;
 
 class App {
     public static void main(String[] args) {
+        Conf conf = new Conf();
+        System.out.println(conf);
         System.out.println("Hello shit world!");
     }
 }
