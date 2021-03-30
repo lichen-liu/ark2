@@ -30,3 +30,8 @@ build
 
 # Window git file
 .gitattributes
+
+# Others
+.classpath
+.project
+.settings
