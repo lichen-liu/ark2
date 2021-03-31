@@ -13,7 +13,7 @@ public class AppServer {
 
     public AppServer(InetSocketAddress socketAddress) throws Exception {
         this.server = HttpServer.create(socketAddress, 0);
-        System.out.println("Server is binded to: " + socketAddress);
+        System.out.println("Server is binded to: Http:/" + socketAddress);
 
         this.server.createContext("/", new RootHandler());
         this.server.start();
