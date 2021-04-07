@@ -32,7 +32,9 @@ build
 .gitattributes
 
 # Others
+.classpath
 .project
+.settings
 
 # test network 
 hlf2-network/channel-artifacts
