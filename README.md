@@ -17,7 +17,6 @@ gradle run
 # Install Test Hyperledger Network on your local machine
 ### Prerequisites
 - Docker
-- Hyperledger Flex Docker Image
 
 ## Step 1 - Gradle build the project
 ```
@@ -26,7 +25,7 @@ gradle install
 cd ./hlf2-network
 ```
 
-## Step 2 - Download bin and config files
+## Step 2 - Download bin, config and Docker image
 ```
 curl -sSL https://bit.ly/2ysbOFE | bash -s -- -s
 ```
@@ -38,7 +37,7 @@ curl -sSL https://bit.ly/2ysbOFE | bash -s -- -s
 
 ## Step 4 - Install the chaincode
 ```
-./network deployCC -l java
+./network.sh deployCC -l java
 ```
 At the end of step 3, a chaincode function is automatically invoked, if the deployment is successful, you should see:
 ![image](https://user-images.githubusercontent.com/19659223/113533938-3d8d3300-959d-11eb-94d2-183453de5291.png)
