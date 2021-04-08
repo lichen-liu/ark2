@@ -12,6 +12,9 @@ https://gradle.org/install/
 Application (client) code that interacts with the blockchain via Hyperledger Flex APIs
 
 ## How
+```
+cd application
+```
 
 ### To build
 ```
@@ -27,6 +30,9 @@ gradle run
 Hyperledger Flex blockchain and smart contracts
 
 ## How
+```
+cd blockchain
+```
 
 ### Step 0 - (Optional) Download bin, config and Docker image
 ```
