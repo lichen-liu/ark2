@@ -8,3 +8,5 @@
  */
 
 rootProject.name = 'ark2'
+include 'blockchain'
+include 'application'

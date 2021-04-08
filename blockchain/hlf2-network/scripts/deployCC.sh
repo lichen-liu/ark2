@@ -34,7 +34,7 @@ elif [ "$CC_SRC_LANGUAGE" = "javascript" ]; then
 
 elif [ "$CC_SRC_LANGUAGE" = "java" ]; then
 	CC_RUNTIME_LANGUAGE=java
-	CC_SRC_PATH="../build/install/ark2"
+	CC_SRC_PATH="../build/install/blockchain"
 
 	echo Compiling Java code ...
 	pushd ../.
