@@ -15,10 +15,9 @@ gradle run
 ```
 
 # Install Test Hyperledger Network on your local machine
-## Prerequisite 
-```
-Docker
-```
+### Prerequisites
+- Docker
+- Hyperledger Flex Docker Image
 
 ## Step 1 - Gradle build the project
 ```
