@@ -22,6 +22,7 @@ gradle run
 ## Step 1 - Gradle build the project
 ```
 gradle build
+gradle install
 cd ./hlf2-network
 ```
 
