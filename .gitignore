@@ -42,4 +42,4 @@ hlf2-network/log.txt
 hlf2-network/organizations
 hlf2-network/system-genesis-block
 
-bin
+./bin
