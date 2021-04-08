@@ -28,7 +28,7 @@ cd ./hlf2-network
 
 ## Step 2 - Download bin and config files
 ```
-curl -sSL https://bit.ly/2ysbOFE | bash -s
+curl -sSL https://bit.ly/2ysbOFE | bash -s -- -s
 ```
 
 ## Step 3 - Initialize and start up the test network
