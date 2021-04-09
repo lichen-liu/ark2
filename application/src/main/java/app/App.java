@@ -17,23 +17,26 @@ class App {
 
         // AppServer server = new AppServer(conf.getAppServerSocketAddress());
 
-        invokePeer();
+        App app = new App();
+        app.invokePeer();
     }
 
-    private static void invokePeer() {
+    public App() {
+    }
 
+    public void invokePeer() {
         try {
-            EnrollAdmin.main(null);
-            RegisterUser.main(null);
+            new AdminEnrollment().enroll(true);
+            new UserRegistration().register(true);
         } catch (Exception e) {
-            System.out.println("fuck");
+            System.out.println("Something is wrong with Admin Enrollment or User Registration");
             System.err.println(e);
         }
 
-		// connect to the network and invoke the smart contract
-		try (Gateway gateway = connect()) {
-			Network network = gateway.getNetwork("mychannel");
-			Contract contract = network.getContract("agreements");
+        // connect to the network and invoke the smart contract
+        try (Gateway gateway = this.connect()) {
+            Network network = gateway.getNetwork("mychannel");
+            Contract contract = network.getContract("agreements");
 
             try {
                 byte[] result = contract.evaluateTransaction("getPointTransaction", "ptTransaction0");
@@ -46,7 +49,7 @@ class App {
         }
     }
 
-    private static Gateway connect() throws Exception {
+    private Gateway connect() throws Exception {
         // Load a file system based wallet for managing identities.
         Path walletPath = Paths.get("wallet");
         Wallet wallet = Wallets.newFileSystemWallet(walletPath);
