@@ -48,7 +48,7 @@ cd ./hlf2-network
 
 ### Step 2 - Initialize and start up the network
 ```
-./network.sh up
+./network.sh up -ca
 ./network.sh createChannel
 ```
 
