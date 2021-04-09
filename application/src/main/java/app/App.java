@@ -36,7 +36,7 @@ class App {
 			Contract contract = network.getContract("agreements");
 
             try {
-                byte[] result = contract.evaluateTransaction("getPointTransaction", "TRANSACTIONSTATE");
+                byte[] result = contract.evaluateTransaction("getPointTransaction", "ptTransaction0");
                 System.out.println("result: " + new String(result));
             } catch (Exception e) {
                 e.printStackTrace(System.out);

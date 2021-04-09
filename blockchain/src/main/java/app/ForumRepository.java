@@ -18,22 +18,17 @@ public final class ForumRepository implements ContractInterface {
         ChaincodeStub stub = ctx.getStub();
 
         Post post = new Post("1", "timestamp", "content1", "signature1");
-        Reward reward = new Reward("2", "timestamp", "amount", "sender", "receiver", "signature");
         PointTransaction pointTransaction = new PointTransaction("id", "now", new PointTransactionElement("user0", 100),
                 "ref", "sig", "outgoing");
 
         String postState = genson.serialize(post);
-        String rewardState = genson.serialize(reward);
         String pointTransactionState = genson.serialize(pointTransaction);
 
         stub.putStringState("POST1", postState);
-        stub.putStringState("REWARD1", postState);
-        stub.putStringState("TRANSACTIONSTATE", pointTransactionState);
+        stub.putStringState("ptTransaction0", pointTransactionState);
 
         System.out.println("initLedger DONE!");
     }
-
-    // region Post
 
     @Transaction()
     public Post getPost(final Context ctx, final String key) {
@@ -76,39 +71,6 @@ public final class ForumRepository implements ContractInterface {
         stub.putStringState(id, newPostState);
 
         return newPost;
-    }
-
-    // endregion
-
-    // region Reward
-
-    @Transaction()
-    public Reward getReward(final Context ctx, final String key) {
-        ChaincodeStub stub = ctx.getStub();
-        String rewardState = tryGetStateByKey(stub, key);
-
-        Reward reward = genson.deserialize(rewardState, Reward.class);
-
-        return reward;
-    }
-
-    @Transaction()
-    public Reward createReward(final Context ctx, final String key, final String id, final String timestamp,
-            final String amount, final String sender, final String receiver, final String signature) {
-        ChaincodeStub stub = ctx.getStub();
-        String rewardState = tryGetStateByKey(stub, key);
-
-        if (!rewardState.isEmpty()) {
-            String errorMessage = String.format("Post %s already exists", id);
-            System.out.println(errorMessage);
-            throw new ChaincodeException(errorMessage, "Post already exists");
-        }
-
-        Reward reward = new Reward(id, timestamp, amount, sender, receiver, signature);
-        rewardState = genson.serialize(reward);
-        stub.putStringState(id, rewardState);
-
-        return reward;
     }
 
     // endregion

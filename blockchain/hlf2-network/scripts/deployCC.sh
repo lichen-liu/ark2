@@ -235,12 +235,10 @@ chaincodeQuery() {
     sleep $DELAY
     echo "Attempting to Query peer0.org${ORG} ...$(($(date +%s) - starttime)) secs"
     set -x
-    # Get an agreement state
-    peer chaincode query -C $CHANNEL_NAME -n ${CHAINCODE_NAME} -c '{"Args":["getReward", "REWARD1"]}' >&log.txt
-    # Get a post state
+    # Get a post
     peer chaincode query -C $CHANNEL_NAME -n ${CHAINCODE_NAME} -c '{"Args":["getPost", "POST1"]}' >&log.txt
-    # Get a post state
-    peer chaincode query -C $CHANNEL_NAME -n ${CHAINCODE_NAME} -c '{"Args":["getPointTransaction", "TRANSACTIONSTATE"]}' >&log.txt
+    # Get a point trasaction
+    peer chaincode query -C $CHANNEL_NAME -n ${CHAINCODE_NAME} -c '{"Args":["getPointTransaction", "ptTransaction0"]}' >&log.txt
     res=$?
     set +x
 		let rc=$res
