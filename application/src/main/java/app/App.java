@@ -58,8 +58,6 @@ class App {
         builder.identity(wallet, "appUser").networkConfig(networkConfigPath).discovery(true);
         return builder.connect();
     }
-<<<<<<< HEAD
-=======
 
     // public static PublicKey get(String filename)
     // throws Exception {
@@ -71,5 +69,4 @@ class App {
     // KeyFactory kf = KeyFactory.getInstance("RSA");
     // return kf.generatePublic(spec);
     // }
->>>>>>> 6d8a3b97c331913f4426b73900b33dbf7dfd8299
 }
