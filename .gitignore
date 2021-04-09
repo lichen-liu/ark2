@@ -37,4 +37,4 @@ build
 .settings
 .vscode
 
-bin
+/bin
