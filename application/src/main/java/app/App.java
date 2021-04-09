@@ -33,10 +33,10 @@ class App {
 		// connect to the network and invoke the smart contract
 		try (Gateway gateway = connect()) {
 			Network network = gateway.getNetwork("mychannel");
-			Contract contract = network.getContract("Agreements");
+			Contract contract = network.getContract("agreements");
 
             try {
-                byte[] result = contract.evaluateTransaction("getPost", "POST1");
+                byte[] result = contract.evaluateTransaction("getPointTransaction", "TRANSACTIONSTATE");
                 System.out.println("result: " + new String(result));
             } catch(Exception e) {
                 e.printStackTrace(System.out);
@@ -57,15 +57,4 @@ class App {
 		builder.identity(wallet, "appUser").networkConfig(networkConfigPath).discovery(true);
 		return builder.connect();
     }
-    
-//     public static PublicKey get(String filename)
-//     throws Exception {
-
-//     byte[] keyBytes = Files.readAllBytes(Paths.get(filename));
-
-//     X509EncodedKeySpec spec =
-//       new X509EncodedKeySpec(keyBytes);
-//     KeyFactory kf = KeyFactory.getInstance("RSA");
-//     return kf.generatePublic(spec);
-//   }
 }
