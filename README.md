@@ -48,7 +48,8 @@ cd ./hlf2-network
 
 ### Step 2 - Initialize and start up the network
 ```
-./network.sh up createChannel
+./network.sh up
+./network.sh createChannel
 ```
 
 ### Step 3 - Install the smart contract

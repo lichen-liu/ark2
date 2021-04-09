@@ -1,4 +1,5 @@
 package app;
+
 import com.owlike.genson.Genson;
 import org.hyperledger.fabric.contract.Context;
 import org.hyperledger.fabric.contract.ContractInterface;
@@ -6,16 +7,10 @@ import org.hyperledger.fabric.contract.annotation.*;
 import org.hyperledger.fabric.shim.ChaincodeException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
-
-@Contract(
-        name = "Agreements",
-        info = @Info(
-                title = "Agreements contract",
-                description = "A java chaincode example",
-                version = "0.0.1-SNAPSHOT"))
+@Contract(name = "Agreements", info = @Info(title = "Agreements contract", description = "A java chaincode example", version = "0.0.1-SNAPSHOT"))
 
 @Default
-    public final class ForumRepository implements ContractInterface{
+public final class ForumRepository implements ContractInterface {
     private final Genson genson = new Genson();
 
     @Transaction()
@@ -24,15 +19,21 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 
         Post post = new Post("1", "timestamp", "content1", "signature1");
         Reward reward = new Reward("2", "timestamp", "amount", "sender", "receiver", "signature");
+        PointTransaction pointTransaction = new PointTransaction("id", "now", new PointTransactionElement("user0", 100),
+                "ref", "sig", "outgoing");
 
         String postState = genson.serialize(post);
         String rewardState = genson.serialize(reward);
+        String pointTransactionState = genson.serialize(pointTransaction);
 
         stub.putStringState("POST1", postState);
         stub.putStringState("REWARD1", postState);
+        stub.putStringState("TRANSACTIONSTATE", pointTransactionState);
+
+        System.out.println("initLedger DONE!");
     }
 
-//region Post
+    // region Post
 
     @Transaction()
     public Post getPost(final Context ctx, final String key) {
@@ -45,7 +46,8 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
     }
 
     @Transaction()
-    public Post createPost(final Context ctx, final String key ,final String id, final String timestamp, final String content, final String signature) {
+    public Post createPost(final Context ctx, final String key, final String id, final String timestamp,
+            final String content, final String signature) {
         ChaincodeStub stub = ctx.getStub();
         String postState = tryGetStateByKey(stub, key);
 
@@ -61,7 +63,7 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 
         return post;
     }
-    
+
     @Transaction()
     public Post changePostContent(final Context ctx, final String id, final String newContent) {
         ChaincodeStub stub = ctx.getStub();
@@ -76,9 +78,9 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
         return newPost;
     }
 
-//endregion
+    // endregion
 
-//region Reward
+    // region Reward
 
     @Transaction()
     public Reward getReward(final Context ctx, final String key) {
@@ -91,7 +93,8 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
     }
 
     @Transaction()
-    public Reward createReward(final Context ctx, final String key, final String id, final String timestamp, final String amount, final String sender, final String receiver, final String signature) {
+    public Reward createReward(final Context ctx, final String key, final String id, final String timestamp,
+            final String amount, final String sender, final String receiver, final String signature) {
         ChaincodeStub stub = ctx.getStub();
         String rewardState = tryGetStateByKey(stub, key);
 
@@ -108,15 +111,23 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
         return reward;
     }
 
-//endregion
+    // endregion
 
-    private String tryGetStateByKey(ChaincodeStub stub, final String key){
+    @Transaction()
+    public String getPointTransaction(final Context ctx, final String key) {
+        ChaincodeStub stub = ctx.getStub();
+        return tryGetStateByKey(stub, key);
+        // PointTransaction pointTransaction = genson.deserialize(tryGetStateByKey(stub, key), PointTransaction.class);
+        // return genson.serialize(pointTransaction);
+    }
+
+    private String tryGetStateByKey(ChaincodeStub stub, final String key) {
         String state = stub.getStringState(key);
 
-        if(state.isEmpty()) {
+        if (state.isEmpty()) {
             String errorMessage = String.format("State %s does not exist", key);
             System.out.println(errorMessage);
-            throw new ChaincodeException(errorMessage, "State not found"); 
+            throw new ChaincodeException(errorMessage, "State not found");
         }
 
         return state;
