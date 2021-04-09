@@ -4,6 +4,9 @@
 /hlf2-network/organizations/ordererOrganizations
 /hlf2-network/organizations/peerOrganizations
 /hlf2-network/system-genesis-block/genesis.block
+/hlf2-network/organizations/fabric-ca/ordererOrg
+/hlf2-network/organizations/fabric-ca/org1
+/hlf2-network/organizations/fabric-ca/org2
 
 # bin folder at the outmost scope
 /bin
