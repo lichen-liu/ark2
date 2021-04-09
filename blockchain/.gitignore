@@ -1,8 +1,6 @@
 # Network 
 /hlf2-network/channel-artifacts
 /hlf2-network/log.txt
-/hlf2-network/organizations
-/hlf2-network/system-genesis-block
 
 # bin folder at the outmost scope
 /bin
