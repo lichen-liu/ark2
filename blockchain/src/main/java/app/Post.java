@@ -1,8 +1,8 @@
 package app;
+
 import com.owlike.genson.annotation.JsonProperty;
 import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
-
 
 @DataType
 public final class Post {
@@ -36,7 +36,7 @@ public final class Post {
     }
 
     public Post(@JsonProperty("postId") final String id, @JsonProperty("timestamp") final String timestamp,
-                     @JsonProperty("content") final String content, @JsonProperty("signature") final String signature) {
+            @JsonProperty("content") final String content, @JsonProperty("signature") final String signature) {
         this.id = id;
         this.timestamp = timestamp;
         this.content = content;

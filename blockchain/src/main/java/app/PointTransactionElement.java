@@ -1,5 +1,6 @@
 package app;
 
+import com.owlike.genson.annotation.JsonProperty;
 import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
 
@@ -19,7 +20,7 @@ public class PointTransactionElement {
         return pointAmount;
     }
 
-    public PointTransactionElement(String id, double pointAmount) {
+    public PointTransactionElement(@JsonProperty("id") String id, @JsonProperty("pointAmount") double pointAmount) {
         this.id = id;
         this.pointAmount = pointAmount;
     }

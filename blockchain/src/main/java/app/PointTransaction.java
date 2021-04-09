@@ -1,5 +1,6 @@
 package app;
 
+import com.owlike.genson.annotation.JsonProperty;
 import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
 
@@ -50,9 +51,11 @@ public final class PointTransaction {
         return outgoingTransactionElements;
     }
 
-    public PointTransaction(String pointTransactionId, String timestamp,
-            PointTransactionElement incomingTransactionElement, String reference, String signature,
-            String outgoingTransactionElements) {
+    public PointTransaction(@JsonProperty("pointTransactionId") String pointTransactionId,
+            @JsonProperty("timestamp") String timestamp,
+            @JsonProperty("incomingTransactionElement") PointTransactionElement incomingTransactionElement,
+            @JsonProperty("reference") String reference, @JsonProperty("signature") String signature,
+            @JsonProperty("outgoingTransactionElements") String outgoingTransactionElements) {
         this.pointTransactionId = pointTransactionId;
         this.timestamp = timestamp;
         this.incomingTransactionElement = incomingTransactionElement;

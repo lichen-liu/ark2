@@ -239,6 +239,8 @@ chaincodeQuery() {
     peer chaincode query -C $CHANNEL_NAME -n ${CHAINCODE_NAME} -c '{"Args":["getReward", "REWARD1"]}' >&log.txt
     # Get a post state
     peer chaincode query -C $CHANNEL_NAME -n ${CHAINCODE_NAME} -c '{"Args":["getPost", "POST1"]}' >&log.txt
+    # Get a post state
+    peer chaincode query -C $CHANNEL_NAME -n ${CHAINCODE_NAME} -c '{"Args":["getPointTransaction", "TRANSACTIONSTATE"]}' >&log.txt
     res=$?
     set +x
 		let rc=$res

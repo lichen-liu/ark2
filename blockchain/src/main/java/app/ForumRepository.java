@@ -114,11 +114,10 @@ public final class ForumRepository implements ContractInterface {
     // endregion
 
     @Transaction()
-    public String getPointTransaction(final Context ctx, final String key) {
+    public PointTransaction getPointTransaction(final Context ctx, final String key) {
         ChaincodeStub stub = ctx.getStub();
-        return tryGetStateByKey(stub, key);
-        // PointTransaction pointTransaction = genson.deserialize(tryGetStateByKey(stub, key), PointTransaction.class);
-        // return genson.serialize(pointTransaction);
+
+        return genson.deserialize(tryGetStateByKey(stub, key), PointTransaction.class);
     }
 
     private String tryGetStateByKey(ChaincodeStub stub, final String key) {
