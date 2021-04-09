@@ -16,14 +16,9 @@ Application (client) code that interacts with the blockchain via Hyperledger Fle
 cd application
 ```
 
-### To build
-```
-gradle build
-```
-
 ### To run
 ```
-gradle run
+gradle runApp
 ```
 
 # Project Blockchain
