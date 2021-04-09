@@ -9,7 +9,7 @@ https://gradle.org/install/
 ## Docker
 
 # Project Application
-Application (client) code that interacts with the blockchain via Hyperledger Flex APIs
+Application (client) code that interacts with the blockchain via Hyperledger Flex Gateway APIs
 
 ## How
 ```
@@ -22,7 +22,7 @@ gradle runApp
 ```
 
 # Project Blockchain
-Hyperledger Flex blockchain and smart contracts
+Hyperledger Flex blockchain and chaincodes
 
 ## How
 ```
@@ -34,11 +34,11 @@ cd blockchain
 curl -sSL https://bit.ly/2ysbOFE | bash -s -- -s
 ```
 
-### Step 1 - Gradle build the smart contract
+### Step 1 - Gradle build the chaincode
 ```
 gradle build
 gradle install
-cd ./hlf2-network
+cd hlf2-network
 ```
 
 ### Step 2 - Initialize and start up the network
@@ -47,7 +47,7 @@ cd ./hlf2-network
 ./network.sh createChannel
 ```
 
-### Step 3 - Install the smart contract
+### Step 3 - Install the chaincode
 ```
 ./network.sh deployCC -l java
 ```
