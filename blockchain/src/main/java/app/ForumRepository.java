@@ -93,5 +93,4 @@ public final class ForumRepository implements ContractInterface {
 
         return state;
     }
-
 }

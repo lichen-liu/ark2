@@ -8,8 +8,6 @@ apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'visual-studio'
 
-mainClassName = "app.App"
-
 group 'org.example'
 version '1.0'
 
@@ -35,4 +33,3 @@ repositories {
         url 'https://jitpack.io'
     }
 }
-    
