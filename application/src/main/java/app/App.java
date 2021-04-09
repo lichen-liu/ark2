@@ -26,6 +26,7 @@ class App {
 			//EnrollAdmin.main(null);
 			//RegisterUser.main(null);
 		} catch (Exception e) {
+            System.out.println("fuck");
 			System.err.println(e);
 		}
 
@@ -34,12 +35,14 @@ class App {
 			Network network = gateway.getNetwork("mychannel");
 			Contract contract = network.getContract("Agreements");
 
-			byte[] result;
-
-			result = contract.evaluateTransaction("getPost", "POST1");
-            System.out.println("result: " + new String(result));
+            try {
+                byte[] result = contract.evaluateTransaction("getPost", "POST1");
+                System.out.println("result: " + new String(result));
+            } catch(Exception e) {
+                e.printStackTrace(System.out);
+            } 
         } catch (Exception e) {
-            System.err.println(e);
+            e.printStackTrace(System.out);
         }
     }
 
@@ -48,10 +51,21 @@ class App {
 		Path walletPath = Paths.get("wallet");
 		Wallet wallet = Wallets.newFileSystemWallet(walletPath);
 		// load a CCP
-		Path networkConfigPath = Paths.get("..", "chaincode", "hlf2-network", "organizations", "peerOrganizations", "org1.example.com", "connection-org1.yaml");
+		Path networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations", "peerOrganizations", "org1.example.com", "connection-org1.yaml");
 
-		Gateway.Builder builder = Gateway.createBuilder();
+        Gateway.Builder builder = Gateway.createBuilder();
 		builder.identity(wallet, "appUser").networkConfig(networkConfigPath).discovery(true);
 		return builder.connect();
-	}
+    }
+    
+//     public static PublicKey get(String filename)
+//     throws Exception {
+
+//     byte[] keyBytes = Files.readAllBytes(Paths.get(filename));
+
+//     X509EncodedKeySpec spec =
+//       new X509EncodedKeySpec(keyBytes);
+//     KeyFactory kf = KeyFactory.getInstance("RSA");
+//     return kf.generatePublic(spec);
+//   }
 }
