@@ -11,12 +11,12 @@ public class WalletFactory {
 
     public static final String pathPostfix = "wallet";
     
-    public static Wallet GetWallet(String mspId) throws IOException {
-        Path walletPath = GetWalletPath(mspId);
+    public static Wallet GetWallet(String adminId) throws IOException {
+        Path walletPath = GetWalletPath(adminId);
         return Wallets.newFileSystemWallet(walletPath);
     }
 
-    private static Path GetWalletPath(String mspId) {
-        return Paths.get(String.format("%s-%s", mspId, pathPostfix));   
+    private static Path GetWalletPath(String adminId) {
+        return Paths.get(String.format("%s-%s", adminId, pathPostfix));   
     }
 }
