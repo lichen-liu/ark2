@@ -14,6 +14,7 @@ import org.hyperledger.fabric.contract.annotation.Info;
 import org.hyperledger.fabric.contract.annotation.Transaction;
 import org.hyperledger.fabric.shim.ChaincodeException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
+import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
 import app.datatype.Like;
 import app.datatype.PointTransaction;
@@ -154,7 +155,8 @@ public final class ForumRepository implements ContractInterface {
     public String getAllPostKeys(final Context ctx) {
         final ChaincodeStub stub = ctx.getStub();
         List<String> postKeys = StreamSupport
-                .stream(stub.getStateByPartialCompositeKey(Post.getObjectTypeName()).spliterator(), false)
+                .stream(stub.getStateByPartialCompositeKey(new CompositeKey(Post.getObjectTypeName())).spliterator(),
+                        false)
                 .map(keyVale -> keyVale.getKey()).collect(Collectors.toList());
         return genson.serialize(postKeys);
     }

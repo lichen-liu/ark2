@@ -16,6 +16,7 @@ public class CCTesting {
             print(contract.evaluateTransaction("getPost", "post_id_0"));
             print(contract.submitTransaction("publishNewPost", "future", "I am smart", "user007",
                     "signature(user007)"));
+            print(contract.evaluateTransaction("getAllPostKeys"));
         } catch (final ContractException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
