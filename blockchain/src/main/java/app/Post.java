@@ -6,9 +6,8 @@ import org.hyperledger.fabric.contract.annotation.Property;
 
 @DataType
 public final class Post {
-
     @Property()
-    private final String id;
+    private final String postId;
 
     @Property()
     private final String timestamp;
@@ -16,11 +15,14 @@ public final class Post {
     @Property
     private final String content;
 
+    /**
+     * sign(privateKey, hash(timestamp, content))
+     */
     @Property
     private final String signature;
 
     public String getPostId() {
-        return id;
+        return postId;
     }
 
     public String getTimestamp() {
@@ -35,9 +37,9 @@ public final class Post {
         return signature;
     }
 
-    public Post(@JsonProperty("postId") final String id, @JsonProperty("timestamp") final String timestamp,
+    public Post(@JsonProperty("postId") final String postId, @JsonProperty("timestamp") final String timestamp,
             @JsonProperty("content") final String content, @JsonProperty("signature") final String signature) {
-        this.id = id;
+        this.postId = postId;
         this.timestamp = timestamp;
         this.content = content;
         this.signature = signature;
