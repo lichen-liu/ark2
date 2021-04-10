@@ -15,7 +15,6 @@ import app.datatype.Like;
 import app.datatype.PointTransaction;
 import app.datatype.PointTransactionElement;
 import app.datatype.Post;
-import app.util.ChaincodeStubTools;
 import app.util.KeyGenerationTools;
 
 @Contract(name = "Agreements", info = @Info(title = "Agreements contract", description = "A java chaincode example", version = "0.0.1-SNAPSHOT"))
@@ -34,13 +33,15 @@ public final class ForumRepository implements ContractInterface {
                         new PointTransactionElement("user2", 50) });
         final Like like = new Like("future", "1", "user0", "id0", "donaldtrump");
 
-        // Fixed ID put, mock API
+        // mock API
         stub.putStringState("post_id_0", genson.serialize(post));
         stub.putStringState("point_transaction_id_0", genson.serialize(pointTransaction));
         stub.putStringState("like_id_0", genson.serialize(like));
 
-        // Random ID put, real API
-        // stub.invokeChaincodeWithStringArgs("publishNewPost", "future", "I am smart", "user007", "signature(user007)");
+        // real API
+        this.publishNewPost(ctx, "future", "I am smart", "user007", "signature(user007)");
+        // stub.invokeChaincodeWithStringArgs("publishNewPost", "future", "I am smart",
+        // "user007", "signature(user007)");
 
         System.out.println("initLedger DONE!");
     }
@@ -116,7 +117,12 @@ public final class ForumRepository implements ContractInterface {
     /**
      * 
      * @param ctx
-     * @param timestamp
+     * @param timestamp "2015-04-14T11:07:36.639Z"
+     * 
+     *                  <pre>
+     *                  ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT)
+     *                  </pre>
+     * 
      * @param content
      * @param userId
      * @param signature
@@ -128,11 +134,7 @@ public final class ForumRepository implements ContractInterface {
         final ChaincodeStub stub = ctx.getStub();
 
         // TODO: verify signature
-        String postId;
-        do {
-            postId = KeyGenerationTools.generateKey(KeyGenerationTools.ObjectType.POST);
-        } while (ChaincodeStubTools.isKeyExisted(stub, postId));
-
+        final String postId = KeyGenerationTools.generateKeyForPost(stub, userId, signature);
         final Post post = new Post(timestamp, content, userId, signature);
 
         stub.putStringState(postId, genson.serialize(post));

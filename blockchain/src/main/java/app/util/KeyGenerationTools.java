@@ -1,7 +1,6 @@
 package app.util;
 
-import java.util.UUID;
-
+import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
 public class KeyGenerationTools {
@@ -9,12 +8,19 @@ public class KeyGenerationTools {
         POST, POINT_TRANSACTION, LIKE
     }
 
-    public static String generateKey(final ObjectType objectType) {
-        final CompositeKey compositeKey = new CompositeKey(objectType.name(), generateUuid());
+    public static String generateKeyForPost(final String userId, final String signature, final String salt) {
+        final CompositeKey compositeKey = new CompositeKey(ObjectType.POST.name(), userId, signature, salt);
         return compositeKey.toString();
     }
 
-    private static String generateUuid() {
-        return UUID.randomUUID().toString().replace("-", "");
+    public static String generateKeyForPost(final ChaincodeStub stub, final String userId, final String signature) {
+        String postId;
+        int attempt = 0;
+        do {
+            postId = generateKeyForPost(userId, signature, String.valueOf(attempt));
+            attempt++;
+        } while (ChaincodeStubTools.isKeyExisted(stub, postId));
+
+        return postId;
     }
 }
