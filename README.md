@@ -8,6 +8,14 @@ https://gradle.org/install/
 
 ## Docker
 
+# Helps
+
+## API Documents
+1. https://hyperledger.github.io/fabric-chaincode-java/release-2.2/api
+
+## Code Samples
+1. https://github.com/hyperledger/fabric-samples/tree/main/asset-transfer-basic
+
 # Project Application
 Application (client) code that interacts with the blockchain via Hyperledger Flex Gateway APIs
 

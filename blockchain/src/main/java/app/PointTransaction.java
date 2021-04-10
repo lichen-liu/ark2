@@ -15,6 +15,9 @@ public final class PointTransaction {
     @Property
     private final PointTransactionElement incomingTransactionElement;
 
+    /**
+     * A user specified reference number, can be arbitrary
+     */
     @Property
     private final String reference;
 
@@ -25,7 +28,7 @@ public final class PointTransaction {
     private final String signature;
 
     @Property
-    private final String outgoingTransactionElements;
+    private final PointTransactionElement[] outgoingTransactionElements;
 
     public String getPointTransactionId() {
         return pointTransactionId;
@@ -47,7 +50,7 @@ public final class PointTransaction {
         return signature;
     }
 
-    public String getOutgoingTransactionElements() {
+    public PointTransactionElement[] getOutgoingTransactionElements() {
         return outgoingTransactionElements;
     }
 
@@ -55,7 +58,7 @@ public final class PointTransaction {
             @JsonProperty("timestamp") String timestamp,
             @JsonProperty("incomingTransactionElement") PointTransactionElement incomingTransactionElement,
             @JsonProperty("reference") String reference, @JsonProperty("signature") String signature,
-            @JsonProperty("outgoingTransactionElements") String outgoingTransactionElements) {
+            @JsonProperty("outgoingTransactionElements") PointTransactionElement[] outgoingTransactionElements) {
         this.pointTransactionId = pointTransactionId;
         this.timestamp = timestamp;
         this.incomingTransactionElement = incomingTransactionElement;

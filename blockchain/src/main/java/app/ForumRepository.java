@@ -13,19 +13,19 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 public final class ForumRepository implements ContractInterface {
     private final Genson genson = new Genson();
 
-    @Transaction()
+    @Transaction(intent = Transaction.TYPE.SUBMIT)
     public void initLedger(final Context ctx) {
         ChaincodeStub stub = ctx.getStub();
 
-        Post post = new Post("1", "timestamp", "content1", "signature1");
-        PointTransaction pointTransaction = new PointTransaction("id", "now", new PointTransactionElement("user0", 100),
-                "ref", "sig", "outgoing");
+        Post post = new Post("1", "timestamp", "content1", "author1", "signature1");
+        PointTransaction pointTransaction = new PointTransaction("id0", "now", new PointTransactionElement("user0", 100),
+                "ref", "sig", new PointTransactionElement[] { new PointTransactionElement("user1", 50),
+                        new PointTransactionElement("user2", 50) });
+        Like like = new Like("like0", "future", "1", "user0", "id0", "donaldtrump");
 
-        String postState = genson.serialize(post);
-        String pointTransactionState = genson.serialize(pointTransaction);
-
-        stub.putStringState("POST1", postState);
-        stub.putStringState("ptTransaction0", pointTransactionState);
+        stub.putStringState("post_id_0", genson.serialize(post));
+        stub.putStringState("point_transaction_id_0", genson.serialize(pointTransaction));
+        stub.putStringState("like_id_0", genson.serialize(like));
 
         System.out.println("initLedger DONE!");
     }
@@ -40,38 +40,41 @@ public final class ForumRepository implements ContractInterface {
         return post;
     }
 
-    @Transaction()
-    public Post createPost(final Context ctx, final String key, final String id, final String timestamp,
-            final String content, final String signature) {
-        ChaincodeStub stub = ctx.getStub();
-        String postState = tryGetStateByKey(stub, key);
+    // @Transaction()
+    // public Post createPost(final Context ctx, final String key, final String id,
+    // final String timestamp,
+    // final String content, final String signature) {
+    // ChaincodeStub stub = ctx.getStub();
+    // String postState = tryGetStateByKey(stub, key);
 
-        if (!postState.isEmpty()) {
-            String errorMessage = String.format("Post %s already exists", id);
-            System.out.println(errorMessage);
-            throw new ChaincodeException(errorMessage, "Post already exists");
-        }
+    // if (!postState.isEmpty()) {
+    // String errorMessage = String.format("Post %s already exists", id);
+    // System.out.println(errorMessage);
+    // throw new ChaincodeException(errorMessage, "Post already exists");
+    // }
 
-        Post post = new Post(id, timestamp, content, signature);
-        postState = genson.serialize(post);
-        stub.putStringState(key, postState);
+    // Post post = new Post(id, timestamp, content, signature);
+    // postState = genson.serialize(post);
+    // stub.putStringState(key, postState);
 
-        return post;
-    }
+    // return post;
+    // }
 
-    @Transaction()
-    public Post changePostContent(final Context ctx, final String id, final String newContent) {
-        ChaincodeStub stub = ctx.getStub();
-        String postState = tryGetStateByKey(stub, id);
+    // @Transaction()
+    // public Post changePostContent(final Context ctx, final String id, final
+    // String newContent) {
+    // ChaincodeStub stub = ctx.getStub();
+    // String postState = tryGetStateByKey(stub, id);
 
-        Post post = genson.deserialize(postState, Post.class);
-        Post newPost = new Post(post.getPostId(), post.getTimestamp(), newContent, post.getSignature());
-        String newPostState = genson.serialize(newPost);
+    // Post post = genson.deserialize(postState, Post.class);
+    // Post newPost = new Post(post.getPostId(), post.getTimestamp(), newContent,
+    // post.getSignature());
+    // String newPostState = genson.serialize(newPost);
 
-        stub.putStringState(id, newPostState);
+    // stub.putStringState(id, newPostState);
 
-        return newPost;
-    }
+    // return newPost;
+    // }
 
     // endregion
 
