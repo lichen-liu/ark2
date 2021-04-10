@@ -1,5 +1,9 @@
 package app;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import com.owlike.genson.Genson;
 
 import org.hyperledger.fabric.contract.Context;
@@ -141,13 +145,17 @@ public final class ForumRepository implements ContractInterface {
         return postKey;
     }
 
+    /**
+     * 
+     * @param ctx
+     * @return postKeys
+     */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public String getAllPostKeys(final Context ctx) {
         final ChaincodeStub stub = ctx.getStub();
-
-        return null;
+        List<String> postKeys = StreamSupport
+                .stream(stub.getStateByPartialCompositeKey(Post.getObjectTypeName()).spliterator(), false)
+                .map(keyVale -> keyVale.getKey()).collect(Collectors.toList());
+        return genson.serialize(postKeys);
     }
 }
-// @Transaction(intent = Transaction.TYPE.EVALUATE)
-// public void
-// }

@@ -53,12 +53,11 @@ public final class Post implements KeyGeneration {
     }
 
     @Override
-    public String getObjectTypeName() {
-        return "POST";
-    }
-
-    @Override
     public CompositeKey generateCompositeKey(final String salt) {
         return new CompositeKey(getObjectTypeName(), userId, signature, salt);
+    }
+
+    public static String getObjectTypeName() {
+        return "POST";
     }
 }

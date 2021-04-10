@@ -4,8 +4,6 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
 public interface KeyGeneration {
-    public String getObjectTypeName();
-
     /**
      * Generate a composite key
      * 
