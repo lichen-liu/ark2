@@ -37,8 +37,8 @@ public final class Post {
         return signature;
     }
 
-    public Post(@JsonProperty("postId") final String postId, @JsonProperty("timestamp") final String timestamp,
-            @JsonProperty("content") final String content, @JsonProperty("signature") final String signature) {
+    public Post(@JsonProperty("postId") String postId, @JsonProperty("timestamp") String timestamp,
+            @JsonProperty("content") String content, @JsonProperty("signature") String signature) {
         this.postId = postId;
         this.timestamp = timestamp;
         this.content = content;
