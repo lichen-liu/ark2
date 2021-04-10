@@ -13,7 +13,7 @@ public class CCTesting {
 
     public void test(final Contract contract) {
         try {
-            print(contract.evaluateTransaction("getPost", "post_id_0"));
+            print(contract.evaluateTransaction("getPostByKey", "post_id_0"));
             print(contract.submitTransaction("publishNewPost", "future", "I am smart", "user007",
                     "signature(user007)"));
             print(contract.evaluateTransaction("getAllPostKeys"));

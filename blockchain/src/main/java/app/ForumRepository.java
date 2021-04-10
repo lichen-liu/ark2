@@ -50,16 +50,6 @@ public final class ForumRepository implements ContractInterface {
         System.out.println("initLedger DONE!");
     }
 
-    @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public Post getPost(final Context ctx, final String key) {
-        final ChaincodeStub stub = ctx.getStub();
-        final String postState = tryGetStringByKey(stub, key);
-
-        final Post post = genson.deserialize(postState, Post.class);
-
-        return post;
-    }
-
     // @Transaction()
     // public Post createPost(final Context ctx, final String key, final String id,
     // final String timestamp,
@@ -105,19 +95,23 @@ public final class ForumRepository implements ContractInterface {
         return genson.deserialize(tryGetStringByKey(stub, key), PointTransaction.class);
     }
 
+    /* REVIEWED */
+    /**
+     * 
+     * @param stub
+     * @param key
+     * @return
+     */
     private String tryGetStringByKey(final ChaincodeStub stub, final String key) {
         final String state = stub.getStringState(key);
-
         if (state.isEmpty()) {
             final String errorMessage = String.format("State %s does not exist", key);
             System.out.println(errorMessage);
             throw new ChaincodeException(errorMessage, "State not found");
         }
-
         return state;
     }
 
-    /* REVIEWED */
     /**
      * 
      * @param ctx
@@ -152,12 +146,43 @@ public final class ForumRepository implements ContractInterface {
      * @return postKeys
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public String getAllPostKeys(final Context ctx) {
+    public List<String> getAllPostKeys(final Context ctx) {
         final ChaincodeStub stub = ctx.getStub();
         List<String> postKeys = StreamSupport
                 .stream(stub.getStateByPartialCompositeKey(new CompositeKey(Post.getObjectTypeName())).spliterator(),
                         false)
                 .map(keyVale -> keyVale.getKey()).collect(Collectors.toList());
-        return genson.serialize(postKeys);
+        return postKeys;
+    }
+
+    /**
+     * 
+     * @param ctx
+     * @param userId
+     * @return
+     */
+    @Transaction(intent = Transaction.TYPE.EVALUATE)
+    public List<String> getAllPostKeysByUserId(Context ctx, String userId) {
+        final ChaincodeStub stub = ctx.getStub();
+        List<String> postKeys = StreamSupport.stream(
+                stub.getStateByPartialCompositeKey(new CompositeKey(Post.getObjectTypeName(), userId)).spliterator(),
+                false).map(keyVale -> keyVale.getKey()).collect(Collectors.toList());
+        return postKeys;
+    }
+
+    /**
+     * 
+     * @param ctx
+     * @param postKey
+     * @return
+     */
+    @Transaction(intent = Transaction.TYPE.EVALUATE)
+    public Post getPostByKey(final Context ctx, final String postKey) {
+        final ChaincodeStub stub = ctx.getStub();
+        final String postString = this.tryGetStringByKey(stub, postKey);
+
+        final Post post = genson.deserialize(postString, Post.class);
+
+        return post;
     }
 }
