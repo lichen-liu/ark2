@@ -15,7 +15,6 @@ import app.datatype.Like;
 import app.datatype.PointTransaction;
 import app.datatype.PointTransactionElement;
 import app.datatype.Post;
-import app.util.KeyGenerationTools;
 
 @Contract(name = "Agreements", info = @Info(title = "Agreements contract", description = "A java chaincode example", version = "0.0.1-SNAPSHOT"))
 
@@ -134,8 +133,8 @@ public final class ForumRepository implements ContractInterface {
         final ChaincodeStub stub = ctx.getStub();
 
         // TODO: verify signature
-        final String postId = KeyGenerationTools.generateKeyForPost(stub, userId, signature);
         final Post post = new Post(timestamp, content, userId, signature);
+        final String postId = post.generateKey(stub);
 
         stub.putStringState(postId, genson.serialize(post));
 

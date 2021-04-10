@@ -4,9 +4,12 @@ import com.owlike.genson.annotation.JsonProperty;
 
 import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
+import org.hyperledger.fabric.shim.ledger.CompositeKey;
+
+import app.util.KeyGeneration;
 
 @DataType
-public final class Post {
+public final class Post implements KeyGeneration {
     @Property()
     private final String timestamp;
 
@@ -47,5 +50,16 @@ public final class Post {
         this.content = content;
         this.userId = userId;
         this.signature = signature;
+    }
+
+    @Override
+    public String getObjectTypeName() {
+        return "POST";
+    }
+
+    @Override
+    public String generateKey(final String salt) {
+        final CompositeKey compositeKey = new CompositeKey(getObjectTypeName(), userId, signature, salt);
+        return compositeKey.toString();
     }
 }
