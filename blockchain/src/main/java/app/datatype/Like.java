@@ -1,14 +1,12 @@
-package app;
+package app.datatype;
 
 import com.owlike.genson.annotation.JsonProperty;
+
 import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
 
 @DataType
 public final class Like {
-    @Property
-    private final String likeId;
-
     @Property
     private final String timestamp;
 
@@ -30,10 +28,6 @@ public final class Like {
     @Property
     private final String signature;
 
-    public String getLikeId() {
-        return likeId;
-    }
-
     public String getTimestamp() {
         return timestamp;
     }
@@ -54,11 +48,10 @@ public final class Like {
         return signature;
     }
 
-    public Like(@JsonProperty("likeId") String likeId, @JsonProperty("timestamp") String timestamp,
-            @JsonProperty("postId") String postId, @JsonProperty("userId") String userId,
-            @JsonProperty("pointTransactionId") String pointTransactionId,
-            @JsonProperty("signature") String signature) {
-        this.likeId = likeId;
+    public Like(@JsonProperty("timestamp") final String timestamp, @JsonProperty("postId") final String postId,
+            @JsonProperty("userId") final String userId,
+            @JsonProperty("pointTransactionId") final String pointTransactionId,
+            @JsonProperty("signature") final String signature) {
         this.timestamp = timestamp;
         this.postId = postId;
         this.userId = userId;

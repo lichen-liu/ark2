@@ -1,14 +1,12 @@
-package app;
+package app.datatype;
 
 import com.owlike.genson.annotation.JsonProperty;
+
 import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
 
 @DataType
 public final class PointTransaction {
-    @Property
-    private final String pointTransactionId;
-
     @Property
     private final String timestamp;
 
@@ -30,10 +28,6 @@ public final class PointTransaction {
     @Property
     private final PointTransactionElement[] outgoingTransactionElements;
 
-    public String getPointTransactionId() {
-        return pointTransactionId;
-    }
-
     public String getTimestamp() {
         return timestamp;
     }
@@ -54,12 +48,10 @@ public final class PointTransaction {
         return outgoingTransactionElements;
     }
 
-    public PointTransaction(@JsonProperty("pointTransactionId") String pointTransactionId,
-            @JsonProperty("timestamp") String timestamp,
-            @JsonProperty("incomingTransactionElement") PointTransactionElement incomingTransactionElement,
-            @JsonProperty("reference") String reference, @JsonProperty("signature") String signature,
-            @JsonProperty("outgoingTransactionElements") PointTransactionElement[] outgoingTransactionElements) {
-        this.pointTransactionId = pointTransactionId;
+    public PointTransaction(@JsonProperty("timestamp") final String timestamp,
+            @JsonProperty("incomingTransactionElement") final PointTransactionElement incomingTransactionElement,
+            @JsonProperty("reference") final String reference, @JsonProperty("signature") final String signature,
+            @JsonProperty("outgoingTransactionElements") final PointTransactionElement[] outgoingTransactionElements) {
         this.timestamp = timestamp;
         this.incomingTransactionElement = incomingTransactionElement;
         this.reference = reference;
