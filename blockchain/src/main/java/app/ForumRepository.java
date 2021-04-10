@@ -18,8 +18,10 @@ public final class ForumRepository implements ContractInterface {
         ChaincodeStub stub = ctx.getStub();
 
         Post post = new Post("1", "timestamp", "content1", "signature1");
+        PointTransactionElement outgoingTransactionElements[] = { new PointTransactionElement("user1", 50),
+                new PointTransactionElement("user2", 50) };
         PointTransaction pointTransaction = new PointTransaction("id", "now", new PointTransactionElement("user0", 100),
-                "ref", "sig", "outgoing");
+                "ref", "sig", outgoingTransactionElements);
 
         String postState = genson.serialize(post);
         String pointTransactionState = genson.serialize(pointTransaction);
