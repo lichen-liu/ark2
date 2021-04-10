@@ -26,16 +26,6 @@ import app.factory.CaClientFactory;
 import app.factory.WalletFactory;
 
 class App {
-<<<<<<< HEAD
-=======
-    public static final String userId = "appUser3";
-    public static final String pemPath = "../blockchain/hlf2-network/organizations/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem";
-    public static final String url = "https://localhost:7054";
-    public static final String mspId = "Org1MSP";
-    public static final String affliation = "org1.department1";
-    public static final String channel = "mychannel";
-    public static final String contractName = "agreements";
->>>>>>> 589da8ce536c32420729c02fafe9295fed0f9b81
 
     public static void main(String[] args) throws Exception {
         // Conf conf = new Conf();
