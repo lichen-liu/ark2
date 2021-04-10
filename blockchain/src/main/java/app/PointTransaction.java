@@ -15,6 +15,9 @@ public final class PointTransaction {
     @Property
     private final PointTransactionElement incomingTransactionElement;
 
+    /**
+     * A user specified reference number, can be arbitrary
+     */
     @Property
     private final String reference;
 

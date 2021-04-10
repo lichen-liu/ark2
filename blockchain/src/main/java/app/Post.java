@@ -16,7 +16,13 @@ public final class Post {
     private final String content;
 
     /**
-     * sign(privateKey, hash(timestamp, content))
+     * userId who creates the post
+     */
+    @Property
+    private final String userId;
+
+    /**
+     * sign(privateKey, hash(timestamp, content, userId))
      */
     @Property
     private final String signature;
@@ -33,15 +39,21 @@ public final class Post {
         return content;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
     public String getSignature() {
         return signature;
     }
 
     public Post(@JsonProperty("postId") String postId, @JsonProperty("timestamp") String timestamp,
-            @JsonProperty("content") String content, @JsonProperty("signature") String signature) {
+            @JsonProperty("content") String content, @JsonProperty("userId") String userId,
+            @JsonProperty("signature") String signature) {
         this.postId = postId;
         this.timestamp = timestamp;
         this.content = content;
+        this.userId = userId;
         this.signature = signature;
     }
 }

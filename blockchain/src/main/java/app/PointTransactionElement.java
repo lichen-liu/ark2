@@ -7,21 +7,21 @@ import org.hyperledger.fabric.contract.annotation.Property;
 @DataType
 public class PointTransactionElement {
     @Property
-    private final String id;
+    private final String userId;
 
     @Property
     private final double pointAmount;
 
-    public String getId() {
-        return id;
+    public String getUserId() {
+        return userId;
     }
 
     public double getPointAmount() {
         return pointAmount;
     }
 
-    public PointTransactionElement(@JsonProperty("id") String id, @JsonProperty("pointAmount") double pointAmount) {
-        this.id = id;
+    public PointTransactionElement(@JsonProperty("userId") String userId, @JsonProperty("pointAmount") double pointAmount) {
+        this.userId = userId;
         this.pointAmount = pointAmount;
     }
 }
