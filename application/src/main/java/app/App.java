@@ -27,6 +27,10 @@ import app.factory.WalletFactory;
 
 class App {
 
+    static {
+        System.setProperty("org.hyperledger.fabric.sdk.service_discovery.as_localhost", "true");
+    }
+
     public static void main(String[] args) throws Exception {
         // Conf conf = new Conf();
         // System.out.println(conf);
@@ -47,7 +51,7 @@ class App {
         try{
 
             PeerInfo peer = om.readValue(file, PeerInfo.class);
-            Wallet wallet = WalletFactory.GetWallet(peer.getMpsId());
+            Wallet wallet = WalletFactory.GetWallet(peer.getAdminName());
             HFCAClient client = CaClientFactory.CreateCaClient(peer.getCaUrl(), peer.getPemPath());
 
             tryEnrollAdmin(wallet, client, peer);
@@ -57,8 +61,10 @@ class App {
 
                 Network network = gateway.getNetwork(peer.getChannel());
                 Contract contract = network.getContract(peer.getContractName());
-                byte[] result = contract.evaluateTransaction("getPost", "POST1");
-                System.out.println("result: " + new String(result));
+                //byte[] result = contract.evaluateTransaction("getPost", "POST1");
+                //System.out.println("result: " + new String(result));
+
+                System.out.println("\n[1] result: " + new String(contract.submitTransaction("initLedger")));
     
             } catch (Exception e) {
                 e.printStackTrace(System.out);
