@@ -40,7 +40,7 @@ public final class ForumRepository implements ContractInterface {
         stub.putStringState("like_id_0", genson.serialize(like));
 
         // Random ID put, real API
-        this.publishNewPost(ctx, "future", "I am smart", "user007", "signature(user007)");
+        // stub.invokeChaincodeWithStringArgs("publishNewPost", "future", "I am smart", "user007", "signature(user007)");
 
         System.out.println("initLedger DONE!");
     }
