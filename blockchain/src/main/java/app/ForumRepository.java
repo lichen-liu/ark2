@@ -1,5 +1,9 @@
 package app;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import com.owlike.genson.Genson;
 
 import org.hyperledger.fabric.contract.Context;
@@ -10,6 +14,7 @@ import org.hyperledger.fabric.contract.annotation.Info;
 import org.hyperledger.fabric.contract.annotation.Transaction;
 import org.hyperledger.fabric.shim.ChaincodeException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
+import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
 import app.datatype.Like;
 import app.datatype.PointTransaction;
@@ -141,13 +146,18 @@ public final class ForumRepository implements ContractInterface {
         return postKey;
     }
 
+    /**
+     * 
+     * @param ctx
+     * @return postKeys
+     */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public String getAllPostKeys(final Context ctx) {
         final ChaincodeStub stub = ctx.getStub();
-
-        return null;
+        List<String> postKeys = StreamSupport
+                .stream(stub.getStateByPartialCompositeKey(new CompositeKey(Post.getObjectTypeName())).spliterator(),
+                        false)
+                .map(keyVale -> keyVale.getKey()).collect(Collectors.toList());
+        return genson.serialize(postKeys);
     }
 }
-// @Transaction(intent = Transaction.TYPE.EVALUATE)
-// public void
-// }
