@@ -1,0 +1,12 @@
+---
+mpsId: Org1MSP
+affliation: org1.department1
+channel: mychannel
+contractName: agreements
+adminName: admin
+adminSecret: adminpw
+hostName: localhost
+profile: tls
+userId: appUser2
+pemPath: ../blockchain/hlf2-network/organizations/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem
+caUrl: https://localhost:7054

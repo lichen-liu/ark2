@@ -9,28 +9,34 @@ import org.hyperledger.fabric.sdk.User;
 import org.hyperledger.fabric_ca.sdk.HFCAClient;
 import org.hyperledger.fabric_ca.sdk.RegistrationRequest;
 
-import app.factory.WalletFactory;
-
 public class UserRegistrationService {
-    public UserRegistrationService() {}
+    private final Wallet _wallet;
+    private final HFCAClient _client; 
 
-    public void RegisterUser(Wallet wallet, HFCAClient client, User user, String userId) throws Exception {
+    public UserRegistrationService(Wallet wallet, HFCAClient client) {
+        this._wallet = wallet;
+        this._client = client;
+    }
 
-        X509Identity adminIdentity = (X509Identity) wallet.get(WalletFactory.adminEntityName);
+    public void RegisterUser(User user, String newUserId) throws Exception {
+
+        X509Identity adminIdentity = (X509Identity) _wallet.get(user.getName());
+
         if (adminIdentity == null) {
-            System.out.println("\"" + WalletFactory.adminEntityName + "\" needs to be enrolled and added to the wallet first");
+            System.out.println("\"" + user.getName() + "\" needs to be enrolled and added to the wallet first");
             return;
         }
 
-        RegistrationRequest registrationRequest = new RegistrationRequest(userId);
+        RegistrationRequest registrationRequest = new RegistrationRequest(newUserId);
         registrationRequest.setAffiliation(user.getAffiliation());
-        registrationRequest.setEnrollmentID(userId);
+        registrationRequest.setEnrollmentID(newUserId);
 
-        String enrollmentSecret = client.register(registrationRequest, user);
-        Enrollment enrollment = client.enroll(userId, enrollmentSecret);
+        String enrollmentSecret = _client.register(registrationRequest, user);
+        Enrollment enrollment = _client.enroll(newUserId, enrollmentSecret);
         Identity userIdentity = Identities.newX509Identity(user.getMspId(), enrollment);
 
-        wallet.put(userId, userIdentity);
-        System.out.println("Successfully enrolled user \"" + userId + "\" and imported it into the wallet");
+        _wallet.put(newUserId, userIdentity);
+        System.out.println("Successfully enrolled user \"" + newUserId + "\" and imported it into the wallet");
     }
 }
+
