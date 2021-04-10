@@ -4,8 +4,10 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.PrivateKey;
-import java.util.Collection;
 import java.util.Set;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.*;
 
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.Gateway;
@@ -16,16 +18,16 @@ import org.hyperledger.fabric.gateway.X509Identity;
 import org.hyperledger.fabric.sdk.Enrollment;
 import org.hyperledger.fabric.sdk.User;
 import org.hyperledger.fabric_ca.sdk.HFCAClient;
-import org.hyperledger.fabric_ca.sdk.HFCAIdentity;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.*;
 
-import app.service.UserRegistrationService;
-import app.service.AdminEnrollmentService;
 import app.factory.CaClientFactory;
 import app.factory.WalletFactory;
+import app.service.AdminEnrollmentService;
+import app.service.UserRegistrationService;
 
 class App {
+    static {
+        System.setProperty("org.hyperledger.fabric.sdk.service_discovery.as_localhost", "true");
+    }
 
     public static void main(String[] args) throws Exception {
         // Conf conf = new Conf();
@@ -36,7 +38,8 @@ class App {
         app.invokePeer();
     }
 
-    public App() { }
+    public App() {
+    }
 
     public void invokePeer() {
 
@@ -44,7 +47,7 @@ class App {
         File file = new File("peer.yaml");
         ObjectMapper om = new ObjectMapper(new YAMLFactory());
 
-        try{
+        try {
 
             PeerInfo peer = om.readValue(file, PeerInfo.class);
             Wallet wallet = WalletFactory.GetWallet(peer.getMpsId());
@@ -57,14 +60,15 @@ class App {
 
                 Network network = gateway.getNetwork(peer.getChannel());
                 Contract contract = network.getContract(peer.getContractName());
-                byte[] result = contract.evaluateTransaction("getPost", "POST1");
-                System.out.println("result: " + new String(result));
-    
+
+                CCTesting t = new CCTesting();
+                t.test(contract);
+
             } catch (Exception e) {
                 e.printStackTrace(System.out);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("An error occurred when fetching wallet or client");
             System.err.println(e);
         }
@@ -103,10 +107,12 @@ class App {
         User adminUser = createUser((X509Identity) wallet.get(peer.getAdminName()), peer);
         var identities = client.getHFCAIdentities(adminUser);
         for (var identity : identities) {
-            //System.out.println(String.format("Existing enrollment ids are: %s", identity.getEnrollmentId()));
-            if(identity.getEnrollmentId().equals(peer.getUserId())) return;
+            // System.out.println(String.format("Existing enrollment ids are: %s",
+            // identity.getEnrollmentId()));
+            if (identity.getEnrollmentId().equals(peer.getUserId()))
+                return;
         }
-        
+
         try {
             var registrationService = new UserRegistrationService(wallet, client);
             registrationService.RegisterUser(adminUser, peer.getUserId());
