@@ -7,12 +7,6 @@ import org.hyperledger.fabric.contract.annotation.Property;
 
 @DataType
 public final class Post {
-    /**
-     * Suggestion:
-     * Format:
-     * 2015-04-14T11:07:36.639Z
-     * ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT)
-     */
     @Property()
     private final String timestamp;
 
