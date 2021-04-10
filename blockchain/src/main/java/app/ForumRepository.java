@@ -125,7 +125,7 @@ public final class ForumRepository implements ContractInterface {
      * @param content
      * @param userId
      * @param signature
-     * @return postId
+     * @return postKey
      */
     @Transaction(intent = Transaction.TYPE.SUBMIT)
     public String publishNewPost(final Context ctx, final String timestamp, final String content, final String userId,
@@ -134,11 +134,18 @@ public final class ForumRepository implements ContractInterface {
 
         // TODO: verify signature
         final Post post = new Post(timestamp, content, userId, signature);
-        final String postId = post.generateKey(stub);
+        final String postKey = post.generateKey(stub);
 
-        stub.putStringState(postId, genson.serialize(post));
+        stub.putStringState(postKey, genson.serialize(post));
 
-        return postId;
+        return postKey;
+    }
+
+    @Transaction(intent = Transaction.TYPE.EVALUATE)
+    public String getAllPostKeys(final Context ctx) {
+        final ChaincodeStub stub = ctx.getStub();
+
+        return null;
     }
 }
 // @Transaction(intent = Transaction.TYPE.EVALUATE)
