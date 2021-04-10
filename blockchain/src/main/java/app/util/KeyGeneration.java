@@ -1,6 +1,7 @@
 package app.util;
 
 import org.hyperledger.fabric.shim.ChaincodeStub;
+import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
 public interface KeyGeneration {
     public String getObjectTypeName();
@@ -11,7 +12,11 @@ public interface KeyGeneration {
      * @param salt extra field in the composite key for uniqueness
      * @return composite key in String
      */
-    public String generateKey(final String salt);
+    public CompositeKey generateCompositeKey(final String salt);
+
+    public default String generateKey(final String salt) {
+        return generateCompositeKey(salt).toString();
+    }
 
     public default String generateKey(final ChaincodeStub stub) {
         String key;

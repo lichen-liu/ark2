@@ -58,8 +58,7 @@ public final class Post implements KeyGeneration {
     }
 
     @Override
-    public String generateKey(final String salt) {
-        final CompositeKey compositeKey = new CompositeKey(getObjectTypeName(), userId, signature, salt);
-        return compositeKey.toString();
+    public CompositeKey generateCompositeKey(final String salt) {
+        return new CompositeKey(getObjectTypeName(), userId, signature, salt);
     }
 }
