@@ -141,6 +141,7 @@ public final class ForumRepository implements ContractInterface {
     }
 
     /**
+     * Sorted by timestamp
      * 
      * @param ctx
      * @return postKeys
@@ -148,14 +149,20 @@ public final class ForumRepository implements ContractInterface {
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public String getAllPostKeys(final Context ctx) {
         final ChaincodeStub stub = ctx.getStub();
-        List<String> postKeys = StreamSupport
-                .stream(stub.getStateByPartialCompositeKey(new CompositeKey(Post.getObjectTypeName())).spliterator(),
-                        false)
-                .map(keyVale -> keyVale.getKey()).collect(Collectors.toList());
+        final var keyValueIterator = stub.getStateByPartialCompositeKey(new CompositeKey(Post.getObjectTypeName()));
+        List<String> postKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
+                .sorted((keyValueLeft, keyValueRight) -> {
+                    String leftPostTimestamp = genson.deserialize(keyValueLeft.getStringValue(), Post.class)
+                            .getTimestamp();
+                    String rightPostTimestamp = genson.deserialize(keyValueRight.getStringValue(), Post.class)
+                            .getTimestamp();
+                    return leftPostTimestamp.compareToIgnoreCase(rightPostTimestamp);
+                }).map(keyVale -> keyVale.getKey()).collect(Collectors.toList());
         return genson.serialize(postKeys);
     }
 
     /**
+     * Sorted by timestamp
      * 
      * @param ctx
      * @param userId
@@ -164,9 +171,15 @@ public final class ForumRepository implements ContractInterface {
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public String getAllPostKeysByUserId(Context ctx, String userId) {
         final ChaincodeStub stub = ctx.getStub();
-        List<String> postKeys = StreamSupport.stream(
-                stub.getStateByPartialCompositeKey(new CompositeKey(Post.getObjectTypeName(), userId)).spliterator(),
-                false).map(keyVale -> keyVale.getKey()).collect(Collectors.toList());
+        final var keyValueIterator = stub.getStateByPartialCompositeKey(Post.getObjectTypeName(), userId);
+        List<String> postKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
+                .sorted((keyValueLeft, keyValueRight) -> {
+                    String leftPostTimestamp = genson.deserialize(keyValueLeft.getStringValue(), Post.class)
+                            .getTimestamp();
+                    String rightPostTimestamp = genson.deserialize(keyValueRight.getStringValue(), Post.class)
+                            .getTimestamp();
+                    return leftPostTimestamp.compareToIgnoreCase(rightPostTimestamp);
+                }).map(keyValue -> keyValue.getKey()).collect(Collectors.toList());
         return genson.serialize(postKeys);
     }
 
