@@ -11,7 +11,7 @@ public final class Like {
     private final String timestamp;
 
     @Property
-    private final String postId;
+    private final String postKey;
 
     /**
      * userId who likes the post
@@ -20,10 +20,10 @@ public final class Like {
     private final String userId;
 
     @Property
-    private final String pointTransactionId;
+    private final String pointTransactionKey;
 
     /**
-     * sign(privateKey, hash(timestamp, postId, userId, pointTransactionId))
+     * sign(privateKey, hash(timestamp, postKey, userId, pointTransactionKey))
      */
     @Property
     private final String signature;
@@ -32,30 +32,30 @@ public final class Like {
         return timestamp;
     }
 
-    public String getPostId() {
-        return postId;
+    public String getPostKey() {
+        return postKey;
     }
 
     public String getUserId() {
         return userId;
     }
 
-    public String getPointTransactionId() {
-        return pointTransactionId;
+    public String getPointTransactionKey() {
+        return pointTransactionKey;
     }
 
     public String getSignature() {
         return signature;
     }
 
-    public Like(@JsonProperty("timestamp") final String timestamp, @JsonProperty("postId") final String postId,
+    public Like(@JsonProperty("timestamp") final String timestamp, @JsonProperty("postKey") final String postKey,
             @JsonProperty("userId") final String userId,
-            @JsonProperty("pointTransactionId") final String pointTransactionId,
+            @JsonProperty("pointTransactionKey") final String pointTransactionKey,
             @JsonProperty("signature") final String signature) {
         this.timestamp = timestamp;
-        this.postId = postId;
+        this.postKey = postKey;
         this.userId = userId;
-        this.pointTransactionId = pointTransactionId;
+        this.pointTransactionKey = pointTransactionKey;
         this.signature = signature;
     }
 }
