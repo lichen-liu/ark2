@@ -72,10 +72,10 @@ class App {
             System.out.println("\n[0] result: "
                     + new String(contract.evaluateTransaction("getPointTransaction", "point_transaction_id_0")));
 
-            System.out.println("\n[1] result: " + new String(contract.submitTransaction("initLedger")));
+            // System.out.println("\n[1] result: " + new String(contract.submitTransaction("initLedger")));
 
-            System.out.println("\n[2] result: " + new String(contract.submitTransaction("publishNewPost", "future",
-                    "I am smart", "user007", "signature(user007)")));
+            // System.out.println("\n[2] result: " + new String(contract.submitTransaction("publishNewPost", "future",
+            //         "I am smart", "user007", "signature(user007)")));
 
         } catch (Exception e) {
 
