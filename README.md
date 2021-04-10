@@ -39,7 +39,9 @@ cd blockchain
 
 ### Step 0 - (Optional) Download bin, config and Docker image
 ```
+cd hlf2-network
 curl -sSL https://bit.ly/2ysbOFE | bash -s -- -s
+cd ..
 ```
 
 ### Step 1 - Gradle build the chaincode
