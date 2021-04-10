@@ -237,7 +237,7 @@ chaincodeQuery() {
     echo "Attempting to Query peer0.org${ORG} ...$(($(date +%s) - starttime)) secs"
     set -x
     # Get a post
-    peer chaincode query -C $CHANNEL_NAME -n ${CHAINCODE_NAME} -c '{"Args":["getPostByKey", "post_id_0"]}' >&log.txt
+    peer chaincode query -C $CHANNEL_NAME -n ${CHAINCODE_NAME} -c '{"Args":["getAllPostKeys"]}' >&log.txt
     # Get a point trasaction
     peer chaincode query -C $CHANNEL_NAME -n ${CHAINCODE_NAME} -c '{"Args":["getPointTransaction", "point_transaction_id_0"]}' >&log.txt
     res=$?

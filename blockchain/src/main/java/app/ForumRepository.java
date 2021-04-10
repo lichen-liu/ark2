@@ -146,13 +146,13 @@ public final class ForumRepository implements ContractInterface {
      * @return postKeys
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public List<String> getAllPostKeys(final Context ctx) {
+    public String getAllPostKeys(final Context ctx) {
         final ChaincodeStub stub = ctx.getStub();
         List<String> postKeys = StreamSupport
                 .stream(stub.getStateByPartialCompositeKey(new CompositeKey(Post.getObjectTypeName())).spliterator(),
                         false)
                 .map(keyVale -> keyVale.getKey()).collect(Collectors.toList());
-        return postKeys;
+        return genson.serialize(postKeys);
     }
 
     /**
@@ -162,12 +162,12 @@ public final class ForumRepository implements ContractInterface {
      * @return
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public List<String> getAllPostKeysByUserId(Context ctx, String userId) {
+    public String getAllPostKeysByUserId(Context ctx, String userId) {
         final ChaincodeStub stub = ctx.getStub();
         List<String> postKeys = StreamSupport.stream(
                 stub.getStateByPartialCompositeKey(new CompositeKey(Post.getObjectTypeName(), userId)).spliterator(),
                 false).map(keyVale -> keyVale.getKey()).collect(Collectors.toList());
-        return postKeys;
+        return genson.serialize(postKeys);
     }
 
     /**
