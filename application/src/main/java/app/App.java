@@ -4,18 +4,42 @@ import java.net.InetSocketAddress;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.PrivateKey;
+import java.util.Set;
+
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.Gateway;
+import org.hyperledger.fabric.gateway.Identities;
 import org.hyperledger.fabric.gateway.Network;
 import org.hyperledger.fabric.gateway.Wallet;
 import org.hyperledger.fabric.gateway.Wallets;
+import org.hyperledger.fabric.gateway.X509Identity;
+import org.hyperledger.fabric.protos.peer.Collection;
+import org.hyperledger.fabric.sdk.Enrollment;
+import org.hyperledger.fabric.sdk.User;
+import org.hyperledger.fabric_ca.sdk.HFCAClient;
+
+import app.service.UserRegistrationService;
+import app.service.AdminEnrollmentService;
+import app.factory.CaClientFactory;
+import app.factory.WalletFactory;
 
 class App {
+    public static final String userId = "appUser2";
+    public static final String pemPath = "../blockchain/hlf2-network/organizations/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem";
+    public static final String url = "https://localhost:7054";
+    public static final String mspId = "Org1MSP";
+    public static final String affliation = "org1.department1";
+    public static final String channel = "mychannel";
+    public static final String contractName = "agreements";
+
     public static void main(String[] args) throws Exception {
         // Conf conf = new Conf();
         // System.out.println(conf);
 
         // AppServer server = new AppServer(conf.getAppServerSocketAddress());
+
+        // HFCAClient client = CaClientFactory.CreateCaClient(caUrl, pemPath);
 
         App app = new App();
         app.invokePeer();
@@ -25,51 +49,114 @@ class App {
     }
 
     public void invokePeer() {
-        try {
-            new AdminEnrollment().enroll(true);
-            new UserRegistration().register(true);
-        } catch (Exception e) {
-            System.out.println("Something is wrong with Admin Enrollment or User Registration");
+        try{
+
+            Wallet wallet = WalletFactory.GetWallet(mspId);
+            HFCAClient client = CaClientFactory.CreateCaClient(url, pemPath);
+            tryEnrollAdmin(wallet, client);
+            tryRegisterUser(wallet, client);
+
+        } catch(Exception e) {
+
+            System.out.println("An error occurred when fetching wallet or client");
             System.err.println(e);
+
         }
 
-        // connect to the network and invoke the smart contract
         try (Gateway gateway = this.connect()) {
-            Network network = gateway.getNetwork("mychannel");
-            Contract contract = network.getContract("agreements");
 
-            try {
-                byte[] result = contract.evaluateTransaction("getPointTransaction", "ptTransaction0");
-                System.out.println("result: " + new String(result));
-            } catch (Exception e) {
-                e.printStackTrace(System.out);
-            }
+            Network network = gateway.getNetwork(channel);
+            Contract contract = network.getContract(contractName);
+            byte[] result = contract.evaluateTransaction("getPost", "POST1");
+            System.out.println("result: " + new String(result));
+
         } catch (Exception e) {
+
             e.printStackTrace(System.out);
+
         }
     }
 
     private Gateway connect() throws Exception {
-        // Load a file system based wallet for managing identities.
-        Path walletPath = Paths.get("wallet");
-        Wallet wallet = Wallets.newFileSystemWallet(walletPath);
-        // load a CCP
+        Wallet wallet = WalletFactory.GetWallet(mspId);
         Path networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations", "peerOrganizations",
                 "org1.example.com", "connection-org1.yaml");
 
         Gateway.Builder builder = Gateway.createBuilder();
-        builder.identity(wallet, "appUser").networkConfig(networkConfigPath).discovery(true);
+        builder.identity(wallet, userId).networkConfig(networkConfigPath).discovery(true);
         return builder.connect();
     }
 
-    // public static PublicKey get(String filename)
-    // throws Exception {
+    private void tryEnrollAdmin(Wallet wallet, HFCAClient client) {
+        try {
+            AdminEnrollmentService enrollmentService = new AdminEnrollmentService();
+            enrollmentService.EnrollAdmin(wallet, client, mspId);
+        } catch (Exception e) {
+            System.out.println("An error occurred when enrolling admin");
+            System.err.println(e);
+        }
+    }
 
-    // byte[] keyBytes = Files.readAllBytes(Paths.get(filename));
+    private void tryRegisterUser(Wallet wallet, HFCAClient client) {
+        // Collection identities = client.getHFCAIdentities(user);
+        // for (var identity : identities) {
+        //     if(identity.)
+        // }
+        try {
+            User user = createUser((X509Identity) wallet.get(WalletFactory.adminEntityName));
+            UserRegistrationService registrationService = new UserRegistrationService();
+            registrationService.RegisterUser(wallet, client, user, userId);
+        } catch (Exception e) {
+            System.out.println("An error occurred when registrating user");
+            System.err.println(e);
+        }
+    }
 
-    // X509EncodedKeySpec spec =
-    // new X509EncodedKeySpec(keyBytes);
-    // KeyFactory kf = KeyFactory.getInstance("RSA");
-    // return kf.generatePublic(spec);
-    // }
+    private User createUser(X509Identity identity) {
+
+        return new User() {
+
+            @Override
+            public String getName() {
+                return WalletFactory.adminEntityName;
+            }
+
+            @Override
+            public Set<String> getRoles() {
+                return null;
+            }
+
+            @Override
+            public String getAccount() {
+                return null;
+            }
+
+            @Override
+            public String getAffiliation() {
+                return affliation;
+            }
+
+            @Override
+            public Enrollment getEnrollment() {
+                return new Enrollment() {
+
+                    @Override
+                    public PrivateKey getKey() {
+                        return identity.getPrivateKey();
+                    }
+
+                    @Override
+                    public String getCert() {
+                        return Identities.toPemString(identity.getCertificate());
+                    }
+                };
+            }
+
+            @Override
+            public String getMspId() {
+                return mspId;
+            }
+
+        };
+    }
 }
