@@ -25,7 +25,7 @@ import app.factory.CaClientFactory;
 import app.factory.WalletFactory;
 
 class App {
-    public static final String userId = "appUser2";
+    public static final String userId = "appUser3";
     public static final String pemPath = "../blockchain/hlf2-network/organizations/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem";
     public static final String url = "https://localhost:7054";
     public static final String mspId = "Org1MSP";
