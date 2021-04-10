@@ -49,14 +49,14 @@ class App {
     }
 
     public void invokePeer() {
-        try{
+        try {
 
             Wallet wallet = WalletFactory.GetWallet(mspId);
             HFCAClient client = CaClientFactory.CreateCaClient(url, pemPath);
             tryEnrollAdmin(wallet, client);
             tryRegisterUser(wallet, client);
 
-        } catch(Exception e) {
+        } catch (Exception e) {
 
             System.out.println("An error occurred when fetching wallet or client");
             System.err.println(e);
@@ -67,8 +67,15 @@ class App {
 
             Network network = gateway.getNetwork(channel);
             Contract contract = network.getContract(contractName);
-            byte[] result = contract.evaluateTransaction("getPost", "POST1");
-            System.out.println("result: " + new String(result));
+
+            // transactions
+            System.out.println("\n[0] result: "
+                    + new String(contract.evaluateTransaction("getPointTransaction", "point_transaction_id_0")));
+
+            System.out.println("\n[1] result: " + new String(contract.submitTransaction("initLedger")));
+
+            System.out.println("\n[2] result: " + new String(contract.submitTransaction("publishNewPost", "future",
+                    "I am smart", "user007", "signature(user007)")));
 
         } catch (Exception e) {
 
@@ -100,7 +107,7 @@ class App {
     private void tryRegisterUser(Wallet wallet, HFCAClient client) {
         // Collection identities = client.getHFCAIdentities(user);
         // for (var identity : identities) {
-        //     if(identity.)
+        // if(identity.)
         // }
         try {
             User user = createUser((X509Identity) wallet.get(WalletFactory.adminEntityName));
