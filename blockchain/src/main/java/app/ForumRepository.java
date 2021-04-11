@@ -145,7 +145,7 @@ public final class ForumRepository implements ContractInterface {
      * @return postKeys
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public String getAllPostKeys(final Context ctx) {
+    public String[] getAllPostKeys(final Context ctx) {
         final ChaincodeStub stub = ctx.getStub();
         final var keyValueIterator = stub.getStateByPartialCompositeKey(new CompositeKey(Post.getObjectTypeName()));
         List<String> postKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
@@ -156,7 +156,7 @@ public final class ForumRepository implements ContractInterface {
                             .getTimestamp();
                     return leftPostTimestamp.compareToIgnoreCase(rightPostTimestamp);
                 }).map(keyVale -> keyVale.getKey()).collect(Collectors.toList());
-        return genson.serialize(postKeys);
+        return postKeys.toArray(String[]::new);
     }
 
     /**
@@ -167,7 +167,7 @@ public final class ForumRepository implements ContractInterface {
      * @return
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public String getAllPostKeysByUserId(Context ctx, String userId) {
+    public String[] getAllPostKeysByUserId(Context ctx, String userId) {
         final ChaincodeStub stub = ctx.getStub();
         final var keyValueIterator = stub.getStateByPartialCompositeKey(Post.getObjectTypeName(), userId);
         List<String> postKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
@@ -178,7 +178,7 @@ public final class ForumRepository implements ContractInterface {
                             .getTimestamp();
                     return leftPostTimestamp.compareToIgnoreCase(rightPostTimestamp);
                 }).map(keyValue -> keyValue.getKey()).collect(Collectors.toList());
-        return genson.serialize(postKeys);
+        return postKeys.toArray(String[]::new);
     }
 
     /**
