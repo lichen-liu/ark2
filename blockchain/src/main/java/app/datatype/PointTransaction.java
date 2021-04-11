@@ -4,9 +4,12 @@ import com.owlike.genson.annotation.JsonProperty;
 
 import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
+import org.hyperledger.fabric.shim.ledger.CompositeKey;
+
+import app.util.KeyGeneration;
 
 @DataType
-public final class PointTransaction {
+public final class PointTransaction implements KeyGeneration {
     @Property
     private final String timestamp;
 
@@ -57,5 +60,15 @@ public final class PointTransaction {
         this.reference = reference;
         this.signature = signature;
         this.outgoingTransactionElements = outgoingTransactionElements;
+    }
+
+    @Override
+    public String generateKey(final String salt) {
+        return new CompositeKey(getObjectTypeName(), this.getIncomingTransactionElement().getUserId(), signature, salt)
+                .toString();
+    }
+
+    public static String getObjectTypeName() {
+        return "POINT_TRANSACTION";
     }
 }
