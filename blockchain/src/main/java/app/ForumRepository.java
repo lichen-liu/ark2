@@ -12,7 +12,6 @@ import org.hyperledger.fabric.contract.annotation.Contract;
 import org.hyperledger.fabric.contract.annotation.Default;
 import org.hyperledger.fabric.contract.annotation.Info;
 import org.hyperledger.fabric.contract.annotation.Transaction;
-import org.hyperledger.fabric.shim.ChaincodeException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
@@ -20,6 +19,7 @@ import app.datatype.Like;
 import app.datatype.PointTransaction;
 import app.datatype.PointTransactionElement;
 import app.datatype.Post;
+import app.util.ChaincodeStubTools;
 
 @Contract(name = "Agreements", info = @Info(title = "Agreements contract", description = "A java chaincode example", version = "0.0.1-SNAPSHOT"))
 
@@ -49,26 +49,6 @@ public final class ForumRepository implements ContractInterface {
     }
 
     // @Transaction()
-    // public Post createPost(final Context ctx, final String key, final String id,
-    // final String timestamp,
-    // final String content, final String signature) {
-    // ChaincodeStub stub = ctx.getStub();
-    // String postState = tryGetStateByKey(stub, key);
-
-    // if (!postState.isEmpty()) {
-    // String errorMessage = String.format("Post %s already exists", id);
-    // System.out.println(errorMessage);
-    // throw new ChaincodeException(errorMessage, "Post already exists");
-    // }
-
-    // Post post = new Post(id, timestamp, content, signature);
-    // postState = genson.serialize(post);
-    // stub.putStringState(key, postState);
-
-    // return post;
-    // }
-
-    // @Transaction()
     // public Post changePostContent(final Context ctx, final String id, final
     // String newContent) {
     // ChaincodeStub stub = ctx.getStub();
@@ -90,25 +70,10 @@ public final class ForumRepository implements ContractInterface {
     public PointTransaction getPointTransaction(final Context ctx, final String key) {
         final ChaincodeStub stub = ctx.getStub();
 
-        return genson.deserialize(tryGetStringByKey(stub, key), PointTransaction.class);
+        return genson.deserialize(ChaincodeStubTools.tryGetStringStateByKey(stub, key), PointTransaction.class);
     }
 
-    /* REVIEWED */
-    /**
-     * 
-     * @param stub
-     * @param key
-     * @return
-     */
-    private String tryGetStringByKey(final ChaincodeStub stub, final String key) {
-        final String state = stub.getStringState(key);
-        if (state.isEmpty()) {
-            final String errorMessage = String.format("State %s does not exist", key);
-            System.out.println(errorMessage);
-            throw new ChaincodeException(errorMessage, "State not found");
-        }
-        return state;
-    }
+    /* FORMAL */
 
     /**
      * 
@@ -190,10 +155,7 @@ public final class ForumRepository implements ContractInterface {
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public Post getPostByKey(final Context ctx, final String postKey) {
         final ChaincodeStub stub = ctx.getStub();
-        final String postString = this.tryGetStringByKey(stub, postKey);
-
-        final Post post = genson.deserialize(postString, Post.class);
-
-        return post;
+        final String postString = ChaincodeStubTools.tryGetStringStateByKey(stub, postKey);
+        return genson.deserialize(postString, Post.class);
     }
 }
