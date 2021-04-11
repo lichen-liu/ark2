@@ -6,10 +6,11 @@ import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
+import app.util.ComparableByTimestamp;
 import app.util.KeyGeneration;
 
 @DataType
-public final class PointTransaction implements KeyGeneration {
+public final class PointTransaction implements KeyGeneration, ComparableByTimestamp {
     @Property
     private final String timestamp;
 
@@ -31,6 +32,7 @@ public final class PointTransaction implements KeyGeneration {
     @Property
     private final PointTransactionElement[] outgoingTransactionElements;
 
+    @Override
     public String getTimestamp() {
         return timestamp;
     }
