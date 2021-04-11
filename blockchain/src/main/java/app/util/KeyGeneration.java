@@ -14,7 +14,7 @@ public interface KeyGeneration {
      * @param salt extra field in the composite key for uniqueness
      * @return composite key in String
      */
-    public CompositeKey generateCompositeKey(final String salt);
+    public abstract CompositeKey generateCompositeKey(final String salt);
 
     public default String generateKey(final String salt) {
         return generateCompositeKey(salt).toString();
