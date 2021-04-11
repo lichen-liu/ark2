@@ -19,6 +19,12 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
     private final PointTransactionElement incomingTransactionElement;
 
     /**
+     * The issuerUserId for this PointTransaction. Also the verficationKey of the
+     * signature.
+     */
+    private final String issuerUserId;
+
+    /**
      * A user specified reference number, can be arbitrary
      */
     @Property
@@ -64,6 +70,10 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
         return incomingTransactionElement;
     }
 
+    public String getIssuerUserId() {
+        return issuerUserId;
+    }
+
     public String getReference() {
         return reference;
     }
@@ -91,13 +101,15 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
 
     public PointTransaction(@JsonProperty("timestamp") final String timestamp,
             @JsonProperty("incomingTransactionElement") final PointTransactionElement incomingTransactionElement,
-            @JsonProperty("reference") final String reference, @JsonProperty("signature") final String signature,
+            @JsonProperty("issuerUserId") final String issuerUserId, @JsonProperty("reference") final String reference,
+            @JsonProperty("signature") final String signature,
             @JsonProperty("outgoingTransactionElements") final PointTransactionElement[] outgoingTransactionElements,
             @JsonProperty("relativeOrder") final long relativeOrder,
             @JsonProperty("recentSpendingPointTransactionKey") final String recentSpendingPointTransactionKey,
             @JsonProperty("recentEarningPointTransactionKeys") final String[] recentEarningPointTransactionKeys) {
         this.timestamp = timestamp;
         this.incomingTransactionElement = incomingTransactionElement;
+        this.issuerUserId = issuerUserId;
         this.reference = reference;
         this.signature = signature;
         this.outgoingTransactionElements = outgoingTransactionElements;
