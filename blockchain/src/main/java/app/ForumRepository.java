@@ -12,6 +12,7 @@ import org.hyperledger.fabric.contract.annotation.Contract;
 import org.hyperledger.fabric.contract.annotation.Default;
 import org.hyperledger.fabric.contract.annotation.Info;
 import org.hyperledger.fabric.contract.annotation.Transaction;
+import org.hyperledger.fabric.shim.ChaincodeException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
@@ -94,8 +95,11 @@ public final class ForumRepository implements ContractInterface {
             final String signature) {
         final ChaincodeStub stub = ctx.getStub();
 
-        // TODO: verify signature
         final Post post = new Post(timestamp, content, userId, signature);
+        if (!post.isMatchingSignature()) {
+            final String errorMessage = genson.serialize(post) + " has non-matching signature";
+            throw new ChaincodeException(errorMessage, errorMessage);
+        }
         final String postKey = post.generateKey(key -> ChaincodeStubTools.isKeyExisted(stub, key));
 
         stub.putStringState(postKey, genson.serialize(post));

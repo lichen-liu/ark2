@@ -13,7 +13,7 @@ public class ChaincodeStubTools {
         if (state.isEmpty()) {
             final String errorMessage = String.format("State %s does not exist", key);
             System.out.println(errorMessage);
-            throw new ChaincodeException(errorMessage, "State not found");
+            throw new ChaincodeException(errorMessage, errorMessage);
         }
         return state;
     }
