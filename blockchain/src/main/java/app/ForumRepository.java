@@ -17,6 +17,8 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
 import app.datatype.Like;
+import app.datatype.PointTransaction;
+import app.datatype.PointTransactionElement;
 import app.datatype.Post;
 import app.util.ChaincodeStubTools;
 
@@ -30,6 +32,15 @@ public final class ForumRepository implements ContractInterface {
 
     @Transaction(intent = Transaction.TYPE.SUBMIT)
     public void initLedger(final Context ctx) throws Exception {
+        // final ChaincodeStub stub = ctx.getStub();
+        // final PointTransaction pointTransaction = new PointTransaction("now", new
+        // PointTransactionElement("user0", 100),
+        // "ref", "sig", new PointTransactionElement[] { new
+        // PointTransactionElement("user1", 50),
+        // new PointTransactionElement("user2", 50) });
+        // stub.putStringState("point_transaction_id_0",
+        // genson.serialize(pointTransaction));
+
         // real API
         this.publishNewPost(ctx, "future0", "I am smart", "user007", "signature(user007)");
         this.publishNewPost(ctx, "future1", "I am very smart", "user008", "signature(user008)");
