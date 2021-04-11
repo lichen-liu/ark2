@@ -170,6 +170,12 @@ public final class ForumRepository implements ContractInterface {
         return totalPointAmount;
     }
 
+    /**
+     * 
+     * @param ctx
+     * @return
+     * @throws Exception
+     */
     private long determineRelativeOrderForPost(final Context ctx) throws Exception {
         final String[] keys = this.getAllPostKeys(ctx);
         if (keys.length == 0) {
@@ -179,6 +185,13 @@ public final class ForumRepository implements ContractInterface {
         return Math.max(keys.length, recentPost.getRelativeOrder() + 1);
     }
 
+    /**
+     * 
+     * @param ctx
+     * @param postKey
+     * @return
+     * @throws Exception
+     */
     private long determineRelativeOrderForLike(final Context ctx, final String postKey) throws Exception {
         final String[] keys = this.getAllLikeKeysByPostKey(ctx, postKey);
         if (keys.length == 0) {
