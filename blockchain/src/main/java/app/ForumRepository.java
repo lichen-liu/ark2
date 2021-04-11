@@ -49,33 +49,6 @@ public final class ForumRepository implements ContractInterface {
         System.out.println("initLedger DONE!");
     }
 
-    // @Transaction()
-    // public Post changePostContent(final Context ctx, final String id, final
-    // String newContent) {
-    // ChaincodeStub stub = ctx.getStub();
-    // String postState = tryGetStateByKey(stub, id);
-
-    // Post post = genson.deserialize(postState, Post.class);
-    // Post newPost = new Post(post.getPostId(), post.getTimestamp(), newContent,
-    // post.getSignature());
-    // String newPostState = genson.serialize(newPost);
-
-    // stub.putStringState(id, newPostState);
-
-    // return newPost;
-    // }
-
-    // endregion
-
-    @Transaction()
-    public PointTransaction getPointTransaction(final Context ctx, final String key) {
-        final ChaincodeStub stub = ctx.getStub();
-
-        return genson.deserialize(ChaincodeStubTools.tryGetStringStateByKey(stub, key), PointTransaction.class);
-    }
-
-    /* FORMAL */
-
     /**
      * 
      * @param ctx
