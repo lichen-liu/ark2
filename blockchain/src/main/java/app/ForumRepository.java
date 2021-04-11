@@ -113,11 +113,11 @@ public final class ForumRepository implements ContractInterface {
     public String[] getAllPostKeys(final Context ctx) {
         final ChaincodeStub stub = ctx.getStub();
         final var keyValueIterator = stub.getStateByPartialCompositeKey(new CompositeKey(Post.getObjectTypeName()));
-        List<String> postKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
+        final List<String> postKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
                 .sorted((keyValueLeft, keyValueRight) -> {
-                    String leftPostTimestamp = genson.deserialize(keyValueLeft.getStringValue(), Post.class)
+                    final String leftPostTimestamp = genson.deserialize(keyValueLeft.getStringValue(), Post.class)
                             .getTimestamp();
-                    String rightPostTimestamp = genson.deserialize(keyValueRight.getStringValue(), Post.class)
+                    final String rightPostTimestamp = genson.deserialize(keyValueRight.getStringValue(), Post.class)
                             .getTimestamp();
                     return leftPostTimestamp.compareToIgnoreCase(rightPostTimestamp);
                 }).map(keyVale -> keyVale.getKey()).collect(Collectors.toList());
@@ -132,14 +132,14 @@ public final class ForumRepository implements ContractInterface {
      * @return
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public String[] getAllPostKeysByUserId(Context ctx, String userId) {
+    public String[] getAllPostKeysByUserId(final Context ctx, final String userId) {
         final ChaincodeStub stub = ctx.getStub();
         final var keyValueIterator = stub.getStateByPartialCompositeKey(Post.getObjectTypeName(), userId);
-        List<String> postKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
+        final List<String> postKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
                 .sorted((keyValueLeft, keyValueRight) -> {
-                    String leftPostTimestamp = genson.deserialize(keyValueLeft.getStringValue(), Post.class)
+                    final String leftPostTimestamp = genson.deserialize(keyValueLeft.getStringValue(), Post.class)
                             .getTimestamp();
-                    String rightPostTimestamp = genson.deserialize(keyValueRight.getStringValue(), Post.class)
+                    final String rightPostTimestamp = genson.deserialize(keyValueRight.getStringValue(), Post.class)
                             .getTimestamp();
                     return leftPostTimestamp.compareToIgnoreCase(rightPostTimestamp);
                 }).map(keyValue -> keyValue.getKey()).collect(Collectors.toList());
@@ -157,5 +157,11 @@ public final class ForumRepository implements ContractInterface {
         final ChaincodeStub stub = ctx.getStub();
         final String postString = ChaincodeStubTools.tryGetStringStateByKey(stub, postKey);
         return genson.deserialize(postString, Post.class);
+    }
+
+    @Transaction(intent = Transaction.TYPE.EVALUATE)
+    public String[] getAllLikeKeysByPostKey(final Context ctx, final String postKey) {
+        final ChaincodeStub stub = ctx.getStub();
+        return null;
     }
 }
