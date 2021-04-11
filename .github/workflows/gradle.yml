@@ -9,11 +9,13 @@ on:
     paths:
       - '**.java'
       - '**.gradle'
+      - '.github/workflows/**'
   pull_request:
     branches: [ main ]
     paths:
       - '**.java'
       - '**.gradle'
+      - '.github/workflows/**'
 
 jobs:
   build:
