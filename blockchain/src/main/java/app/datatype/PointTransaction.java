@@ -66,6 +66,7 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
 
     @Override
     public String generateKey(final String salt) {
+        // relativeOrder
         return new CompositeKey(getObjectTypeName(), this.getIncomingTransactionElement().getUserId(), signature, salt)
                 .toString();
     }
