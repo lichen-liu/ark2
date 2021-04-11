@@ -3,8 +3,6 @@ package app;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -26,39 +24,42 @@ import org.hyperledger.fabric.gateway.X509Identity;
 
 public class AppPeer {
 
-    private Contract contract;
-    private PrivateKey privateKey;
-    private PublicKey publicKey;
+    private final Contract contract;
+    private final PrivateKey privateKey;
+    private final PublicKey publicKey;
 
-    public AppPeer(Wallet wallet, Contract contract, String userId) throws InvalidKeySpecException, IOException {
+    public AppPeer(final Wallet wallet, final Contract contract, final String userId)
+            throws InvalidKeySpecException, IOException {
         this.contract = contract;
 
-        X509Identity adminIdentity = (X509Identity) wallet.get(userId);
+        final X509Identity adminIdentity = (X509Identity) wallet.get(userId);
 
         this.privateKey = adminIdentity.getPrivateKey();
         this.publicKey = adminIdentity.getCertificate().getPublicKey();
     }
 
-    public String publishNewPost(String content) throws ContractException, TimeoutException, InterruptedException, InvalidKeyException, NoSuchAlgorithmException, SignatureException{
+    public String publishNewPost(final String content) throws ContractException, TimeoutException, InterruptedException,
+            InvalidKeyException, NoSuchAlgorithmException, SignatureException {
 
-        var timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
+        final var timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
 
-        var hash = getSHA(String.join("", timestamp, content, privateKey.toString()));
-        
+        final var hash = getSHA(String.join("", timestamp, content, privateKey.toString()));
+
         assert privateKey.getAlgorithm() == "ECDSA" : "The private key is not in ECDSA format";
 
-        Signature sig = Signature.getInstance("SHA256withECDSA");
+        final Signature sig = Signature.getInstance("SHA256withECDSA");
         sig.initSign(privateKey);
         sig.update(hash.getBytes());
 
-        var signature = sig.sign();
+        final var signature = sig.sign();
 
-        Signature sig2 = Signature.getInstance("SHA256withECDSA");
+        final Signature sig2 = Signature.getInstance("SHA256withECDSA");
         sig2.initVerify(publicKey);
         sig2.update(hash.getBytes());
         assert sig2.verify(signature) : "Signature not correct";
 
-        return new String(contract.submitTransaction("publishNewPost", timestamp, content, bytesToHexString(publicKey.getEncoded()), bytesToHexString(sig.sign())));        
+        return new String(contract.submitTransaction("publishNewPost", timestamp, content,
+                bytesToHexString(publicKey.getEncoded()), bytesToHexString(sig.sign())));
     }
 
     public Iterable<String> fetchUserPosts() {
@@ -68,29 +69,26 @@ public class AppPeer {
     public String fetchAllPosts() throws ContractException {
         return new String(contract.evaluateTransaction("getAllPostKeys"));
     }
-    
-    public final Contract getContract(){
+
+    public final Contract getContract() {
         return this.contract;
     }
 
-    public static String getSHA(String input) throws NoSuchAlgorithmException
-    { 
-        MessageDigest md = MessageDigest.getInstance("SHA-256"); 
-        var hash = md.digest(input.getBytes(StandardCharsets.UTF_8)); 
+    public static String getSHA(final String input) throws NoSuchAlgorithmException {
+        final MessageDigest md = MessageDigest.getInstance("SHA-256");
+        final var hash = md.digest(input.getBytes(StandardCharsets.UTF_8));
 
         return bytesToHexString(hash);
     }
 
-    public static String bytesToHexString(byte[] bytes)
-    {
-        BigInteger number = new BigInteger(1, bytes); 
-        StringBuilder hexString = new StringBuilder(number.toString(16)); 
-  
-        while (hexString.length() < 32) 
-        { 
-            hexString.insert(0, '0'); 
-        } 
-  
-        return hexString.toString(); 
+    public static String bytesToHexString(final byte[] bytes) {
+        final BigInteger number = new BigInteger(1, bytes);
+        final StringBuilder hexString = new StringBuilder(number.toString(16));
+
+        while (hexString.length() < 32) {
+            hexString.insert(0, '0');
+        }
+
+        return hexString.toString();
     }
 }

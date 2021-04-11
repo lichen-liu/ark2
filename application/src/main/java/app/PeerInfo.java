@@ -2,12 +2,13 @@ package app;
 
 public class PeerInfo {
 
-    public PeerInfo(String mpsId, String affliation, String channel, String contractName, String adminName, 
-    String adminSecret, String hostName, String profile, String userId, String pemPath, String caUrl) {
+    public PeerInfo(final String mpsId, final String affliation, final String channel, final String contractName,
+            final String adminName, final String adminSecret, final String hostName, final String profile,
+            final String userId, final String pemPath, final String caUrl) {
         this.mpsId = mpsId;
         this.affliation = affliation;
         this.channel = channel;
-        this.contractName = contractName;    
+        this.contractName = contractName;
         this.adminName = adminName;
         this.adminSecret = adminSecret;
         this.hostName = hostName;
@@ -18,12 +19,13 @@ public class PeerInfo {
     }
 
     // Without a default constructor, Jackson will throw an exception
-    public PeerInfo() {}
+    public PeerInfo() {
+    }
 
     private String mpsId;
     private String affliation;
     private String channel;
-    private String contractName;    
+    private String contractName;
     private String adminName;
     private String adminSecret;
     private String hostName;
@@ -31,7 +33,7 @@ public class PeerInfo {
     private String userId;
     private String pemPath;
     private String caUrl;
-    
+
     @Override
     public String toString() {
         return "";

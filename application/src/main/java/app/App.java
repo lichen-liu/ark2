@@ -1,14 +1,14 @@
 package app;
 
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.PrivateKey;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.*;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.Gateway;
@@ -24,20 +24,20 @@ import app.factory.CaClientFactory;
 import app.factory.WalletFactory;
 import app.service.AdminEnrollmentService;
 import app.service.UserRegistrationService;
-
 import app.utils.KeyParser;
+
 class App {
 
     static {
         System.setProperty("org.hyperledger.fabric.sdk.service_discovery.as_localhost", "true");
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         // Conf conf = new Conf();
         // System.out.println(conf);
 
         // AppServer server = new AppServer(conf.getAppServerSocketAddress());
-        App app = new App();
+        final App app = new App();
         app.invokeAppPeer();
     }
 
@@ -46,55 +46,55 @@ class App {
 
     public void invokeAppPeer() {
 
-        File file = new File("peer.yaml");
-        ObjectMapper om = new ObjectMapper(new YAMLFactory());
+        final File file = new File("peer.yaml");
+        final ObjectMapper om = new ObjectMapper(new YAMLFactory());
 
         try {
 
-            PeerInfo peerInfo = om.readValue(file, PeerInfo.class);
-            Wallet wallet = WalletFactory.GetWallet(peerInfo.getAdminName());
-            HFCAClient client = CaClientFactory.CreateCaClient(peerInfo.getCaUrl(), peerInfo.getPemPath());
+            final PeerInfo peerInfo = om.readValue(file, PeerInfo.class);
+            final Wallet wallet = WalletFactory.GetWallet(peerInfo.getAdminName());
+            final HFCAClient client = CaClientFactory.CreateCaClient(peerInfo.getCaUrl(), peerInfo.getPemPath());
 
             tryEnrollAdmin(wallet, client, peerInfo);
             tryRegisterUser(wallet, client, peerInfo);
 
-            Path networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations", "peerOrganizations",
-            "org1.example.com", "connection-org1.yaml");
+            final Path networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
+                    "peerOrganizations", "org1.example.com", "connection-org1.yaml");
 
-            X509Identity adminIdentity = (X509Identity) wallet.get(peerInfo.getUserId());
+            final X509Identity adminIdentity = (X509Identity) wallet.get(peerInfo.getUserId());
 
             adminIdentity.getCertificate().getPublicKey();
             adminIdentity.getPrivateKey();
-    
-            Gateway.Builder builder = Gateway.createBuilder();
+
+            final Gateway.Builder builder = Gateway.createBuilder();
             try {
                 builder.identity(wallet, peerInfo.getUserId()).networkConfig(networkConfigPath).discovery(true);
-            } catch(IOException e) {
+            } catch (final IOException e) {
                 throw e;
             }
-    
-            Gateway gateway = builder.connect();
-            Network network = gateway.getNetwork(peerInfo.getChannel());
-            Contract contract = network.getContract(peerInfo.getContractName());
 
-            KeyParser keyParser = new KeyParser(peerInfo.getPemPath(), "RSA", "BC");
+            final Gateway gateway = builder.connect();
+            final Network network = gateway.getNetwork(peerInfo.getChannel());
+            final Contract contract = network.getContract(peerInfo.getContractName());
 
-            var peer = new AppPeer(wallet, contract, peerInfo.getUserId());
+            final KeyParser keyParser = new KeyParser(peerInfo.getPemPath(), "RSA", "BC");
+
+            final var peer = new AppPeer(wallet, contract, peerInfo.getUserId());
             System.out.println(peer.publishNewPost("hahaha"));
             System.out.println(peer.fetchAllPosts());
 
-            CCTesting t = new CCTesting();
+            final CCTesting t = new CCTesting();
             t.test(peer.getContract());
 
-        } catch (Exception e) {
+        } catch (final Exception e) {
             System.out.println("An error occurred when fetching wallet or client");
             System.err.println(e);
         }
     }
 
-    private void tryEnrollAdmin(Wallet wallet, HFCAClient client, PeerInfo peer) {
+    private void tryEnrollAdmin(final Wallet wallet, final HFCAClient client, final PeerInfo peer) {
 
-        var entity = new AdminEnrollmentService.Entity();
+        final var entity = new AdminEnrollmentService.Entity();
         entity.adminName = peer.getAdminName();
         entity.adminSecret = peer.getAdminSecret();
         entity.hostName = peer.getHostName();
@@ -102,33 +102,33 @@ class App {
         entity.profile = peer.getProfile();
 
         try {
-            var enrollmentService = new AdminEnrollmentService(wallet, client);
+            final var enrollmentService = new AdminEnrollmentService(wallet, client);
             enrollmentService.EnrollAdmin(entity);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             System.out.println("An error occurred when enrolling admin");
             System.err.println(e);
         }
     }
 
-    private void tryRegisterUser(Wallet wallet, HFCAClient client, PeerInfo peer) throws Exception {
+    private void tryRegisterUser(final Wallet wallet, final HFCAClient client, final PeerInfo peer) throws Exception {
 
-        User adminUser = createUser((X509Identity) wallet.get(peer.getAdminName()), peer);
-        var identities = client.getHFCAIdentities(adminUser);
-        for (var identity : identities) {
+        final User adminUser = createUser((X509Identity) wallet.get(peer.getAdminName()), peer);
+        final var identities = client.getHFCAIdentities(adminUser);
+        for (final var identity : identities) {
             if (identity.getEnrollmentId().equals(peer.getUserId()))
                 return;
         }
 
         try {
-            var registrationService = new UserRegistrationService(wallet, client);
+            final var registrationService = new UserRegistrationService(wallet, client);
             registrationService.RegisterUser(adminUser, peer.getUserId());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             System.out.println("An error occurred when registrating user");
             System.err.println(e);
         }
     }
 
-    private User createUser(X509Identity identity, PeerInfo peer) {
+    private User createUser(final X509Identity identity, final PeerInfo peer) {
 
         return new User() {
 

@@ -169,7 +169,7 @@ public final class ForumRepository implements ContractInterface {
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public double getPointAmountByUserId(final Context ctx, final String userId) {
         final ChaincodeStub stub = ctx.getStub();
-        double totalPointAmount = 0;
+        final double totalPointAmount = 0;
         // TODO
         return totalPointAmount;
     }

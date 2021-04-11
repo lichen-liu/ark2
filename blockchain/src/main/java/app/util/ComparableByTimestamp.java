@@ -11,7 +11,7 @@ public interface ComparableByTimestamp {
      */
     public abstract String getTimestampString();
 
-    public default int compareToByTimestamp(ComparableByTimestamp other) {
+    public default int compareToByTimestamp(final ComparableByTimestamp other) {
         return getTimestampString().compareToIgnoreCase(other.getTimestampString());
     }
 }
