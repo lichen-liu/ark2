@@ -13,7 +13,7 @@ import app.util.SignatureVerification;
 
 @DataType
 public final class Post
-        implements KeyGeneration, ComparableByTimestamp, SignatureVerification, ComparableByRelativeOrder {
+        implements KeyGeneration, ComparableByTimestamp, ComparableByRelativeOrder, SignatureVerification {
     @Property()
     private final String timestamp;
 
@@ -69,7 +69,7 @@ public final class Post
 
     @Override
     public String generateKey(final String salt) {
-        return new CompositeKey(getObjectTypeName(), userId, signature, salt).toString();
+        return new CompositeKey(getObjectTypeName(), userId, String.valueOf(relativeOrder), salt).toString();
     }
 
     public static String getObjectTypeName() {

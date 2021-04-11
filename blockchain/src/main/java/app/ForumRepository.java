@@ -18,7 +18,6 @@ import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
 import app.datatype.Like;
 import app.datatype.PointTransaction;
-import app.datatype.PointTransactionElement;
 import app.datatype.Post;
 import app.util.ChaincodeStubTools;
 
@@ -173,6 +172,68 @@ public final class ForumRepository implements ContractInterface {
         return genson.deserialize(likeString, Like.class);
     }
 
+    /**
+     * Sorted by relativeOrder, most recent first
+     * 
+     * @param ctx
+     * @return
+     * @throws Exception
+     */
+    @Transaction(intent = Transaction.TYPE.EVALUATE)
+    public String[] getAllPointTransactionKeys(final Context ctx) throws Exception {
+        final ChaincodeStub stub = ctx.getStub();
+        final var keyValueIterator = stub
+                .getStateByPartialCompositeKey(new CompositeKey(PointTransaction.getObjectTypeName()));
+        final List<String> pointTransactionKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
+                .sorted((keyValueLeft, keyValueRight) -> {
+                    final var leftPointTransaction = genson.deserialize(keyValueLeft.getStringValue(),
+                            PointTransaction.class);
+                    final var rightPointTransaction = genson.deserialize(keyValueRight.getStringValue(),
+                            PointTransaction.class);
+                    return rightPointTransaction.compareToByRelativeOrder(leftPointTransaction);
+                }).map(keyValue -> keyValue.getKey()).collect(Collectors.toList());
+        keyValueIterator.close();
+        return pointTransactionKeys.toArray(String[]::new);
+    }
+
+    /**
+     * Sorted by relativeOrder, most recent first
+     * 
+     * @param ctx
+     * @param payerUserId
+     * @return
+     * @throws Exception
+     */
+    @Transaction(intent = Transaction.TYPE.EVALUATE)
+    public String[] getAllPointTransactionKeysByUserId(final Context ctx, final String payerUserId) throws Exception {
+        final ChaincodeStub stub = ctx.getStub();
+        final var keyValueIterator = stub.getStateByPartialCompositeKey(PointTransaction.getObjectTypeName(),
+                payerUserId);
+        final List<String> pointTransactionKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
+                .sorted((keyValueLeft, keyValueRight) -> {
+                    final var leftPointTransaction = genson.deserialize(keyValueLeft.getStringValue(),
+                            PointTransaction.class);
+                    final var rightPointTransaction = genson.deserialize(keyValueRight.getStringValue(),
+                            PointTransaction.class);
+                    return rightPointTransaction.compareToByRelativeOrder(leftPointTransaction);
+                }).map(keyValue -> keyValue.getKey()).collect(Collectors.toList());
+        keyValueIterator.close();
+        return pointTransactionKeys.toArray(String[]::new);
+    }
+
+    /**
+     * 
+     * @param ctx
+     * @param pointTransactionKey
+     * @return
+     */
+    @Transaction(intent = Transaction.TYPE.EVALUATE)
+    public PointTransaction getPointTransactionByKey(final Context ctx, final String pointTransactionKey) {
+        final ChaincodeStub stub = ctx.getStub();
+        final String pointTransactionString = ChaincodeStubTools.tryGetStringStateByKey(stub, pointTransactionKey);
+        return genson.deserialize(pointTransactionString, PointTransaction.class);
+    }
+
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public double getPointAmountByUserId(final Context ctx, final String userId) {
         final ChaincodeStub stub = ctx.getStub();
@@ -210,5 +271,20 @@ public final class ForumRepository implements ContractInterface {
         }
         final Like recentLike = this.getLikeByKey(ctx, keys[0]);
         return Math.max(keys.length, recentLike.getRelativeOrder() + 1);
+    }
+
+    /**
+     * 
+     * @param ctx
+     * @return
+     * @throws Exception
+     */
+    private long determineRelativeOrderForPointTransaction(final Context ctx) throws Exception {
+        final String[] keys = this.getAllPointTransactionKeys(ctx);
+        if (keys.length == 0) {
+            return 0L;
+        }
+        final PointTransaction recentPointTransaction = this.getPointTransactionByKey(ctx, keys[0]);
+        return Math.max(keys.length, recentPointTransaction.getRelativeOrder() + 1);
     }
 }

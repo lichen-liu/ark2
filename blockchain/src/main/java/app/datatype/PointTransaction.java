@@ -6,10 +6,12 @@ import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
+import app.util.ComparableByRelativeOrder;
+import app.util.ComparableByTimestamp;
 import app.util.KeyGeneration;
 
 @DataType
-public final class PointTransaction implements KeyGeneration {
+public final class PointTransaction implements KeyGeneration, ComparableByTimestamp, ComparableByRelativeOrder {
     @Property
     private final String timestamp;
 
@@ -31,6 +33,10 @@ public final class PointTransaction implements KeyGeneration {
     @Property
     private final PointTransactionElement[] outgoingTransactionElements;
 
+    @Property
+    private final long relativeOrder;
+
+    @Override
     public String getTimestamp() {
         return timestamp;
     }
@@ -51,21 +57,28 @@ public final class PointTransaction implements KeyGeneration {
         return outgoingTransactionElements;
     }
 
+    @Override
+    public long getRelativeOrder() {
+        return relativeOrder;
+    }
+
     public PointTransaction(@JsonProperty("timestamp") final String timestamp,
             @JsonProperty("incomingTransactionElement") final PointTransactionElement incomingTransactionElement,
             @JsonProperty("reference") final String reference, @JsonProperty("signature") final String signature,
-            @JsonProperty("outgoingTransactionElements") final PointTransactionElement[] outgoingTransactionElements) {
+            @JsonProperty("outgoingTransactionElements") final PointTransactionElement[] outgoingTransactionElements,
+            @JsonProperty("relativeOrder") final long relativeOrder) {
         this.timestamp = timestamp;
         this.incomingTransactionElement = incomingTransactionElement;
         this.reference = reference;
         this.signature = signature;
         this.outgoingTransactionElements = outgoingTransactionElements;
+        this.relativeOrder = relativeOrder;
     }
 
     @Override
     public String generateKey(final String salt) {
-        return new CompositeKey(getObjectTypeName(), this.getIncomingTransactionElement().getUserId(), signature, salt)
-                .toString();
+        return new CompositeKey(getObjectTypeName(), this.getIncomingTransactionElement().getUserId(),
+                String.valueOf(relativeOrder), salt).toString();
     }
 
     public static String getObjectTypeName() {
