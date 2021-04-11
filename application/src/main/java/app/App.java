@@ -80,11 +80,8 @@ class App {
             final KeyParser keyParser = new KeyParser(peerInfo.getPemPath(), "RSA", "BC");
 
             final var peer = new AppPeer(wallet, contract, peerInfo.getUserId());
-            System.out.println(peer.publishNewPost("hahaha"));
-            System.out.println(peer.fetchAllPosts());
-
-            final CCTesting t = new CCTesting();
-            t.test(peer.getContract());
+            final var t = new CCTesting();
+            t.test(peer);
 
         } catch (final Exception e) {
             System.out.println("An error occurred when fetching wallet or client");
