@@ -4,9 +4,13 @@ import com.owlike.genson.annotation.JsonProperty;
 
 import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
+import org.hyperledger.fabric.shim.ledger.CompositeKey;
+
+import app.util.ComparableByTimestamp;
+import app.util.KeyGeneration;
 
 @DataType
-public final class Like {
+public final class Like implements KeyGeneration, ComparableByTimestamp {
     @Property
     private final String timestamp;
 
@@ -57,5 +61,19 @@ public final class Like {
         this.userId = userId;
         this.pointTransactionKey = pointTransactionKey;
         this.signature = signature;
+    }
+
+    @Override
+    public CompositeKey generateCompositeKey(final String salt) {
+        return new CompositeKey(getObjectTypeName(), postKey, signature, salt);
+    }
+
+    public static String getObjectTypeName() {
+        return "LIKE";
+    }
+
+    @Override
+    public String getTimestampString() {
+        return this.getTimestamp();
     }
 }
