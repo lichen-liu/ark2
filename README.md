@@ -1,6 +1,12 @@
 # ark2
 Anonymous Blockchain-Based Forum
 
+[![Build Status][actions-badge]][actions-url]
+
+
+[actions-badge]: https://github.com/lichen-liu/ark2/workflows/java_gradle_build/badge.svg
+[actions-url]: https://github.com/lichen-liu/ark2/actions?query=workflow%3Ajava_gradle_build
+
 # Requirements
 
 ## Gradle
