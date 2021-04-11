@@ -24,13 +24,13 @@ import org.hyperledger.fabric.gateway.ContractException;
 import org.hyperledger.fabric.gateway.Wallet;
 import org.hyperledger.fabric.gateway.X509Identity;
 
-public class Peer {
+public class AppPeer {
 
     private Contract contract;
     private PrivateKey privateKey;
     private PublicKey publicKey;
 
-    public Peer(Wallet wallet, Contract contract, String userId) throws InvalidKeySpecException, IOException {
+    public AppPeer(Wallet wallet, Contract contract, String userId) throws InvalidKeySpecException, IOException {
         this.contract = contract;
 
         X509Identity adminIdentity = (X509Identity) wallet.get(userId);
