@@ -21,10 +21,10 @@ import org.hyperledger.fabric.sdk.User;
 import org.hyperledger.fabric_ca.sdk.HFCAClient;
 
 import app.factory.CaClientFactory;
+import app.factory.ContractFactory;
 import app.factory.WalletFactory;
 import app.service.AdminEnrollmentService;
 import app.service.UserRegistrationService;
-import app.utils.KeyParser;
 
 class App {
 
@@ -58,30 +58,18 @@ class App {
             tryEnrollAdmin(wallet, client, peerInfo);
             tryRegisterUser(wallet, client, peerInfo);
 
-            final Path networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
-                    "peerOrganizations", "org1.example.com", "connection-org1.yaml");
+            var contractCreation = new ContractFactory.Entity();
+            contractCreation.userId = peerInfo.getUserId();
+            contractCreation.channel = peerInfo.getChannel();
+            contractCreation.contractName = peerInfo.getContractName();
+            contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
+            "peerOrganizations", "org1.example.com", "connection-org1.yaml");
 
-            final X509Identity adminIdentity = (X509Identity) wallet.get(peerInfo.getUserId());
+            var contract = ContractFactory.CreateContract(wallet, contractCreation);
 
-            adminIdentity.getCertificate().getPublicKey();
-            adminIdentity.getPrivateKey();
-
-            final Gateway.Builder builder = Gateway.createBuilder();
-            try {
-                builder.identity(wallet, peerInfo.getUserId()).networkConfig(networkConfigPath).discovery(true);
-            } catch (final IOException e) {
-                throw e;
-            }
-
-            final Gateway gateway = builder.connect();
-            final Network network = gateway.getNetwork(peerInfo.getChannel());
-            final Contract contract = network.getContract(peerInfo.getContractName());
-
-            final KeyParser keyParser = new KeyParser(peerInfo.getPemPath(), "RSA", "BC");
-
-            final var peer = new AppPeer(wallet, contract, peerInfo.getUserId());
+            final var appClient = new AppClient(wallet, contract, peerInfo.getUserId());
             final var t = new CCTesting();
-            t.test(peer);
+            t.test(appClient);
 
         } catch (final Exception e) {
             System.out.println("An error occurred when fetching wallet or client");

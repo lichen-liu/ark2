@@ -8,7 +8,7 @@ public class CCTesting {
     public CCTesting() {
     }
 
-    public void test(final AppPeer appPeer) {
+    public void test(final AppClient appPeer) {
         try {
             final Contract contract = appPeer.getContract();
             final String r0 = appPeer.publishNewPost("hahaha");
