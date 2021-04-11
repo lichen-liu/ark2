@@ -26,6 +26,8 @@ import app.util.ChaincodeStubTools;
 
 @Default
 public final class ForumRepository implements ContractInterface {
+    private static boolean shouldVerifyIntegrity = false;
+
     private final Genson genson = new Genson();
 
     @Transaction(intent = Transaction.TYPE.SUBMIT)
@@ -69,7 +71,7 @@ public final class ForumRepository implements ContractInterface {
         final ChaincodeStub stub = ctx.getStub();
 
         final Post post = new Post(timestamp, content, userId, signature);
-        if (!post.isMatchingSignature()) {
+        if (shouldVerifyIntegrity && !post.isMatchingSignature()) {
             final String errorMessage = genson.serialize(post) + " has non-matching signature";
             throw new ChaincodeException(errorMessage, errorMessage);
         }
@@ -162,5 +164,13 @@ public final class ForumRepository implements ContractInterface {
         final ChaincodeStub stub = ctx.getStub();
         final String likeString = ChaincodeStubTools.tryGetStringStateByKey(stub, likeKey);
         return genson.deserialize(likeString, Like.class);
+    }
+
+    @Transaction(intent = Transaction.TYPE.EVALUATE)
+    public double getPointAmountByUserId(final Context ctx, final String userId) {
+        final ChaincodeStub stub = ctx.getStub();
+        double totalPointAmount = 0;
+        // TODO
+        return totalPointAmount;
     }
 }
