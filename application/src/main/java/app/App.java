@@ -1,5 +1,6 @@
 package app;
 
+import java.io.IOException;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,10 +25,8 @@ import app.factory.WalletFactory;
 import app.service.AdminEnrollmentService;
 import app.service.UserRegistrationService;
 
+import app.utils.KeyParser;
 class App {
-    static {
-        System.setProperty("org.hyperledger.fabric.sdk.service_discovery.as_localhost", "true");
-    }
 
     static {
         System.setProperty("org.hyperledger.fabric.sdk.service_discovery.as_localhost", "true");
@@ -47,45 +46,51 @@ class App {
 
     public void invokePeer() {
 
-        String dir = System.getProperty("user.dir");
         File file = new File("peer.yaml");
         ObjectMapper om = new ObjectMapper(new YAMLFactory());
 
         try {
 
-            PeerInfo peer = om.readValue(file, PeerInfo.class);
-            Wallet wallet = WalletFactory.GetWallet(peer.getAdminName());
-            HFCAClient client = CaClientFactory.CreateCaClient(peer.getCaUrl(), peer.getPemPath());
+            PeerInfo peerInfo = om.readValue(file, PeerInfo.class);
+            Wallet wallet = WalletFactory.GetWallet(peerInfo.getAdminName());
+            HFCAClient client = CaClientFactory.CreateCaClient(peerInfo.getCaUrl(), peerInfo.getPemPath());
 
-            tryEnrollAdmin(wallet, client, peer);
-            tryRegisterUser(wallet, client, peer);
+            tryEnrollAdmin(wallet, client, peerInfo);
+            tryRegisterUser(wallet, client, peerInfo);
 
-            try (Gateway gateway = this.connect(wallet, peer.getUserId())) {
+            Path networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations", "peerOrganizations",
+            "org1.example.com", "connection-org1.yaml");
 
-                Network network = gateway.getNetwork(peer.getChannel());
-                Contract contract = network.getContract(peer.getContractName());
+            X509Identity adminIdentity = (X509Identity) wallet.get(peerInfo.getUserId());
 
-                CCTesting t = new CCTesting();
-                t.test(contract);
-
-            } catch (Exception e) {
-                e.printStackTrace(System.out);
+            adminIdentity.getCertificate().getPublicKey();
+            adminIdentity.getPrivateKey();
+    
+            Gateway.Builder builder = Gateway.createBuilder();
+            try {
+                builder.identity(wallet, peerInfo.getUserId()).networkConfig(networkConfigPath).discovery(true);
+            } catch(IOException e) {
+                throw e;
             }
+    
+            Gateway gateway = builder.connect();
+            Network network = gateway.getNetwork(peerInfo.getChannel());
+            Contract contract = network.getContract(peerInfo.getContractName());
+
+            KeyParser keyParser = new KeyParser(peerInfo.getPemPath(), "RSA", "BC");
+
+            //var a = keyParser.getPrivateKey();
+            //var b = keyParser.getPublicKey();
+            var peer = new Peer(wallet, contract, peerInfo.getUserId());
+            peer.PublishNewPost("hahaha");
+
+            CCTesting t = new CCTesting();
+           // t.test(peer.getContract());
 
         } catch (Exception e) {
             System.out.println("An error occurred when fetching wallet or client");
             System.err.println(e);
         }
-    }
-
-    private Gateway connect(Wallet wallet, String userId) throws Exception {
-
-        Path networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations", "peerOrganizations",
-                "org1.example.com", "connection-org1.yaml");
-
-        Gateway.Builder builder = Gateway.createBuilder();
-        builder.identity(wallet, userId).networkConfig(networkConfigPath).discovery(true);
-        return builder.connect();
     }
 
     private void tryEnrollAdmin(Wallet wallet, HFCAClient client, PeerInfo peer) {
@@ -111,8 +116,6 @@ class App {
         User adminUser = createUser((X509Identity) wallet.get(peer.getAdminName()), peer);
         var identities = client.getHFCAIdentities(adminUser);
         for (var identity : identities) {
-            // System.out.println(String.format("Existing enrollment ids are: %s",
-            // identity.getEnrollmentId()));
             if (identity.getEnrollmentId().equals(peer.getUserId()))
                 return;
         }
