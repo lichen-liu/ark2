@@ -26,7 +26,7 @@ import app.util.ChaincodeStubTools;
 
 @Default
 public final class ForumRepository implements ContractInterface {
-    private static boolean shouldVerifyIntegrity = false;
+    private static final boolean shouldVerifyIntegrity = false;
 
     private final Genson genson = new Genson();
 
@@ -71,9 +71,11 @@ public final class ForumRepository implements ContractInterface {
         final ChaincodeStub stub = ctx.getStub();
 
         final Post post = new Post(timestamp, content, userId, signature);
-        if (shouldVerifyIntegrity && !post.isMatchingSignature()) {
-            final String errorMessage = genson.serialize(post) + " has non-matching signature";
-            throw new ChaincodeException(errorMessage, errorMessage);
+        if (shouldVerifyIntegrity) {
+            if (!post.isMatchingSignature()) {
+                final String errorMessage = genson.serialize(post) + " has non-matching signature";
+                throw new ChaincodeException(errorMessage, errorMessage);
+            }
         }
         final String postKey = post.generateKey(key -> ChaincodeStubTools.isKeyExisted(stub, key));
 
