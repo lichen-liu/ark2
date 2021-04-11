@@ -115,11 +115,9 @@ public final class ForumRepository implements ContractInterface {
         final var keyValueIterator = stub.getStateByPartialCompositeKey(new CompositeKey(Post.getObjectTypeName()));
         final List<String> postKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
                 .sorted((keyValueLeft, keyValueRight) -> {
-                    final String leftPostTimestamp = genson.deserialize(keyValueLeft.getStringValue(), Post.class)
-                            .getTimestamp();
-                    final String rightPostTimestamp = genson.deserialize(keyValueRight.getStringValue(), Post.class)
-                            .getTimestamp();
-                    return leftPostTimestamp.compareToIgnoreCase(rightPostTimestamp);
+                    final var leftPost = genson.deserialize(keyValueLeft.getStringValue(), Post.class);
+                    final var rightPost = genson.deserialize(keyValueRight.getStringValue(), Post.class);
+                    return leftPost.compareToByTimestamp(rightPost);
                 }).map(keyVale -> keyVale.getKey()).collect(Collectors.toList());
         return postKeys.toArray(String[]::new);
     }
@@ -137,11 +135,9 @@ public final class ForumRepository implements ContractInterface {
         final var keyValueIterator = stub.getStateByPartialCompositeKey(Post.getObjectTypeName(), userId);
         final List<String> postKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
                 .sorted((keyValueLeft, keyValueRight) -> {
-                    final String leftPostTimestamp = genson.deserialize(keyValueLeft.getStringValue(), Post.class)
-                            .getTimestamp();
-                    final String rightPostTimestamp = genson.deserialize(keyValueRight.getStringValue(), Post.class)
-                            .getTimestamp();
-                    return leftPostTimestamp.compareToIgnoreCase(rightPostTimestamp);
+                    final var leftPost = genson.deserialize(keyValueLeft.getStringValue(), Post.class);
+                    final var rightPost = genson.deserialize(keyValueRight.getStringValue(), Post.class);
+                    return leftPost.compareToByTimestamp(rightPost);
                 }).map(keyValue -> keyValue.getKey()).collect(Collectors.toList());
         return postKeys.toArray(String[]::new);
     }
