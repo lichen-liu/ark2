@@ -11,7 +11,8 @@ https://gradle.org/install/
 # Helps
 
 ## API Documents
-1. https://hyperledger.github.io/fabric-chaincode-java/release-2.2/api
+1. chaincode: https://hyperledger.github.io/fabric-chaincode-java/release-2.2/api
+2. gateway: https://hyperledger.github.io/fabric-gateway-java/release-2.2/
 
 ## Code Samples
 1. https://github.com/hyperledger/fabric-samples/tree/main/asset-transfer-basic
