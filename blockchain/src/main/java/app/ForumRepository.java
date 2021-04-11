@@ -78,10 +78,10 @@ public final class ForumRepository implements ContractInterface {
     /**
      * 
      * @param ctx
-     * @param timestamp "2015-04-14T11:07:36.639Z"
+     * @param timestamp
      * 
      *                  <pre>
-     *                  ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT)
+     *                  ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT); // "2015-04-14T11:07:36.639Z"
      *                  </pre>
      * 
      * @param content

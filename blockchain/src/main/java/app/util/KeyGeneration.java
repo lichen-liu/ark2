@@ -5,7 +5,11 @@ import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
 public interface KeyGeneration {
     /**
-     * Generate a composite key
+     * Generate a composite key. The composite key is usually formed as:
+     * 
+     * <pre>
+     * new CompositeKey(objectTypeName, keyForFiltering, deterministicRandomString, nonceValueForUniqueness);
+     * </pre>
      * 
      * @param salt extra field in the composite key for uniqueness
      * @return composite key in String
