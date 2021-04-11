@@ -43,5 +43,8 @@ public class AppClient {
     public String[] fetchAllPostKeys() throws ContractException {
         return postRepository.selectObjectKeysByCustomKey();
     }   
-    
+
+    public Contract getContract() {
+        return contract;
+    }
 }

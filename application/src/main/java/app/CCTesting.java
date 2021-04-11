@@ -13,10 +13,9 @@ public class CCTesting {
             final Contract contract = appPeer.getContract();
             final String r0 = appPeer.publishNewPost("hahaha");
             print(r0);
-            print(appPeer.fetchAllPosts());
+            print(appPeer.fetchAllPostKeys().toString());
             print(contract.evaluateTransaction("getPostByKey", r0));
         } catch (final Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 

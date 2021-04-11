@@ -18,7 +18,7 @@ public class ContractFactory {
         return network.getContract(entity.contractName);
     }
 
-    public class Entity {
+    public static class Entity {
         public String userId;
         public String channel;
         public String contractName;
