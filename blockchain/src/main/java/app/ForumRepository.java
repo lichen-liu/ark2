@@ -272,4 +272,19 @@ public final class ForumRepository implements ContractInterface {
         final Like recentLike = this.getLikeByKey(ctx, keys[0]);
         return Math.max(keys.length, recentLike.getRelativeOrder() + 1);
     }
+
+    /**
+     * 
+     * @param ctx
+     * @return
+     * @throws Exception
+     */
+    private long determineRelativeOrderForPointTransaction(final Context ctx) throws Exception {
+        final String[] keys = this.getAllPointTransactionKeys(ctx);
+        if (keys.length == 0) {
+            return 0L;
+        }
+        final PointTransaction recentPointTransaction = this.getPointTransactionByKey(ctx, keys[0]);
+        return Math.max(keys.length, recentPointTransaction.getRelativeOrder() + 1);
+    }
 }
