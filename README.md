@@ -1,5 +1,5 @@
 # ark2
-Anonymous Blockchain-Based Forum
+Anonymous Immutable Reward-Motivated Forum on Blockchain
 
 [![Build Status][actions-badge]][actions-url]
 
