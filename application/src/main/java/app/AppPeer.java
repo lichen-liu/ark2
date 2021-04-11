@@ -43,6 +43,7 @@ public class AppPeer {
 
         final var timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
 
+        // TODO: should be publicKey
         final var hash = getSHA(String.join("", timestamp, content, privateKey.toString()));
 
         assert privateKey.getAlgorithm() == "ECDSA" : "The private key is not in ECDSA format";
