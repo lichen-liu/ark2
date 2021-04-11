@@ -18,7 +18,7 @@ public final class Like implements KeyGeneration, ComparableByTimestamp {
     private final String postKey;
 
     /**
-     * userId who likes the post
+     * userId who likes the post, the public key for the signature
      */
     @Property
     private final String userId;

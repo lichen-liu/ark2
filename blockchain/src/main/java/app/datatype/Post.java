@@ -8,9 +8,10 @@ import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
 import app.util.ComparableByTimestamp;
 import app.util.KeyGeneration;
+import app.util.SignatureVerification;
 
 @DataType
-public final class Post implements KeyGeneration, ComparableByTimestamp {
+public final class Post implements KeyGeneration, ComparableByTimestamp, SignatureVerification {
     @Property()
     private final String timestamp;
 
@@ -18,7 +19,7 @@ public final class Post implements KeyGeneration, ComparableByTimestamp {
     private final String content;
 
     /**
-     * userId who creates the post
+     * userId who creates the post, the public key for the signature
      */
     @Property
     private final String userId;
@@ -65,5 +66,21 @@ public final class Post implements KeyGeneration, ComparableByTimestamp {
     @Override
     public String getTimestampString() {
         return this.getTimestamp();
+    }
+
+    @Override
+    public String getExpectedSignatureContent() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getSignatureForVerification() {
+        return getSignature();
+    }
+
+    @Override
+    public String getVerificationKey() {
+        return getUserId();
     }
 }
