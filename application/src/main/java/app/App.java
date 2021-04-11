@@ -38,13 +38,13 @@ class App {
 
         // AppServer server = new AppServer(conf.getAppServerSocketAddress());
         App app = new App();
-        app.invokePeer();
+        app.invokeAppPeer();
     }
 
     public App() {
     }
 
-    public void invokePeer() {
+    public void invokeAppPeer() {
 
         File file = new File("peer.yaml");
         ObjectMapper om = new ObjectMapper(new YAMLFactory());
@@ -79,7 +79,7 @@ class App {
 
             KeyParser keyParser = new KeyParser(peerInfo.getPemPath(), "RSA", "BC");
 
-            var peer = new Peer(wallet, contract, peerInfo.getUserId());
+            var peer = new AppPeer(wallet, contract, peerInfo.getUserId());
             System.out.println(peer.publishNewPost("hahaha"));
             System.out.println(peer.fetchAllPosts());
 
