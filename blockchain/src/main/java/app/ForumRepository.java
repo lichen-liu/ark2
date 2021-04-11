@@ -31,19 +31,17 @@ public final class ForumRepository implements ContractInterface {
     public void initLedger(final Context ctx) {
         final ChaincodeStub stub = ctx.getStub();
 
-        final Post post = new Post("timestamp", "content1", "author1", "signature1");
+        // mock API
         final PointTransaction pointTransaction = new PointTransaction("now", new PointTransactionElement("user0", 100),
                 "ref", "sig", new PointTransactionElement[] { new PointTransactionElement("user1", 50),
                         new PointTransactionElement("user2", 50) });
-        final Like like = new Like("future", "1", "user0", "id0", "donaldtrump");
-
-        // mock API
-        stub.putStringState("post_id_0", genson.serialize(post));
         stub.putStringState("point_transaction_id_0", genson.serialize(pointTransaction));
+        final Like like = new Like("future", "1", "user0", "id0", "donaldtrump");
         stub.putStringState("like_id_0", genson.serialize(like));
 
         // real API
-        this.publishNewPost(ctx, "future", "I am smart", "user007", "signature(user007)");
+        this.publishNewPost(ctx, "future0", "I am smart", "user007", "signature(user007)");
+        this.publishNewPost(ctx, "future1", "I am very smart", "user008", "signature(user008)");
         // stub.invokeChaincodeWithStringArgs("publishNewPost", "future", "I am smart",
         // "user007", "signature(user007)");
 
