@@ -96,7 +96,7 @@ public final class ForumRepository implements ContractInterface {
 
         // TODO: verify signature
         final Post post = new Post(timestamp, content, userId, signature);
-        final String postKey = post.generateKey(stub);
+        final String postKey = post.generateKey(key -> ChaincodeStubTools.isKeyExisted(stub, key));
 
         stub.putStringState(postKey, genson.serialize(post));
 

@@ -1,7 +1,6 @@
 package app.util;
 
-import org.hyperledger.fabric.shim.ChaincodeStub;
-import org.hyperledger.fabric.shim.ledger.CompositeKey;
+import java.util.function.Predicate;
 
 public interface KeyGeneration {
     /**
@@ -14,19 +13,15 @@ public interface KeyGeneration {
      * @param salt extra field in the composite key for uniqueness
      * @return composite key in String
      */
-    public abstract CompositeKey generateCompositeKey(final String salt);
+    public abstract String generateKey(final String salt);
 
-    public default String generateKey(final String salt) {
-        return generateCompositeKey(salt).toString();
-    }
-
-    public default String generateKey(final ChaincodeStub stub) {
+    public default String generateKey(final Predicate<String> isKeyInvalid) {
         String key;
         int attempt = 0;
         do {
             key = generateKey(String.valueOf(attempt));
             attempt++;
-        } while (ChaincodeStubTools.isKeyExisted(stub, key));
+        } while (isKeyInvalid.test(key));
 
         return key;
     }

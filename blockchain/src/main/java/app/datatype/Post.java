@@ -54,8 +54,8 @@ public final class Post implements KeyGeneration, ComparableByTimestamp {
     }
 
     @Override
-    public CompositeKey generateCompositeKey(final String salt) {
-        return new CompositeKey(getObjectTypeName(), userId, signature, salt);
+    public String generateKey(final String salt) {
+        return new CompositeKey(getObjectTypeName(), userId, signature, salt).toString();
     }
 
     public static String getObjectTypeName() {
