@@ -30,11 +30,30 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
     @Property
     private final String signature;
 
+    /**
+     * Sequenced
+     */
     @Property
     private final PointTransactionElement[] outgoingTransactionElements;
 
     @Property
     private final long relativeOrder;
+
+    /**
+     * With respect to the incomingTransactionElement.getUserId(), the key to the
+     * most recent spending PointTransaction (appears in
+     * incomingTransactionElement).
+     */
+    @Property
+    private final String recentSpendingPointTransactionKey;
+
+    /**
+     * With respect to the incomingTransactionElement.getUserId(), the keys to the
+     * recent earning PointTransactions (appears in outgoingTransactionElements)
+     * after recentSpendingPointTransactionKey.
+     */
+    @Property
+    private final String[] recentEarningPointTransactionKeys;
 
     @Override
     public String getTimestamp() {
@@ -62,17 +81,29 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
         return relativeOrder;
     }
 
+    public String getRecentSpendingPointTransactionKey() {
+        return recentSpendingPointTransactionKey;
+    }
+
+    public String[] getRecentEarningPointTransactionKeys() {
+        return recentEarningPointTransactionKeys;
+    }
+
     public PointTransaction(@JsonProperty("timestamp") final String timestamp,
             @JsonProperty("incomingTransactionElement") final PointTransactionElement incomingTransactionElement,
             @JsonProperty("reference") final String reference, @JsonProperty("signature") final String signature,
             @JsonProperty("outgoingTransactionElements") final PointTransactionElement[] outgoingTransactionElements,
-            @JsonProperty("relativeOrder") final long relativeOrder) {
+            @JsonProperty("relativeOrder") final long relativeOrder,
+            @JsonProperty("recentSpendingPointTransactionKey") final String recentSpendingPointTransactionKey,
+            @JsonProperty("recentEarningPointTransactionKeys") final String[] recentEarningPointTransactionKeys) {
         this.timestamp = timestamp;
         this.incomingTransactionElement = incomingTransactionElement;
         this.reference = reference;
         this.signature = signature;
         this.outgoingTransactionElements = outgoingTransactionElements;
         this.relativeOrder = relativeOrder;
+        this.recentSpendingPointTransactionKey = recentSpendingPointTransactionKey;
+        this.recentEarningPointTransactionKeys = recentEarningPointTransactionKeys;
     }
 
     @Override
