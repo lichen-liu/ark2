@@ -17,8 +17,6 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
 import app.datatype.Like;
-import app.datatype.PointTransaction;
-import app.datatype.PointTransactionElement;
 import app.datatype.Post;
 import app.util.ChaincodeStubTools;
 
@@ -31,22 +29,10 @@ public final class ForumRepository implements ContractInterface {
     private final Genson genson = new Genson();
 
     @Transaction(intent = Transaction.TYPE.SUBMIT)
-    public void initLedger(final Context ctx) {
-        final ChaincodeStub stub = ctx.getStub();
-
-        // mock API
-        final PointTransaction pointTransaction = new PointTransaction("now", new PointTransactionElement("user0", 100),
-                "ref", "sig", new PointTransactionElement[] { new PointTransactionElement("user1", 50),
-                        new PointTransactionElement("user2", 50) });
-        stub.putStringState("point_transaction_id_0", genson.serialize(pointTransaction));
-        final Like like = new Like("future", "1", "user0", "id0", "donaldtrump");
-        stub.putStringState("like_id_0", genson.serialize(like));
-
+    public void initLedger(final Context ctx) throws Exception {
         // real API
         this.publishNewPost(ctx, "future0", "I am smart", "user007", "signature(user007)");
         this.publishNewPost(ctx, "future1", "I am very smart", "user008", "signature(user008)");
-        // stub.invokeChaincodeWithStringArgs("publishNewPost", "future", "I am smart",
-        // "user007", "signature(user007)");
 
         System.out.println("initLedger DONE!");
     }
@@ -64,13 +50,14 @@ public final class ForumRepository implements ContractInterface {
      * @param userId
      * @param signature
      * @return postKey
+     * @throws Exception
      */
     @Transaction(intent = Transaction.TYPE.SUBMIT)
     public String publishNewPost(final Context ctx, final String timestamp, final String content, final String userId,
-            final String signature) {
+            final String signature) throws Exception {
         final ChaincodeStub stub = ctx.getStub();
 
-        final Post post = new Post(timestamp, content, userId, signature);
+        final Post post = new Post(timestamp, content, userId, signature, this.determineRelativeOrderForPost(ctx));
         if (shouldVerifyIntegrity) {
             if (!post.isMatchingSignature()) {
                 final String errorMessage = genson.serialize(post) + " has non-matching signature";
@@ -85,41 +72,45 @@ public final class ForumRepository implements ContractInterface {
     }
 
     /**
-     * Sorted by timestamp
+     * Sorted by relativeOrder, most recent first
      * 
      * @param ctx
      * @return postKeys
+     * @throws Exception
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public String[] getAllPostKeys(final Context ctx) {
+    public String[] getAllPostKeys(final Context ctx) throws Exception {
         final ChaincodeStub stub = ctx.getStub();
         final var keyValueIterator = stub.getStateByPartialCompositeKey(new CompositeKey(Post.getObjectTypeName()));
         final List<String> postKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
                 .sorted((keyValueLeft, keyValueRight) -> {
                     final var leftPost = genson.deserialize(keyValueLeft.getStringValue(), Post.class);
                     final var rightPost = genson.deserialize(keyValueRight.getStringValue(), Post.class);
-                    return leftPost.compareToByTimestamp(rightPost);
+                    return rightPost.compareToByRelativeOrder(leftPost);
                 }).map(keyVale -> keyVale.getKey()).collect(Collectors.toList());
+        keyValueIterator.close();
         return postKeys.toArray(String[]::new);
     }
 
     /**
-     * Sorted by timestamp
+     * Sorted by relativeOrder, most recent first
      * 
      * @param ctx
      * @param userId
      * @return
+     * @throws Exception
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public String[] getAllPostKeysByUserId(final Context ctx, final String userId) {
+    public String[] getAllPostKeysByUserId(final Context ctx, final String userId) throws Exception {
         final ChaincodeStub stub = ctx.getStub();
         final var keyValueIterator = stub.getStateByPartialCompositeKey(Post.getObjectTypeName(), userId);
         final List<String> postKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
                 .sorted((keyValueLeft, keyValueRight) -> {
                     final var leftPost = genson.deserialize(keyValueLeft.getStringValue(), Post.class);
                     final var rightPost = genson.deserialize(keyValueRight.getStringValue(), Post.class);
-                    return leftPost.compareToByTimestamp(rightPost);
+                    return rightPost.compareToByRelativeOrder(leftPost);
                 }).map(keyValue -> keyValue.getKey()).collect(Collectors.toList());
+        keyValueIterator.close();
         return postKeys.toArray(String[]::new);
     }
 
@@ -137,21 +128,24 @@ public final class ForumRepository implements ContractInterface {
     }
 
     /**
+     * Sorted by relativeOrder, most recent first
      * 
      * @param ctx
      * @param postKey
      * @return
+     * @throws Exception
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public String[] getAllLikeKeysByPostKey(final Context ctx, final String postKey) {
+    public String[] getAllLikeKeysByPostKey(final Context ctx, final String postKey) throws Exception {
         final ChaincodeStub stub = ctx.getStub();
         final var keyValueIterator = stub.getStateByPartialCompositeKey(Like.getObjectTypeName(), postKey);
         final List<String> likeKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
                 .sorted((keyValueLeft, keyValueRight) -> {
                     final var leftLike = genson.deserialize(keyValueLeft.getStringValue(), Like.class);
                     final var rightLike = genson.deserialize(keyValueRight.getStringValue(), Like.class);
-                    return leftLike.compareToByTimestamp(rightLike);
+                    return rightLike.compareToByRelativeOrder(leftLike);
                 }).map(keyValue -> keyValue.getKey()).collect(Collectors.toList());
+        keyValueIterator.close();
         return likeKeys.toArray(String[]::new);
     }
 
@@ -174,5 +168,23 @@ public final class ForumRepository implements ContractInterface {
         final double totalPointAmount = 0;
         // TODO
         return totalPointAmount;
+    }
+
+    private long determineRelativeOrderForPost(final Context ctx) throws Exception {
+        final String[] keys = this.getAllPostKeys(ctx);
+        if (keys.length == 0) {
+            return 0L;
+        }
+        final Post recentPost = this.getPostByKey(ctx, keys[0]);
+        return Math.max(keys.length, recentPost.getRelativeOrder() + 1);
+    }
+
+    private long determineRelativeOrderForLike(final Context ctx, final String postKey) throws Exception {
+        final String[] keys = this.getAllLikeKeysByPostKey(ctx, postKey);
+        if (keys.length == 0) {
+            return 0L;
+        }
+        final Like recentLike = this.getLikeByKey(ctx, keys[0]);
+        return Math.max(keys.length, recentLike.getRelativeOrder() + 1);
     }
 }

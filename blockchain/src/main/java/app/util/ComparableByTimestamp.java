@@ -9,9 +9,9 @@ public interface ComparableByTimestamp {
      *         ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT); // "2015-04-14T11:07:36.639Z"
      *         </pre>
      */
-    public abstract String getTimestampString();
+    public abstract String getTimestamp();
 
     public default int compareToByTimestamp(final ComparableByTimestamp other) {
-        return getTimestampString().compareToIgnoreCase(other.getTimestampString());
+        return getTimestamp().compareToIgnoreCase(other.getTimestamp());
     }
 }

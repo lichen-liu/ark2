@@ -6,12 +6,14 @@ import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
+import app.util.ComparableByRelativeOrder;
 import app.util.ComparableByTimestamp;
 import app.util.KeyGeneration;
 import app.util.SignatureVerification;
 
 @DataType
-public final class Post implements KeyGeneration, ComparableByTimestamp, SignatureVerification {
+public final class Post
+        implements KeyGeneration, ComparableByTimestamp, SignatureVerification, ComparableByRelativeOrder {
     @Property()
     private final String timestamp;
 
@@ -30,6 +32,10 @@ public final class Post implements KeyGeneration, ComparableByTimestamp, Signatu
     @Property
     private final String signature;
 
+    @Property
+    private final long relativeOrder;
+
+    @Override
     public String getTimestamp() {
         return timestamp;
     }
@@ -46,12 +52,19 @@ public final class Post implements KeyGeneration, ComparableByTimestamp, Signatu
         return signature;
     }
 
+    @Override
+    public long getRelativeOrder() {
+        return relativeOrder;
+    }
+
     public Post(@JsonProperty("timestamp") final String timestamp, @JsonProperty("content") final String content,
-            @JsonProperty("userId") final String userId, @JsonProperty("signature") final String signature) {
+            @JsonProperty("userId") final String userId, @JsonProperty("signature") final String signature,
+            @JsonProperty("relativeOrder") final long relativeOrder) {
         this.timestamp = timestamp;
         this.content = content;
         this.userId = userId;
         this.signature = signature;
+        this.relativeOrder = relativeOrder;
     }
 
     @Override
@@ -61,11 +74,6 @@ public final class Post implements KeyGeneration, ComparableByTimestamp, Signatu
 
     public static String getObjectTypeName() {
         return "POST";
-    }
-
-    @Override
-    public String getTimestampString() {
-        return this.getTimestamp();
     }
 
     @Override

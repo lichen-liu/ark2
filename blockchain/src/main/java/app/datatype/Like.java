@@ -6,11 +6,12 @@ import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
+import app.util.ComparableByRelativeOrder;
 import app.util.ComparableByTimestamp;
 import app.util.KeyGeneration;
 
 @DataType
-public final class Like implements KeyGeneration, ComparableByTimestamp {
+public final class Like implements KeyGeneration, ComparableByTimestamp, ComparableByRelativeOrder {
     @Property
     private final String timestamp;
 
@@ -32,6 +33,10 @@ public final class Like implements KeyGeneration, ComparableByTimestamp {
     @Property
     private final String signature;
 
+    @Property
+    private final long relativeOrder;
+
+    @Override
     public String getTimestamp() {
         return timestamp;
     }
@@ -52,15 +57,22 @@ public final class Like implements KeyGeneration, ComparableByTimestamp {
         return signature;
     }
 
+    @Override
+    public long getRelativeOrder() {
+        return relativeOrder;
+    }
+
     public Like(@JsonProperty("timestamp") final String timestamp, @JsonProperty("postKey") final String postKey,
             @JsonProperty("userId") final String userId,
             @JsonProperty("pointTransactionKey") final String pointTransactionKey,
-            @JsonProperty("signature") final String signature) {
+            @JsonProperty("signature") final String signature,
+            @JsonProperty("relativeOrder") final long relativeOrder) {
         this.timestamp = timestamp;
         this.postKey = postKey;
         this.userId = userId;
         this.pointTransactionKey = pointTransactionKey;
         this.signature = signature;
+        this.relativeOrder = relativeOrder;
     }
 
     @Override
@@ -70,10 +82,5 @@ public final class Like implements KeyGeneration, ComparableByTimestamp {
 
     public static String getObjectTypeName() {
         return "LIKE";
-    }
-
-    @Override
-    public String getTimestampString() {
-        return this.getTimestamp();
     }
 }
