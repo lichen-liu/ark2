@@ -13,7 +13,7 @@ import app.util.SignatureVerification;
 
 @DataType
 public final class Post
-        implements KeyGeneration, ComparableByTimestamp, SignatureVerification, ComparableByRelativeOrder {
+        implements KeyGeneration, ComparableByTimestamp, ComparableByRelativeOrder, SignatureVerification {
     @Property()
     private final String timestamp;
 
