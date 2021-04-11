@@ -155,9 +155,35 @@ public final class ForumRepository implements ContractInterface {
         return genson.deserialize(postString, Post.class);
     }
 
+    /**
+     * 
+     * @param ctx
+     * @param postKey
+     * @return
+     */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public String[] getAllLikeKeysByPostKey(final Context ctx, final String postKey) {
         final ChaincodeStub stub = ctx.getStub();
-        return null;
+        final var keyValueIterator = stub.getStateByPartialCompositeKey(Like.getObjectTypeName(), postKey);
+        final List<String> likeKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
+                .sorted((keyValueLeft, keyValueRight) -> {
+                    final var leftLike = genson.deserialize(keyValueLeft.getStringValue(), Like.class);
+                    final var rightLike = genson.deserialize(keyValueRight.getStringValue(), Like.class);
+                    return leftLike.compareToByTimestamp(rightLike);
+                }).map(keyValue -> keyValue.getKey()).collect(Collectors.toList());
+        return likeKeys.toArray(String[]::new);
+    }
+
+    /**
+     * 
+     * @param ctx
+     * @param likeKey
+     * @return
+     */
+    @Transaction(intent = Transaction.TYPE.EVALUATE)
+    public Like getLikeByKey(final Context ctx, final String likeKey) {
+        final ChaincodeStub stub = ctx.getStub();
+        final String likeString = ChaincodeStubTools.tryGetStringStateByKey(stub, likeKey);
+        return genson.deserialize(likeString, Like.class);
     }
 }
