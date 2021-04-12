@@ -33,7 +33,7 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
     private final String reference;
 
     /**
-     * sign(privateKey, hash(timestamp, payerEntry, reference))
+     * sign(privateKey, hash(timestamp, payerEntry, issuerUserId, reference))
      */
     @Property
     private final String signature;
@@ -47,21 +47,8 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
     @Property
     private final long relativeOrder;
 
-    /**
-     * With respect to the payerEntry.getUserId(), the key to the most recent
-     * spending PointTransaction (appears in payerEntry).
-     */
     @Property
-    @Nullable
-    private final String recentSpendingPointTransactionKey;
-
-    /**
-     * With respect to the payerEntry.getUserId(), the keys to the recent earning
-     * PointTransactions (appears in payeeEntries) after
-     * recentSpendingPointTransactionKey.
-     */
-    @Property
-    private final String[] recentEarningPointTransactionKeys;
+    private final Tracking payerPointTransactionTracking;
 
     @DataType
     public static class Entry {
@@ -83,6 +70,40 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
                 @JsonProperty("pointAmount") final double pointAmount) {
             this.userId = userId;
             this.pointAmount = pointAmount;
+        }
+    }
+
+    @DataType
+    public static class Tracking {
+        /**
+         * With respect to the payerEntry.getUserId(), the key to the most recent
+         * spending PointTransaction (appears in payerEntry).
+         */
+        @Property
+        @Nullable
+        private final String recentSpendingPointTransactionKey;
+
+        /**
+         * With respect to the payerEntry.getUserId(), the keys to the recent earning
+         * PointTransactions (appears in payeeEntries) after
+         * recentSpendingPointTransactionKey.
+         */
+        @Property
+        private final String[] recentEarningPointTransactionKeys;
+
+        public String getRecentSpendingPointTransactionKey() {
+            return recentSpendingPointTransactionKey;
+        }
+
+        public String[] getRecentEarningPointTransactionKeys() {
+            return recentEarningPointTransactionKeys;
+        }
+
+        public Tracking(
+                @JsonProperty("recentSpendingPointTransactionKey") final String recentSpendingPointTransactionKey,
+                @JsonProperty("recentEarningPointTransactionKeys") final String[] recentEarningPointTransactionKeys) {
+            this.recentSpendingPointTransactionKey = recentSpendingPointTransactionKey;
+            this.recentEarningPointTransactionKeys = recentEarningPointTransactionKeys;
         }
     }
 
@@ -116,12 +137,8 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
         return relativeOrder;
     }
 
-    public String getRecentSpendingPointTransactionKey() {
-        return recentSpendingPointTransactionKey;
-    }
-
-    public String[] getRecentEarningPointTransactionKeys() {
-        return recentEarningPointTransactionKeys;
+    public Tracking getPayerPointTransactionTracking() {
+        return payerPointTransactionTracking;
     }
 
     public PointTransaction(@JsonProperty("timestamp") final String timestamp,
@@ -129,8 +146,7 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
             @JsonProperty("reference") final String reference, @JsonProperty("signature") final String signature,
             @JsonProperty("payeeEntries") final Entry[] payeeEntries,
             @JsonProperty("relativeOrder") final long relativeOrder,
-            @JsonProperty("recentSpendingPointTransactionKey") final String recentSpendingPointTransactionKey,
-            @JsonProperty("recentEarningPointTransactionKeys") final String[] recentEarningPointTransactionKeys) {
+            @JsonProperty("payerPointTransactionTracking") final Tracking payerPointTransactionTracking) {
         this.timestamp = timestamp;
         this.payerEntry = payerEntry;
         this.issuerUserId = issuerUserId;
@@ -138,8 +154,7 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
         this.signature = signature;
         this.payeeEntries = payeeEntries;
         this.relativeOrder = relativeOrder;
-        this.recentSpendingPointTransactionKey = recentSpendingPointTransactionKey;
-        this.recentEarningPointTransactionKeys = recentEarningPointTransactionKeys;
+        this.payerPointTransactionTracking = payerPointTransactionTracking;
     }
 
     @Override
