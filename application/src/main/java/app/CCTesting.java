@@ -36,7 +36,7 @@ public class CCTesting {
 
             {
                 Map<String, String> payer = Map.of("userId", "bank", "pointAmount", "100");
-                List<Map<String, String>> payees = List.of(Map.of("userId", "bank", "pointAmount", "100"));
+                List<Map<String, String>> payees = List.of(Map.of("userId", "ray", "pointAmount", "100"));
 
                 final var t0 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155300",
                         objectMapper.writeValueAsString(payer), "bank", "reference", "signature(bank)",
