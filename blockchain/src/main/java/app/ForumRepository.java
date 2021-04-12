@@ -24,7 +24,6 @@ import org.hyperledger.fabric.shim.ledger.KeyValue;
 
 import app.datatype.Like;
 import app.datatype.PointTransaction;
-import app.datatype.PointTransactionElement;
 import app.datatype.Post;
 import app.util.ChaincodeStubTools;
 
@@ -40,10 +39,10 @@ public final class ForumRepository implements ContractInterface {
     public void initLedger(final Context ctx) throws Exception {
         // final ChaincodeStub stub = ctx.getStub();
         // final PointTransaction pointTransaction = new PointTransaction("now", new
-        // PointTransactionElement("user0", 100),
-        // "ref", "sig", new PointTransactionElement[] { new
-        // PointTransactionElement("user1", 50),
-        // new PointTransactionElement("user2", 50) });
+        // PointTransaction.Entry("user0", 100),
+        // "ref", "sig", new PointTransaction.Entry[] { new
+        // PointTransaction.Entry("user1", 50),
+        // new PointTransaction.Entry("user2", 50) });
         // stub.putStringState("point_transaction_id_0",
         // genson.serialize(pointTransaction));
 
@@ -97,21 +96,21 @@ public final class ForumRepository implements ContractInterface {
      *                      ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT); // "2015-04-14T11:07:36.639Z"
      *                      </pre>
      * 
-     * @param payerElement
+     * @param payerEntry
      * @param issuerUserId
      * @param reference
      * @param signature
-     * @param payeeElements
+     * @param payeeEntries
      * @return
      * @throws Exception
      */
     @Transaction(intent = Transaction.TYPE.SUBMIT)
-    public String publishNewPointTransaction(final Context ctx, final String timestamp,
-            final PointTransactionElement payerElement, final String issuerUserId, final String reference,
-            final String signature, final PointTransactionElement[] payeeElements) throws Exception {
+    public String publishNewPointTransaction(final Context ctx, final String timestamp, final PointTransaction.Entry payerEntry,
+            final String issuerUserId, final String reference, final String signature, final PointTransaction.Entry[] payeeEntries)
+            throws Exception {
 
         final ChaincodeStub stub = ctx.getStub();
-        final String payerUserId = payerElement.getUserId();
+        final String payerUserId = payerEntry.getUserId();
         final String[] spendingKeys = this.getAllPointTransactionKeysByPayerUserId(ctx, payerUserId);
         final String recentSpendingPointTransactionKey = spendingKeys.length > 0 ? spendingKeys[0] : null;
 
@@ -123,7 +122,7 @@ public final class ForumRepository implements ContractInterface {
             }
             final var pointTransaction = genson.deserialize(pointTransactionKV.getStringValue(),
                     PointTransaction.class);
-            if (Arrays.stream(pointTransaction.getPayeeElements())
+            if (Arrays.stream(pointTransaction.getPayeeEntries())
                     .anyMatch(payee -> payee.getUserId().equals(payerUserId))) {
                 recentEarningPointTransactionKeys.add(pointTransactionKV.getKey());
             }
@@ -138,8 +137,8 @@ public final class ForumRepository implements ContractInterface {
             return Math.max(allPointTransactions.length, recentPointTransaction.getRelativeOrder() + 1);
         };
 
-        final var pointTransaction = new PointTransaction(timestamp, payerElement, issuerUserId, reference, signature,
-                payeeElements, determineRelativeOrderForPointTransaction.getAsLong(), recentSpendingPointTransactionKey,
+        final var pointTransaction = new PointTransaction(timestamp, payerEntry, issuerUserId, reference, signature,
+                payeeEntries, determineRelativeOrderForPointTransaction.getAsLong(), recentSpendingPointTransactionKey,
                 recentEarningPointTransactionKeys.toArray(String[]::new));
 
         final String pointTransactionKey = pointTransaction
