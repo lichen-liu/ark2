@@ -1,7 +1,9 @@
 package app;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.LongSupplier;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -84,6 +86,68 @@ public final class ForumRepository implements ContractInterface {
         stub.putStringState(postKey, genson.serialize(post));
 
         return postKey;
+    }
+
+    /**
+     * 
+     * @param ctx
+     * @param timestamp
+     * 
+     *                      <pre>
+     *                      ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT); // "2015-04-14T11:07:36.639Z"
+     *                      </pre>
+     * 
+     * @param payerElement
+     * @param issuerUserId
+     * @param reference
+     * @param signature
+     * @param payeeElements
+     * @return
+     * @throws Exception
+     */
+    @Transaction(intent = Transaction.TYPE.SUBMIT)
+    public String publishNewPointTransaction(final Context ctx, final String timestamp,
+            final PointTransactionElement payerElement, final String issuerUserId, final String reference,
+            final String signature, final PointTransactionElement[] payeeElements) throws Exception {
+
+        final ChaincodeStub stub = ctx.getStub();
+        final String payerUserId = payerElement.getUserId();
+        final String[] spendingKeys = this.getAllPointTransactionKeysByPayerUserId(ctx, payerUserId);
+        final String recentSpendingPointTransactionKey = spendingKeys.length > 0 ? spendingKeys[0] : null;
+
+        final List<String> recentEarningPointTransactionKeys = new ArrayList<String>();
+        final KeyValue[] allPointTransactions = this.getAllPointTransactions(ctx, null);
+        for (final KeyValue pointTransactionKV : allPointTransactions) {
+            if (pointTransactionKV.getKey().equals(recentSpendingPointTransactionKey)) {
+                break;
+            }
+            final var pointTransaction = genson.deserialize(pointTransactionKV.getStringValue(),
+                    PointTransaction.class);
+            if (Arrays.stream(pointTransaction.getPayeeElements())
+                    .anyMatch(payee -> payee.getUserId().equals(payerUserId))) {
+                recentEarningPointTransactionKeys.add(pointTransactionKV.getKey());
+            }
+        }
+
+        final LongSupplier determineRelativeOrderForPointTransaction = () -> {
+            if (allPointTransactions.length == 0) {
+                return 0L;
+            }
+            final PointTransaction recentPointTransaction = genson.deserialize(allPointTransactions[0].getStringValue(),
+                    PointTransaction.class);
+            return Math.max(allPointTransactions.length, recentPointTransaction.getRelativeOrder() + 1);
+        };
+
+        final var pointTransaction = new PointTransaction(timestamp, payerElement, issuerUserId, reference, signature,
+                payeeElements, determineRelativeOrderForPointTransaction.getAsLong(), recentSpendingPointTransactionKey,
+                recentEarningPointTransactionKeys.toArray(String[]::new));
+
+        final String pointTransactionKey = pointTransaction
+                .generateKey(key -> ChaincodeStubTools.isKeyExisted(stub, key));
+
+        stub.putStringState(pointTransactionKey, genson.serialize(pointTransaction));
+
+        return pointTransactionKey;
     }
 
     /**
@@ -186,8 +250,7 @@ public final class ForumRepository implements ContractInterface {
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public String[] getAllPointTransactionKeys(final Context ctx) throws Exception {
-        final List<String> pointTransactionKeys = StreamSupport
-                .stream(Arrays.spliterator(this.getAllPointTransactions(ctx, null)), false)
+        final List<String> pointTransactionKeys = Arrays.stream(this.getAllPointTransactions(ctx, null))
                 .map(keyValue -> keyValue.getKey()).collect(Collectors.toList());
         return pointTransactionKeys.toArray(String[]::new);
     }
@@ -203,8 +266,7 @@ public final class ForumRepository implements ContractInterface {
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public String[] getAllPointTransactionKeysByPayerUserId(final Context ctx, final String payerUserId)
             throws Exception {
-        final List<String> pointTransactionKeys = StreamSupport
-                .stream(Arrays.spliterator(this.getAllPointTransactions(ctx, payerUserId)), false)
+        final List<String> pointTransactionKeys = Arrays.stream(this.getAllPointTransactions(ctx, payerUserId))
                 .map(keyValue -> keyValue.getKey()).collect(Collectors.toList());
         return pointTransactionKeys.toArray(String[]::new);
     }
@@ -285,31 +347,5 @@ public final class ForumRepository implements ContractInterface {
         }
         final Like recentLike = this.getLikeByKey(ctx, keys[0]);
         return Math.max(keys.length, recentLike.getRelativeOrder() + 1);
-    }
-
-    /**
-     * 
-     * @param ctx
-     * @return
-     * @throws Exception
-     */
-    private long determineRelativeOrderForPointTransaction(final Context ctx) throws Exception {
-        final String[] keys = this.getAllPointTransactionKeys(ctx);
-        if (keys.length == 0) {
-            return 0L;
-        }
-        final PointTransaction recentPointTransaction = this.getPointTransactionByKey(ctx, keys[0]);
-        return Math.max(keys.length, recentPointTransaction.getRelativeOrder() + 1);
-    }
-
-    @Transaction(intent = Transaction.TYPE.SUBMIT)
-    public String publishNewPointTransaction(final Context ctx, final String timestamp,
-            final PointTransactionElement payerElement, final String issuerUserId, final String reference,
-            final String signature, final PointTransactionElement[] payeeElements) throws Exception {
-
-        final String[] spendingKeys = this.getAllPointTransactionKeysByPayerUserId(ctx, payerElement.getUserId());
-        final String recentSpendingPointTransactionKey = spendingKeys.length > 0 ? spendingKeys[0] : null;
-
-        return null;
     }
 }
