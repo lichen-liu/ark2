@@ -1,16 +1,22 @@
 package app.utils;
 
-import com.owlike.genson.Genson;
+import java.io.IOException;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+//import com.owlike.genson.Genson;
 
 import app.interfaces.Deserializer;
 
 public class GensonDeserializer implements Deserializer {
-    private Genson genson;
+    private ObjectMapper om;
     public GensonDeserializer() {
-        this.genson = new Genson();
+        this.om = new ObjectMapper();
     }
     @Override
-    public String[] toStringArray(String str) {
-        return genson.deserialize(str, String[].class);
+    public String[] toStringArray(String str) throws IOException, JsonParseException, JsonMappingException {
+        return om.readValue(str, String[].class);
     }
 }

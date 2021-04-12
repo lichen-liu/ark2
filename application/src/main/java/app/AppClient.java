@@ -14,6 +14,8 @@ import org.hyperledger.fabric.gateway.ContractException;
 import org.hyperledger.fabric.gateway.Wallet;
 import org.hyperledger.fabric.gateway.X509Identity;
 
+import app.repository.LikeRepository;
+import app.repository.PointTransactionRepository;
 import app.repository.PostRepository;
 
 public class AppClient {
@@ -22,6 +24,8 @@ public class AppClient {
     private PrivateKey privateKey;
     private PublicKey publicKey;
     private PostRepository postRepository;
+    private LikeRepository likeRepository;
+    private PointTransactionRepository transactionRepository;
 
     public AppClient(Wallet wallet, Contract contract, String userId) throws InvalidKeySpecException, IOException {
         this.contract = contract;
@@ -36,13 +40,21 @@ public class AppClient {
         return postRepository.insertNewPost(contract, content, publicKey, privateKey);
     }
 
-    public String[] fetchUserPostKeys(String userId) throws ContractException {
+    public String[] fetchUserPostKeys(String userId) throws Exception {
         return postRepository.selectObjectKeysByCustomKey(userId);
     }
 
-    public String[] fetchAllPostKeys() throws ContractException {
+    public String[] fetchAllPostKeys() throws Exception {
         return postRepository.selectObjectKeysByCustomKey();
     }   
+    
+    public String[] fetchAllUserPosts(String userId) throws Exception {
+        return postRepository.selectObjectsByCustomKeys(userId);
+    }
+
+    public String[] fetchAllPosts() throws Exception {
+        return postRepository.selectObjectsByCustomKeys();
+    }
 
     public Contract getContract() {
         return contract;

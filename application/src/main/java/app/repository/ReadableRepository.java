@@ -17,17 +17,17 @@ public abstract class ReadableRepository {
 
     protected abstract String getKeysByCustomKeysQuery();
 
-    protected abstract String getObjectQuery();
+    protected abstract String getObjectByKeyQuery();
 
-    public String[] selectObjectKeysByCustomKey(String... userIds) throws ContractException {
-        if (userIds.length == 0) {
+    public String[] selectObjectKeysByCustomKey(String... customKeys) throws Exception {
+        if (customKeys.length == 0) {
             var keys = new String(contract.evaluateTransaction(getAllKeysQuery()));
             return deserializer.toStringArray(keys);
         }
 
         List<String> usersPostKeys = new ArrayList<String>();
-        for (var id : userIds) {
-            var raw = new String(contract.evaluateTransaction(getKeysByCustomKeysQuery(), id));
+        for (var key : customKeys) {
+            var raw = new String(contract.evaluateTransaction(getKeysByCustomKeysQuery(), key));
             var keys = deserializer.toStringArray(raw);
             Collections.addAll(usersPostKeys, keys);
         }
@@ -39,13 +39,13 @@ public abstract class ReadableRepository {
 
         List<String> objects = new ArrayList<String>();
         for (var key : keys) {
-            var objectString = new String(contract.evaluateTransaction(getObjectQuery(), key));
+            var objectString = new String(contract.evaluateTransaction(getObjectByKeyQuery(), key));
             objects.add(objectString);
         }
         return objects.toArray(String[]::new);
     }
 
-    public String[] selectObjectsByCustomKeys(String... keys) throws ContractException {
+    public String[] selectObjectsByCustomKeys(String... keys) throws Exception {
         return selectObjectsByKeys(selectObjectKeysByCustomKey(keys));
     }
 }

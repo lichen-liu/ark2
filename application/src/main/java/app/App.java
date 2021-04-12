@@ -1,19 +1,17 @@
 package app;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.PrivateKey;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+//import com.owlike.genson.Genson;
 
-import org.hyperledger.fabric.gateway.Contract;
-import org.hyperledger.fabric.gateway.Gateway;
 import org.hyperledger.fabric.gateway.Identities;
-import org.hyperledger.fabric.gateway.Network;
 import org.hyperledger.fabric.gateway.Wallet;
 import org.hyperledger.fabric.gateway.X509Identity;
 import org.hyperledger.fabric.sdk.Enrollment;
@@ -33,10 +31,10 @@ class App {
     }
 
     public static void main(final String[] args) throws Exception {
-        // Conf conf = new Conf();
-        // System.out.println(conf);
+        //Conf conf = new Conf();
+        //System.out.println(conf);
+        //AppServer server = new AppServer(conf.getAppServerSocketAddress());
 
-        // AppServer server = new AppServer(conf.getAppServerSocketAddress());
         final App app = new App();
         app.invokeAppPeer();
     }
@@ -63,17 +61,30 @@ class App {
             contractCreation.channel = peerInfo.getChannel();
             contractCreation.contractName = peerInfo.getContractName();
             contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
-            "peerOrganizations", "org1.example.com", "connection-org1.yaml");
+            "peerOrganizations", "org1.example.com", "connection-org1.yaml");;
 
             var contract = ContractFactory.CreateContract(wallet, contractCreation);
-
             final var appClient = new AppClient(wallet, contract, peerInfo.getUserId());
+
+            // for(String post : posts) {
+            //     Map m = genson.deserialize(post, Map.class);
+            //     var timestamp = (String)m.get("timestamp");
+            //     var content = (String)m.get("content");
+            //     var userId = (String)m.get("userId");
+            //     var signature = (String)m.get("signature");
+            //     var relativeOrder = (String)m.get("relativeOrder");
+                
+            //     System.out.println(String.format("timestamp: %s, content: %s, uerId: %s, signature: %s, relativeOrder: %s",
+            //     timestamp, content, userId, signature, relativeOrder));
+            // }
+
             final var t = new CCTesting();
             t.test(appClient);
-
         } catch (final Exception e) {
             System.out.println("An error occurred when fetching wallet or client");
             System.err.println(e);
+            e.printStackTrace();
+
         }
     }
 
@@ -91,7 +102,7 @@ class App {
             enrollmentService.EnrollAdmin(entity);
         } catch (final Exception e) {
             System.out.println("An error occurred when enrolling admin");
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 

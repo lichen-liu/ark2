@@ -11,8 +11,10 @@ public class CCTesting {
     public void test(final AppClient appPeer) {
         try {
             final Contract contract = appPeer.getContract();
+            print(appPeer.getContract().submitTransaction("publishNewPost","a","a","a","a"));
             final String r0 = appPeer.publishNewPost("hahaha");
             print(r0);
+            print(appPeer.fetchAllPosts());
             print(appPeer.fetchAllPostKeys().toString());
             print(contract.evaluateTransaction("getPostByKey", r0));
         } catch (final Exception e) {
@@ -28,5 +30,10 @@ public class CCTesting {
     private void print(final String result) {
         System.out.println("\n[" + this.testId + "] result: " + result);
         this.testId++;
+    }
+    private void print(final String[] results) {
+        for(var result : results){
+            print(result);
+        }
     }
 }
