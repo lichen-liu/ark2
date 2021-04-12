@@ -293,32 +293,48 @@ public final class ForumRepository implements ContractInterface {
         return genson.deserialize(pointTransactionString, PointTransaction.class);
     }
 
+    /**
+     * 
+     * @param ctx
+     * @param userId
+     * @return
+     * @throws Exception
+     */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public double getPointAmountByUserId(final Context ctx, final String userId) throws Exception {
-        double totalPointAmount = 0;
+        double totalEarningPointAmount = 0;
+        double totalSpendingPointAmount = 0;
 
-        final PointTransaction.Tracking tracking = this.determinePointTransactionTrackingForUserId(ctx, userId);
+        PointTransaction.Tracking nextTracking = this.determinePointTransactionTrackingForUserId(ctx, userId);
 
-        double earningPointAmount = 0;
-        for (final String earningKey : tracking.getRecentEarningPointTransactionKeys()) {
-            final var earningPointTransaction = this.getPointTransactionByKey(ctx, earningKey);
-            for (final var earningPointTransactionPayee : earningPointTransaction.getPayeeEntries()) {
-                if (userId.equals(earningPointTransactionPayee.getUserId())) {
-                    earningPointAmount += earningPointTransactionPayee.getPointAmount();
+        while (nextTracking != null) {
+            final var tracking = nextTracking;
+            nextTracking = null;
+            double earningPointAmount = 0;
+            for (final String earningKey : tracking.getRecentEarningPointTransactionKeys()) {
+                final var earningPointTransaction = this.getPointTransactionByKey(ctx, earningKey);
+                for (final var earningPointTransactionPayee : earningPointTransaction.getPayeeEntries()) {
+                    if (userId.equals(earningPointTransactionPayee.getUserId())) {
+                        earningPointAmount += earningPointTransactionPayee.getPointAmount();
+                    }
                 }
             }
-        }
-        final double spendingPointAmount = 0;
-        final String spendingKey = tracking.getRecentSpendingPointTransactionKey();
-        if (spendingKey != null) {
-            final var spendingPointTransaction = this.getPointTransactionByKey(ctx, spendingKey);
-            // TODO:
+            double spendingPointAmount = 0;
+            final String spendingKey = tracking.getRecentSpendingPointTransactionKey();
+            if (spendingKey != null) {
+                final var spendingPointTransaction = this.getPointTransactionByKey(ctx, spendingKey);
+                final var spendingPointTransactionPayer = spendingPointTransaction.getPayerEntry();
+                if (userId.equals(spendingPointTransactionPayer.getUserId())) {
+                    spendingPointAmount += spendingPointTransactionPayer.getPointAmount();
+                    nextTracking = spendingPointTransaction.getPayerPointTransactionTracking();
+                }
+            }
+
+            totalEarningPointAmount += earningPointAmount;
+            totalSpendingPointAmount += spendingPointAmount;
         }
 
-        totalPointAmount += earningPointAmount;
-        totalPointAmount -= spendingPointAmount;
-
-        return totalPointAmount;
+        return totalEarningPointAmount - totalSpendingPointAmount;
     }
 
     /**
