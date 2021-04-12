@@ -1,5 +1,7 @@
 package app.datatype;
 
+import javax.annotation.Nullable;
+
 import com.owlike.genson.annotation.JsonProperty;
 
 import org.hyperledger.fabric.contract.annotation.DataType;
@@ -50,6 +52,7 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
      * spending PointTransaction (appears in payerElement).
      */
     @Property
+    @Nullable
     private final String recentSpendingPointTransactionKey;
 
     /**
