@@ -8,9 +8,9 @@ import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
-import app.util.ComparableByRelativeOrder;
-import app.util.ComparableByTimestamp;
-import app.util.KeyGeneration;
+import app.policy.ComparableByRelativeOrder;
+import app.policy.ComparableByTimestamp;
+import app.policy.KeyGeneration;
 
 @DataType
 public final class PointTransaction implements KeyGeneration, ComparableByTimestamp, ComparableByRelativeOrder {

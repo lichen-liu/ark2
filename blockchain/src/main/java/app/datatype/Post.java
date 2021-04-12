@@ -6,10 +6,10 @@ import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
-import app.util.ComparableByRelativeOrder;
-import app.util.ComparableByTimestamp;
-import app.util.KeyGeneration;
-import app.util.SignatureVerification;
+import app.policy.ComparableByRelativeOrder;
+import app.policy.ComparableByTimestamp;
+import app.policy.KeyGeneration;
+import app.policy.SignatureVerification;
 
 @DataType
 public final class Post

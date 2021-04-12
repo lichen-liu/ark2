@@ -1,4 +1,4 @@
-package app.util;
+package app.policy;
 
 public interface SignatureVerification {
     public abstract String getExpectedSignatureContent();
