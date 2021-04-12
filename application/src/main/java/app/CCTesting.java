@@ -37,7 +37,6 @@ public class CCTesting {
             {
                 Map<String, String> payer = Map.of("userId", "bank", "pointAmount", "100");
                 List<Map<String, String>> payees = List.of(Map.of("userId", "ray", "pointAmount", "100"));
-
                 final var t0 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155300",
                         objectMapper.writeValueAsString(payer), "bank", "reference", "signature(bank)",
                         objectMapper.writeValueAsString(payees)));
@@ -45,29 +44,47 @@ public class CCTesting {
                 print(contract.evaluateTransaction("getPointTransactionByKey", t0));
             }
 
-            final var t1 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155400",
-                    "{\"pointAmount\":100,\"userId\":\"ray\"}", "ray", "reference", "signature(ray)",
-                    "[{\"pointAmount\":50,\"userId\":\"charles\"},{\"pointAmount\":50,\"userId\":\"zac\"}]"));
-            print(t1);
-            print(contract.evaluateTransaction("getPointTransactionByKey", t1));
+            {
+                Map<String, String> payer = Map.of("userId", "ray", "pointAmount", "100");
+                List<Map<String, String>> payees = List.of(Map.of("userId", "charles", "pointAmount", "50"),
+                        Map.of("userId", "zac", "pointAmount", "50"));
+                final var t1 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155400",
+                        objectMapper.writeValueAsString(payer), "ray", "reference", "signature(ray)",
+                        objectMapper.writeValueAsString(payees)));
+                print(t1);
+                print(contract.evaluateTransaction("getPointTransactionByKey", t1));
+            }
 
-            final var t2 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155500",
-                    "{\"pointAmount\":100,\"userId\":\"bank\"}", "bank", "reference", "signature(bank)",
-                    "[{\"pointAmount\":100,\"userId\":\"ray\"}]"));
-            print(t2);
-            print(contract.evaluateTransaction("getPointTransactionByKey", t2));
+            {
+                Map<String, String> payer = Map.of("userId", "bank", "pointAmount", "100");
+                List<Map<String, String>> payees = List.of(Map.of("userId", "ray", "pointAmount", "100"));
+                final var t2 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155500",
+                        objectMapper.writeValueAsString(payer), "bank", "reference", "signature(bank)",
+                        objectMapper.writeValueAsString(payees)));
+                print(t2);
+                print(contract.evaluateTransaction("getPointTransactionByKey", t2));
+            }
 
-            final var t3 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155600",
-                    "{\"pointAmount\":100,\"userId\":\"bank\"}", "bank", "reference", "signature(bank)",
-                    "[{\"pointAmount\":100,\"userId\":\"ray\"}]"));
-            print(t3);
-            print(contract.evaluateTransaction("getPointTransactionByKey", t3));
+            {
+                Map<String, String> payer = Map.of("userId", "bank", "pointAmount", "100");
+                List<Map<String, String>> payees = List.of(Map.of("userId", "ray", "pointAmount", "100"));
+                final var t3 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155600",
+                        objectMapper.writeValueAsString(payer), "bank", "reference", "signature(bank)",
+                        objectMapper.writeValueAsString(payees)));
+                print(t3);
+                print(contract.evaluateTransaction("getPointTransactionByKey", t3));
+            }
 
-            final var t4 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155700",
-                    "{\"pointAmount\":150,\"userId\":\"ray\"}", "ray", "reference", "signature(ray)",
-                    "[{\"pointAmount\":50,\"userId\":\"charles\"},{\"pointAmount\":100,\"userId\":\"zac\"}]"));
-            print(t4);
-            print(contract.evaluateTransaction("getPointTransactionByKey", t4));
+            {
+                Map<String, String> payer = Map.of("userId", "ray", "pointAmount", "150");
+                List<Map<String, String>> payees = List.of(Map.of("userId", "charles", "pointAmount", "50"),
+                        Map.of("userId", "zac", "pointAmount", "100"));
+                final var t4 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155700",
+                        objectMapper.writeValueAsString(payer), "ray", "reference", "signature(ray)",
+                        objectMapper.writeValueAsString(payees)));
+                print(t4);
+                print(contract.evaluateTransaction("getPointTransactionByKey", t4));
+            }
 
             print("bank: " + new String(contract.evaluateTransaction("getPointAmountByUserId", "bank")));
             print("ray: " + new String(contract.evaluateTransaction("getPointAmountByUserId", "ray")));
