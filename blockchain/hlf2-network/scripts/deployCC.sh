@@ -214,8 +214,12 @@ chaincodeInvokeInit() {
   # peer (if join was successful), let's supply it directly as we know
   # it using the "-o" option
   set -x
-  peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n ${CHAINCODE_NAME} $PEER_CONN_PARMS --isInit -c '{"function":"initLedger","Args":[]}' >&log.txt
-  #peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n ${CHAINCODE_NAME} $PEER_CONN_PARMS --isInit -c '{"function":"publishNewPost","Args":["future", "I am smart", "user007", "signature(user007)"]}' >&log.txt
+  declare -a invokes
+  invokes+=( '{"function":"initLedger","Args":[]}' )
+  echo "invoke:" > log.txt
+  for invoke in "${invokes[@]}"; do
+    peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n ${CHAINCODE_NAME} $PEER_CONN_PARMS --isInit -c $invoke &>> log.txt
+  done
   res=$?
   set +x
   cat log.txt
@@ -236,10 +240,8 @@ chaincodeQuery() {
     sleep $DELAY
     echo "Attempting to Query peer0.org${ORG} ...$(($(date +%s) - starttime)) secs"
     set -x
-    # Get a post
-    peer chaincode query -C $CHANNEL_NAME -n ${CHAINCODE_NAME} -c '{"Args":["getAllPostKeys"]}' >&log.txt
-    # Get a point trasaction
-    # peer chaincode query -C $CHANNEL_NAME -n ${CHAINCODE_NAME} -c '{"Args":["getPointTransaction", "point_transaction_id_0"]}' >&log.txt
+    echo "query:" > log.txt
+    # peer chaincode query -C $CHANNEL_NAME -n ${CHAINCODE_NAME} -c '{"Args":["getAllPostKeys"]}' &>> log.txt
     res=$?
     set +x
 		let rc=$res
