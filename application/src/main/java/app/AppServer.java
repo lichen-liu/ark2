@@ -16,6 +16,7 @@ public class AppServer {
         System.out.println("Server is binded to: http:/" + socketAddress);
 
         this.server.createContext("/", new RootHandler());
+
         this.server.start();
         System.out.println("Server is up and running!");
     }

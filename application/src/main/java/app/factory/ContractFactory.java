@@ -12,7 +12,6 @@ public class ContractFactory {
     public static Contract CreateContract(Wallet wallet, Entity entity) throws IOException{
         final Gateway.Builder builder = Gateway.createBuilder();
         builder.identity(wallet, entity.userId).networkConfig(entity.networkConfigPath).discovery(true);
-
         final Gateway gateway = builder.connect();
         final Network network = gateway.getNetwork(entity.channel);
         return network.getContract(entity.contractName);

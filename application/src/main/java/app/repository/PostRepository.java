@@ -33,7 +33,7 @@ public class PostRepository extends ReadableRepository {
         var hash = ByteUtils.getSHA(String.join("", timestamp, content, publicKeyString));
         var signature = NewPostSignature.sign(privateKey, hash);
 
-        return new String(contract.submitTransaction("publishNewPost", timestamp, publicKeyString,
+        return new String(contract.submitTransaction("publishNewPost", timestamp, content, publicKeyString,
                 ByteUtils.bytesToHexString(signature)));
     }
 
@@ -48,7 +48,7 @@ public class PostRepository extends ReadableRepository {
     }
 
     @Override
-    protected String getObjectQuery() {
+    protected String getObjectByKeyQuery() {
         return "getPostByKey";
     }
 }

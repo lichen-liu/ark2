@@ -1,5 +1,5 @@
 package app.interfaces;
 
 public interface Deserializer {
-    public String[] toStringArray(String str);
+    public String[] toStringArray(String str) throws Exception;
 }
