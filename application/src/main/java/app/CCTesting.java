@@ -1,7 +1,5 @@
 package app;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +10,7 @@ import org.hyperledger.fabric.gateway.Contract;
 
 public class CCTesting {
     private int testId = 0;
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     public CCTesting() {
         objectMapper = new ObjectMapper();
@@ -35,8 +33,8 @@ public class CCTesting {
             print(appPeer.fetchAllPostKeys());
 
             {
-                Map<String, String> payer = Map.of("userId", "bank", "pointAmount", "100");
-                List<Map<String, String>> payees = List.of(Map.of("userId", "ray", "pointAmount", "100"));
+                final Map<String, String> payer = Map.of("userId", "bank", "pointAmount", "100");
+                final List<Map<String, String>> payees = List.of(Map.of("userId", "ray", "pointAmount", "100"));
                 final var t0 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155300",
                         objectMapper.writeValueAsString(payer), "bank", "reference", "signature(bank)",
                         objectMapper.writeValueAsString(payees)));
@@ -45,8 +43,8 @@ public class CCTesting {
             }
 
             {
-                Map<String, String> payer = Map.of("userId", "ray", "pointAmount", "100");
-                List<Map<String, String>> payees = List.of(Map.of("userId", "charles", "pointAmount", "50"),
+                final Map<String, String> payer = Map.of("userId", "ray", "pointAmount", "100");
+                final List<Map<String, String>> payees = List.of(Map.of("userId", "charles", "pointAmount", "50"),
                         Map.of("userId", "zac", "pointAmount", "50"));
                 final var t1 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155400",
                         objectMapper.writeValueAsString(payer), "ray", "reference", "signature(ray)",
@@ -56,8 +54,8 @@ public class CCTesting {
             }
 
             {
-                Map<String, String> payer = Map.of("userId", "bank", "pointAmount", "100");
-                List<Map<String, String>> payees = List.of(Map.of("userId", "ray", "pointAmount", "100"));
+                final Map<String, String> payer = Map.of("userId", "bank", "pointAmount", "100");
+                final List<Map<String, String>> payees = List.of(Map.of("userId", "ray", "pointAmount", "100"));
                 final var t2 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155500",
                         objectMapper.writeValueAsString(payer), "bank", "reference", "signature(bank)",
                         objectMapper.writeValueAsString(payees)));
@@ -66,8 +64,8 @@ public class CCTesting {
             }
 
             {
-                Map<String, String> payer = Map.of("userId", "bank", "pointAmount", "100");
-                List<Map<String, String>> payees = List.of(Map.of("userId", "ray", "pointAmount", "100"));
+                final Map<String, String> payer = Map.of("userId", "bank", "pointAmount", "100");
+                final List<Map<String, String>> payees = List.of(Map.of("userId", "ray", "pointAmount", "100"));
                 final var t3 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155600",
                         objectMapper.writeValueAsString(payer), "bank", "reference", "signature(bank)",
                         objectMapper.writeValueAsString(payees)));
@@ -76,8 +74,8 @@ public class CCTesting {
             }
 
             {
-                Map<String, String> payer = Map.of("userId", "ray", "pointAmount", "150");
-                List<Map<String, String>> payees = List.of(Map.of("userId", "charles", "pointAmount", "50"),
+                final Map<String, String> payer = Map.of("userId", "ray", "pointAmount", "150");
+                final List<Map<String, String>> payees = List.of(Map.of("userId", "charles", "pointAmount", "50"),
                         Map.of("userId", "zac", "pointAmount", "100"));
                 final var t4 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155700",
                         objectMapper.writeValueAsString(payer), "ray", "reference", "signature(ray)",
@@ -110,7 +108,7 @@ public class CCTesting {
 
         System.out.println("\n[" + this.testId + "] result: ");
 
-        for (var result : results) {
+        for (final var result : results) {
             System.out.println(prettifyJson(result));
         }
 
@@ -121,14 +119,14 @@ public class CCTesting {
         return new String(result);
     }
 
-    private String prettifyJson(String raw) {
+    private String prettifyJson(final String raw) {
         try {
-            Object json = objectMapper.readValue(raw, Object.class);
-            String prettified = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+            final Object json = objectMapper.readValue(raw, Object.class);
+            final String prettified = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
             return prettified;
-        } catch (JsonParseException e) {
+        } catch (final JsonParseException e) {
             return raw;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
         return null;
