@@ -18,6 +18,7 @@ import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
 import app.datatype.Like;
 import app.datatype.PointTransaction;
+import app.datatype.PointTransactionElement;
 import app.datatype.Post;
 import app.util.ChaincodeStubTools;
 
@@ -205,7 +206,8 @@ public final class ForumRepository implements ContractInterface {
      * @throws Exception
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public String[] getAllPointTransactionKeysByUserId(final Context ctx, final String payerUserId) throws Exception {
+    public String[] getAllPointTransactionKeysByPayerUserId(final Context ctx, final String payerUserId)
+            throws Exception {
         final ChaincodeStub stub = ctx.getStub();
         final var keyValueIterator = stub.getStateByPartialCompositeKey(PointTransaction.getObjectTypeName(),
                 payerUserId);
@@ -286,5 +288,16 @@ public final class ForumRepository implements ContractInterface {
         }
         final PointTransaction recentPointTransaction = this.getPointTransactionByKey(ctx, keys[0]);
         return Math.max(keys.length, recentPointTransaction.getRelativeOrder() + 1);
+    }
+
+    @Transaction(intent = Transaction.TYPE.SUBMIT)
+    public String publishNewPointTransaction(final Context ctx, final String timestamp,
+            final PointTransactionElement payerElement, final String issuerUserId, final String reference,
+            final String signature, final PointTransactionElement[] payeeElements) throws Exception {
+
+        String[] spendingKeys = this.getAllPointTransactionKeysByPayerUserId(ctx, payerElement.getUserId());
+        String recentSpendingPointTransactionKey = spendingKeys.length > 0 ? spendingKeys[0] : null;
+
+        return null;
     }
 }
