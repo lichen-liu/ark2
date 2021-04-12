@@ -159,15 +159,8 @@ public final class ForumRepository implements ContractInterface {
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public String[] getAllPostKeys(final Context ctx) throws Exception {
-        final ChaincodeStub stub = ctx.getStub();
-        final var keyValueIterator = stub.getStateByPartialCompositeKey(new CompositeKey(Post.getObjectTypeName()));
-        final List<String> postKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
-                .sorted((keyValueLeft, keyValueRight) -> {
-                    final var leftPost = genson.deserialize(keyValueLeft.getStringValue(), Post.class);
-                    final var rightPost = genson.deserialize(keyValueRight.getStringValue(), Post.class);
-                    return rightPost.compareToByRelativeOrder(leftPost);
-                }).map(keyVale -> keyVale.getKey()).collect(Collectors.toList());
-        keyValueIterator.close();
+        final List<String> postKeys = Arrays.stream(this.getAllPosts(ctx, null)).map(keyValue -> keyValue.getKey())
+                .collect(Collectors.toList());
         return postKeys.toArray(String[]::new);
     }
 
@@ -181,16 +174,32 @@ public final class ForumRepository implements ContractInterface {
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public String[] getAllPostKeysByUserId(final Context ctx, final String userId) throws Exception {
-        final ChaincodeStub stub = ctx.getStub();
-        final var keyValueIterator = stub.getStateByPartialCompositeKey(Post.getObjectTypeName(), userId);
-        final List<String> postKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
-                .sorted((keyValueLeft, keyValueRight) -> {
-                    final var leftPost = genson.deserialize(keyValueLeft.getStringValue(), Post.class);
-                    final var rightPost = genson.deserialize(keyValueRight.getStringValue(), Post.class);
-                    return rightPost.compareToByRelativeOrder(leftPost);
-                }).map(keyValue -> keyValue.getKey()).collect(Collectors.toList());
-        keyValueIterator.close();
+        final List<String> postKeys = Arrays.stream(this.getAllPosts(ctx, userId)).map(keyValue -> keyValue.getKey())
+                .collect(Collectors.toList());
         return postKeys.toArray(String[]::new);
+    }
+
+    /**
+     * Sorted by relativeOrder, most recent first
+     * 
+     * @param ctx
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    private KeyValue[] getAllPosts(final Context ctx, @Nullable final String userId) throws Exception {
+        final ChaincodeStub stub = ctx.getStub();
+        final CompositeKey partialCompositeKey = userId == null ? new CompositeKey(Post.getObjectTypeName())
+                : new CompositeKey(Post.getObjectTypeName(), userId);
+        final var keyValueIterator = stub.getStateByPartialCompositeKey(partialCompositeKey);
+        final List<KeyValue> postKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
+                .sorted((leftKeyValue, rightKeyValue) -> {
+                    final var leftPost = genson.deserialize(leftKeyValue.getStringValue(), Post.class);
+                    final var rightPost = genson.deserialize(rightKeyValue.getStringValue(), Post.class);
+                    return rightPost.compareToByRelativeOrder(leftPost);
+                }).collect(Collectors.toList());
+        keyValueIterator.close();
+        return postKeys.toArray(KeyValue[]::new);
     }
 
     /**
@@ -219,9 +228,9 @@ public final class ForumRepository implements ContractInterface {
         final ChaincodeStub stub = ctx.getStub();
         final var keyValueIterator = stub.getStateByPartialCompositeKey(Like.getObjectTypeName(), postKey);
         final List<String> likeKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
-                .sorted((keyValueLeft, keyValueRight) -> {
-                    final var leftLike = genson.deserialize(keyValueLeft.getStringValue(), Like.class);
-                    final var rightLike = genson.deserialize(keyValueRight.getStringValue(), Like.class);
+                .sorted((leftKeyValue, rightKeyValue) -> {
+                    final var leftLike = genson.deserialize(leftKeyValue.getStringValue(), Like.class);
+                    final var rightLike = genson.deserialize(rightKeyValue.getStringValue(), Like.class);
                     return rightLike.compareToByRelativeOrder(leftLike);
                 }).map(keyValue -> keyValue.getKey()).collect(Collectors.toList());
         keyValueIterator.close();
@@ -286,10 +295,10 @@ public final class ForumRepository implements ContractInterface {
                 : new CompositeKey(PointTransaction.getObjectTypeName(), payerUserId);
         final var keyValueIterator = stub.getStateByPartialCompositeKey(partialCompositeKey);
         final List<KeyValue> pointTransactionKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
-                .sorted((keyValueLeft, keyValueRight) -> {
-                    final var leftPointTransaction = genson.deserialize(keyValueLeft.getStringValue(),
+                .sorted((leftKeyValue, rightKeyValue) -> {
+                    final var leftPointTransaction = genson.deserialize(leftKeyValue.getStringValue(),
                             PointTransaction.class);
-                    final var rightPointTransaction = genson.deserialize(keyValueRight.getStringValue(),
+                    final var rightPointTransaction = genson.deserialize(rightKeyValue.getStringValue(),
                             PointTransaction.class);
                     return rightPointTransaction.compareToByRelativeOrder(leftPointTransaction);
                 }).collect(Collectors.toList());
