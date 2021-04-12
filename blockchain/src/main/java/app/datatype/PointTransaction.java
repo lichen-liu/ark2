@@ -124,6 +124,6 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
     }
 
     public static String getObjectTypeName() {
-        return "POINT_TRANSACTION";
+        return PointTransaction.class.getSimpleName();
     }
 }

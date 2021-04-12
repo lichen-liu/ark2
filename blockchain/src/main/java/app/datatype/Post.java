@@ -73,7 +73,7 @@ public final class Post
     }
 
     public static String getObjectTypeName() {
-        return "POST";
+        return Post.class.getSimpleName();
     }
 
     @Override
