@@ -1,6 +1,9 @@
 package app;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,19 +24,26 @@ public class CCTesting {
 
             print(appPeer.getContract().submitTransaction("publishNewPost", "a", "a", "a", "a"));
 
-            final String p0 = appPeer.publishNewPost("hahaha");
-            print(p0);
-            print(contract.evaluateTransaction("getPostByKey", p0));
+            {
+                final String p0 = appPeer.publishNewPost("hahaha");
+                print(p0);
+                print(contract.evaluateTransaction("getPostByKey", p0));
+            }
 
             print(appPeer.fetchAllPosts());
 
             print(appPeer.fetchAllPostKeys());
 
-            final var t0 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155300",
-                    "{\"userId\":\"bank\",\"pointAmount\":100}", "bank", "reference", "signature(bank)",
-                    "[{\"userId\":\"ray\",\"pointAmount\":100}]"));
-            print(t0);
-            print(contract.evaluateTransaction("getPointTransactionByKey", t0));
+            {
+                Map<String, String> payer = Map.of("userId", "bank", "pointAmount", "100");
+                List<Map<String, String>> payees = List.of(Map.of("userId", "bank", "pointAmount", "100"));
+
+                final var t0 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155300",
+                        objectMapper.writeValueAsString(payer), "bank", "reference", "signature(bank)",
+                        objectMapper.writeValueAsString(payees)));
+                print(t0);
+                print(contract.evaluateTransaction("getPointTransactionByKey", t0));
+            }
 
             final var t1 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155400",
                     "{\"pointAmount\":100,\"userId\":\"ray\"}", "ray", "reference", "signature(ray)",
