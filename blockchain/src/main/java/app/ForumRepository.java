@@ -300,7 +300,7 @@ public final class ForumRepository implements ContractInterface {
      * @throws Exception
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public String getPointAmountByUserId(final Context ctx, final String userId) throws Exception {
+    public double getPointAmountByUserId(final Context ctx, final String userId) throws Exception {
         double totalEarningPointAmount = 0;
         double totalSpendingPointAmount = 0;
 
@@ -333,9 +333,9 @@ public final class ForumRepository implements ContractInterface {
             totalSpendingPointAmount += spendingPointAmount;
         }
 
-        return "totalEarningPointAmount=" + totalEarningPointAmount + ", totalSpendingPointAmount="
-                + totalSpendingPointAmount;
-        // return totalEarningPointAmount - totalSpendingPointAmount;
+        System.out.println("getPointAmountByUserId(" + userId + "): " + "totalEarningPointAmount="
+                + totalEarningPointAmount + ", totalSpendingPointAmount=" + totalSpendingPointAmount);
+        return totalEarningPointAmount - totalSpendingPointAmount;
     }
 
     /**
