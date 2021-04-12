@@ -294,10 +294,13 @@ public final class ForumRepository implements ContractInterface {
     }
 
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public double getPointAmountByUserId(final Context ctx, final String userId) {
+    public double getPointAmountByUserId(final Context ctx, final String userId) throws Exception {
         final ChaincodeStub stub = ctx.getStub();
         final double totalPointAmount = 0;
-        // TODO
+
+        final PointTransaction.Tracking latestPointTransactionTracking = this
+                .determinePointTransactionTrackingForUserId(ctx, userId);
+
         return totalPointAmount;
     }
 
