@@ -81,6 +81,6 @@ public final class Like implements KeyGeneration, ComparableByTimestamp, Compara
     }
 
     public static String getObjectTypeName() {
-        return "LIKE";
+        return Like.class.getSimpleName();
     }
 }
