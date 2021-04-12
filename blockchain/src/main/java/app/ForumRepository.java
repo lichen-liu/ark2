@@ -1,8 +1,11 @@
 package app;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+
+import javax.annotation.Nullable;
 
 import com.owlike.genson.Genson;
 
@@ -15,6 +18,7 @@ import org.hyperledger.fabric.contract.annotation.Transaction;
 import org.hyperledger.fabric.shim.ChaincodeException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
+import org.hyperledger.fabric.shim.ledger.KeyValue;
 
 import app.datatype.Like;
 import app.datatype.PointTransaction;
@@ -182,18 +186,9 @@ public final class ForumRepository implements ContractInterface {
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public String[] getAllPointTransactionKeys(final Context ctx) throws Exception {
-        final ChaincodeStub stub = ctx.getStub();
-        final var keyValueIterator = stub
-                .getStateByPartialCompositeKey(new CompositeKey(PointTransaction.getObjectTypeName()));
-        final List<String> pointTransactionKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
-                .sorted((keyValueLeft, keyValueRight) -> {
-                    final var leftPointTransaction = genson.deserialize(keyValueLeft.getStringValue(),
-                            PointTransaction.class);
-                    final var rightPointTransaction = genson.deserialize(keyValueRight.getStringValue(),
-                            PointTransaction.class);
-                    return rightPointTransaction.compareToByRelativeOrder(leftPointTransaction);
-                }).map(keyValue -> keyValue.getKey()).collect(Collectors.toList());
-        keyValueIterator.close();
+        final List<String> pointTransactionKeys = StreamSupport
+                .stream(Arrays.spliterator(this.getAllPointTransactions(ctx, null)), false)
+                .map(keyValue -> keyValue.getKey()).collect(Collectors.toList());
         return pointTransactionKeys.toArray(String[]::new);
     }
 
@@ -208,19 +203,36 @@ public final class ForumRepository implements ContractInterface {
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public String[] getAllPointTransactionKeysByPayerUserId(final Context ctx, final String payerUserId)
             throws Exception {
+        final List<String> pointTransactionKeys = StreamSupport
+                .stream(Arrays.spliterator(this.getAllPointTransactions(ctx, payerUserId)), false)
+                .map(keyValue -> keyValue.getKey()).collect(Collectors.toList());
+        return pointTransactionKeys.toArray(String[]::new);
+    }
+
+    /**
+     * Sorted by relativeOrder, most recent first
+     * 
+     * @param ctx
+     * @param payerUserId
+     * @return
+     * @throws Exception
+     */
+    private KeyValue[] getAllPointTransactions(final Context ctx, @Nullable final String payerUserId) throws Exception {
         final ChaincodeStub stub = ctx.getStub();
-        final var keyValueIterator = stub.getStateByPartialCompositeKey(PointTransaction.getObjectTypeName(),
-                payerUserId);
-        final List<String> pointTransactionKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
+        final CompositeKey partialCompositeKey = payerUserId == null
+                ? new CompositeKey(PointTransaction.getObjectTypeName())
+                : new CompositeKey(PointTransaction.getObjectTypeName(), payerUserId);
+        final var keyValueIterator = stub.getStateByPartialCompositeKey(partialCompositeKey);
+        final List<KeyValue> pointTransactionKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
                 .sorted((keyValueLeft, keyValueRight) -> {
                     final var leftPointTransaction = genson.deserialize(keyValueLeft.getStringValue(),
                             PointTransaction.class);
                     final var rightPointTransaction = genson.deserialize(keyValueRight.getStringValue(),
                             PointTransaction.class);
                     return rightPointTransaction.compareToByRelativeOrder(leftPointTransaction);
-                }).map(keyValue -> keyValue.getKey()).collect(Collectors.toList());
+                }).collect(Collectors.toList());
         keyValueIterator.close();
-        return pointTransactionKeys.toArray(String[]::new);
+        return pointTransactionKeys.toArray(KeyValue[]::new);
     }
 
     /**
@@ -295,8 +307,8 @@ public final class ForumRepository implements ContractInterface {
             final PointTransactionElement payerElement, final String issuerUserId, final String reference,
             final String signature, final PointTransactionElement[] payeeElements) throws Exception {
 
-        String[] spendingKeys = this.getAllPointTransactionKeysByPayerUserId(ctx, payerElement.getUserId());
-        String recentSpendingPointTransactionKey = spendingKeys.length > 0 ? spendingKeys[0] : null;
+        final String[] spendingKeys = this.getAllPointTransactionKeysByPayerUserId(ctx, payerElement.getUserId());
+        final String recentSpendingPointTransactionKey = spendingKeys.length > 0 ? spendingKeys[0] : null;
 
         return null;
     }
