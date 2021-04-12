@@ -36,46 +36,6 @@ public final class ForumRepository implements ContractInterface {
 
     @Transaction(intent = Transaction.TYPE.SUBMIT)
     public void initLedger(final Context ctx) throws Exception {
-
-        // final PointTransaction pointTransaction = new PointTransaction("now", new
-        // PointTransaction.Entry("user0", 100),
-        // "ref", "sig", new PointTransaction.Entry[] { new
-        // PointTransaction.Entry("user1", 50),
-        // new PointTransaction.Entry("user2", 50) });
-        // stub.putStringState("point_transaction_id_0",
-        // genson.serialize(pointTransaction));
-
-        // real API
-        // this.publishNewPost(ctx, "future0", "I am smart", "user007",
-        // "signature(user007)");
-        // this.publishNewPost(ctx, "future1", "I am very smart", "user008",
-        // "signature(user008)");
-
-        // this.publishNewPointTransaction(ctx, "20210412_155300", new
-        // PointTransaction.Entry("bank", 100), "bank",
-        // "reference", "signature(bank)",
-        // new PointTransaction.Entry[] { new PointTransaction.Entry("ray", 100) });
-        // this.publishNewPointTransaction(ctx, "20210412_155400", new
-        // PointTransaction.Entry("ray", 100), "ray",
-        // "reference", "signature(ray)", new PointTransaction.Entry[] { new
-        // PointTransaction.Entry("charles", 50),
-        // new PointTransaction.Entry("zac", 50) });
-
-        // not converted
-        // this.publishNewPointTransaction(ctx, "20210412_155500", new
-        // PointTransaction.Entry("bank", 100), "bank",
-        // "reference", "signature(bank)",
-        // new PointTransaction.Entry[] { new PointTransaction.Entry("ray", 100) });
-        // this.publishNewPointTransaction(ctx, "20210412_155600", new
-        // PointTransaction.Entry("bank", 100), "bank",
-        // "reference", "signature(bank)",
-        // new PointTransaction.Entry[] { new PointTransaction.Entry("ray", 100) });
-        // this.publishNewPointTransaction(ctx, "20210412_155700", new
-        // PointTransaction.Entry("ray", 150), "ray",
-        // "reference", "signature(ray)", new PointTransaction.Entry[] { new
-        // PointTransaction.Entry("charles", 50),
-        // new PointTransaction.Entry("zac", 100) });
-
         System.out.println("initLedger: DONE");
     }
 
