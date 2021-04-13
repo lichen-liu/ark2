@@ -36,7 +36,7 @@ public class CCTesting {
                 final Map<String, String> payer = Map.of("userId", "bank", "pointAmount", "100");
                 final List<Map<String, String>> payees = List.of(Map.of("userId", "ray", "pointAmount", "100"));
                 final var t0 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155300",
-                        objectMapper.writeValueAsString(payer), "bank", "signature(bank)",
+                        objectMapper.writeValueAsString(payer), "bank", "reference", "signature(bank)",
                         objectMapper.writeValueAsString(payees)));
                 print(t0);
                 print(contract.evaluateTransaction("getPointTransactionByKey", t0));
@@ -47,7 +47,7 @@ public class CCTesting {
                 final List<Map<String, String>> payees = List.of(Map.of("userId", "charles", "pointAmount", "50"),
                         Map.of("userId", "zac", "pointAmount", "50"));
                 final var t1 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155400",
-                        objectMapper.writeValueAsString(payer), "ray", "signature(ray)",
+                        objectMapper.writeValueAsString(payer), "ray", "reference", "signature(ray)",
                         objectMapper.writeValueAsString(payees)));
                 print(t1);
                 print(contract.evaluateTransaction("getPointTransactionByKey", t1));
@@ -57,7 +57,7 @@ public class CCTesting {
                 final Map<String, String> payer = Map.of("userId", "bank", "pointAmount", "100");
                 final List<Map<String, String>> payees = List.of(Map.of("userId", "ray", "pointAmount", "100"));
                 final var t2 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155500",
-                        objectMapper.writeValueAsString(payer), "bank", "signature(bank)",
+                        objectMapper.writeValueAsString(payer), "bank", "reference", "signature(bank)",
                         objectMapper.writeValueAsString(payees)));
                 print(t2);
                 print(contract.evaluateTransaction("getPointTransactionByKey", t2));
@@ -67,7 +67,7 @@ public class CCTesting {
                 final Map<String, String> payer = Map.of("userId", "bank", "pointAmount", "100");
                 final List<Map<String, String>> payees = List.of(Map.of("userId", "ray", "pointAmount", "100"));
                 final var t3 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155600",
-                        objectMapper.writeValueAsString(payer), "bank", "signature(bank)",
+                        objectMapper.writeValueAsString(payer), "bank", "reference", "signature(bank)",
                         objectMapper.writeValueAsString(payees)));
                 print(t3);
                 print(contract.evaluateTransaction("getPointTransactionByKey", t3));
@@ -78,7 +78,7 @@ public class CCTesting {
                 final List<Map<String, String>> payees = List.of(Map.of("userId", "charles", "pointAmount", "50"),
                         Map.of("userId", "zac", "pointAmount", "100"));
                 final var t4 = toString(contract.submitTransaction("publishNewPointTransaction", "20210412_155700",
-                        objectMapper.writeValueAsString(payer), "ray", "signature(ray)",
+                        objectMapper.writeValueAsString(payer), "ray", "reference", "signature(ray)",
                         objectMapper.writeValueAsString(payees)));
                 print(t4);
                 print(contract.evaluateTransaction("getPointTransactionByKey", t4));
