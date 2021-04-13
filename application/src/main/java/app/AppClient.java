@@ -18,6 +18,7 @@ import app.repository.LikeRepository;
 import app.repository.PointTransactionRepository;
 import app.repository.PostRepository;
 import app.repository.contracts.Transaction;
+import app.utils.ByteUtils;
 
 public class AppClient {
 
@@ -65,6 +66,10 @@ public class AppClient {
 
     public String publishNewTransaction(Transaction transaction) throws Exception {
         return transactionRepository.insertNewTransaction(contract, transaction.reference, transaction, publicKey, privateKey);
+    }
+
+    public String getPointAmount() throws ContractException {
+        return new String(contract.evaluateTransaction("getPointAmountByUserId", ByteUtils.bytesToHexString(publicKey.getEncoded())));
     }
 
     public Contract getContract() {

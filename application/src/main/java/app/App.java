@@ -31,10 +31,6 @@ class App {
     }
 
     public static void main(final String[] args) throws Exception {
-        //Conf conf = new Conf();
-        //System.out.println(conf);
-        //AppServer server = new AppServer(conf.getAppServerSocketAddress());
-
         final App app = new App();
         app.invokeAppPeer();
     }
@@ -65,18 +61,6 @@ class App {
 
             var contract = ContractFactory.CreateContract(wallet, contractCreation);
             final var appClient = new AppClient(wallet, contract, peerInfo.getUserId());
-
-            // for(String post : posts) {
-            //     Map m = genson.deserialize(post, Map.class);
-            //     var timestamp = (String)m.get("timestamp");
-            //     var content = (String)m.get("content");
-            //     var userId = (String)m.get("userId");
-            //     var signature = (String)m.get("signature");
-            //     var relativeOrder = (String)m.get("relativeOrder");
-                
-            //     System.out.println(String.format("timestamp: %s, content: %s, uerId: %s, signature: %s, relativeOrder: %s",
-            //     timestamp, content, userId, signature, relativeOrder));
-            // }
 
             final var t = new CCTesting();
             t.test(appClient);
