@@ -9,7 +9,7 @@ import org.hyperledger.fabric.gateway.Network;
 import org.hyperledger.fabric.gateway.Wallet;
 
 public class ContractFactory {
-    public static Contract CreateContract(Wallet wallet, Entity entity) throws IOException{
+    public static Contract CreateContract(Wallet wallet, Entity entity) throws IOException {
         final Gateway.Builder builder = Gateway.createBuilder();
         builder.identity(wallet, entity.userId).networkConfig(entity.networkConfigPath).discovery(true);
         final Gateway gateway = builder.connect();
