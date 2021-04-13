@@ -29,7 +29,7 @@ find ./ -name '*.java' | xargs wc -l | sort -nr
 ```
 
 # Project Application
-Application (client) code that interacts with the blockchain via Hyperledger Flex Gateway APIs
+Application (client) code that interacts with the blockchain via Hyperledger Fabric Gateway APIs
 
 ## How
 ```
@@ -42,7 +42,7 @@ gradle runApp
 ```
 
 # Project Blockchain
-Hyperledger Flex blockchain and chaincodes
+Hyperledger Fabric blockchain and chaincodes
 
 ## How
 ```
