@@ -7,7 +7,7 @@ DELAY="$4"
 MAX_RETRY="$5"
 VERBOSE="$6"
 : ${CHANNEL_NAME:="mychannel"}
-: ${CC_SRC_LANGUAGE:="golang"}
+: ${CC_SRC_LANGUAGE:="java"}
 : ${VERSION:="1"}
 : ${DELAY:="3"}
 : ${MAX_RETRY:="5"}
@@ -18,21 +18,7 @@ CHAINCODE_NAME="agreements"
 
 FABRIC_CFG_PATH=$PWD/./config/
 
-if [ "$CC_SRC_LANGUAGE" = "go" -o "$CC_SRC_LANGUAGE" = "golang" ] ; then
-	CC_RUNTIME_LANGUAGE=golang
-	CC_SRC_PATH="../chaincode/fabcar/go/"
-
-	echo Vendoring Go dependencies ...
-	pushd ../chaincode/fabcar/go
-	GO111MODULE=on go mod vendor
-	popd
-	echo Finished vendoring Go dependencies
-
-elif [ "$CC_SRC_LANGUAGE" = "javascript" ]; then
-	CC_RUNTIME_LANGUAGE=node # chaincode runtime language is node.js
-	CC_SRC_PATH="../chaincode/fabcar/javascript/"
-
-elif [ "$CC_SRC_LANGUAGE" = "java" ]; then
+if [ "$CC_SRC_LANGUAGE" = "java" ]; then
 	CC_RUNTIME_LANGUAGE=java
 	CC_SRC_PATH="../build/install/blockchain"
 
@@ -41,17 +27,6 @@ elif [ "$CC_SRC_LANGUAGE" = "java" ]; then
 	./gradlew installDist
 	popd
 	echo Finished compiling Java code
-
-elif [ "$CC_SRC_LANGUAGE" = "typescript" ]; then
-	CC_RUNTIME_LANGUAGE=node # chaincode runtime language is node.js
-	CC_SRC_PATH="../chaincode/fabcar/typescript/"
-
-	echo Compiling TypeScript code into JavaScript ...
-	pushd ../chaincode/fabcar/typescript
-	npm install
-	npm run build
-	popd
-	echo Finished compiling TypeScript code into JavaScript
 
 else
 	echo The chaincode language ${CC_SRC_LANGUAGE} is not supported by this script
