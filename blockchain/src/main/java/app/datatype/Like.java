@@ -55,7 +55,7 @@ public final class Like implements KeyGeneration, ComparableByTimestamp, Compara
         return signature;
     }
 
-    public void setPointTransactionKey(String pointTransactionKey) {
+    public void setPointTransactionKey(final String pointTransactionKey) {
         this.pointTransactionKey = pointTransactionKey;
     }
 
