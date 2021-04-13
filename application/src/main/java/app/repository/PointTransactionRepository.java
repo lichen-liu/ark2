@@ -23,7 +23,8 @@ public class PointTransactionRepository extends ReadableRepository {
     public String insertNewTransaction(Contract contract, String reference, Transaction transaction,  
     PublicKey publicKey, PrivateKey privateKey) throws Exception {
             
-        var timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);    
+        var timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);  
+    
         var payer = this.deserializer.participantToJson(transaction.payer);
         var payees = this.deserializer.participantsToJson(transaction.payees);
         var publicKeyString = ByteUtils.bytesToHexString(publicKey.getEncoded());
@@ -32,7 +33,7 @@ public class PointTransactionRepository extends ReadableRepository {
         var signature = NewPostSignature.sign(privateKey, hash);
 
         return new String(contract.submitTransaction("publishNewPointTransaction", timestamp,
-                        payer, publicKeyString, reference, ByteUtils.bytesToHexString(signature), payees));
+                        payer, publicKeyString, ByteUtils.bytesToHexString(signature), reference, payees));
     }
 
     @Override

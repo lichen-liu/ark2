@@ -26,11 +26,11 @@ public class GensonDeserializer implements Deserializer {
 
     @Override
     public String participantsToJson(final Iterable<Participant> participants) throws JsonProcessingException {
-        var list = new ArrayList<String> ();
+        var list = new ArrayList<Map<String, String>> ();
         participants.forEach(p -> {
             try {
-                list.add(participantToJson(p));
-            } catch (IOException e) {
+                list.add(participantMap(p));
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
@@ -39,8 +39,10 @@ public class GensonDeserializer implements Deserializer {
 
     @Override
     public String participantToJson(final Participant participant) throws IOException, JsonParseException, JsonMappingException {
-        return om.writeValueAsString(Map.of("userId", participant.userId,"amount", participant.amount));
+        return om.writeValueAsString(participantMap(participant));
     }
 
-    
+    private Map<String, String> participantMap(final Participant participant) {
+        return Map.of("userId", participant.userId,"pointAmount", Double.toString(participant.amount));
+    }
 }
