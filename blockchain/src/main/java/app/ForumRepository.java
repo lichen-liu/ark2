@@ -188,6 +188,17 @@ public final class ForumRepository implements ContractInterface {
         return genson.deserialize(postString, Post.class);
     }
 
+    // @Transaction(intent = Transaction.TYPE.SUBMIT)
+    // public String publishNewLike(final Context ctx, final String timestamp, final String postKey, final String payerEntryString,
+    //         final String likeSignature, final String pointTransactionSignature) throws Exception {
+        
+    //     var payerEntry = genson.deserialize(payerEntryString, PointTransaction.Entry.class);
+
+    //     this.publishNewPointTransaction(ctx, timestamp, payerEntryString, issuerUserId, reference, signature, payeeEntriesString)
+    //     final ChaincodeStub stub = ctx.getStub();
+    //     return null;
+    // }
+
     /**
      * Sorted by relativeOrder, most recent first
      * 
