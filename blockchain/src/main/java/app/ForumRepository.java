@@ -188,20 +188,27 @@ public final class ForumRepository implements ContractInterface {
         return genson.deserialize(postString, Post.class);
     }
 
-    // @Transaction(intent = Transaction.TYPE.SUBMIT)
-    // public String publishNewLike(final Context ctx, final String timestamp, final
-    // String postKey, final String payerEntryString,
-    // final String likeSignature, final String pointTransactionSignature) throws
-    // Exception {
+    @Transaction(intent = Transaction.TYPE.SUBMIT)
+    public String publishNewLike(final Context ctx, final String timestamp, final String postKey,
+            final String payerEntryString, final String likeSignature, final String pointTransactionSignature)
+            throws Exception {
+        final ChaincodeStub stub = ctx.getStub();
+        final var payerEntry = genson.deserialize(payerEntryString, PointTransaction.Entry.class);
 
-    // var payerEntry = genson.deserialize(payerEntryString,
-    // PointTransaction.Entry.class);
+        // TODO: find payees
+        final PointTransaction.Entry[] payeeEntries = null;
 
-    // this.publishNewPointTransaction(ctx, timestamp, payerEntryString,
-    // issuerUserId, reference, signature, payeeEntriesString)
-    // final ChaincodeStub stub = ctx.getStub();
-    // return null;
-    // }
+        final var like = new Like(timestamp, postKey, payerEntry.getUserId(), likeSignature, null,
+                this.determineRelativeOrderForLike(ctx, postKey));
+        final String likeKey = like.generateKey(key -> ChaincodeStubTools.isKeyExisted(stub, key));
+
+        final String pointTransactionKey = this.publishNewPointTransaction(ctx, timestamp, payerEntryString,
+                payerEntry.getUserId(), pointTransactionSignature, likeKey, genson.serialize(payeeEntries));
+        like.setPointTransactionKey(pointTransactionKey);
+
+        stub.putStringState(likeKey, genson.serialize(like));
+        return likeKey;
+    }
 
     /**
      * Sorted by relativeOrder, most recent first

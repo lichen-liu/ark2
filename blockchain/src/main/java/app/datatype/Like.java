@@ -1,5 +1,7 @@
 package app.datatype;
 
+import javax.annotation.Nullable;
+
 import com.owlike.genson.annotation.JsonProperty;
 
 import org.hyperledger.fabric.contract.annotation.DataType;
@@ -31,7 +33,7 @@ public final class Like implements KeyGeneration, ComparableByTimestamp, Compara
     private final String signature;
 
     @Property
-    private final String pointTransactionKey;
+    private @Nullable String pointTransactionKey;
 
     @Property
     private final long relativeOrder;
@@ -53,6 +55,10 @@ public final class Like implements KeyGeneration, ComparableByTimestamp, Compara
         return signature;
     }
 
+    public void setPointTransactionKey(String pointTransactionKey) {
+        this.pointTransactionKey = pointTransactionKey;
+    }
+
     public String getPointTransactionKey() {
         return pointTransactionKey;
     }
@@ -64,7 +70,7 @@ public final class Like implements KeyGeneration, ComparableByTimestamp, Compara
 
     public Like(@JsonProperty("timestamp") final String timestamp, @JsonProperty("postKey") final String postKey,
             @JsonProperty("userId") final String userId, @JsonProperty("signature") final String signature,
-            @JsonProperty("pointTransactionKey") final String pointTransactionKey,
+            @JsonProperty("pointTransactionKey") @Nullable final String pointTransactionKey,
             @JsonProperty("relativeOrder") final long relativeOrder) {
         this.timestamp = timestamp;
         this.postKey = postKey;
