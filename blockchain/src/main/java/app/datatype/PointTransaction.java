@@ -27,16 +27,16 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
     private final String issuerUserId;
 
     /**
+     * sign(privateKey, hash(timestamp, payerEntry, issuerUserId))
+     */
+    @Property
+    private final String signature;
+
+    /**
      * A user specified reference number, can be arbitrary
      */
     @Property
     private final String reference;
-
-    /**
-     * sign(privateKey, hash(timestamp, payerEntry, issuerUserId, reference))
-     */
-    @Property
-    private final String signature;
 
     /**
      * Sequenced
@@ -120,12 +120,12 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
         return issuerUserId;
     }
 
-    public String getReference() {
-        return reference;
-    }
-
     public String getSignature() {
         return signature;
+    }
+
+    public String getReference() {
+        return reference;
     }
 
     public Entry[] getPayeeEntries() {
@@ -143,15 +143,15 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
 
     public PointTransaction(@JsonProperty("timestamp") final String timestamp,
             @JsonProperty("payerEntry") final Entry payerEntry, @JsonProperty("issuerUserId") final String issuerUserId,
-            @JsonProperty("reference") final String reference, @JsonProperty("signature") final String signature,
+            @JsonProperty("signature") final String signature, @JsonProperty("reference") final String reference,
             @JsonProperty("payeeEntries") final Entry[] payeeEntries,
             @JsonProperty("relativeOrder") final long relativeOrder,
             @JsonProperty("payerPointTransactionTracking") final Tracking payerPointTransactionTracking) {
         this.timestamp = timestamp;
         this.payerEntry = payerEntry;
         this.issuerUserId = issuerUserId;
-        this.reference = reference;
         this.signature = signature;
+        this.reference = reference;
         this.payeeEntries = payeeEntries;
         this.relativeOrder = relativeOrder;
         this.payerPointTransactionTracking = payerPointTransactionTracking;

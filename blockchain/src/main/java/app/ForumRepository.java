@@ -102,7 +102,7 @@ public final class ForumRepository implements ContractInterface {
      */
     @Transaction(intent = Transaction.TYPE.SUBMIT)
     public String publishNewPointTransaction(final Context ctx, final String timestamp, final String payerEntryString,
-            final String issuerUserId, final String reference, final String signature, final String payeeEntriesString)
+            final String issuerUserId, final String signature, final String reference, final String payeeEntriesString)
             throws Exception {
 
         final ChaincodeStub stub = ctx.getStub();
@@ -112,7 +112,7 @@ public final class ForumRepository implements ContractInterface {
         final PointTransaction.Tracking payerPointTransactionTracking = this
                 .determinePointTransactionTrackingForUserId(ctx, payerEntry.getUserId());
 
-        final var pointTransaction = new PointTransaction(timestamp, payerEntry, issuerUserId, reference, signature,
+        final var pointTransaction = new PointTransaction(timestamp, payerEntry, issuerUserId, signature, reference,
                 payeeEntries, this.determineRelativeOrderForPointTransaction(ctx), payerPointTransactionTracking);
 
         final String pointTransactionKey = pointTransaction
@@ -189,14 +189,18 @@ public final class ForumRepository implements ContractInterface {
     }
 
     // @Transaction(intent = Transaction.TYPE.SUBMIT)
-    // public String publishNewLike(final Context ctx, final String timestamp, final String postKey, final String payerEntryString,
-    //         final String likeSignature, final String pointTransactionSignature) throws Exception {
-        
-    //     var payerEntry = genson.deserialize(payerEntryString, PointTransaction.Entry.class);
+    // public String publishNewLike(final Context ctx, final String timestamp, final
+    // String postKey, final String payerEntryString,
+    // final String likeSignature, final String pointTransactionSignature) throws
+    // Exception {
 
-    //     this.publishNewPointTransaction(ctx, timestamp, payerEntryString, issuerUserId, reference, signature, payeeEntriesString)
-    //     final ChaincodeStub stub = ctx.getStub();
-    //     return null;
+    // var payerEntry = genson.deserialize(payerEntryString,
+    // PointTransaction.Entry.class);
+
+    // this.publishNewPointTransaction(ctx, timestamp, payerEntryString,
+    // issuerUserId, reference, signature, payeeEntriesString)
+    // final ChaincodeStub stub = ctx.getStub();
+    // return null;
     // }
 
     /**
