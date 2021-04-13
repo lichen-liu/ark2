@@ -17,6 +17,7 @@ import org.hyperledger.fabric.gateway.X509Identity;
 import app.repository.LikeRepository;
 import app.repository.PointTransactionRepository;
 import app.repository.PostRepository;
+import app.repository.contracts.Transaction;
 
 public class AppClient {
 
@@ -29,11 +30,17 @@ public class AppClient {
 
     public AppClient(Wallet wallet, Contract contract, String userId) throws InvalidKeySpecException, IOException {
         this.contract = contract;
-        this.postRepository = new PostRepository(contract);
         X509Identity adminIdentity = (X509Identity) wallet.get(userId);
-
         this.privateKey = adminIdentity.getPrivateKey();
         this.publicKey = adminIdentity.getCertificate().getPublicKey();
+        InitRepositories();
+    }
+
+    public AppClient(Contract contract, PublicKey publicKey, PrivateKey privateKey) {
+        this.contract = contract;
+        this.privateKey = privateKey;
+        this.publicKey = publicKey;
+        InitRepositories();
     }
 
     public String publishNewPost(String content) throws ContractException, TimeoutException, InterruptedException, InvalidKeyException, NoSuchAlgorithmException, SignatureException{
@@ -56,7 +63,20 @@ public class AppClient {
         return postRepository.selectObjectsByCustomKeys();
     }
 
+    public String publishNewTransaction(Transaction transaction) throws Exception {
+        return transactionRepository.insertNewTransaction(contract, transaction.reference, transaction, publicKey, privateKey);
+    }
+
     public Contract getContract() {
         return contract;
+    }
+
+    public PublicKey getPublicKey() {
+        return publicKey;
+    }
+
+    private void InitRepositories() {
+        this.postRepository = new PostRepository(contract);
+        this.transactionRepository = new PointTransactionRepository(contract);
     }
 }

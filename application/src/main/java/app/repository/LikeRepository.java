@@ -5,6 +5,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SignatureException;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.concurrent.TimeoutException;
 
 import org.hyperledger.fabric.gateway.Contract;
@@ -22,12 +24,15 @@ public class LikeRepository extends ReadableRepository {
     public String insertNewLike(Contract contract, String content, PublicKey publicKey, PrivateKey privateKey)
             throws InvalidKeyException, NoSuchAlgorithmException, SignatureException, ContractException,
             TimeoutException, InterruptedException {
-        throw new UnsupportedOperationException();
+            
+        return new String(contract.submitTransaction("publishNewPointTransaction", "20210412_155300",
+                "{\"userId\":\"bank\",\"pointAmount\":100}", "bank", "reference", "signature(bank)",
+                "[{\"userId\":\"ray\",\"pointAmount\":100}]"));
     }
 
     @Override
     protected String getAllKeysQuery() {
-        throw new UnsupportedOperationException("Like");
+        throw new UnsupportedOperationException("This operation is not supported");
     }
 
     @Override

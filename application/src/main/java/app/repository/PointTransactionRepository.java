@@ -1,16 +1,17 @@
 package app.repository;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SignatureException;
-import java.util.concurrent.TimeoutException;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.hyperledger.fabric.gateway.Contract;
-import org.hyperledger.fabric.gateway.ContractException;
 
+import app.repository.contracts.Transaction;
+import app.utils.ByteUtils;
 import app.utils.GensonDeserializer;
+import app.utils.NewPostSignature;
 
 public class PointTransactionRepository extends ReadableRepository {
 
@@ -19,11 +20,19 @@ public class PointTransactionRepository extends ReadableRepository {
         this.contract = contract;
     }
 
-    public String insertNewTransaction(Contract contract, String content, PublicKey publicKey, PrivateKey privateKey)
-            throws InvalidKeyException, NoSuchAlgorithmException, SignatureException, ContractException,
-            TimeoutException, InterruptedException {
+    public String insertNewTransaction(Contract contract, String reference, Transaction transaction,  
+    PublicKey publicKey, PrivateKey privateKey) throws Exception {
+            
+        var timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);    
+        var payer = this.deserializer.participantToJson(transaction.payer);
+        var payees = this.deserializer.participantsToJson(transaction.payees);
+        var publicKeyString = ByteUtils.bytesToHexString(publicKey.getEncoded());
+        
+        var hash = ByteUtils.getSHA(String.join("", timestamp, payer, publicKeyString, reference));
+        var signature = NewPostSignature.sign(privateKey, hash);
 
-            throw new UnsupportedOperationException();
+        return new String(contract.submitTransaction("publishNewPointTransaction", timestamp,
+                        payer, publicKeyString, reference, ByteUtils.bytesToHexString(signature), payees));
     }
 
     @Override
