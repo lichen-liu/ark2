@@ -15,5 +15,4 @@ public interface Deserializer {
 
     public String participantToJson(Participant participant)
             throws IOException, JsonParseException, JsonMappingException;
-
 }
