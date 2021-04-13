@@ -17,13 +17,13 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
+import org.bouncycastle.jce.ECNamedCurveTable;
 import org.bouncycastle.jce.ECPointUtil;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
 import org.bouncycastle.jce.spec.ECNamedCurveSpec;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
-import org.bouncycastle.jce.ECNamedCurveTable;
 
 public class KeyParser {
 
@@ -59,20 +59,22 @@ public class KeyParser {
         return factory.generatePrivate(privKeySpec);
     }
 
-    public static PrivateKey generatePrivateKey(byte[] keyBin) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        ECNamedCurveParameterSpec spec = ECNamedCurveTable.getParameterSpec("secp256k1");
-        KeyFactory kf = KeyFactory.getInstance("ECDSA", new BouncyCastleProvider());
-        ECNamedCurveSpec params = new ECNamedCurveSpec("secp256k1", spec.getCurve(), spec.getG(), spec.getN());
-        ECPrivateKeySpec privKeySpec = new ECPrivateKeySpec(new BigInteger(keyBin), params);
+    public static PrivateKey generatePrivateKey(final byte[] keyBin)
+            throws InvalidKeySpecException, NoSuchAlgorithmException {
+        final ECNamedCurveParameterSpec spec = ECNamedCurveTable.getParameterSpec("secp256k1");
+        final KeyFactory kf = KeyFactory.getInstance("ECDSA", new BouncyCastleProvider());
+        final ECNamedCurveSpec params = new ECNamedCurveSpec("secp256k1", spec.getCurve(), spec.getG(), spec.getN());
+        final ECPrivateKeySpec privKeySpec = new ECPrivateKeySpec(new BigInteger(keyBin), params);
         return kf.generatePrivate(privKeySpec);
     }
-    
-    public static PublicKey generatePublicKey(byte[] keyBin) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        ECNamedCurveParameterSpec spec = ECNamedCurveTable. getParameterSpec("secp256k1");
-        KeyFactory kf = KeyFactory.getInstance("ECDSA", new BouncyCastleProvider());
-        ECNamedCurveSpec params = new ECNamedCurveSpec("secp256k1", spec.getCurve(), spec.getG(), spec.getN());
-        ECPoint point =  ECPointUtil.decodePoint(params.getCurve(), keyBin);
-        ECPublicKeySpec pubKeySpec = new ECPublicKeySpec(point, params);
+
+    public static PublicKey generatePublicKey(final byte[] keyBin)
+            throws InvalidKeySpecException, NoSuchAlgorithmException {
+        final ECNamedCurveParameterSpec spec = ECNamedCurveTable.getParameterSpec("secp256k1");
+        final KeyFactory kf = KeyFactory.getInstance("ECDSA", new BouncyCastleProvider());
+        final ECNamedCurveSpec params = new ECNamedCurveSpec("secp256k1", spec.getCurve(), spec.getG(), spec.getN());
+        final ECPoint point = ECPointUtil.decodePoint(params.getCurve(), keyBin);
+        final ECPublicKeySpec pubKeySpec = new ECPublicKeySpec(point, params);
         return kf.generatePublic(pubKeySpec);
     }
 }

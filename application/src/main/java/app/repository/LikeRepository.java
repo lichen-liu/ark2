@@ -5,8 +5,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SignatureException;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.concurrent.TimeoutException;
 
 import org.hyperledger.fabric.gateway.Contract;
@@ -16,15 +14,15 @@ import app.utils.GensonDeserializer;
 
 public class LikeRepository extends ReadableRepository {
 
-    public LikeRepository(Contract contract) {
+    public LikeRepository(final Contract contract) {
         this.deserializer = new GensonDeserializer();
         this.contract = contract;
     }
 
-    public String insertNewLike(Contract contract, String content, PublicKey publicKey, PrivateKey privateKey)
-            throws InvalidKeyException, NoSuchAlgorithmException, SignatureException, ContractException,
-            TimeoutException, InterruptedException {
-            
+    public String insertNewLike(final Contract contract, final String content, final PublicKey publicKey,
+            final PrivateKey privateKey) throws InvalidKeyException, NoSuchAlgorithmException, SignatureException,
+            ContractException, TimeoutException, InterruptedException {
+
         return new String(contract.submitTransaction("publishNewPointTransaction", "20210412_155300",
                 "{\"userId\":\"bank\",\"pointAmount\":100}", "bank", "reference", "signature(bank)",
                 "[{\"userId\":\"ray\",\"pointAmount\":100}]"));

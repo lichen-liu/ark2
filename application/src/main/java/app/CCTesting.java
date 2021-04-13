@@ -10,17 +10,16 @@ import java.security.SecureRandom;
 import java.security.spec.ECGenParameterSpec;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Timer;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 
 import org.hyperledger.fabric.gateway.Contract;
 
 import app.repository.contracts.Transaction;
 import app.repository.contracts.Transaction.Participant;
 import app.utils.ByteUtils;
+
 public class CCTesting {
     private int testId = 0;
     private final ObjectMapper objectMapper;
@@ -33,22 +32,22 @@ public class CCTesting {
         try {
             final Contract contract = appPeer.getContract();
 
-            String ray = "ray";
-            String charles = "charles";
-            String bank = "bank";
-            String zac = "zac";
+            final String ray = "ray";
+            final String charles = "charles";
+            final String bank = "bank";
+            final String zac = "zac";
 
-            var names = new String[] {ray, charles, bank, zac};
-            var users = new HashMap<String, AppClient> ();
+            final var names = new String[] { ray, charles, bank, zac };
+            final var users = new HashMap<String, AppClient>();
 
-            for(var name : names) {
+            for (final var name : names) {
                 users.put(name, createClient(contract));
             }
 
-            String bankId = ByteUtils.bytesToHexString(users.get(bank).getPublicKey().getEncoded());
-            String rayId = ByteUtils.bytesToHexString(users.get(ray).getPublicKey().getEncoded());
-            String zacId = ByteUtils.bytesToHexString(users.get(zac).getPublicKey().getEncoded());
-            String charlesId = ByteUtils.bytesToHexString(users.get(charles).getPublicKey().getEncoded());
+            final String bankId = ByteUtils.bytesToHexString(users.get(bank).getPublicKey().getEncoded());
+            final String rayId = ByteUtils.bytesToHexString(users.get(ray).getPublicKey().getEncoded());
+            final String zacId = ByteUtils.bytesToHexString(users.get(zac).getPublicKey().getEncoded());
+            final String charlesId = ByteUtils.bytesToHexString(users.get(charles).getPublicKey().getEncoded());
 
             print(appPeer.getContract().submitTransaction("publishNewPost", "a", "a", "a", "a"));
 
@@ -59,52 +58,50 @@ public class CCTesting {
             }
 
             {
-                String post = "This is a post This is a post This is a post This is a post This is a post";
-                long startTime = System.nanoTime();
-                for(int i = 0; i < 100; ++i) {
+                final String post = "This is a post This is a post This is a post This is a post This is a post";
+                final long startTime = System.nanoTime();
+                for (int i = 0; i < 100; ++i) {
                     appPeer.publishNewPost(post);
                 }
-                long endTime = System.nanoTime();
-                long average = (endTime - startTime) / (long)100; 
+                final long endTime = System.nanoTime();
+                final long average = (endTime - startTime) / (long) 100;
                 System.out.println("Average 1: " + Long.toString(average));
             }
-            
+
             {
-                String post = "This is a post This is a post This is a post This is a post This is a post";
+                final String post = "This is a post This is a post This is a post This is a post This is a post";
                 users.get(ray).publishNewPost(post);
-                long startTime = System.nanoTime();
-                for(int i = 0; i < 100; ++i) {
+                final long startTime = System.nanoTime();
+                for (int i = 0; i < 100; ++i) {
                     appPeer.fetchAllUserPosts(rayId);
                 }
-                long endTime = System.nanoTime();
-                long average = (endTime - startTime) / (long)100; 
+                final long endTime = System.nanoTime();
+                final long average = (endTime - startTime) / (long) 100;
                 System.out.println("Average 2: " + Long.toString(average));
             }
 
             {
-                Transaction transaction = new Transaction();
+                final Transaction transaction = new Transaction();
                 transaction.reference = "reference";
-                transaction.payer = new Participant(rayId, (double)100);
-                transaction.payees = Arrays.asList(
-                    new Participant(rayId, (double)100) 
-                );
+                transaction.payer = new Participant(rayId, (double) 100);
+                transaction.payees = Arrays.asList(new Participant(rayId, (double) 100));
 
-                long startTime = System.nanoTime();
-                for(int i = 0; i < 100; ++i) {
+                final long startTime = System.nanoTime();
+                for (int i = 0; i < 100; ++i) {
                     users.get(ray).publishNewTransaction(transaction);
                 }
-                long endTime = System.nanoTime();
-                long average = (endTime - startTime) / (long)100; 
+                final long endTime = System.nanoTime();
+                final long average = (endTime - startTime) / (long) 100;
                 System.out.println("Average 3: " + Long.toString(average));
             }
 
             {
-                long startTime = System.nanoTime();
-                for(int i = 0; i < 100; ++i) {
+                final long startTime = System.nanoTime();
+                for (int i = 0; i < 100; ++i) {
                     users.get(ray).getPointAmount();
                 }
-                long endTime = System.nanoTime();
-                long average = (endTime - startTime) / (long)100; 
+                final long endTime = System.nanoTime();
+                final long average = (endTime - startTime) / (long) 100;
                 System.out.println("Average 4: " + Long.toString(average));
             }
             // print(appPeer.fetchAllPosts());
@@ -112,77 +109,81 @@ public class CCTesting {
             // print(appPeer.fetchAllPostKeys());
 
             // {
-            //     Transaction transaction = new Transaction();
-            //     transaction.reference = "reference";
-            //     transaction.payer = new Participant(bankId, (double)100);
-            //     transaction.payees = Arrays.asList(
-            //         new Participant(rayId, (double)100) 
-            //     );
-                
-            //     final var t0 = users.get(bank).publishNewTransaction(transaction);
-            //     print(t0);
-            //     print(contract.evaluateTransaction("getPointTransactionByKey", t0));
+            // Transaction transaction = new Transaction();
+            // transaction.reference = "reference";
+            // transaction.payer = new Participant(bankId, (double)100);
+            // transaction.payees = Arrays.asList(
+            // new Participant(rayId, (double)100)
+            // );
+
+            // final var t0 = users.get(bank).publishNewTransaction(transaction);
+            // print(t0);
+            // print(contract.evaluateTransaction("getPointTransactionByKey", t0));
             // }
 
             // {
-            //     Transaction transaction = new Transaction();
-            //     transaction.reference = "reference";
-            //     transaction.payer = new Participant(rayId, (double)100);
-            //     transaction.payees = Arrays.asList(
-            //         new Participant(charlesId, (double)50),
-            //         new Participant(zacId, (double)50) 
-            //     );
+            // Transaction transaction = new Transaction();
+            // transaction.reference = "reference";
+            // transaction.payer = new Participant(rayId, (double)100);
+            // transaction.payees = Arrays.asList(
+            // new Participant(charlesId, (double)50),
+            // new Participant(zacId, (double)50)
+            // );
 
-            //     final var t1 = users.get(ray).publishNewTransaction(transaction);
-            //     print(t1);
-            //     print(contract.evaluateTransaction("getPointTransactionByKey", t1));
-            // }
-
-            // {  
-            //     Transaction transaction = new Transaction();
-            //     transaction.reference = "reference";
-            //     transaction.payer = new Participant(bankId, (double)100);
-            //     transaction.payees = Arrays.asList(
-            //         new Participant(rayId, (double)100) 
-            //     );
-
-            //     final var t2 = users.get(bank).publishNewTransaction(transaction);
-            //     print(t2);
-            //     print(contract.evaluateTransaction("getPointTransactionByKey", t2));
+            // final var t1 = users.get(ray).publishNewTransaction(transaction);
+            // print(t1);
+            // print(contract.evaluateTransaction("getPointTransactionByKey", t1));
             // }
 
             // {
-                
-            //     Transaction transaction = new Transaction();
-            //     transaction.reference = "reference";
-            //     transaction.payer = new Participant(bankId, (double)100);
-            //     transaction.payees = Arrays.asList(
-            //         new Participant(rayId, (double)100) 
-            //     );
+            // Transaction transaction = new Transaction();
+            // transaction.reference = "reference";
+            // transaction.payer = new Participant(bankId, (double)100);
+            // transaction.payees = Arrays.asList(
+            // new Participant(rayId, (double)100)
+            // );
 
-            //     final var t3 = users.get(bank).publishNewTransaction(transaction);
-            //     print(t3);
-            //     print(contract.evaluateTransaction("getPointTransactionByKey", t3));
+            // final var t2 = users.get(bank).publishNewTransaction(transaction);
+            // print(t2);
+            // print(contract.evaluateTransaction("getPointTransactionByKey", t2));
             // }
 
             // {
-            //     Transaction transaction = new Transaction();
-            //     transaction.reference = "reference";
-            //     transaction.payer = new Participant(rayId, (double)150);
-            //     transaction.payees = Arrays.asList(
-            //         new Participant(charlesId, (double)50),
-            //         new Participant(zacId, (double)100) 
-            //     );
 
-            //     final var t4 = users.get(ray).publishNewTransaction(transaction);
-            //     print(t4);
-            //     print(contract.evaluateTransaction("getPointTransactionByKey", t4));
+            // Transaction transaction = new Transaction();
+            // transaction.reference = "reference";
+            // transaction.payer = new Participant(bankId, (double)100);
+            // transaction.payees = Arrays.asList(
+            // new Participant(rayId, (double)100)
+            // );
+
+            // final var t3 = users.get(bank).publishNewTransaction(transaction);
+            // print(t3);
+            // print(contract.evaluateTransaction("getPointTransactionByKey", t3));
             // }
 
-            // print("bank: " + new String(contract.evaluateTransaction("getPointAmountByUserId", bankId)));
-            // print("ray: " + new String(contract.evaluateTransaction("getPointAmountByUserId", rayId)));
-            // print("charles: " + new String(contract.evaluateTransaction("getPointAmountByUserId", charlesId)));
-            // print("zac: " + new String(contract.evaluateTransaction("getPointAmountByUserId", zacId)));
+            // {
+            // Transaction transaction = new Transaction();
+            // transaction.reference = "reference";
+            // transaction.payer = new Participant(rayId, (double)150);
+            // transaction.payees = Arrays.asList(
+            // new Participant(charlesId, (double)50),
+            // new Participant(zacId, (double)100)
+            // );
+
+            // final var t4 = users.get(ray).publishNewTransaction(transaction);
+            // print(t4);
+            // print(contract.evaluateTransaction("getPointTransactionByKey", t4));
+            // }
+
+            // print("bank: " + new
+            // String(contract.evaluateTransaction("getPointAmountByUserId", bankId)));
+            // print("ray: " + new
+            // String(contract.evaluateTransaction("getPointAmountByUserId", rayId)));
+            // print("charles: " + new
+            // String(contract.evaluateTransaction("getPointAmountByUserId", charlesId)));
+            // print("zac: " + new
+            // String(contract.evaluateTransaction("getPointAmountByUserId", zacId)));
             // print(contract.evaluateTransaction("getAllPointTransactionKeys"));
         } catch (final Exception e) {
             e.printStackTrace();
@@ -227,14 +228,15 @@ public class CCTesting {
         return null;
     }
 
-    private AppClient createClient(Contract contract) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException{
-        
-        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC");
+    private AppClient createClient(final Contract contract)
+            throws InvalidAlgorithmParameterException, NoSuchAlgorithmException {
+
+        final KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC");
         keyGen.initialize(new ECGenParameterSpec("secp256r1"), new SecureRandom());
 
-        KeyPair pair = keyGen.generateKeyPair();
-        PrivateKey priv = pair.getPrivate();
-        PublicKey pub = pair.getPublic();
+        final KeyPair pair = keyGen.generateKeyPair();
+        final PrivateKey priv = pair.getPrivate();
+        final PublicKey pub = pair.getPublic();
         return new AppClient(contract, pub, priv);
     }
 

@@ -12,6 +12,7 @@ public class Transaction {
             this.userId = userId;
             this.amount = amount;
         }
+
         public String userId;
         public Double amount;
     }

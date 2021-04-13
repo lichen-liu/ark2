@@ -22,41 +22,43 @@ import app.utils.ByteUtils;
 
 public class AppClient {
 
-    private Contract contract;
-    private PrivateKey privateKey;
-    private PublicKey publicKey;
+    private final Contract contract;
+    private final PrivateKey privateKey;
+    private final PublicKey publicKey;
     private PostRepository postRepository;
     private LikeRepository likeRepository;
     private PointTransactionRepository transactionRepository;
 
-    public AppClient(Wallet wallet, Contract contract, String userId) throws InvalidKeySpecException, IOException {
+    public AppClient(final Wallet wallet, final Contract contract, final String userId)
+            throws InvalidKeySpecException, IOException {
         this.contract = contract;
-        X509Identity adminIdentity = (X509Identity) wallet.get(userId);
+        final X509Identity adminIdentity = (X509Identity) wallet.get(userId);
         this.privateKey = adminIdentity.getPrivateKey();
         this.publicKey = adminIdentity.getCertificate().getPublicKey();
         InitRepositories();
     }
 
-    public AppClient(Contract contract, PublicKey publicKey, PrivateKey privateKey) {
+    public AppClient(final Contract contract, final PublicKey publicKey, final PrivateKey privateKey) {
         this.contract = contract;
         this.privateKey = privateKey;
         this.publicKey = publicKey;
         InitRepositories();
     }
 
-    public String publishNewPost(String content) throws ContractException, TimeoutException, InterruptedException, InvalidKeyException, NoSuchAlgorithmException, SignatureException{
+    public String publishNewPost(final String content) throws ContractException, TimeoutException, InterruptedException,
+            InvalidKeyException, NoSuchAlgorithmException, SignatureException {
         return postRepository.insertNewPost(contract, content, publicKey, privateKey);
     }
 
-    public String[] fetchUserPostKeys(String userId) throws Exception {
+    public String[] fetchUserPostKeys(final String userId) throws Exception {
         return postRepository.selectObjectKeysByCustomKey(userId);
     }
 
     public String[] fetchAllPostKeys() throws Exception {
         return postRepository.selectObjectKeysByCustomKey();
-    }   
-    
-    public String[] fetchAllUserPosts(String userId) throws Exception {
+    }
+
+    public String[] fetchAllUserPosts(final String userId) throws Exception {
         return postRepository.selectObjectsByCustomKeys(userId);
     }
 
@@ -64,12 +66,14 @@ public class AppClient {
         return postRepository.selectObjectsByCustomKeys();
     }
 
-    public String publishNewTransaction(Transaction transaction) throws Exception {
-        return transactionRepository.insertNewTransaction(contract, transaction.reference, transaction, publicKey, privateKey);
+    public String publishNewTransaction(final Transaction transaction) throws Exception {
+        return transactionRepository.insertNewTransaction(contract, transaction.reference, transaction, publicKey,
+                privateKey);
     }
 
     public String getPointAmount() throws ContractException {
-        return new String(contract.evaluateTransaction("getPointAmountByUserId", ByteUtils.bytesToHexString(publicKey.getEncoded())));
+        return new String(contract.evaluateTransaction("getPointAmountByUserId",
+                ByteUtils.bytesToHexString(publicKey.getEncoded())));
     }
 
     public Contract getContract() {

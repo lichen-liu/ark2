@@ -3,13 +3,10 @@ package app;
 import java.io.File;
 import java.nio.file.Paths;
 import java.security.PrivateKey;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-//import com.owlike.genson.Genson;
 
 import org.hyperledger.fabric.gateway.Identities;
 import org.hyperledger.fabric.gateway.Wallet;
@@ -52,14 +49,15 @@ class App {
             tryEnrollAdmin(wallet, client, peerInfo);
             tryRegisterUser(wallet, client, peerInfo);
 
-            var contractCreation = new ContractFactory.Entity();
+            final var contractCreation = new ContractFactory.Entity();
             contractCreation.userId = peerInfo.getUserId();
             contractCreation.channel = peerInfo.getChannel();
             contractCreation.contractName = peerInfo.getContractName();
             contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
-            "peerOrganizations", "org1.example.com", "connection-org1.yaml");;
+                    "peerOrganizations", "org1.example.com", "connection-org1.yaml");
+            ;
 
-            var contract = ContractFactory.CreateContract(wallet, contractCreation);
+            final var contract = ContractFactory.CreateContract(wallet, contractCreation);
             final var appClient = new AppClient(wallet, contract, peerInfo.getUserId());
 
             final var t = new CCTesting();

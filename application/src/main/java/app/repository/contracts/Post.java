@@ -1,7 +1,9 @@
 package app.repository.contracts;
 
 public class Post implements RepositoryContract {
-    public Post() {}
+    public Post() {
+    }
+
     @Override
     public String getKeySelectionQuery() {
         return "getAllPostKeys";
@@ -11,7 +13,7 @@ public class Post implements RepositoryContract {
     public String getObjectSelectionQuery() {
         return "getAllPostKeysByUserId";
     }
-   
+
     @Override
     public String getInsertionQuery() {
         return "getInsertionQuery";

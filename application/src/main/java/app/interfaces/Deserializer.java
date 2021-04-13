@@ -10,7 +10,10 @@ import app.repository.contracts.Transaction.Participant;
 
 public interface Deserializer {
     public String[] toStringArray(String str) throws Exception;
+
     public String participantsToJson(Iterable<Participant> participants) throws JsonProcessingException;
-    public String participantToJson(Participant participant) throws IOException, JsonParseException, JsonMappingException;
+
+    public String participantToJson(Participant participant)
+            throws IOException, JsonParseException, JsonMappingException;
 
 }

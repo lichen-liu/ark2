@@ -19,19 +19,19 @@ import app.utils.NewPostSignature;
 
 public class PostRepository extends ReadableRepository {
 
-    public PostRepository(Contract contract) {
+    public PostRepository(final Contract contract) {
         this.deserializer = new GensonDeserializer();
         this.contract = contract;
     }
 
-    public String insertNewPost(Contract contract, String content, PublicKey publicKey, PrivateKey privateKey)
-            throws InvalidKeyException, NoSuchAlgorithmException, SignatureException, ContractException,
-            TimeoutException, InterruptedException {
+    public String insertNewPost(final Contract contract, final String content, final PublicKey publicKey,
+            final PrivateKey privateKey) throws InvalidKeyException, NoSuchAlgorithmException, SignatureException,
+            ContractException, TimeoutException, InterruptedException {
 
-        var timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
-        var publicKeyString = ByteUtils.bytesToHexString(publicKey.getEncoded());
-        var hash = ByteUtils.getSHA(String.join("", timestamp, content, publicKeyString));
-        var signature = NewPostSignature.sign(privateKey, hash);
+        final var timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
+        final var publicKeyString = ByteUtils.bytesToHexString(publicKey.getEncoded());
+        final var hash = ByteUtils.getSHA(String.join("", timestamp, content, publicKeyString));
+        final var signature = NewPostSignature.sign(privateKey, hash);
 
         return new String(contract.submitTransaction("publishNewPost", timestamp, content, publicKeyString,
                 ByteUtils.bytesToHexString(signature)));

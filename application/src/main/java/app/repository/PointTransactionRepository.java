@@ -15,25 +15,25 @@ import app.utils.NewPostSignature;
 
 public class PointTransactionRepository extends ReadableRepository {
 
-    public PointTransactionRepository(Contract contract) {
+    public PointTransactionRepository(final Contract contract) {
         this.deserializer = new GensonDeserializer();
         this.contract = contract;
     }
 
-    public String insertNewTransaction(Contract contract, String reference, Transaction transaction,  
-    PublicKey publicKey, PrivateKey privateKey) throws Exception {
-            
-        var timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);  
-    
-        var payer = this.deserializer.participantToJson(transaction.payer);
-        var payees = this.deserializer.participantsToJson(transaction.payees);
-        var publicKeyString = ByteUtils.bytesToHexString(publicKey.getEncoded());
-        
-        var hash = ByteUtils.getSHA(String.join("", timestamp, payer, publicKeyString, reference));
-        var signature = NewPostSignature.sign(privateKey, hash);
+    public String insertNewTransaction(final Contract contract, final String reference, final Transaction transaction,
+            final PublicKey publicKey, final PrivateKey privateKey) throws Exception {
 
-        return new String(contract.submitTransaction("publishNewPointTransaction", timestamp,
-                        payer, publicKeyString, ByteUtils.bytesToHexString(signature), reference, payees));
+        final var timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
+
+        final var payer = this.deserializer.participantToJson(transaction.payer);
+        final var payees = this.deserializer.participantsToJson(transaction.payees);
+        final var publicKeyString = ByteUtils.bytesToHexString(publicKey.getEncoded());
+
+        final var hash = ByteUtils.getSHA(String.join("", timestamp, payer, publicKeyString, reference));
+        final var signature = NewPostSignature.sign(privateKey, hash);
+
+        return new String(contract.submitTransaction("publishNewPointTransaction", timestamp, payer, publicKeyString,
+                ByteUtils.bytesToHexString(signature), reference, payees));
     }
 
     @Override
