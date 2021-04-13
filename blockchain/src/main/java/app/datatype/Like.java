@@ -24,14 +24,14 @@ public final class Like implements KeyGeneration, ComparableByTimestamp, Compara
     @Property
     private final String userId;
 
-    @Property
-    private final String pointTransactionKey;
-
     /**
-     * sign(privateKey, hash(timestamp, postKey, userId, pointTransactionKey))
+     * sign(privateKey, hash(timestamp, postKey, userId))
      */
     @Property
     private final String signature;
+
+    @Property
+    private final String pointTransactionKey;
 
     @Property
     private final long relativeOrder;
@@ -49,12 +49,12 @@ public final class Like implements KeyGeneration, ComparableByTimestamp, Compara
         return userId;
     }
 
-    public String getPointTransactionKey() {
-        return pointTransactionKey;
-    }
-
     public String getSignature() {
         return signature;
+    }
+
+    public String getPointTransactionKey() {
+        return pointTransactionKey;
     }
 
     @Override
@@ -63,15 +63,14 @@ public final class Like implements KeyGeneration, ComparableByTimestamp, Compara
     }
 
     public Like(@JsonProperty("timestamp") final String timestamp, @JsonProperty("postKey") final String postKey,
-            @JsonProperty("userId") final String userId,
+            @JsonProperty("userId") final String userId, @JsonProperty("signature") final String signature,
             @JsonProperty("pointTransactionKey") final String pointTransactionKey,
-            @JsonProperty("signature") final String signature,
             @JsonProperty("relativeOrder") final long relativeOrder) {
         this.timestamp = timestamp;
         this.postKey = postKey;
         this.userId = userId;
-        this.pointTransactionKey = pointTransactionKey;
         this.signature = signature;
+        this.pointTransactionKey = pointTransactionKey;
         this.relativeOrder = relativeOrder;
     }
 

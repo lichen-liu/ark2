@@ -1,7 +1,5 @@
 package app;
 
-import java.io.File;
-import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -12,23 +10,19 @@ import java.security.SecureRandom;
 import java.security.spec.ECGenParameterSpec;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.apache.commons.io.FileUtils;
+
 import org.hyperledger.fabric.gateway.Contract;
 
 import app.repository.contracts.Transaction;
 import app.repository.contracts.Transaction.Participant;
 import app.utils.ByteUtils;
-import app.utils.KeyParser;
-
 public class CCTesting {
     private int testId = 0;
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     public CCTesting() {
         objectMapper = new ObjectMapper();
@@ -159,7 +153,7 @@ public class CCTesting {
 
         System.out.println("\n[" + this.testId + "] result: ");
 
-        for (var result : results) {
+        for (final var result : results) {
             System.out.println(prettifyJson(result));
         }
 
@@ -170,14 +164,14 @@ public class CCTesting {
         return new String(result);
     }
 
-    private String prettifyJson(String raw) {
+    private String prettifyJson(final String raw) {
         try {
-            Object json = objectMapper.readValue(raw, Object.class);
-            String prettified = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+            final Object json = objectMapper.readValue(raw, Object.class);
+            final String prettified = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
             return prettified;
-        } catch (JsonParseException e) {
+        } catch (final JsonParseException e) {
             return raw;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
         return null;
