@@ -30,4 +30,5 @@ public class LikeRewarding {
         return this.basePointAmount * (splitToAuthorRatio + inflationRate * Math.log(this.totalNumberLikes));
     }
 
+    /// TODO: beta distribution
 }
