@@ -26,7 +26,7 @@ import app.datatype.PointTransaction;
 import app.datatype.Post;
 import app.util.ChaincodeStubTools;
 
-@Contract(name = "Agreements", info = @Info(title = "Agreements contract", description = "A java chaincode example", version = "0.0.1-SNAPSHOT"))
+@Contract(name = "ForumAgreement", info = @Info(title = "ForumAgreement", description = "Forum chaincode", version = "0.1.0-SNAPSHOT"))
 
 @Default
 public final class ForumRepository implements ContractInterface {

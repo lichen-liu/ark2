@@ -14,7 +14,7 @@ VERBOSE="$6"
 : ${VERBOSE:="false"}
 CC_SRC_LANGUAGE=`echo "$CC_SRC_LANGUAGE" | tr [:upper:] [:lower:]`
 
-CHAINCODE_NAME="agreements"
+CHAINCODE_NAME="ForumAgreement"
 
 FABRIC_CFG_PATH=$PWD/./config/
 

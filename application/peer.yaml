@@ -2,7 +2,7 @@
 mpsId: Org1MSP
 affliation: org1.department1
 channel: mychannel
-contractName: agreements
+contractName: ForumAgreement
 adminName: admin
 adminSecret: adminpw
 hostName: localhost
