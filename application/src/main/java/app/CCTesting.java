@@ -10,6 +10,7 @@ import java.security.SecureRandom;
 import java.security.spec.ECGenParameterSpec;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +29,7 @@ public class CCTesting {
         objectMapper = new ObjectMapper();
     }
 
-    public void test(final AppClient appPeer) {
+    public void benchmark(final AppClient appPeer) {
         try {
             final Contract contract = appPeer.getContract();
 
@@ -37,10 +38,8 @@ public class CCTesting {
             final String bank = "bank";
             final String zac = "zac";
 
-            final var names = new String[] { ray, charles, bank, zac };
             final var users = new HashMap<String, AppClient>();
-
-            for (final var name : names) {
+            for (final String name : List.of(ray, charles, bank, zac)) {
                 users.put(name, createClient(contract));
             }
 
@@ -104,91 +103,101 @@ public class CCTesting {
                 final long average = (endTime - startTime) / (long) 100;
                 System.out.println("Average 4: " + Long.toString(average));
             }
-            // print(appPeer.fetchAllPosts());
-
-            // print(appPeer.fetchAllPostKeys());
-
-            // {
-            // Transaction transaction = new Transaction();
-            // transaction.reference = "reference";
-            // transaction.payer = new Participant(bankId, (double)100);
-            // transaction.payees = Arrays.asList(
-            // new Participant(rayId, (double)100)
-            // );
-
-            // final var t0 = users.get(bank).publishNewTransaction(transaction);
-            // print(t0);
-            // print(contract.evaluateTransaction("getPointTransactionByKey", t0));
-            // }
-
-            // {
-            // Transaction transaction = new Transaction();
-            // transaction.reference = "reference";
-            // transaction.payer = new Participant(rayId, (double)100);
-            // transaction.payees = Arrays.asList(
-            // new Participant(charlesId, (double)50),
-            // new Participant(zacId, (double)50)
-            // );
-
-            // final var t1 = users.get(ray).publishNewTransaction(transaction);
-            // print(t1);
-            // print(contract.evaluateTransaction("getPointTransactionByKey", t1));
-            // }
-
-            // {
-            // Transaction transaction = new Transaction();
-            // transaction.reference = "reference";
-            // transaction.payer = new Participant(bankId, (double)100);
-            // transaction.payees = Arrays.asList(
-            // new Participant(rayId, (double)100)
-            // );
-
-            // final var t2 = users.get(bank).publishNewTransaction(transaction);
-            // print(t2);
-            // print(contract.evaluateTransaction("getPointTransactionByKey", t2));
-            // }
-
-            // {
-
-            // Transaction transaction = new Transaction();
-            // transaction.reference = "reference";
-            // transaction.payer = new Participant(bankId, (double)100);
-            // transaction.payees = Arrays.asList(
-            // new Participant(rayId, (double)100)
-            // );
-
-            // final var t3 = users.get(bank).publishNewTransaction(transaction);
-            // print(t3);
-            // print(contract.evaluateTransaction("getPointTransactionByKey", t3));
-            // }
-
-            // {
-            // Transaction transaction = new Transaction();
-            // transaction.reference = "reference";
-            // transaction.payer = new Participant(rayId, (double)150);
-            // transaction.payees = Arrays.asList(
-            // new Participant(charlesId, (double)50),
-            // new Participant(zacId, (double)100)
-            // );
-
-            // final var t4 = users.get(ray).publishNewTransaction(transaction);
-            // print(t4);
-            // print(contract.evaluateTransaction("getPointTransactionByKey", t4));
-            // }
-
-            // print("bank: " + new
-            // String(contract.evaluateTransaction("getPointAmountByUserId", bankId)));
-            // print("ray: " + new
-            // String(contract.evaluateTransaction("getPointAmountByUserId", rayId)));
-            // print("charles: " + new
-            // String(contract.evaluateTransaction("getPointAmountByUserId", charlesId)));
-            // print("zac: " + new
-            // String(contract.evaluateTransaction("getPointAmountByUserId", zacId)));
-            // print(contract.evaluateTransaction("getAllPointTransactionKeys"));
         } catch (final Exception e) {
             e.printStackTrace();
         }
+    }
 
+    public void test(final AppClient appPeer) {
+
+        try {
+            print(appPeer.fetchAllPosts());
+
+            print(appPeer.fetchAllPostKeys());
+
+            final Contract contract = appPeer.getContract();
+
+            final String ray = "ray";
+            final String charles = "charles";
+            final String bank = "bank";
+            final String zac = "zac";
+
+            final var users = new HashMap<String, AppClient>();
+            for (final String name : List.of(ray, charles, bank, zac)) {
+                users.put(name, createClient(contract));
+            }
+
+            final String bankId = ByteUtils.bytesToHexString(users.get(bank).getPublicKey().getEncoded());
+            final String rayId = ByteUtils.bytesToHexString(users.get(ray).getPublicKey().getEncoded());
+            final String zacId = ByteUtils.bytesToHexString(users.get(zac).getPublicKey().getEncoded());
+            final String charlesId = ByteUtils.bytesToHexString(users.get(charles).getPublicKey().getEncoded());
+
+            {
+                final Transaction transaction = new Transaction();
+                transaction.reference = "reference";
+                transaction.payer = new Participant(bankId, (double) 100);
+                transaction.payees = Arrays.asList(new Participant(rayId, (double) 100));
+
+                final var t0 = users.get(bank).publishNewTransaction(transaction);
+                print(t0);
+                print(contract.evaluateTransaction("getPointTransactionByKey", t0));
+            }
+
+            {
+                final Transaction transaction = new Transaction();
+                transaction.reference = "reference";
+                transaction.payer = new Participant(rayId, (double) 100);
+                transaction.payees = Arrays.asList(new Participant(charlesId, (double) 50),
+                        new Participant(zacId, (double) 50));
+
+                final var t1 = users.get(ray).publishNewTransaction(transaction);
+                print(t1);
+                print(contract.evaluateTransaction("getPointTransactionByKey", t1));
+            }
+
+            {
+                final Transaction transaction = new Transaction();
+                transaction.reference = "reference";
+                transaction.payer = new Participant(bankId, (double) 100);
+                transaction.payees = Arrays.asList(new Participant(rayId, (double) 100));
+
+                final var t2 = users.get(bank).publishNewTransaction(transaction);
+                print(t2);
+                print(contract.evaluateTransaction("getPointTransactionByKey", t2));
+            }
+
+            {
+
+                final Transaction transaction = new Transaction();
+                transaction.reference = "reference";
+                transaction.payer = new Participant(bankId, (double) 100);
+                transaction.payees = Arrays.asList(new Participant(rayId, (double) 100));
+
+                final var t3 = users.get(bank).publishNewTransaction(transaction);
+                print(t3);
+                print(contract.evaluateTransaction("getPointTransactionByKey", t3));
+            }
+
+            {
+                final Transaction transaction = new Transaction();
+                transaction.reference = "reference";
+                transaction.payer = new Participant(rayId, (double) 150);
+                transaction.payees = Arrays.asList(new Participant(charlesId, (double) 50),
+                        new Participant(zacId, (double) 100));
+
+                final var t4 = users.get(ray).publishNewTransaction(transaction);
+                print(t4);
+                print(contract.evaluateTransaction("getPointTransactionByKey", t4));
+            }
+
+            print("bank: " + new String(contract.evaluateTransaction("getPointAmountByUserId", bankId)));
+            print("ray: " + new String(contract.evaluateTransaction("getPointAmountByUserId", rayId)));
+            print("charles: " + new String(contract.evaluateTransaction("getPointAmountByUserId", charlesId)));
+            print("zac: " + new String(contract.evaluateTransaction("getPointAmountByUserId", zacId)));
+            print(contract.evaluateTransaction("getAllPointTransactionKeys"));
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void print(final byte[] result) {
