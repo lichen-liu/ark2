@@ -66,7 +66,7 @@ public final class ForumRepository implements ContractInterface {
                 throw new ChaincodeException(errorMessage, errorMessage);
             }
         }
-        final String postKey = post.generateKey(key -> ChaincodeStubTools.isKeyExisted(stub, key));
+        final String postKey = ChaincodeStubTools.generateKey(stub, post);
 
         stub.putStringState(postKey, genson.serialize(post));
 
@@ -115,8 +115,7 @@ public final class ForumRepository implements ContractInterface {
         final var pointTransaction = new PointTransaction(timestamp, payerEntry, issuerUserId, signature, reference,
                 payeeEntries, this.determineRelativeOrderForPointTransaction(ctx), payerPointTransactionTracking);
 
-        final String pointTransactionKey = pointTransaction
-                .generateKey(key -> ChaincodeStubTools.isKeyExisted(stub, key));
+        final String pointTransactionKey = ChaincodeStubTools.generateKey(stub, pointTransaction);
 
         stub.putStringState(pointTransactionKey, genson.serialize(pointTransaction));
 
@@ -200,7 +199,7 @@ public final class ForumRepository implements ContractInterface {
 
         final var like = new Like(timestamp, postKey, payerEntry.getUserId(), likeSignature, null,
                 this.determineRelativeOrderForLike(ctx, postKey));
-        final String likeKey = like.generateKey(key -> ChaincodeStubTools.isKeyExisted(stub, key));
+        final String likeKey = ChaincodeStubTools.generateKey(stub, like);
 
         final String pointTransactionKey = this.publishNewPointTransaction(ctx, timestamp, payerEntryString,
                 payerEntry.getUserId(), pointTransactionSignature, likeKey, genson.serialize(payeeEntries));
@@ -433,5 +432,8 @@ public final class ForumRepository implements ContractInterface {
 
         return new PointTransaction.Tracking(recentSpendingPointTransactionKey,
                 recentEarningPointTransactionKeys.toArray(String[]::new));
+    }
+
+    public ForumRepository() {
     }
 }

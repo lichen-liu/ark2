@@ -3,6 +3,8 @@ package app.util;
 import org.hyperledger.fabric.shim.ChaincodeException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
+import app.policy.KeyGeneration;
+
 public class ChaincodeStubTools {
     public static boolean isKeyExisted(final ChaincodeStub stub, final String key) {
         return !stub.getStringState(key).isEmpty();
@@ -16,5 +18,9 @@ public class ChaincodeStubTools {
             throw new ChaincodeException(errorMessage, errorMessage);
         }
         return state;
+    }
+
+    public static String generateKey(final ChaincodeStub stub, final KeyGeneration object) {
+        return object.generateKey(key -> ChaincodeStubTools.isKeyExisted(stub, key));
     }
 }
