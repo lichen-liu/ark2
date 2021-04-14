@@ -1,7 +1,10 @@
 package app.util;
 
+import java.util.stream.StreamSupport;
+
 import org.hyperledger.fabric.shim.ChaincodeException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
+import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
 import app.policy.KeyGeneration;
 
@@ -18,6 +21,12 @@ public class ChaincodeStubTools {
             throw new ChaincodeException(errorMessage, errorMessage);
         }
         return state;
+    }
+
+    public static long getNumberStatesByPartialCompositeKey(final ChaincodeStub stub,
+            final CompositeKey partialCompositeKey) {
+        final var keyValueIterator = stub.getStateByPartialCompositeKey(partialCompositeKey);
+        return StreamSupport.stream(keyValueIterator.spliterator(), false).count();
     }
 
     public static String generateKey(final ChaincodeStub stub, final KeyGeneration object) {
