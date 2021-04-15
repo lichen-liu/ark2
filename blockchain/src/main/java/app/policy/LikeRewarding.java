@@ -1,9 +1,13 @@
 package app.policy;
 
+import org.apache.commons.math3.distribution.BetaDistribution;
+
 public class LikeRewarding {
     private final long numberLikes;
     private final long totalNumberLikes;
     private final double basePointAmount;
+
+    private BetaDistribution likerRewardingDistribution = new BetaDistribution(2, 2);
 
     public static final double splitToAuthorRatio = 0.5;
     public static final double inflationRate = 0.02;
@@ -20,9 +24,10 @@ public class LikeRewarding {
         return basePointAmount;
     }
 
-    public LikeRewarding(final long numberLikes, final long totalNumberLikes, final double basePointAmount) {
-        this.numberLikes = numberLikes;
-        this.totalNumberLikes = totalNumberLikes;
+    public LikeRewarding(final long existingNumberLikes, final long existingTotalNumberLikes,
+            final double basePointAmount) {
+        this.numberLikes = existingNumberLikes + 1;
+        this.totalNumberLikes = existingTotalNumberLikes + 1;
         this.basePointAmount = basePointAmount;
     }
 
@@ -30,5 +35,17 @@ public class LikeRewarding {
         return this.basePointAmount * (splitToAuthorRatio + inflationRate * Math.log(this.totalNumberLikes));
     }
 
-    /// TODO: beta distribution
+    public boolean isLikerRewarded(long likerRank) {
+        return likerRank * 2 < this.numberLikes;
+    }
+
+    public double determineLikerRewarding(long likerRank) {
+        likerRank = Math.min(likerRank, this.numberLikes - 1);
+        if (this.isLikerRewarded(likerRank)) {
+            return this.likerRewardingDistribution.probability(0.5 + (((double) likerRank) / (double) this.numberLikes),
+                    0.5 + (((double) likerRank + 1) / (double) this.numberLikes));
+        } else {
+            return 0;
+        }
+    }
 }
