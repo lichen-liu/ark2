@@ -32,7 +32,8 @@ public class LikeRewarding {
     }
 
     public double determineAuthorRewarding() {
-        return this.basePointAmount * (splitToAuthorRatio + inflationRate * Math.log(this.totalNumberLikes));
+        final double ratio = (splitToAuthorRatio + inflationRate * Math.log(this.totalNumberLikes));
+        return this.basePointAmount * ratio;
     }
 
     public boolean isLikerRewarded(final long likerRank) {
@@ -42,8 +43,10 @@ public class LikeRewarding {
     public double determineLikerRewarding(long likerRank) {
         likerRank = Math.min(likerRank, this.numberLikes - 1);
         if (this.isLikerRewarded(likerRank)) {
-            return this.likerRewardingDistribution.probability(0.5 + (((double) likerRank) / (double) this.numberLikes),
+            final double ratio = this.likerRewardingDistribution.probability(
+                    0.5 + (((double) likerRank) / (double) this.numberLikes),
                     0.5 + (((double) likerRank + 1) / (double) this.numberLikes));
+            return this.basePointAmount * ratio;
         } else {
             return 0;
         }
