@@ -24,6 +24,7 @@ import org.hyperledger.fabric.shim.ledger.KeyValue;
 import app.datatype.Like;
 import app.datatype.PointTransaction;
 import app.datatype.Post;
+import app.policy.LikeRewarding;
 import app.util.ChaincodeStubTools;
 
 @Contract(name = "ForumAgreement", info = @Info(title = "ForumAgreement", description = "Forum chaincode", version = "0.1.0-SNAPSHOT"))
@@ -51,7 +52,8 @@ public final class ForumRepository implements ContractInterface {
      * @param content
      * @param userId
      * @param signature
-     * @return postKey
+     * @return postKey, call getPostByKey to verify whether the Post was
+     *         successfully published
      * @throws Exception
      */
     @Transaction(intent = Transaction.TYPE.SUBMIT)
@@ -97,7 +99,8 @@ public final class ForumRepository implements ContractInterface {
      *                           "[{\"pointAmount\":150,\"userId\":\"ray\"}]"
      *                           </pre>
      * 
-     * @return
+     * @return pointTransactionKey, call getPointTransactionByKey to verify whether
+     *         the PointTransaction was successfully published
      * @throws Exception
      */
     @Transaction(intent = Transaction.TYPE.SUBMIT)
@@ -120,6 +123,74 @@ public final class ForumRepository implements ContractInterface {
         stub.putStringState(pointTransactionKey, genson.serialize(pointTransaction));
 
         return pointTransactionKey;
+    }
+
+    /**
+     * 
+     * @param ctx
+     * @param timestamp
+     * 
+     *                                  <pre>
+     *                                  ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT); // "2015-04-14T11:07:36.639Z"
+     *                                  </pre>
+     * 
+     * @param postKey
+     * @param payerEntryString
+     * 
+     *                                  <pre>
+     *                                  "{\"pointAmount\":150,\"userId\":\"ray\"}"
+     *                                  </pre>
+     * 
+     * @param likeSignature
+     * @param pointTransactionSignature
+     * @return likeKey, call getLikeByKey to verify whether the Like was
+     *         successfully published. Also call getPointTransactionByKey to check
+     *         the associating PointTransaction
+     * @throws Exception
+     */
+    @Transaction(intent = Transaction.TYPE.SUBMIT)
+    public String publishNewLike(final Context ctx, final String timestamp, final String postKey,
+            final String payerEntryString, final String likeSignature, final String pointTransactionSignature)
+            throws Exception {
+        final ChaincodeStub stub = ctx.getStub();
+
+        final var payerEntry = genson.deserialize(payerEntryString, PointTransaction.Entry.class);
+        final Post post = this.getPostByKey(ctx, postKey);
+        final KeyValue[] postLikesKeyValue = this.getAllLikesByPostKey(ctx, postKey);
+
+        final long existingNumberLikes = postLikesKeyValue.length;
+        final long existingTotalNumberLikes = ChaincodeStubTools.getNumberStatesByPartialCompositeKey(stub,
+                new CompositeKey(Like.getObjectTypeName()));
+        final LikeRewarding rewarding = new LikeRewarding(existingNumberLikes, existingTotalNumberLikes,
+                payerEntry.getPointAmount());
+
+        final List<PointTransaction.Entry> payeeEntries = new ArrayList<PointTransaction.Entry>();
+        payeeEntries.add(new PointTransaction.Entry(post.getUserId(), rewarding.determineAuthorRewarding()));
+        for (int idx = postLikesKeyValue.length - 1; idx >= 0; idx--) {
+            final long likerRank = postLikesKeyValue.length - 1 - idx;
+            if (!rewarding.isLikerRewarded(likerRank)) {
+                break;
+            }
+            final Like currentLike = genson.deserialize(postLikesKeyValue[idx].getStringValue(), Like.class);
+            payeeEntries.add(
+                    new PointTransaction.Entry(currentLike.getUserId(), rewarding.determineLikerRewarding(likerRank)));
+        }
+
+        System.out.println("publishNewLike");
+        System.out.println("payer: " + genson.serialize(payerEntry));
+        System.out.println("payees: " + genson.serialize(payeeEntries));
+
+        final var like = new Like(timestamp, postKey, payerEntry.getUserId(), likeSignature, null,
+                this.determineRelativeOrderForLike(ctx, postKey));
+        final String likeKey = ChaincodeStubTools.generateKey(stub, like);
+
+        final String pointTransactionKey = this.publishNewPointTransaction(ctx, timestamp, payerEntryString,
+                payerEntry.getUserId(), pointTransactionSignature, likeKey,
+                genson.serialize(payeeEntries.toArray(PointTransaction.Entry[]::new)));
+        like.setPointTransactionKey(pointTransactionKey);
+
+        stub.putStringState(likeKey, genson.serialize(like));
+        return likeKey;
     }
 
     /**
@@ -187,28 +258,6 @@ public final class ForumRepository implements ContractInterface {
         return genson.deserialize(postString, Post.class);
     }
 
-    @Transaction(intent = Transaction.TYPE.SUBMIT)
-    public String publishNewLike(final Context ctx, final String timestamp, final String postKey,
-            final String payerEntryString, final String likeSignature, final String pointTransactionSignature)
-            throws Exception {
-        final ChaincodeStub stub = ctx.getStub();
-        final var payerEntry = genson.deserialize(payerEntryString, PointTransaction.Entry.class);
-
-        // TODO: find payees
-        final PointTransaction.Entry[] payeeEntries = null;
-
-        final var like = new Like(timestamp, postKey, payerEntry.getUserId(), likeSignature, null,
-                this.determineRelativeOrderForLike(ctx, postKey));
-        final String likeKey = ChaincodeStubTools.generateKey(stub, like);
-
-        final String pointTransactionKey = this.publishNewPointTransaction(ctx, timestamp, payerEntryString,
-                payerEntry.getUserId(), pointTransactionSignature, likeKey, genson.serialize(payeeEntries));
-        like.setPointTransactionKey(pointTransactionKey);
-
-        stub.putStringState(likeKey, genson.serialize(like));
-        return likeKey;
-    }
-
     /**
      * Sorted by relativeOrder, most recent first
      * 
@@ -219,16 +268,30 @@ public final class ForumRepository implements ContractInterface {
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public String[] getAllLikeKeysByPostKey(final Context ctx, final String postKey) throws Exception {
+        final List<String> likeKeys = Arrays.stream(this.getAllLikesByPostKey(ctx, postKey))
+                .map(keyValue -> keyValue.getKey()).collect(Collectors.toList());
+        return likeKeys.toArray(String[]::new);
+    }
+
+    /**
+     * Sorted by relativeOrder, most recent first
+     * 
+     * @param ctx
+     * @param postKey
+     * @return
+     * @throws Exception
+     */
+    private KeyValue[] getAllLikesByPostKey(final Context ctx, final String postKey) throws Exception {
         final ChaincodeStub stub = ctx.getStub();
         final var keyValueIterator = stub.getStateByPartialCompositeKey(Like.getObjectTypeName(), postKey);
-        final List<String> likeKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
+        final List<KeyValue> likes = StreamSupport.stream(keyValueIterator.spliterator(), false)
                 .sorted((leftKeyValue, rightKeyValue) -> {
                     final var leftLike = genson.deserialize(leftKeyValue.getStringValue(), Like.class);
                     final var rightLike = genson.deserialize(rightKeyValue.getStringValue(), Like.class);
                     return rightLike.compareToByRelativeOrder(leftLike);
-                }).map(keyValue -> keyValue.getKey()).collect(Collectors.toList());
+                }).collect(Collectors.toList());
         keyValueIterator.close();
-        return likeKeys.toArray(String[]::new);
+        return likes.toArray(KeyValue[]::new);
     }
 
     /**
