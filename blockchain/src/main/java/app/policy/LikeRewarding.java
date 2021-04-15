@@ -7,7 +7,7 @@ public class LikeRewarding {
     private final long totalNumberLikes;
     private final double basePointAmount;
 
-    private BetaDistribution likerRewardingDistribution = new BetaDistribution(2, 2);
+    private final BetaDistribution likerRewardingDistribution = new BetaDistribution(2, 2);
 
     public static final double splitToAuthorRatio = 0.5;
     public static final double inflationRate = 0.02;
@@ -35,7 +35,7 @@ public class LikeRewarding {
         return this.basePointAmount * (splitToAuthorRatio + inflationRate * Math.log(this.totalNumberLikes));
     }
 
-    public boolean isLikerRewarded(long likerRank) {
+    public boolean isLikerRewarded(final long likerRank) {
         return likerRank * 2 < this.numberLikes;
     }
 
