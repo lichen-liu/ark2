@@ -9,9 +9,6 @@ import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.concurrent.TimeoutException;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
 import org.hyperledger.fabric.gateway.Wallet;
@@ -60,7 +57,7 @@ public class AppClient {
     public String[] fetchAllPostKeys() {
         try {
             return postRepository.selectObjectKeysByCustomKey();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -84,10 +81,11 @@ public class AppClient {
                 ByteUtils.bytesToHexString(publicKey.getEncoded())));
     }
 
-    public String publishNewLike(String postKey, Transaction.Entry likeInfo) {
+    public String publishNewLike(final String postKey, final Transaction.Entry likeInfo) {
         try {
             return new String(likeRepository.insertNewLike(contract, postKey, likeInfo, publicKey, privateKey));
-        } catch (Exception e) { }
+        } catch (final Exception e) {
+        }
 
         return postKey;
     }

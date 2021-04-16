@@ -148,8 +148,7 @@ public class TransactionTests {
                 final Transaction transaction = new Transaction();
                 transaction.reference = "reference";
                 transaction.payer = new Entry(rayId, (double) 100);
-                transaction.payees = Arrays.asList(new Entry(charlesId, (double) 50),
-                        new Entry(zacId, (double) 50));
+                transaction.payees = Arrays.asList(new Entry(charlesId, (double) 50), new Entry(zacId, (double) 50));
 
                 final var t1 = users.get(ray).publishNewTransaction(transaction);
                 print(t1);
@@ -183,8 +182,7 @@ public class TransactionTests {
                 final Transaction transaction = new Transaction();
                 transaction.reference = "reference";
                 transaction.payer = new Entry(rayId, (double) 150);
-                transaction.payees = Arrays.asList(new Entry(charlesId, (double) 50),
-                        new Entry(zacId, (double) 100));
+                transaction.payees = Arrays.asList(new Entry(charlesId, (double) 50), new Entry(zacId, (double) 100));
 
                 final var t4 = users.get(ray).publishNewTransaction(transaction);
                 print(t4);

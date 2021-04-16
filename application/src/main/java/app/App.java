@@ -23,6 +23,7 @@ import app.gui.ForumJFrame;
 import app.service.AdminEnrollmentService;
 import app.service.UserRegistrationService;
 import app.tests.LikeTests;
+import app.tests.TransactionTests;
 
 class App {
 
@@ -35,8 +36,8 @@ class App {
 
     public static void main(final String[] args) throws Exception {
         final App app = new App();
-        app.gui();
-        // app.test();
+        // app.gui();
+        app.test();
     }
 
     public App() {
@@ -66,8 +67,6 @@ class App {
             this.appClient = appClient;
             this.contract = contract;
 
-           
-
         } catch (final Exception e) {
             System.out.println("An error occurred when fetching wallet or client");
             System.err.println(e);
@@ -76,12 +75,11 @@ class App {
         }
     }
 
-    private void test()  {
-        new CCTesting().test(this.appClient);
-        var l = new LikeTests(contract);
+    private void test() {
         try {
-            l.benchmark();
-        } catch (Exception e){
+            new LikeTests(this.contract).benchmark();
+            new TransactionTests().test(this.appClient);
+        } catch (final Exception e) {
             e.printStackTrace();
         }
     }
