@@ -17,9 +17,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.PublishableAppUser;
 import app.repository.contracts.Transaction;
 import app.repository.contracts.Transaction.Entry;
+import app.user.PublishableAppUser;
 import app.utils.ByteUtils;
 
 public class TransactionTests {

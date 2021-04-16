@@ -24,6 +24,7 @@ import app.service.AdminEnrollmentService;
 import app.service.UserRegistrationService;
 import app.tests.LikeTests;
 import app.tests.TransactionTests;
+import app.user.PublishableAppUser;
 
 class App {
 

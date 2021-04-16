@@ -1,4 +1,4 @@
-package app;
+package app.user;
 
 import org.hyperledger.fabric.gateway.Contract;
 

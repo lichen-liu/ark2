@@ -11,7 +11,7 @@ import java.security.spec.ECGenParameterSpec;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.PublishableAppUser;
+import app.user.PublishableAppUser;
 
 public class TestClient {
     public static PublishableAppUser createTestClient(final Contract contract)
