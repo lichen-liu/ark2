@@ -38,8 +38,8 @@ public class ReadOnlyAppUser extends AnynomousAppUser {
         return super.getPostRepository().selectObjectKeysByCustomKey(this.getPublicKeyString());
     }
 
-    public String[] fetchAllUserPosts(final String userId) throws Exception {
-        return super.getPostRepository().selectObjectsByCustomKeys(userId);
+    public String[] fetchAllUserPosts() throws Exception {
+        return super.getPostRepository().selectObjectsByCustomKeys(this.getPublicKeyString());
     }
 
     public String getPointAmount() throws ContractException {

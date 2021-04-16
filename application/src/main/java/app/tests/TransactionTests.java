@@ -44,10 +44,10 @@ public class TransactionTests {
                 users.put(name, createClient(contract));
             }
 
-            final String bankId = ByteUtils.bytesToHexString(users.get(bank).getPublicKey().getEncoded());
-            final String rayId = ByteUtils.bytesToHexString(users.get(ray).getPublicKey().getEncoded());
-            final String zacId = ByteUtils.bytesToHexString(users.get(zac).getPublicKey().getEncoded());
-            final String charlesId = ByteUtils.bytesToHexString(users.get(charles).getPublicKey().getEncoded());
+            final String bankId = users.get(bank).getPublicKeyString();
+            final String rayId = users.get(ray).getPublicKeyString();
+            final String zacId = users.get(zac).getPublicKeyString();
+            final String charlesId = users.get(charles).getPublicKeyString();
 
             print(appClient.getContract().submitTransaction("publishNewPost", "a", "a", "a", "a"));
 
@@ -73,7 +73,7 @@ public class TransactionTests {
                 users.get(ray).publishNewPost(post);
                 final long startTime = System.nanoTime();
                 for (int i = 0; i < 100; ++i) {
-                    appClient.fetchAllUserPosts(rayId);
+                    users.get(ray).fetchAllUserPosts();
                 }
                 final long endTime = System.nanoTime();
                 final long average = (endTime - startTime) / (long) 100;
