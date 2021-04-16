@@ -31,7 +31,7 @@ class App {
         System.setProperty("org.hyperledger.fabric.sdk.service_discovery.as_localhost", "true");
     }
 
-    private AppClient appClient;
+    private PublishableAppUser appClient;
     private Contract contract;
 
     public static void main(final String[] args) throws Exception {
@@ -62,7 +62,7 @@ class App {
             ;
 
             final var contract = ContractFactory.CreateContract(wallet, contractCreation);
-            final var appClient = new AppClient(wallet, contract, peerInfo.getUserId());
+            final var appClient = new PublishableAppUser(wallet, contract, peerInfo.getUserId());
 
             this.appClient = appClient;
             this.contract = contract;

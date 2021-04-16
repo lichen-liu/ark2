@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.AppClient;
+import app.PublishableAppUser;
 import app.repository.contracts.Transaction;
 import app.repository.contracts.Transaction.Entry;
 import app.utils.ByteUtils;
@@ -30,7 +30,7 @@ public class TransactionTests {
         objectMapper = new ObjectMapper();
     }
 
-    public void benchmark(final AppClient appClient) {
+    public void benchmark(final PublishableAppUser appClient) {
         try {
             final Contract contract = appClient.getContract();
 
@@ -39,7 +39,7 @@ public class TransactionTests {
             final String bank = "bank";
             final String zac = "zac";
 
-            final var users = new HashMap<String, AppClient>();
+            final var users = new HashMap<String, PublishableAppUser>();
             for (final String name : List.of(ray, charles, bank, zac)) {
                 users.put(name, createClient(contract));
             }
@@ -109,7 +109,7 @@ public class TransactionTests {
         }
     }
 
-    public void test(final AppClient appClient) {
+    public void test(final PublishableAppUser appClient) {
 
         try {
             print(appClient.fetchAllPosts());
@@ -123,7 +123,7 @@ public class TransactionTests {
             final String bank = "bank";
             final String zac = "zac";
 
-            final var users = new HashMap<String, AppClient>();
+            final var users = new HashMap<String, PublishableAppUser>();
             for (final String name : List.of(ray, charles, bank, zac)) {
                 users.put(name, createClient(contract));
             }
@@ -236,7 +236,7 @@ public class TransactionTests {
         return null;
     }
 
-    private AppClient createClient(final Contract contract)
+    private PublishableAppUser createClient(final Contract contract)
             throws InvalidAlgorithmParameterException, NoSuchAlgorithmException {
 
         final KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC");
@@ -245,7 +245,7 @@ public class TransactionTests {
         final KeyPair pair = keyGen.generateKeyPair();
         final PrivateKey priv = pair.getPrivate();
         final PublicKey pub = pair.getPublic();
-        return new AppClient(contract, pub, priv);
+        return new PublishableAppUser(contract, pub, priv);
     }
 
 }

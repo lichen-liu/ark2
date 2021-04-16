@@ -11,10 +11,10 @@ import java.security.spec.ECGenParameterSpec;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.AppClient;
+import app.PublishableAppUser;
 
 public class TestClient {
-    public static AppClient createTestClient(final Contract contract)
+    public static PublishableAppUser createTestClient(final Contract contract)
             throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
         final KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC");
         keyGen.initialize(new ECGenParameterSpec("secp256r1"), new SecureRandom());
@@ -22,6 +22,6 @@ public class TestClient {
         final KeyPair pair = keyGen.generateKeyPair();
         final PrivateKey priv = pair.getPrivate();
         final PublicKey pub = pair.getPublic();
-        return new AppClient(contract, pub, priv);
+        return new PublishableAppUser(contract, pub, priv);
     }
 }
