@@ -31,6 +31,9 @@ find ./ -name '*.java' | xargs wc -l | sort -nr
 # Project Application
 Application (client) code that interacts with the blockchain via Hyperledger Fabric Gateway APIs
 
+## Requirements
+1. Netbeans (Java Swing GUI Development): https://netbeans.apache.org/
+
 ## How
 ```
 cd application
