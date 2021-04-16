@@ -8,7 +8,7 @@ public class Transaction {
     public String reference;
 
     public static class Entry {
-        public Entry(String userId, Double amount) {
+        public Entry(final String userId, final Double amount) {
             this.userId = userId;
             this.amount = amount;
         }

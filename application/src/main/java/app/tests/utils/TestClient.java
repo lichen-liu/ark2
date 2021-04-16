@@ -14,7 +14,8 @@ import org.hyperledger.fabric.gateway.Contract;
 import app.AppClient;
 
 public class TestClient {
-    public static AppClient createTestClient(Contract contract) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+    public static AppClient createTestClient(final Contract contract)
+            throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
         final KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC");
         keyGen.initialize(new ECGenParameterSpec("secp256r1"), new SecureRandom());
 

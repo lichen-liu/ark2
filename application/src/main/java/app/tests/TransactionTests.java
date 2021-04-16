@@ -30,9 +30,9 @@ public class TransactionTests {
         objectMapper = new ObjectMapper();
     }
 
-    public void benchmark(final AppClient appPeer) {
+    public void benchmark(final AppClient appClient) {
         try {
-            final Contract contract = appPeer.getContract();
+            final Contract contract = appClient.getContract();
 
             final String ray = "ray";
             final String charles = "charles";
@@ -49,10 +49,10 @@ public class TransactionTests {
             final String zacId = ByteUtils.bytesToHexString(users.get(zac).getPublicKey().getEncoded());
             final String charlesId = ByteUtils.bytesToHexString(users.get(charles).getPublicKey().getEncoded());
 
-            print(appPeer.getContract().submitTransaction("publishNewPost", "a", "a", "a", "a"));
+            print(appClient.getContract().submitTransaction("publishNewPost", "a", "a", "a", "a"));
 
             {
-                final String p0 = appPeer.publishNewPost("hahaha");
+                final String p0 = appClient.publishNewPost("hahaha");
                 print(p0);
                 print(contract.evaluateTransaction("getPostByKey", p0));
             }
@@ -61,7 +61,7 @@ public class TransactionTests {
                 final String post = "This is a post This is a post This is a post This is a post This is a post";
                 final long startTime = System.nanoTime();
                 for (int i = 0; i < 100; ++i) {
-                    appPeer.publishNewPost(post);
+                    appClient.publishNewPost(post);
                 }
                 final long endTime = System.nanoTime();
                 final long average = (endTime - startTime) / (long) 100;
@@ -73,7 +73,7 @@ public class TransactionTests {
                 users.get(ray).publishNewPost(post);
                 final long startTime = System.nanoTime();
                 for (int i = 0; i < 100; ++i) {
-                    appPeer.fetchAllUserPosts(rayId);
+                    appClient.fetchAllUserPosts(rayId);
                 }
                 final long endTime = System.nanoTime();
                 final long average = (endTime - startTime) / (long) 100;
@@ -109,14 +109,14 @@ public class TransactionTests {
         }
     }
 
-    public void test(final AppClient appPeer) {
+    public void test(final AppClient appClient) {
 
         try {
-            print(appPeer.fetchAllPosts());
+            print(appClient.fetchAllPosts());
 
-            print(appPeer.fetchAllPostKeys());
+            print(appClient.fetchAllPostKeys());
 
-            final Contract contract = appPeer.getContract();
+            final Contract contract = appClient.getContract();
 
             final String ray = "ray";
             final String charles = "charles";

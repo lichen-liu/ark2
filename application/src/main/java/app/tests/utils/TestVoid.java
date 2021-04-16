@@ -4,4 +4,3 @@ package app.tests.utils;
 public interface TestVoid {
     Object Test();
 }
-
