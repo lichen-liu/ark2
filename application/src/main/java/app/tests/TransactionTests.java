@@ -2,12 +2,9 @@ package app.tests;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SecureRandom;
-import java.security.spec.ECGenParameterSpec;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +18,7 @@ import app.repository.contracts.Transaction;
 import app.repository.contracts.Transaction.Entry;
 import app.user.PublishableAppUser;
 import app.utils.ByteUtils;
+import app.utils.Cryptography;
 
 public class TransactionTests {
     private int testId = 0;
@@ -238,14 +236,9 @@ public class TransactionTests {
 
     private PublishableAppUser createClient(final Contract contract)
             throws InvalidAlgorithmParameterException, NoSuchAlgorithmException {
-
-        final KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC");
-        keyGen.initialize(new ECGenParameterSpec("secp256r1"), new SecureRandom());
-
-        final KeyPair pair = keyGen.generateKeyPair();
+        final KeyPair pair = Cryptography.generateRandomKeyPair();
         final PrivateKey priv = pair.getPrivate();
         final PublicKey pub = pair.getPublic();
         return new PublishableAppUser(contract, pub, priv);
     }
-
 }

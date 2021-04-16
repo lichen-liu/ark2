@@ -4,12 +4,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.Security;
+import java.security.spec.ECGenParameterSpec;
 import java.security.spec.ECPoint;
 import java.security.spec.ECPrivateKeySpec;
 import java.security.spec.ECPublicKeySpec;
@@ -25,7 +30,7 @@ import org.bouncycastle.jce.spec.ECNamedCurveSpec;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
 
-public class KeyParser {
+public class Cryptography {
 
     static {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
@@ -34,7 +39,7 @@ public class KeyParser {
     private PemObject pemObject;
     private final KeyFactory factory;
 
-    public KeyParser(final String filename, final String algorithm, final String provider)
+    public Cryptography(final String filename, final String algorithm, final String provider)
             throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
 
         final PemReader pemReader = new PemReader(new InputStreamReader(new FileInputStream(filename)));
@@ -59,7 +64,7 @@ public class KeyParser {
         return factory.generatePrivate(privKeySpec);
     }
 
-    public static PrivateKey generatePrivateKey(final byte[] keyBin)
+    public static PrivateKey parsePrivateKey(final byte[] keyBin)
             throws InvalidKeySpecException, NoSuchAlgorithmException {
         final ECNamedCurveParameterSpec spec = ECNamedCurveTable.getParameterSpec("secp256k1");
         final KeyFactory kf = KeyFactory.getInstance("ECDSA", new BouncyCastleProvider());
@@ -68,7 +73,7 @@ public class KeyParser {
         return kf.generatePrivate(privKeySpec);
     }
 
-    public static PublicKey generatePublicKey(final byte[] keyBin)
+    public static PublicKey parsePublicKey(final byte[] keyBin)
             throws InvalidKeySpecException, NoSuchAlgorithmException {
         final ECNamedCurveParameterSpec spec = ECNamedCurveTable.getParameterSpec("secp256k1");
         final KeyFactory kf = KeyFactory.getInstance("ECDSA", new BouncyCastleProvider());
@@ -77,4 +82,12 @@ public class KeyParser {
         final ECPublicKeySpec pubKeySpec = new ECPublicKeySpec(point, params);
         return kf.generatePublic(pubKeySpec);
     }
+
+    public static KeyPair generateRandomKeyPair() throws InvalidAlgorithmParameterException, NoSuchAlgorithmException {
+        final KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC");
+        keyGen.initialize(new ECGenParameterSpec("secp256r1"), new SecureRandom());
+        final KeyPair pair = keyGen.generateKeyPair();
+        return pair;
+    }
+
 }
