@@ -8,6 +8,7 @@ import java.util.Set;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
+import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.Identities;
 import org.hyperledger.fabric.gateway.Wallet;
 import org.hyperledger.fabric.gateway.X509Identity;
@@ -18,6 +19,7 @@ import org.hyperledger.fabric_ca.sdk.HFCAClient;
 import app.factory.CaClientFactory;
 import app.factory.ContractFactory;
 import app.factory.WalletFactory;
+import app.gui.ForumJFrame;
 import app.service.AdminEnrollmentService;
 import app.service.UserRegistrationService;
 import app.tests.LikeTests;
@@ -28,16 +30,16 @@ class App {
         System.setProperty("org.hyperledger.fabric.sdk.service_discovery.as_localhost", "true");
     }
 
+    private AppClient appClient;
+    private Contract contract;
+
     public static void main(final String[] args) throws Exception {
         final App app = new App();
-        app.invokeAppPeer();
+        app.gui();
+        // app.test();
     }
 
     public App() {
-    }
-
-    public void invokeAppPeer() {
-
         final File file = new File("peer.yaml");
         final ObjectMapper om = new ObjectMapper(new YAMLFactory());
 
@@ -61,16 +63,27 @@ class App {
             final var contract = ContractFactory.CreateContract(wallet, contractCreation);
             final var appClient = new AppClient(wallet, contract, peerInfo.getUserId());
 
-            final var t = new CCTesting();
-            final var l = new LikeTests(contract);
-            t.test(appClient);
-            l.benchmark();
+            this.appClient = appClient;
+            this.contract = contract;
+
+           
+
         } catch (final Exception e) {
             System.out.println("An error occurred when fetching wallet or client");
             System.err.println(e);
             e.printStackTrace();
 
         }
+    }
+
+    private void test() {
+        new CCTesting().test(this.appClient);
+        final var l = new LikeTests(contract);
+        t.test(appClient);
+    }
+
+    private void gui() {
+        ForumJFrame.run(this.contract);
     }
 
     private void tryEnrollAdmin(final Wallet wallet, final HFCAClient client, final PeerInfo peer) {
