@@ -7,7 +7,7 @@ import java.util.List;
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
 
-import app.interfaces.Deserializer;
+import app.utils.Deserializer;
 
 public abstract class ReadableRepository {
     protected Deserializer deserializer;
