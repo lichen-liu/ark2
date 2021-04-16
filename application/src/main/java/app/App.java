@@ -76,10 +76,14 @@ class App {
         }
     }
 
-    private void test() {
+    private void test()  {
         new CCTesting().test(this.appClient);
-        final var l = new LikeTests(contract);
-        l.benchmark(appClient);
+        var l = new LikeTests(contract);
+        try {
+            l.benchmark();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void gui() {
