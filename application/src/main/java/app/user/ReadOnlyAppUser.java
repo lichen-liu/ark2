@@ -30,8 +30,12 @@ public class ReadOnlyAppUser extends AnynomousAppUser {
         return publicKey;
     }
 
-    public String[] fetchUserPostKeys(final String userId) throws Exception {
-        return super.getPostRepository().selectObjectKeysByCustomKey(userId);
+    public String getPublicKeyString() {
+        return ByteUtils.bytesToHexString(this.publicKey.getEncoded());
+    }
+
+    public String[] fetchUserPostKeys() throws Exception {
+        return super.getPostRepository().selectObjectKeysByCustomKey(this.getPublicKeyString());
     }
 
     public String[] fetchAllUserPosts(final String userId) throws Exception {
@@ -39,7 +43,6 @@ public class ReadOnlyAppUser extends AnynomousAppUser {
     }
 
     public String getPointAmount() throws ContractException {
-        return new String(super.getContract().evaluateTransaction("getPointAmountByUserId",
-                ByteUtils.bytesToHexString(publicKey.getEncoded())));
+        return new String(super.getContract().evaluateTransaction("getPointAmountByUserId", this.getPublicKeyString()));
     }
 }
