@@ -1,4 +1,4 @@
-package app;
+package app.tests;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
@@ -17,15 +17,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.AppClient;
 import app.repository.contracts.Transaction;
 import app.repository.contracts.Transaction.Entry;
 import app.utils.ByteUtils;
 
-public class CCTesting {
+public class TransactionTests {
     private int testId = 0;
     private final ObjectMapper objectMapper;
 
-    public CCTesting() {
+    public TransactionTests() {
         objectMapper = new ObjectMapper();
     }
 

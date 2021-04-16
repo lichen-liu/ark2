@@ -1,16 +1,26 @@
 package app.repository;
 
+import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SignatureException;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeoutException;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
 
+import app.repository.contracts.Transaction;
+import app.utils.ByteUtils;
 import app.utils.GensonDeserializer;
+import app.utils.NewPostSignature;
 
 public class LikeRepository extends ReadableRepository {
 
@@ -19,13 +29,21 @@ public class LikeRepository extends ReadableRepository {
         this.contract = contract;
     }
 
-    public String insertNewLike(final Contract contract, final String content, final PublicKey publicKey,
+    public String insertNewLike(final Contract contract, final String postKey, final Transaction.Entry likeInfo, final PublicKey publicKey,
             final PrivateKey privateKey) throws InvalidKeyException, NoSuchAlgorithmException, SignatureException,
-            ContractException, TimeoutException, InterruptedException {
+            ContractException, TimeoutException, InterruptedException, JsonParseException, JsonMappingException, IOException {
 
-        return new String(contract.submitTransaction("publishNewPointTransaction", "20210412_155300",
-                "{\"userId\":\"bank\",\"pointAmount\":100}", "bank", "reference", "signature(bank)",
-                "[{\"userId\":\"ray\",\"pointAmount\":100}]"));
+        final var timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
+        final var like = this.deserializer.transactionEntriesToJson(likeInfo);
+        final var publicKeyString = ByteUtils.bytesToHexString(publicKey.getEncoded());
+        
+        final var hash = ByteUtils.getSHA(String.join("", timestamp, postKey, publicKeyString));
+        final var likeHash = ByteUtils.getSHA(like);
+        final var signature = NewPostSignature.sign(privateKey, hash);
+        final var likeSignature = NewPostSignature.sign(privateKey, likeHash);
+        
+        return new String(contract.submitTransaction("publishNewLike", timestamp, postKey, like,
+            ByteUtils.bytesToHexString(signature),  ByteUtils.bytesToHexString(likeSignature)));
     }
 
     @Override

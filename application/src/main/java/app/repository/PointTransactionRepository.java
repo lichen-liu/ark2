@@ -25,8 +25,8 @@ public class PointTransactionRepository extends ReadableRepository {
 
         final var timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
 
-        final var payer = this.deserializer.participantToJson(transaction.payer);
-        final var payees = this.deserializer.participantsToJson(transaction.payees);
+        final var payer = this.deserializer.transactionEntriesToJson(transaction.payer);
+        final var payees = this.deserializer.transactionEntryToJson(transaction.payees);
         final var publicKeyString = ByteUtils.bytesToHexString(publicKey.getEncoded());
 
         final var hash = ByteUtils.getSHA(String.join("", timestamp, payer, publicKeyString, reference));

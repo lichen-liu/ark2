@@ -9,6 +9,9 @@ import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.concurrent.TimeoutException;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
 import org.hyperledger.fabric.gateway.Wallet;
@@ -54,8 +57,13 @@ public class AppClient {
         return postRepository.selectObjectKeysByCustomKey(userId);
     }
 
-    public String[] fetchAllPostKeys() throws Exception {
-        return postRepository.selectObjectKeysByCustomKey();
+    public String[] fetchAllPostKeys() {
+        try {
+            return postRepository.selectObjectKeysByCustomKey();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String[] fetchAllUserPosts(final String userId) throws Exception {
@@ -76,6 +84,14 @@ public class AppClient {
                 ByteUtils.bytesToHexString(publicKey.getEncoded())));
     }
 
+    public String publishNewLike(String postKey, Transaction.Entry likeInfo) {
+        try {
+            return new String(likeRepository.insertNewLike(contract, postKey, likeInfo, publicKey, privateKey));
+        } catch (Exception e) { }
+
+        return postKey;
+    }
+
     public Contract getContract() {
         return contract;
     }
@@ -87,5 +103,6 @@ public class AppClient {
     private void InitRepositories() {
         this.postRepository = new PostRepository(contract);
         this.transactionRepository = new PointTransactionRepository(contract);
+        this.likeRepository = new LikeRepository(contract);
     }
 }

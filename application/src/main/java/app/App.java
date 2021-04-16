@@ -20,6 +20,7 @@ import app.factory.ContractFactory;
 import app.factory.WalletFactory;
 import app.service.AdminEnrollmentService;
 import app.service.UserRegistrationService;
+import app.tests.LikeTests;
 
 class App {
 
@@ -61,7 +62,9 @@ class App {
             final var appClient = new AppClient(wallet, contract, peerInfo.getUserId());
 
             final var t = new CCTesting();
+            final var l = new LikeTests(contract);
             t.test(appClient);
+            l.benchmark();
         } catch (final Exception e) {
             System.out.println("An error occurred when fetching wallet or client");
             System.err.println(e);
