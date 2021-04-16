@@ -27,13 +27,13 @@ public class PointTransactionRepository extends ReadableRepository {
 
         final var payer = this.deserializer.transactionEntriesToJson(transaction.payer);
         final var payees = this.deserializer.transactionEntryToJson(transaction.payees);
-        final var publicKeyString = ByteUtils.bytesToHexString(publicKey.getEncoded());
+        final var publicKeyString = ByteUtils.toHexString(publicKey.getEncoded());
 
         final var hash = ByteUtils.getSHA(String.join("", timestamp, payer, publicKeyString, reference));
         final var signature = NewPostSignature.sign(privateKey, hash);
 
         return new String(contract.submitTransaction("publishNewPointTransaction", timestamp, payer, publicKeyString,
-                ByteUtils.bytesToHexString(signature), reference, payees));
+                ByteUtils.toHexString(signature), reference, payees));
     }
 
     @Override

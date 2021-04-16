@@ -31,7 +31,7 @@ public class ReadOnlyAppUser extends AnynomousAppUser {
     }
 
     public String getPublicKeyString() {
-        return ByteUtils.bytesToHexString(this.publicKey.getEncoded());
+        return ByteUtils.toHexString(this.publicKey.getEncoded());
     }
 
     public String[] fetchUserPostKeys() throws Exception {

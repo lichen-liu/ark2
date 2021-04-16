@@ -36,7 +36,7 @@ public class LikeRepository extends ReadableRepository {
 
         final var timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
         final var like = this.deserializer.transactionEntriesToJson(likeInfo);
-        final var publicKeyString = ByteUtils.bytesToHexString(publicKey.getEncoded());
+        final var publicKeyString = ByteUtils.toHexString(publicKey.getEncoded());
 
         final var hash = ByteUtils.getSHA(String.join("", timestamp, postKey, publicKeyString));
         final var likeHash = ByteUtils.getSHA(like);
@@ -44,7 +44,7 @@ public class LikeRepository extends ReadableRepository {
         final var likeSignature = NewPostSignature.sign(privateKey, likeHash);
 
         return new String(contract.submitTransaction("publishNewLike", timestamp, postKey, like,
-                ByteUtils.bytesToHexString(signature), ByteUtils.bytesToHexString(likeSignature)));
+                ByteUtils.toHexString(signature), ByteUtils.toHexString(likeSignature)));
     }
 
     @Override

@@ -128,10 +128,10 @@ public class TransactionTests {
                 users.put(name, createClient(contract));
             }
 
-            final String bankId = ByteUtils.bytesToHexString(users.get(bank).getPublicKey().getEncoded());
-            final String rayId = ByteUtils.bytesToHexString(users.get(ray).getPublicKey().getEncoded());
-            final String zacId = ByteUtils.bytesToHexString(users.get(zac).getPublicKey().getEncoded());
-            final String charlesId = ByteUtils.bytesToHexString(users.get(charles).getPublicKey().getEncoded());
+            final String bankId = ByteUtils.toHexString(users.get(bank).getPublicKey().getEncoded());
+            final String rayId = ByteUtils.toHexString(users.get(ray).getPublicKey().getEncoded());
+            final String zacId = ByteUtils.toHexString(users.get(zac).getPublicKey().getEncoded());
+            final String charlesId = ByteUtils.toHexString(users.get(charles).getPublicKey().getEncoded());
 
             {
                 final Transaction transaction = new Transaction();

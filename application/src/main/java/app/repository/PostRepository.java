@@ -29,12 +29,12 @@ public class PostRepository extends ReadableRepository {
             ContractException, TimeoutException, InterruptedException {
 
         final var timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
-        final var publicKeyString = ByteUtils.bytesToHexString(publicKey.getEncoded());
+        final var publicKeyString = ByteUtils.toHexString(publicKey.getEncoded());
         final var hash = ByteUtils.getSHA(String.join("", timestamp, content, publicKeyString));
         final var signature = NewPostSignature.sign(privateKey, hash);
 
         return new String(contract.submitTransaction("publishNewPost", timestamp, content, publicKeyString,
-                ByteUtils.bytesToHexString(signature)));
+                ByteUtils.toHexString(signature)));
     }
 
     @Override
