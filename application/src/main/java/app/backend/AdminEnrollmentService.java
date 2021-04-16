@@ -1,4 +1,4 @@
-package app.service;
+package app.backend;
 
 import org.hyperledger.fabric.gateway.Identities;
 import org.hyperledger.fabric.gateway.Identity;

@@ -16,12 +16,12 @@ import org.hyperledger.fabric.sdk.Enrollment;
 import org.hyperledger.fabric.sdk.User;
 import org.hyperledger.fabric_ca.sdk.HFCAClient;
 
-import app.factory.CaClientFactory;
-import app.factory.ContractFactory;
-import app.factory.WalletFactory;
+import app.backend.AdminEnrollmentService;
+import app.backend.CaClientFactory;
+import app.backend.ContractFactory;
+import app.backend.UserRegistrationService;
+import app.backend.WalletFactory;
 import app.gui.ForumJFrame;
-import app.service.AdminEnrollmentService;
-import app.service.UserRegistrationService;
 import app.tests.LikeTests;
 import app.tests.TransactionTests;
 import app.user.PublishableAppUser;
