@@ -187,10 +187,12 @@ public class TransactionTests {
                 print(contract.evaluateTransaction("getPointTransactionByKey", t4));
             }
 
-            print("bank: " + new String(contract.evaluateTransaction("getPointAmountByUserId", bankId)));
-            print("ray: " + new String(contract.evaluateTransaction("getPointAmountByUserId", rayId)));
-            print("charles: " + new String(contract.evaluateTransaction("getPointAmountByUserId", charlesId)));
-            print("zac: " + new String(contract.evaluateTransaction("getPointAmountByUserId", zacId)));
+            print("bank: " + bankId + " : "
+                    + new String(contract.evaluateTransaction("getPointAmountByUserId", bankId)));
+            print("ray: " + rayId + " : " + new String(contract.evaluateTransaction("getPointAmountByUserId", rayId)));
+            print("charles: " + charlesId + " : "
+                    + new String(contract.evaluateTransaction("getPointAmountByUserId", charlesId)));
+            print("zac: " + zacId + " : " + new String(contract.evaluateTransaction("getPointAmountByUserId", zacId)));
             print(contract.evaluateTransaction("getAllPointTransactionKeys"));
         } catch (final Exception e) {
             e.printStackTrace();

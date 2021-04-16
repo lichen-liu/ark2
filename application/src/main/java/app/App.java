@@ -37,8 +37,8 @@ class App {
 
     public static void main(final String[] args) throws Exception {
         final App app = new App();
-        // app.gui();
-        app.test();
+        app.gui();
+        //app.test();
     }
 
     public App() {

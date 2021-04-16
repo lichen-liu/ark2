@@ -15,11 +15,11 @@ public class ByteUtils {
         return toHexString(hash);
     }
 
-    public static String toHexString(final byte[] array) {
-        return DatatypeConverter.printHexBinary(array);
+    public static String toHexString(final byte[] bytes) {
+        return DatatypeConverter.printHexBinary(bytes);
     }
 
-    public static byte[] toByteArray(final String s) {
-        return DatatypeConverter.parseHexBinary(s);
+    public static byte[] toByteArray(final String hexString) {
+        return DatatypeConverter.parseHexBinary(hexString);
     }
 }
