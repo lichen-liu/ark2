@@ -1,13 +1,15 @@
 package app.gui;
 
 import org.hyperledger.fabric.gateway.Contract;
+import org.hyperledger.fabric.gateway.ContractException;
 
 public class ForumJFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form ForumJFrame
      */
-    private ForumJFrame() {
+    private ForumJFrame(Contract contract) {
+        this.contract = contract;
         initComponents();
     }
 
@@ -18,7 +20,7 @@ public class ForumJFrame extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         userPublicKeyJTextField = new javax.swing.JTextField();
@@ -27,6 +29,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         pointAmountJTextField = new javax.swing.JTextField();
         refreshPointAmountJButton = new javax.swing.JButton();
         pointAmountJLabel = new javax.swing.JLabel();
+        MessageJTextField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -46,44 +49,72 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         refreshPointAmountJButton.setText("Refresh");
         refreshPointAmountJButton.setName(""); // NOI18N
+        refreshPointAmountJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshPointAmountJButtonActionPerformed(evt);
+            }
+        });
 
         pointAmountJLabel.setText("Point Amount");
         pointAmountJLabel.setToolTipText("");
         pointAmountJLabel.setName(""); // NOI18N
 
+        MessageJTextField.setEditable(false);
+        MessageJTextField.setToolTipText("Message");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup().addContainerGap()
-                        .addComponent(userPublicKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 200,
-                                javax.swing.GroupLayout.PREFERRED_SIZE)
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(MessageJTextField)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(userPublicKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(userPrivateKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 200,
-                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(userPrivateKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(generateKeyPairJButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
                         .addComponent(pointAmountJLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pointAmountJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100,
-                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(pointAmountJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(refreshPointAmountJButton).addGap(27, 27, 27)));
-        layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup().addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(userPublicKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(userPrivateKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(generateKeyPairJButton)
-                                .addComponent(pointAmountJTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(refreshPointAmountJButton).addComponent(pointAmountJLabel))
-                        .addContainerGap(531, Short.MAX_VALUE)));
+                        .addComponent(refreshPointAmountJButton)))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(MessageJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(userPublicKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(userPrivateKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(generateKeyPairJButton)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(pointAmountJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(refreshPointAmountJButton)
+                        .addComponent(pointAmountJLabel)))
+                .addContainerGap(492, Short.MAX_VALUE))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void refreshPointAmountJButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_refreshPointAmountJButtonActionPerformed
+        String userPublicKey = this.userPublicKeyJTextField.getText();
+        String pointAmount = new String();
+        try {
+            pointAmount = new String(contract.evaluateTransaction("getPointAmountByUserId", userPublicKey));
+        } catch (ContractException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        this.pointAmountJTextField.setText(pointAmount);
+    }// GEN-LAST:event_refreshPointAmountJButtonActionPerformed
 
     public static void run(Contract contract) {
         /* Set the Nimbus look and feel */
@@ -119,7 +150,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ForumJFrame().setVisible(true);
+                new ForumJFrame(contract).setVisible(true);
             }
         });
     }
@@ -132,6 +163,7 @@ public class ForumJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField MessageJTextField;
     private javax.swing.JButton generateKeyPairJButton;
     private javax.swing.JLabel pointAmountJLabel;
     private javax.swing.JTextField pointAmountJTextField;
@@ -139,4 +171,6 @@ public class ForumJFrame extends javax.swing.JFrame {
     private javax.swing.JTextField userPrivateKeyJTextField;
     private javax.swing.JTextField userPublicKeyJTextField;
     // End of variables declaration//GEN-END:variables
+
+    private Contract contract;
 }

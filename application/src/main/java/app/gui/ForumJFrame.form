@@ -23,36 +23,45 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="userPublicKeyJTextField" min="-2" pref="200" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="MessageJTextField" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="userPublicKeyJTextField" min="-2" pref="200" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="userPrivateKeyJTextField" min="-2" pref="200" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="generateKeyPairJButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="72" max="32767" attributes="0"/>
+                      <Component id="pointAmountJLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="pointAmountJTextField" min="-2" pref="100" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="refreshPointAmountJButton" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="userPrivateKeyJTextField" min="-2" pref="200" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="generateKeyPairJButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="55" max="32767" attributes="0"/>
-              <Component id="pointAmountJLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="pointAmountJTextField" min="-2" pref="100" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="refreshPointAmountJButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="MessageJTextField" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="userPublicKeyJTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="userPrivateKeyJTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="generateKeyPairJButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="pointAmountJTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="refreshPointAmountJButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="pointAmountJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                      <Component id="pointAmountJTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="refreshPointAmountJButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="pointAmountJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace pref="531" max="32767" attributes="0"/>
+              <EmptySpace pref="492" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -64,9 +73,6 @@
         <Property name="actionCommand" type="java.lang.String" value="&lt;Not Set&gt;"/>
         <Property name="name" type="java.lang.String" value="" noResource="true"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="userPublicKeyJTextFieldActionPerformed"/>
-      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="ForumJFrame_jTextField1"/>
       </AuxValues>
@@ -76,18 +82,12 @@
         <Property name="toolTipText" type="java.lang.String" value="User Private Key"/>
         <Property name="name" type="java.lang.String" value="" noResource="true"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="userPrivateKeyJTextFieldActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="generateKeyPairJButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Generate Key Pair"/>
         <Property name="name" type="java.lang.String" value="" noResource="true"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="generateKeyPairJButtonActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="pointAmountJTextField">
       <Properties>
@@ -101,12 +101,21 @@
         <Property name="text" type="java.lang.String" value="Refresh"/>
         <Property name="name" type="java.lang.String" value="" noResource="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="refreshPointAmountJButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="pointAmountJLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Point Amount"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
         <Property name="name" type="java.lang.String" value="" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="MessageJTextField">
+      <Properties>
+        <Property name="editable" type="boolean" value="false"/>
+        <Property name="toolTipText" type="java.lang.String" value="Message"/>
       </Properties>
     </Component>
   </SubComponents>
