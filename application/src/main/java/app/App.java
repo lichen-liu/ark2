@@ -79,7 +79,7 @@ class App {
     private void test() {
         new CCTesting().test(this.appClient);
         final var l = new LikeTests(contract);
-        t.test(appClient);
+        l.benchmark(appClient);
     }
 
     private void gui() {
