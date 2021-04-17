@@ -46,9 +46,9 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
-          <Component id="contentJTabbedPane" alignment="1" max="32767" attributes="0"/>
           <Component id="MessageJTextField" alignment="1" max="32767" attributes="0"/>
           <Component id="userSearchJSeparator" alignment="0" max="32767" attributes="0"/>
+          <Component id="contentJTabbedPane" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -68,8 +68,8 @@
               <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
               <Component id="searchJTextField" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="contentJTabbedPane" min="-2" pref="619" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="contentJTabbedPane" min="-2" pref="623" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="MessageJTextField" min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -170,7 +170,7 @@
                           <Component id="viewPostJScrollPane" max="-2" attributes="0"/>
                           <Component id="viewPostKeysJScrollPane" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="0" pref="62" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="66" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -259,32 +259,37 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="postEditorJScrollPane" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="publishPostResetJButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="1115" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="publishPostSubmitJButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
+                  <Component id="postEditorJScrollPane" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="postEditorJScrollPane" min="-2" pref="552" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="postEditorJScrollPane" min="-2" pref="528" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="publishPostSubmitJButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="publishPostResetJButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="10" max="32767" attributes="0"/>
+                      <EmptySpace pref="34" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
             <Container class="javax.swing.JScrollPane" name="postEditorJScrollPane">
+              <Properties>
+                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[1275, 528]"/>
+                </Property>
+              </Properties>
               <AuxValues>
                 <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
               </AuxValues>
