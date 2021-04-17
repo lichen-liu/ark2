@@ -7,8 +7,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Function;
 
 import javax.swing.JOptionPane;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
@@ -53,9 +57,11 @@ public class ForumJFrame extends javax.swing.JFrame {
         searchJTextField = new javax.swing.JTextField();
         contentJTabbedPane = new javax.swing.JTabbedPane();
         viewPostJPanel = new javax.swing.JPanel();
-        showPostKeysJScrollPane = new javax.swing.JScrollPane();
-        showPostKeysJList = new javax.swing.JList<>();
-        showPostKeysQueryJComboBox = new javax.swing.JComboBox<>();
+        viewPostKeysJScrollPane = new javax.swing.JScrollPane();
+        viewPostKeysJList = new javax.swing.JList<>();
+        viewPostKeysQueryJComboBox = new javax.swing.JComboBox<>();
+        viewPostJScrollPane = new javax.swing.JScrollPane();
+        viewPostJTextArea = new javax.swing.JTextArea();
         publishPostJPanel = new javax.swing.JPanel();
         postEditorJScrollPane = new javax.swing.JScrollPane();
         postEditorJTextArea = new javax.swing.JTextArea();
@@ -75,7 +81,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         generateKeyPairJButton.setText("Generate Key Pair");
         generateKeyPairJButton.setName(""); // NOI18N
         generateKeyPairJButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(final java.awt.event.ActionEvent evt) {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 generateKeyPairJButtonActionPerformed(evt);
             }
         });
@@ -87,7 +93,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         refreshPointAmountJButton.setText("Refresh");
         refreshPointAmountJButton.setName(""); // NOI18N
         refreshPointAmountJButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(final java.awt.event.ActionEvent evt) {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 refreshPointAmountJButtonActionPerformed(evt);
             }
         });
@@ -101,34 +107,51 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         searchJTextField.setToolTipText("Search Bar");
 
-        showPostKeysJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        showPostKeysJScrollPane.setViewportView(showPostKeysJList);
+        viewPostKeysJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        viewPostKeysJList.setAutoscrolls(false);
+        viewPostKeysJList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                viewPostKeysJListValueChanged(evt);
+            }
+        });
+        viewPostKeysJScrollPane.setViewportView(viewPostKeysJList);
 
-        showPostKeysQueryJComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(
-                new String[] { "All", "Search By Author", "Search By Post Key" }));
-        showPostKeysQueryJComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(final java.awt.event.ActionEvent evt) {
-                showPostKeysQueryJComboBoxActionPerformed(evt);
+        viewPostKeysQueryJComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Search By Author", "Search By Post Key" }));
+        viewPostKeysQueryJComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewPostKeysQueryJComboBoxActionPerformed(evt);
             }
         });
 
-        final javax.swing.GroupLayout viewPostJPanelLayout = new javax.swing.GroupLayout(viewPostJPanel);
+        viewPostJTextArea.setEditable(false);
+        viewPostJTextArea.setColumns(20);
+        viewPostJTextArea.setLineWrap(true);
+        viewPostJTextArea.setRows(5);
+        viewPostJTextArea.setTabSize(4);
+        viewPostJTextArea.setWrapStyleWord(true);
+        viewPostJScrollPane.setViewportView(viewPostJTextArea);
+
+        javax.swing.GroupLayout viewPostJPanelLayout = new javax.swing.GroupLayout(viewPostJPanel);
         viewPostJPanel.setLayout(viewPostJPanelLayout);
-        viewPostJPanelLayout
-                .setHorizontalGroup(viewPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(viewPostJPanelLayout.createSequentialGroup()
-                                .addGroup(viewPostJPanelLayout
-                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(showPostKeysJScrollPane)
-                                        .addComponent(showPostKeysQueryJComboBox, 0, 284, Short.MAX_VALUE))
-                                .addGap(0, 991, Short.MAX_VALUE)));
-        viewPostJPanelLayout.setVerticalGroup(viewPostJPanelLayout
-                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewPostJPanelLayout.createSequentialGroup()
-                        .addComponent(showPostKeysQueryJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(
-                                showPostKeysJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 562, Short.MAX_VALUE)));
+        viewPostJPanelLayout.setHorizontalGroup(
+            viewPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(viewPostJPanelLayout.createSequentialGroup()
+                .addGroup(viewPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(viewPostKeysJScrollPane)
+                    .addComponent(viewPostKeysQueryJComboBox, 0, 284, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(viewPostJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE))
+        );
+        viewPostJPanelLayout.setVerticalGroup(
+            viewPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(viewPostJPanelLayout.createSequentialGroup()
+                .addComponent(viewPostKeysQueryJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(viewPostKeysJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 562, Short.MAX_VALUE))
+            .addGroup(viewPostJPanelLayout.createSequentialGroup()
+                .addComponent(viewPostJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
 
         contentJTabbedPane.addTab("Posts", viewPostJPanel);
 
@@ -142,102 +165,128 @@ public class ForumJFrame extends javax.swing.JFrame {
         publishPostSubmitJButton.setText("Publish");
         publishPostSubmitJButton.setToolTipText("");
         publishPostSubmitJButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(final java.awt.event.ActionEvent evt) {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 publishPostSubmitJButtonActionPerformed(evt);
             }
         });
 
         publishPostResetJButton.setText("Reset");
         publishPostResetJButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(final java.awt.event.ActionEvent evt) {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 publishPostResetJButtonActionPerformed(evt);
             }
         });
 
-        final javax.swing.GroupLayout publishPostJPanelLayout = new javax.swing.GroupLayout(publishPostJPanel);
+        javax.swing.GroupLayout publishPostJPanelLayout = new javax.swing.GroupLayout(publishPostJPanel);
         publishPostJPanel.setLayout(publishPostJPanelLayout);
-        publishPostJPanelLayout.setHorizontalGroup(publishPostJPanelLayout
-                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(postEditorJScrollPane)
-                .addGroup(publishPostJPanelLayout.createSequentialGroup().addContainerGap()
-                        .addComponent(publishPostResetJButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1115, Short.MAX_VALUE)
-                        .addComponent(publishPostSubmitJButton).addContainerGap()));
-        publishPostJPanelLayout
-                .setVerticalGroup(publishPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(publishPostJPanelLayout.createSequentialGroup()
-                                .addComponent(postEditorJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 552,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(publishPostJPanelLayout
-                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(publishPostSubmitJButton).addComponent(publishPostResetJButton))
-                                .addContainerGap(10, Short.MAX_VALUE)));
+        publishPostJPanelLayout.setHorizontalGroup(
+            publishPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(postEditorJScrollPane)
+            .addGroup(publishPostJPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(publishPostResetJButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1115, Short.MAX_VALUE)
+                .addComponent(publishPostSubmitJButton)
+                .addContainerGap())
+        );
+        publishPostJPanelLayout.setVerticalGroup(
+            publishPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(publishPostJPanelLayout.createSequentialGroup()
+                .addComponent(postEditorJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(publishPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(publishPostSubmitJButton)
+                    .addComponent(publishPostResetJButton))
+                .addContainerGap(10, Short.MAX_VALUE))
+        );
 
         contentJTabbedPane.addTab("Publish", publishPostJPanel);
 
-        final javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup().addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(searchJTextField)
-                                .addGroup(layout.createSequentialGroup()
-                                        .addComponent(userPublicKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(userPrivateKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(generateKeyPairJButton, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(pointAmountJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(pointAmountJTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(refreshPointAmountJButton, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                77, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap())
-                .addComponent(contentJTabbedPane, javax.swing.GroupLayout.Alignment.TRAILING)
-                .addComponent(MessageJTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                .addComponent(userSearchJSeparator));
-        layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup().addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(userPublicKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(userPrivateKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(generateKeyPairJButton).addComponent(refreshPointAmountJButton)
-                                .addComponent(pointAmountJTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(pointAmountJLabel))
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(searchJTextField)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(userPublicKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(userSearchJSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 10,
-                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(1, 1, 1)
-                        .addComponent(searchJTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(contentJTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 619,
-                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(MessageJTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)));
+                        .addComponent(userPrivateKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(generateKeyPairJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(pointAmountJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(pointAmountJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(refreshPointAmountJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+            .addComponent(contentJTabbedPane, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(MessageJTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(userSearchJSeparator)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(userPublicKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(userPrivateKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(generateKeyPairJButton)
+                    .addComponent(refreshPointAmountJButton)
+                    .addComponent(pointAmountJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pointAmountJLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(userSearchJSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(searchJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(contentJTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(MessageJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void showPostKeysQueryJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_showPostKeysQueryJComboBoxActionPerformed
-        if (this.showPostKeysQueryJComboBox.getSelectedItem().equals("All")) {
+    private void viewPostKeysJListValueChanged(final javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_viewPostKeysJListValueChanged
+        if(this.viewPostKeysJList.getSelectedIndex() == -1) {
+            return;
+        }
+
+        final Function<String, String> getPrettyJson = (rawString) -> {
+            final var objectMapper = new ObjectMapper();
+            try {
+                final Object json = objectMapper.readValue(rawString, Object.class);
+                final String prettified = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+                return prettified;
+            } catch (final JsonParseException e) {
+                return rawString;
+            } catch (final Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        };
+
+        final String selectedPostKey = this.viewPostKeysJList.getSelectedValue();
+        try {
+            final String postString = new String(this.contract.evaluateTransaction("getPostByKey", selectedPostKey));
+            final String beautifulPostString = getPrettyJson.apply(postString);
+            this.viewPostJTextArea.setText(beautifulPostString);
+        } catch (final ContractException e1) {
+            e1.printStackTrace();
+        }
+    }// GEN-LAST:event_viewPostKeysJListValueChanged
+
+    private void viewPostKeysQueryJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPostKeysQueryJComboBoxActionPerformed
+        if (this.viewPostKeysQueryJComboBox.getSelectedItem().equals("All")) {
             final var userApp = new AnynomousAppUser(this.contract);
             final String[] postKeys = userApp.fetchAllPostKeys();
-            this.showPostKeysJList.setListData(postKeys);
+            this.viewPostKeysJList.setListData(postKeys);
         }
-    }// GEN-LAST:event_showPostKeysQueryJComboBoxActionPerformed
+    }// GEN-LAST:event_viewPostKeysQueryJComboBoxActionPerformed
 
     private void generateKeyPairJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_generateKeyPairJButtonActionPerformed
         if (!this.userPublicKeyJTextField.getText().isEmpty() || !this.userPrivateKeyJTextField.getText().isEmpty()) {
@@ -376,13 +425,15 @@ public class ForumJFrame extends javax.swing.JFrame {
     private javax.swing.JButton publishPostSubmitJButton;
     private javax.swing.JButton refreshPointAmountJButton;
     private javax.swing.JTextField searchJTextField;
-    private javax.swing.JList<String> showPostKeysJList;
-    private javax.swing.JScrollPane showPostKeysJScrollPane;
-    private javax.swing.JComboBox<String> showPostKeysQueryJComboBox;
     private javax.swing.JTextField userPrivateKeyJTextField;
     private javax.swing.JTextField userPublicKeyJTextField;
     private javax.swing.JSeparator userSearchJSeparator;
     private javax.swing.JPanel viewPostJPanel;
+    private javax.swing.JScrollPane viewPostJScrollPane;
+    private javax.swing.JTextArea viewPostJTextArea;
+    private javax.swing.JList<String> viewPostKeysJList;
+    private javax.swing.JScrollPane viewPostKeysJScrollPane;
+    private javax.swing.JComboBox<String> viewPostKeysQueryJComboBox;
     // End of variables declaration//GEN-END:variables
 
     private final Contract contract;
