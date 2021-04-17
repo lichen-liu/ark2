@@ -272,6 +272,7 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         final String selectedPostKey = this.viewPostKeysJList.getSelectedValue();
         try {
+            // TODO: use standard api here
             final String postString = new String(this.contract.evaluateTransaction("getPostByKey", selectedPostKey));
             final String beautifulPostString = getPrettyJson.apply(postString);
             this.viewPostJTextArea.setText(beautifulPostString);
