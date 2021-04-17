@@ -309,9 +309,7 @@ public class ForumJFrame extends javax.swing.JFrame {
             final String privateKeyString = ByteUtils.toHexString(keyPair.getPrivate().getEncoded());
             this.userPublicKeyJTextField.setText(publicKeyString);
             this.userPrivateKeyJTextField.setText(privateKeyString);
-        } catch (final InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-        } catch (final NoSuchAlgorithmException e) {
+        } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
     }// GEN-LAST:event_generateKeyPairJButtonActionPerformed
