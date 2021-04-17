@@ -70,6 +70,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         userSearchJSeparator = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1280, 720));
 
         userPublicKeyJTextField.setToolTipText("User Public Key");
         userPublicKeyJTextField.setActionCommand("<Not Set>");
@@ -108,7 +109,6 @@ public class ForumJFrame extends javax.swing.JFrame {
         searchJTextField.setToolTipText("Search Bar");
 
         viewPostKeysJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        viewPostKeysJList.setAutoscrolls(false);
         viewPostKeysJList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 viewPostKeysJListValueChanged(evt);
@@ -136,21 +136,21 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPostJPanelLayout.setHorizontalGroup(
             viewPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(viewPostJPanelLayout.createSequentialGroup()
-                .addGroup(viewPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(viewPostKeysJScrollPane)
-                    .addComponent(viewPostKeysQueryJComboBox, 0, 284, Short.MAX_VALUE))
+                .addGroup(viewPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(viewPostKeysQueryJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(viewPostKeysJScrollPane))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(viewPostJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE))
         );
         viewPostJPanelLayout.setVerticalGroup(
             viewPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(viewPostJPanelLayout.createSequentialGroup()
+                .addComponent(viewPostJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 30, Short.MAX_VALUE))
+            .addGroup(viewPostJPanelLayout.createSequentialGroup()
                 .addComponent(viewPostKeysQueryJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(viewPostKeysJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 562, Short.MAX_VALUE))
-            .addGroup(viewPostJPanelLayout.createSequentialGroup()
-                .addComponent(viewPostJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(viewPostKeysJScrollPane))
         );
 
         contentJTabbedPane.addTab("Posts", viewPostJPanel);
