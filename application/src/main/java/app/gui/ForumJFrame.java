@@ -1,15 +1,19 @@
 package app.gui;
 
 import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.concurrent.TimeoutException;
 
 import javax.swing.JOptionPane;
 
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
 
+import app.user.PublishableAppUser;
 import app.user.ReadOnlyAppUser;
 import app.utils.ByteUtils;
 import app.utils.Cryptography;
@@ -24,7 +28,7 @@ public class ForumJFrame extends javax.swing.JFrame {
     /**
      * Creates new form ForumJFrame
      */
-    private ForumJFrame(Contract contract) {
+    private ForumJFrame(final Contract contract) {
         this.contract = contract;
         initComponents();
     }
@@ -48,6 +52,9 @@ public class ForumJFrame extends javax.swing.JFrame {
         searchJTextField = new javax.swing.JTextField();
         contentJTabbedPane = new javax.swing.JTabbedPane();
         viewPostJPanel = new javax.swing.JPanel();
+        showPostKeysJScrollPane = new javax.swing.JScrollPane();
+        showPostKeysJList = new javax.swing.JList<>();
+        showPostKeysQueryJComboBox = new javax.swing.JComboBox<>();
         publishPostJPanel = new javax.swing.JPanel();
         postEditorJScrollPane = new javax.swing.JScrollPane();
         postEditorJTextArea = new javax.swing.JTextArea();
@@ -93,27 +100,56 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         searchJTextField.setToolTipText("Search Bar");
 
+        showPostKeysJList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        showPostKeysJScrollPane.setViewportView(showPostKeysJList);
+
+        showPostKeysQueryJComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout viewPostJPanelLayout = new javax.swing.GroupLayout(viewPostJPanel);
         viewPostJPanel.setLayout(viewPostJPanelLayout);
         viewPostJPanelLayout.setHorizontalGroup(
             viewPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1275, Short.MAX_VALUE)
+            .addGroup(viewPostJPanelLayout.createSequentialGroup()
+                .addGroup(viewPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(showPostKeysJScrollPane)
+                    .addComponent(showPostKeysQueryJComboBox, 0, 284, Short.MAX_VALUE))
+                .addGap(0, 991, Short.MAX_VALUE))
         );
         viewPostJPanelLayout.setVerticalGroup(
             viewPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 590, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewPostJPanelLayout.createSequentialGroup()
+                .addComponent(showPostKeysQueryJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(showPostKeysJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 562, Short.MAX_VALUE))
         );
 
         contentJTabbedPane.addTab("Posts", viewPostJPanel);
 
         postEditorJTextArea.setColumns(20);
+        postEditorJTextArea.setLineWrap(true);
         postEditorJTextArea.setRows(5);
+        postEditorJTextArea.setTabSize(4);
+        postEditorJTextArea.setWrapStyleWord(true);
         postEditorJScrollPane.setViewportView(postEditorJTextArea);
 
         publishPostSubmitJButton.setText("Publish");
         publishPostSubmitJButton.setToolTipText("");
+        publishPostSubmitJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                publishPostSubmitJButtonActionPerformed(evt);
+            }
+        });
 
         publishPostResetJButton.setText("Reset");
+        publishPostResetJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                publishPostResetJButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout publishPostJPanelLayout = new javax.swing.GroupLayout(publishPostJPanel);
         publishPostJPanel.setLayout(publishPostJPanelLayout);
@@ -130,12 +166,12 @@ public class ForumJFrame extends javax.swing.JFrame {
         publishPostJPanelLayout.setVerticalGroup(
             publishPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(publishPostJPanelLayout.createSequentialGroup()
-                .addComponent(postEditorJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 558, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(postEditorJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(publishPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(publishPostSubmitJButton)
                     .addComponent(publishPostResetJButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         contentJTabbedPane.addTab("Publish", publishPostJPanel);
@@ -189,45 +225,85 @@ public class ForumJFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void generateKeyPairJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateKeyPairJButtonActionPerformed
-        if(!this.userPrivateKeyJTextField.getText().isEmpty() || !this.userPublicKeyJTextField.getText().isEmpty()) {
-            int choice = JOptionPane.showConfirmDialog(null, "Do you want to overwrite the existing Public and/or Private Keys?", "Warning", JOptionPane.OK_CANCEL_OPTION);
-            if(choice == JOptionPane.CANCEL_OPTION) {
+    private void generateKeyPairJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_generateKeyPairJButtonActionPerformed
+        if (!this.userPublicKeyJTextField.getText().isEmpty() || !this.userPrivateKeyJTextField.getText().isEmpty()) {
+            final int choice = JOptionPane.showConfirmDialog(null,
+                    "Do you want to overwrite the existing Public and/or Private Keys?", "Warning",
+                    JOptionPane.OK_CANCEL_OPTION);
+            if (choice == JOptionPane.CANCEL_OPTION) {
                 return;
             }
         }
         try {
-            KeyPair keyPair = Cryptography.generateRandomKeyPair();
-            String publicKeyString =  ByteUtils.toHexString(keyPair.getPublic().getEncoded());
-            String privateKeyString =  ByteUtils.toHexString(keyPair.getPrivate().getEncoded());
+            final KeyPair keyPair = Cryptography.generateRandomKeyPair();
+            final String publicKeyString = ByteUtils.toHexString(keyPair.getPublic().getEncoded());
+            final String privateKeyString = ByteUtils.toHexString(keyPair.getPrivate().getEncoded());
             this.userPublicKeyJTextField.setText(publicKeyString);
             this.userPrivateKeyJTextField.setText(privateKeyString);
-            JOptionPane.showMessageDialog(null, "Please save the generated Public/Private Key Pair.");
-        } catch (InvalidAlgorithmParameterException e) {
+        } catch (final InvalidAlgorithmParameterException e) {
             e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-    }//GEN-LAST:event_generateKeyPairJButtonActionPerformed
+    }// GEN-LAST:event_generateKeyPairJButtonActionPerformed
 
-    private void refreshPointAmountJButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_refreshPointAmountJButtonActionPerformed
-        String userPublicKey = this.userPublicKeyJTextField.getText();
+    private void publishPostResetJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_publishPostResetJButtonActionPerformed
+        final int choice = JOptionPane.showConfirmDialog(null, "Do you want to discard the content?", "Warning",
+                JOptionPane.OK_CANCEL_OPTION);
+        if (choice == JOptionPane.CANCEL_OPTION) {
+            return;
+        }
+        this.postEditorJTextArea.setText(new String());
+    }// GEN-LAST:event_publishPostResetJButtonActionPerformed
+
+    private void publishPostSubmitJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_publishPostSubmitJButtonActionPerformed
+        final String publicKeyString = this.userPublicKeyJTextField.getText();
+        final String privateKeyString = this.userPrivateKeyJTextField.getText();
+
+        if (publicKeyString.isEmpty() || privateKeyString.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please provide a Public/Private Key Pair!");
+            return;
+        }
+
+        final int choice = JOptionPane.showConfirmDialog(null,
+                "Do you want to publish the post using the provided Public and/or Private Keys?", "Confirm",
+                JOptionPane.OK_CANCEL_OPTION);
+        if (choice == JOptionPane.CANCEL_OPTION) {
+            return;
+        }
+
+        try {
+            final var appUser = new PublishableAppUser(this.contract,
+                    Cryptography.parsePublicKey(ByteUtils.toByteArray(publicKeyString)),
+                    Cryptography.parsePrivateKey(ByteUtils.toByteArray(privateKeyString)));
+
+            appUser.publishNewPost(this.postEditorJTextArea.getText());
+
+            JOptionPane.showMessageDialog(null, "The post was published successfully!");
+
+            this.postEditorJTextArea.setText(new String());
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException | InvalidKeyException | ContractException
+                | SignatureException | TimeoutException | InterruptedException e1) {
+            JOptionPane.showMessageDialog(null, "The post failed to be published!");
+            e1.printStackTrace();
+        }
+
+    }// GEN-LAST:event_publishPostSubmitJButtonActionPerformed
+
+    private void refreshPointAmountJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_refreshPointAmountJButtonActionPerformed
+        final String userPublicKey = this.userPublicKeyJTextField.getText();
         String pointAmount = new String();
         try {
             final var appUser = new ReadOnlyAppUser(this.contract,
                     Cryptography.parsePublicKey(ByteUtils.toByteArray(userPublicKey)));
             pointAmount = appUser.getPointAmount();
-        } catch (ContractException e) {
-            e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
+        } catch (ContractException | InvalidKeySpecException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         this.pointAmountJTextField.setText(pointAmount);
     }// GEN-LAST:event_refreshPointAmountJButtonActionPerformed
 
-    public static void run(Contract contract) {
+    public static void run(final Contract contract) {
         /* Set the Nimbus look and feel */
         // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
         // (optional) ">
@@ -237,22 +313,22 @@ public class ForumJFrame extends javax.swing.JFrame {
          * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            for (final javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
+        } catch (final ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(ForumJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null,
                     ex);
-        } catch (InstantiationException ex) {
+        } catch (final InstantiationException ex) {
             java.util.logging.Logger.getLogger(ForumJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null,
                     ex);
-        } catch (IllegalAccessException ex) {
+        } catch (final IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(ForumJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null,
                     ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (final javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ForumJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null,
                     ex);
         }
@@ -269,7 +345,7 @@ public class ForumJFrame extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(final String args[]) {
         run(null);
     }
 
@@ -286,11 +362,14 @@ public class ForumJFrame extends javax.swing.JFrame {
     private javax.swing.JButton publishPostSubmitJButton;
     private javax.swing.JButton refreshPointAmountJButton;
     private javax.swing.JTextField searchJTextField;
+    private javax.swing.JList<String> showPostKeysJList;
+    private javax.swing.JScrollPane showPostKeysJScrollPane;
+    private javax.swing.JComboBox<String> showPostKeysQueryJComboBox;
     private javax.swing.JTextField userPrivateKeyJTextField;
     private javax.swing.JTextField userPublicKeyJTextField;
     private javax.swing.JSeparator userSearchJSeparator;
     private javax.swing.JPanel viewPostJPanel;
     // End of variables declaration//GEN-END:variables
 
-    private Contract contract;
+    private final Contract contract;
 }
