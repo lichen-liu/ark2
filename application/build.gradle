@@ -37,6 +37,13 @@ repositories {
 task runApp(type: Exec) {
     dependsOn build
     group = "Execution"
-    description = "Run the main class with ExecTask"
+    description = "Run the main class (App) with ExecTask"
     commandLine "java", "-classpath", sourceSets.main.runtimeClasspath.getAsPath(), javaMainClass
+}
+
+task runTest(type: Exec) {
+    dependsOn build
+    group = "Execution"
+    description = "Run the main class (Test) with ExecTask"
+    commandLine "java", "-classpath", sourceSets.main.runtimeClasspath.getAsPath(), javaMainClass, "test"
 }

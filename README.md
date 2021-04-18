@@ -39,9 +39,14 @@ Application (client) code that interacts with the blockchain via Hyperledger Fab
 cd application
 ```
 
-### To run
+### To run GUI
 ```
 gradle runApp
+```
+
+### To run TEST
+```
+gradle runTest
 ```
 
 # Project Blockchain

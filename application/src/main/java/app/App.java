@@ -3,6 +3,7 @@ package app;
 import java.io.File;
 import java.nio.file.Paths;
 import java.security.PrivateKey;
+import java.util.Arrays;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,8 +39,14 @@ class App {
 
     public static void main(final String[] args) throws Exception {
         final App app = new App();
-        app.gui();
-        // app.test();
+
+        if (Arrays.asList(args).contains("test")) {
+            System.out.println(">> test");
+            app.test();
+        } else {
+            System.out.println(">> gui");
+            app.gui();
+        }
     }
 
     public App() {
