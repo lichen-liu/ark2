@@ -34,7 +34,21 @@ public class PostTests {
     }
 
     private void singleThreadTests() throws Exception {
+        final Wallet wallet = WalletFactory.GetWallet("admin");
 
+        final var contractCreation = new ContractFactory.Entity();
+        contractCreation.userId = "appUser3";
+        contractCreation.channel = "mychannel";
+        contractCreation.contractName = "ForumAgreement";
+        contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
+                "peerOrganizations", "org1.example.com", "connection-org1.yaml");
+
+        final var contract = ContractFactory.CreateContract(wallet, contractCreation);
+
+        final var client = TestClient.createTestClient(contract);
+        final String postKey = client.publishNewPost("singleThreadTests");
+        logger.print(postKey);
+        logger.print(client.fetchPostByPostKey(postKey));
     }
 
     private void multiThreadWithDependencyTests() throws Exception {
@@ -47,7 +61,6 @@ public class PostTests {
         contractCreation.contractName = "ForumAgreement";
         contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
                 "peerOrganizations", "org1.example.com", "connection-org1.yaml");
-        ;
 
         final var contract = ContractFactory.CreateContract(wallet, contractCreation);
 
