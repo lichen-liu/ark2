@@ -65,6 +65,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPostRightJPanel = new javax.swing.JPanel();
         viewPostJScrollPane = new javax.swing.JScrollPane();
         viewPostJTextArea = new javax.swing.JTextArea();
+        viewPostLikeJButton = new javax.swing.JButton();
         publishPostJPanel = new javax.swing.JPanel();
         postEditorJScrollPane = new javax.swing.JScrollPane();
         postEditorJTextArea = new javax.swing.JTextArea();
@@ -183,15 +184,25 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPostJTextArea.setWrapStyleWord(true);
         viewPostJScrollPane.setViewportView(viewPostJTextArea);
 
+        viewPostLikeJButton.setText("LIKE");
+
         final javax.swing.GroupLayout viewPostRightJPanelLayout = new javax.swing.GroupLayout(viewPostRightJPanel);
         viewPostRightJPanel.setLayout(viewPostRightJPanelLayout);
-        viewPostRightJPanelLayout.setHorizontalGroup(viewPostRightJPanelLayout
-                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(viewPostJScrollPane,
-                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+        viewPostRightJPanelLayout.setHorizontalGroup(
+                viewPostRightJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(viewPostJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 981, Short.MAX_VALUE)
+                        .addComponent(viewPostLikeJButton, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
         viewPostRightJPanelLayout.setVerticalGroup(
-                viewPostRightJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(
-                        viewPostJScrollPane, javax.swing.GroupLayout.Alignment.TRAILING,
-                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+                viewPostRightJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                        javax.swing.GroupLayout.Alignment.TRAILING,
+                        viewPostRightJPanelLayout.createSequentialGroup().addComponent(viewPostLikeJButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(viewPostJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 527,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)));
+
+        viewPostLikeJButton.getAccessibleContext().setAccessibleName("");
 
         viewPostJSplitPane.setRightComponent(viewPostRightJPanel);
 
@@ -698,6 +709,7 @@ public class ForumJFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane viewPostKeysJScrollPane;
     private javax.swing.JComboBox<String> viewPostKeysQueryJComboBox;
     private javax.swing.JPanel viewPostLeftJPanel;
+    private javax.swing.JButton viewPostLikeJButton;
     private javax.swing.JPanel viewPostRightJPanel;
     // End of variables declaration//GEN-END:variables
 
