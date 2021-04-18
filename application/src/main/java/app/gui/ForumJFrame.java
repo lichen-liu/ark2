@@ -70,7 +70,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         userSearchJSeparator = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1280, 720));
+        setPreferredSize(new java.awt.Dimension(1280, 760));
 
         userPublicKeyJTextField.setToolTipText("User Public Key");
         userPublicKeyJTextField.setActionCommand("<Not Set>");
@@ -104,11 +104,12 @@ public class ForumJFrame extends javax.swing.JFrame {
         pointAmountJLabel.setName(""); // NOI18N
 
         MessageJTextField.setEditable(false);
+        MessageJTextField.setText("Status");
         MessageJTextField.setToolTipText("Message");
 
         searchJTextField.setToolTipText("Search Bar");
 
-        viewPostKeysJScrollPane.setPreferredSize(new java.awt.Dimension(258, 130));
+        viewPostKeysJScrollPane.setPreferredSize(new java.awt.Dimension(284, 500));
 
         viewPostKeysJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         viewPostKeysJList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -125,6 +126,8 @@ public class ForumJFrame extends javax.swing.JFrame {
             }
         });
 
+        viewPostJScrollPane.setPreferredSize(new java.awt.Dimension(985, 500));
+
         viewPostJTextArea.setEditable(false);
         viewPostJTextArea.setColumns(20);
         viewPostJTextArea.setLineWrap(true);
@@ -138,24 +141,26 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPostJPanelLayout.setHorizontalGroup(
             viewPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(viewPostJPanelLayout.createSequentialGroup()
-                .addGroup(viewPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(viewPostKeysQueryJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(viewPostKeysJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(viewPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(viewPostKeysQueryJComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(viewPostKeysJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(viewPostJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE))
+                .addComponent(viewPostJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         viewPostJPanelLayout.setVerticalGroup(
             viewPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(viewPostJPanelLayout.createSequentialGroup()
-                .addComponent(viewPostJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 30, Short.MAX_VALUE))
-            .addGroup(viewPostJPanelLayout.createSequentialGroup()
                 .addComponent(viewPostKeysQueryJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(viewPostKeysJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(viewPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(viewPostJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE)
+                    .addComponent(viewPostKeysJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(0, 37, Short.MAX_VALUE))
         );
 
         contentJTabbedPane.addTab("Posts", viewPostJPanel);
+
+        postEditorJScrollPane.setPreferredSize(new java.awt.Dimension(1275, 528));
 
         postEditorJTextArea.setColumns(20);
         postEditorJTextArea.setLineWrap(true);
@@ -183,23 +188,23 @@ public class ForumJFrame extends javax.swing.JFrame {
         publishPostJPanel.setLayout(publishPostJPanelLayout);
         publishPostJPanelLayout.setHorizontalGroup(
             publishPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(postEditorJScrollPane)
             .addGroup(publishPostJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(publishPostResetJButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1115, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(publishPostSubmitJButton)
                 .addContainerGap())
+            .addComponent(postEditorJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         publishPostJPanelLayout.setVerticalGroup(
             publishPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(publishPostJPanelLayout.createSequentialGroup()
-                .addComponent(postEditorJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(postEditorJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(publishPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(publishPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(publishPostSubmitJButton)
                     .addComponent(publishPostResetJButton))
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         contentJTabbedPane.addTab("Publish", publishPostJPanel);
@@ -225,9 +230,9 @@ public class ForumJFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(refreshPointAmountJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
-            .addComponent(contentJTabbedPane, javax.swing.GroupLayout.Alignment.TRAILING)
             .addComponent(MessageJTextField, javax.swing.GroupLayout.Alignment.TRAILING)
             .addComponent(userSearchJSeparator)
+            .addComponent(contentJTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -245,9 +250,10 @@ public class ForumJFrame extends javax.swing.JFrame {
                 .addGap(1, 1, 1)
                 .addComponent(searchJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(contentJTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(contentJTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(MessageJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(MessageJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         pack();
@@ -377,7 +383,7 @@ public class ForumJFrame extends javax.swing.JFrame {
          */
         try {
             for (final javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
