@@ -34,8 +34,9 @@ public class ForumJFrame extends javax.swing.JFrame {
     /**
      * Creates new form ForumJFrame
      */
-    private ForumJFrame(final Contract contract) {
+    private ForumJFrame(final Contract contract, final String frameTitleString) {
         this.contract = contract;
+        this.frameTitleString = frameTitleString;
         initComponents();
     }
 
@@ -91,6 +92,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         statusJProgressBar = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle(this.frameTitleString);
         setPreferredSize(new java.awt.Dimension(1280, 750));
         setResizable(false);
 
@@ -625,7 +627,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         }
     }
 
-    public static void run(final Contract contract) {
+    public static void run(final Contract contract, final String frameTitleString) {
         /* Set the Nimbus look and feel */
         // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
         // (optional) ">
@@ -658,7 +660,7 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new ForumJFrame(contract).setVisible(true);
+            new ForumJFrame(contract, frameTitleString).setVisible(true);
         });
     }
 
@@ -666,7 +668,7 @@ public class ForumJFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(final String args[]) {
-        run(null);
+        run(null, null);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -714,4 +716,5 @@ public class ForumJFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private final Contract contract;
+    private final String frameTitleString;
 }

@@ -32,6 +32,16 @@ class App {
     }
 
     private Contract contract;
+    private String channelName;
+    private String contractName;
+
+    public String getChannelName() {
+        return channelName;
+    }
+
+    public String getContractName() {
+        return contractName;
+    }
 
     public static void main(final String[] args) throws Exception {
         final App app = new App();
@@ -51,6 +61,9 @@ class App {
 
         try {
             final PeerInfo peerInfo = om.readValue(file, PeerInfo.class);
+            this.channelName = peerInfo.getChannel();
+            this.contractName = peerInfo.getContractName();
+
             final Wallet wallet = WalletFactory.GetWallet(peerInfo.getAdminName());
             final HFCAClient client = CaClientFactory.CreateCaClient(peerInfo.getCaUrl(), peerInfo.getPemPath());
 
@@ -85,7 +98,7 @@ class App {
     }
 
     private void gui() {
-        ForumJFrame.run(this.contract);
+        ForumJFrame.run(this.contract, this.channelName + ":" + this.contractName);
     }
 
     private void tryEnrollAdmin(final Wallet wallet, final HFCAClient client, final PeerInfo peer) {
