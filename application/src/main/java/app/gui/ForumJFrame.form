@@ -46,14 +46,15 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
-          <Component id="MessageJTextField" alignment="1" max="32767" attributes="0"/>
           <Component id="userSearchJSeparator" alignment="0" max="32767" attributes="0"/>
           <Group type="102" attributes="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="contentJTabbedPane" alignment="0" max="-2" attributes="0"/>
-                  <Component id="statusJProgressBar" alignment="0" min="-2" max="-2" attributes="0"/>
-              </Group>
+              <Component id="contentJTabbedPane" max="-2" attributes="0"/>
               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <Component id="statusJProgressBar" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="MessageJTextField" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -76,10 +77,11 @@
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="contentJTabbedPane" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="MessageJTextField" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="statusJProgressBar" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="18" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="MessageJTextField" max="32767" attributes="0"/>
+                  <Component id="statusJProgressBar" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
