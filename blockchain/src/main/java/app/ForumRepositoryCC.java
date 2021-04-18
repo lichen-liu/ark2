@@ -33,8 +33,7 @@ public class ForumRepositoryCC {
             final String signature) throws Exception {
         final ChaincodeStub stub = ctx.getStub();
 
-        // final Post post = new Post(timestamp, content, userId, signature, this.determineRelativeOrderForPost(ctx));
-        final Post post = new Post(timestamp, content, userId, signature, 0L);
+        final Post post = new Post(timestamp, content, userId, signature);
         if (shouldVerifyIntegrity) {
             if (!post.isMatchingSignature()) {
                 final String errorMessage = genson.serialize(post) + " has non-matching signature";
@@ -224,7 +223,7 @@ public class ForumRepositoryCC {
                 .sorted((leftKeyValue, rightKeyValue) -> {
                     final var leftPost = genson.deserialize(leftKeyValue.getStringValue(), Post.class);
                     final var rightPost = genson.deserialize(rightKeyValue.getStringValue(), Post.class);
-                    return rightPost.compareToByRelativeOrder(leftPost);
+                    return rightPost.compareToByTimestamp(leftPost);
                 }).collect(Collectors.toList());
         keyValueIterator.close();
         return postKeys.toArray(KeyValue[]::new);
@@ -273,15 +272,6 @@ public class ForumRepositoryCC {
                 }).collect(Collectors.toList());
         keyValueIterator.close();
         return pointTransactionKeys.toArray(KeyValue[]::new);
-    }
-
-    private long determineRelativeOrderForPost(final Context ctx) throws Exception {
-        final String[] keys = this.getAllPostKeys(ctx);
-        if (keys.length == 0) {
-            return 0L;
-        }
-        final Post recentPost = this.getPostByKey(ctx, keys[0]);
-        return Math.max(keys.length, recentPost.getRelativeOrder() + 1);
     }
 
     private long determineRelativeOrderForLike(final Context ctx, final String postKey) throws Exception {

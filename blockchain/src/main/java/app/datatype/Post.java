@@ -6,14 +6,12 @@ import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
-import app.policy.ComparableByRelativeOrder;
 import app.policy.ComparableByTimestamp;
 import app.policy.KeyGeneration;
 import app.policy.SignatureVerification;
 
 @DataType
-public final class Post
-        implements KeyGeneration, ComparableByTimestamp, ComparableByRelativeOrder, SignatureVerification {
+public final class Post implements KeyGeneration, ComparableByTimestamp, SignatureVerification {
     @Property()
     private final String timestamp;
 
@@ -32,9 +30,6 @@ public final class Post
     @Property
     private final String signature;
 
-    @Property
-    private final long relativeOrder;
-
     @Override
     public String getTimestamp() {
         return timestamp;
@@ -52,25 +47,13 @@ public final class Post
         return signature;
     }
 
-    @Override
-    public long getRelativeOrder() {
-        return relativeOrder;
-    }
-
     public Post(@JsonProperty("timestamp") final String timestamp, @JsonProperty("content") final String content,
-            @JsonProperty("userId") final String userId, @JsonProperty("signature") final String signature,
-            @JsonProperty("relativeOrder") final long relativeOrder) {
+            @JsonProperty("userId") final String userId, @JsonProperty("signature") final String signature) {
         this.timestamp = timestamp;
         this.content = content;
         this.userId = userId;
         this.signature = signature;
-        this.relativeOrder = relativeOrder;
     }
-
-    // @Override
-    // public CompositeKey generateKey(final String salt) {
-    //     return new CompositeKey(getObjectTypeName(), userId, String.valueOf(relativeOrder), salt);
-    // }
 
     @Override
     public CompositeKey generateKey(final String salt) {
