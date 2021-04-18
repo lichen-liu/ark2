@@ -8,12 +8,12 @@ import org.hyperledger.fabric_ca.sdk.EnrollmentRequest;
 import org.hyperledger.fabric_ca.sdk.HFCAClient;
 
 public class AdminEnrollmentService {
-    private final Wallet _wallet;
-    private final HFCAClient _client;
+    private final Wallet wallet;
+    private final HFCAClient client;
 
     public AdminEnrollmentService(final Wallet wallet, final HFCAClient client) {
-        this._wallet = wallet;
-        this._client = client;
+        this.wallet = wallet;
+        this.client = client;
     }
 
     public void EnrollAdmin(final Entity entity) throws Exception {
@@ -22,10 +22,10 @@ public class AdminEnrollmentService {
         enrollmentRequestTLS.addHost(entity.hostName);
         enrollmentRequestTLS.setProfile(entity.profile);
 
-        final Enrollment enrollment = _client.enroll(entity.adminName, entity.adminSecret, enrollmentRequestTLS);
+        final Enrollment enrollment = client.enroll(entity.adminName, entity.adminSecret, enrollmentRequestTLS);
         final Identity adminIdentity = Identities.newX509Identity(entity.mspId, enrollment);
 
-        _wallet.put(entity.adminName, adminIdentity);
+        wallet.put(entity.adminName, adminIdentity);
         System.out.println("Successfully enrolled admin \"" + entity.adminName + "\" and imported it into the wallet");
     }
 

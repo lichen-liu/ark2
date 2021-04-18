@@ -28,16 +28,16 @@ public class PostTests {
             singleThreadTests();
             multiThreadWithoutDependencyTests();
             multiThreadWithDependencyTests();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void singleThreadTests() throws Exception{
+    private void singleThreadTests() throws Exception {
 
     }
 
-    private void multiThreadWithDependencyTests() throws Exception{
+    private void multiThreadWithDependencyTests() throws Exception {
 
         final Wallet wallet = WalletFactory.GetWallet("admin");
 
@@ -60,33 +60,38 @@ public class PostTests {
         final var runner1Tests = new ArrayList<TestVoid>();
         final var runner2Tests = new ArrayList<TestVoid>();
 
-        runner1Tests.add((TestVoid)() -> { return client1.publishNewPost("I am client one"); });
+        runner1Tests.add((TestVoid) () -> {
+            return client1.publishNewPost("I am client one");
+        });
 
-        for(var test : runner1Tests) {
+        for (final var test : runner1Tests) {
             runner1.insertNewTest(test, 5);
-        }       
-     
-        runner2Tests.add((TestVoid)() -> { return client2.publishNewPost("I am client two"); });
+        }
 
-        for(var test : runner2Tests) {
+        runner2Tests.add((TestVoid) () -> {
+            return client2.publishNewPost("I am client two");
+        });
+
+        for (final var test : runner2Tests) {
             runner2.insertNewTest(test, 5);
-        }  
+        }
 
         final Thread thread1 = new Thread(runner1);
         final Thread thread2 = new Thread(runner2);
 
         thread1.start();
         thread2.start();
-        
+
         try {
             thread1.join();
             thread2.join();
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    private void multiThreadWithoutDependencyTests() throws IOException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, ContractException {
-       
+    private void multiThreadWithoutDependencyTests()
+            throws IOException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, ContractException {
+
     }
 }

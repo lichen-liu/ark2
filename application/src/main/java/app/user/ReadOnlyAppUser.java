@@ -9,7 +9,6 @@ import org.hyperledger.fabric.gateway.ContractException;
 import org.hyperledger.fabric.gateway.Wallet;
 import org.hyperledger.fabric.gateway.X509Identity;
 
-import app.repository.LikeRepository;
 import app.utils.ByteUtils;
 
 public class ReadOnlyAppUser extends AnynomousAppUser {
@@ -43,10 +42,10 @@ public class ReadOnlyAppUser extends AnynomousAppUser {
         return super.getPostRepository().selectObjectsByCustomKeys(this.getPublicKeyString());
     }
 
-    public String[] fetchAllLikesByPostKey(String postKey) {
+    public String[] fetchAllLikesByPostKey(final String postKey) {
         try {
             return this.getLikeRepository().selectObjectsByCustomKeys(postKey);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
         return null;

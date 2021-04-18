@@ -22,9 +22,7 @@ import app.backend.ContractFactory;
 import app.backend.UserRegistrationService;
 import app.backend.WalletFactory;
 import app.gui.ForumJFrame;
-import app.tests.PostTests;
 import app.tests.LikeTests;
-import app.tests.TransactionTests;
 import app.user.PublishableAppUser;
 
 class App {
@@ -41,7 +39,7 @@ class App {
     public static void main(final String[] args) throws Exception {
         final App app = new App();
         app.gui();
-        //app.test();
+        // app.test();
     }
 
     public App() {
@@ -73,7 +71,6 @@ class App {
 
             this.contract2 = ContractFactory.CreateContract(wallet, contractCreation);
 
-
         } catch (final Exception e) {
             System.out.println("An error occurred when fetching wallet or client");
             System.err.println(e);
@@ -84,10 +81,10 @@ class App {
 
     private void test() {
         try {
-            //new PostTests().benchmark();
+            // new PostTests().benchmark();
             new LikeTests(this.contract).benchmark();
-            //new TransactionTests().benchmark();
-            //new TransactionTests().test(this.appClient);
+            // new TransactionTests().benchmark();
+            // new TransactionTests().test(this.appClient);
         } catch (final Exception e) {
             e.printStackTrace();
         }
