@@ -1,7 +1,6 @@
 package app.gui;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
@@ -71,6 +70,22 @@ public class ForumJFrame extends javax.swing.JFrame {
         postEditorJTextArea = new javax.swing.JTextArea();
         publishPostSubmitJButton = new javax.swing.JButton();
         publishPostResetJButton = new javax.swing.JButton();
+        viewLikeJSplitPane = new javax.swing.JSplitPane();
+        viewLikeLeftJPanel = new javax.swing.JPanel();
+        viewLikeKeysQueryJComboBox = new javax.swing.JComboBox<>();
+        viewLikeKeysJScrollPane = new javax.swing.JScrollPane();
+        viewLikeKeysJList = new javax.swing.JList<>();
+        viewLikeRightJPanel = new javax.swing.JPanel();
+        viewLikeJScrollPane = new javax.swing.JScrollPane();
+        viewLikeJTextArea = new javax.swing.JTextArea();
+        viewPointTransactionJSplitPane = new javax.swing.JSplitPane();
+        viewPointTransactionLeftJPanel = new javax.swing.JPanel();
+        viewPointTransactionKeysQueryJComboBox = new javax.swing.JComboBox<>();
+        viewPointTransactionKeysJScrollPane = new javax.swing.JScrollPane();
+        viewPointTransactionKeysJList = new javax.swing.JList<>();
+        viewPointTransactionRightJPanel = new javax.swing.JPanel();
+        viewPointTransactionJScrollPane = new javax.swing.JScrollPane();
+        viewPointTransactionJTextArea = new javax.swing.JTextArea();
         userSearchJSeparator = new javax.swing.JSeparator();
         statusJProgressBar = new javax.swing.JProgressBar();
 
@@ -229,6 +244,122 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         contentJTabbedPane.addTab("Publish", publishPostJPanel);
 
+        viewLikeJSplitPane.setDividerLocation(300);
+
+        viewLikeLeftJPanel.setPreferredSize(new java.awt.Dimension(400, 500));
+
+        viewLikeKeysQueryJComboBox.setModel(
+                new javax.swing.DefaultComboBoxModel<>(new String[] { "Search By Post Key", "Search By Like Key" }));
+
+        viewLikeKeysJScrollPane.setPreferredSize(new java.awt.Dimension(400, 500));
+
+        viewLikeKeysJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        viewLikeKeysJScrollPane.setViewportView(viewLikeKeysJList);
+
+        final javax.swing.GroupLayout viewLikeLeftJPanelLayout = new javax.swing.GroupLayout(viewLikeLeftJPanel);
+        viewLikeLeftJPanel.setLayout(viewLikeLeftJPanelLayout);
+        viewLikeLeftJPanelLayout.setHorizontalGroup(viewLikeLeftJPanelLayout
+                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(viewLikeKeysJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(viewLikeKeysQueryJComboBox, 0, 299, Short.MAX_VALUE));
+        viewLikeLeftJPanelLayout.setVerticalGroup(
+                viewLikeLeftJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                        javax.swing.GroupLayout.Alignment.TRAILING,
+                        viewLikeLeftJPanelLayout.createSequentialGroup()
+                                .addComponent(viewLikeKeysQueryJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(viewLikeKeysJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 527,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)));
+
+        viewLikeJSplitPane.setLeftComponent(viewLikeLeftJPanel);
+
+        viewLikeRightJPanel.setPreferredSize(new java.awt.Dimension(880, 500));
+
+        viewLikeJScrollPane.setPreferredSize(new java.awt.Dimension(880, 500));
+
+        viewLikeJTextArea.setEditable(false);
+        viewLikeJTextArea.setColumns(20);
+        viewLikeJTextArea.setLineWrap(true);
+        viewLikeJTextArea.setRows(5);
+        viewLikeJTextArea.setTabSize(4);
+        viewLikeJTextArea.setWrapStyleWord(true);
+        viewLikeJScrollPane.setViewportView(viewLikeJTextArea);
+
+        final javax.swing.GroupLayout viewLikeRightJPanelLayout = new javax.swing.GroupLayout(viewLikeRightJPanel);
+        viewLikeRightJPanel.setLayout(viewLikeRightJPanelLayout);
+        viewLikeRightJPanelLayout.setHorizontalGroup(viewLikeRightJPanelLayout
+                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(viewLikeJScrollPane,
+                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+        viewLikeRightJPanelLayout.setVerticalGroup(
+                viewLikeRightJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(
+                        viewLikeJScrollPane, javax.swing.GroupLayout.Alignment.TRAILING,
+                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+
+        viewLikeJSplitPane.setRightComponent(viewLikeRightJPanel);
+
+        contentJTabbedPane.addTab("Likes", viewLikeJSplitPane);
+
+        viewPointTransactionJSplitPane.setDividerLocation(300);
+
+        viewPointTransactionLeftJPanel.setPreferredSize(new java.awt.Dimension(400, 500));
+
+        viewPointTransactionKeysQueryJComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(
+                new String[] { "All", "Search By Payer", "Search By Point Transaction Key" }));
+
+        viewPointTransactionKeysJScrollPane.setPreferredSize(new java.awt.Dimension(400, 500));
+
+        viewPointTransactionKeysJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        viewPointTransactionKeysJScrollPane.setViewportView(viewPointTransactionKeysJList);
+
+        final javax.swing.GroupLayout viewPointTransactionLeftJPanelLayout = new javax.swing.GroupLayout(
+                viewPointTransactionLeftJPanel);
+        viewPointTransactionLeftJPanel.setLayout(viewPointTransactionLeftJPanelLayout);
+        viewPointTransactionLeftJPanelLayout.setHorizontalGroup(
+                viewPointTransactionLeftJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(viewPointTransactionKeysJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0,
+                                Short.MAX_VALUE)
+                        .addComponent(viewPointTransactionKeysQueryJComboBox, 0, 299, Short.MAX_VALUE));
+        viewPointTransactionLeftJPanelLayout.setVerticalGroup(viewPointTransactionLeftJPanelLayout
+                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewPointTransactionLeftJPanelLayout
+                        .createSequentialGroup()
+                        .addComponent(viewPointTransactionKeysQueryJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(viewPointTransactionKeysJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 527,
+                                javax.swing.GroupLayout.PREFERRED_SIZE)));
+
+        viewPointTransactionJSplitPane.setLeftComponent(viewPointTransactionLeftJPanel);
+
+        viewPointTransactionRightJPanel.setPreferredSize(new java.awt.Dimension(880, 500));
+
+        viewPointTransactionJScrollPane.setPreferredSize(new java.awt.Dimension(880, 500));
+
+        viewPointTransactionJTextArea.setEditable(false);
+        viewPointTransactionJTextArea.setColumns(20);
+        viewPointTransactionJTextArea.setLineWrap(true);
+        viewPointTransactionJTextArea.setRows(5);
+        viewPointTransactionJTextArea.setTabSize(4);
+        viewPointTransactionJTextArea.setWrapStyleWord(true);
+        viewPointTransactionJScrollPane.setViewportView(viewPointTransactionJTextArea);
+
+        final javax.swing.GroupLayout viewPointTransactionRightJPanelLayout = new javax.swing.GroupLayout(
+                viewPointTransactionRightJPanel);
+        viewPointTransactionRightJPanel.setLayout(viewPointTransactionRightJPanelLayout);
+        viewPointTransactionRightJPanelLayout.setHorizontalGroup(
+                viewPointTransactionRightJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(viewPointTransactionJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+        viewPointTransactionRightJPanelLayout.setVerticalGroup(viewPointTransactionRightJPanelLayout
+                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(viewPointTransactionJScrollPane, javax.swing.GroupLayout.Alignment.TRAILING,
+                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+
+        viewPointTransactionJSplitPane.setRightComponent(viewPointTransactionRightJPanel);
+
+        contentJTabbedPane.addTab("Point Transaction", viewPointTransactionJSplitPane);
+
         final javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -329,11 +460,14 @@ public class ForumJFrame extends javax.swing.JFrame {
 
     private void viewPostKeysQueryJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPostKeysQueryJComboBoxActionPerformed
         final String selectedQueryMethod = (String) this.viewPostKeysQueryJComboBox.getSelectedItem();
-        if (selectedQueryMethod.equals("All")) {
+        switch (selectedQueryMethod) {
+        case "All": {
             final var userApp = new AnynomousAppUser(this.contract);
             final String[] postKeys = userApp.fetchAllPostKeys();
             this.viewPostKeysJList.setListData(postKeys);
-        } else if (selectedQueryMethod.equals("Search By Author")) {
+            break;
+        }
+        case "Search By Author": {
             PublicKey publicKey = null;
             try {
                 publicKey = Cryptography.parsePublicKey(ByteUtils.toByteArray(this.searchJTextField.getText()));
@@ -349,7 +483,9 @@ public class ForumJFrame extends javax.swing.JFrame {
                 this.viewPostKeysJList.setListData(new String[0]);
                 e.printStackTrace();
             }
-        } else if (selectedQueryMethod.equals("Search By Post Key")) {
+            break;
+        }
+        case "Search By Post Key":
             final var postKey = this.searchJTextField.getText();
             String[] postKeyResult;
             try {
@@ -359,7 +495,8 @@ public class ForumJFrame extends javax.swing.JFrame {
                 postKeyResult = new String[0];
             }
             this.viewPostKeysJList.setListData(postKeyResult);
-        } else {
+            break;
+        default:
             throw new UnsupportedOperationException();
         }
     }// GEN-LAST:event_viewPostKeysQueryJComboBoxActionPerformed
@@ -431,25 +568,22 @@ public class ForumJFrame extends javax.swing.JFrame {
             }
         };
 
-        task.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                if ("progress" == evt.getPropertyName() && (Integer) evt.getNewValue() == 100) {
-                    Boolean result = false;
-                    try {
-                        result = task.get();
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
+        task.addPropertyChangeListener((final PropertyChangeEvent evt1) -> {
+            if ("progress".equals(evt1.getPropertyName()) && (Integer) evt1.getNewValue() == 100) {
+                Boolean result = false;
+                try {
+                    result = task.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
 
-                    ForumJFrame.this.setBusy(false);
+                ForumJFrame.this.setBusy(false);
 
-                    if (result != null && result.booleanValue()) {
-                        JOptionPane.showMessageDialog(null, "The post was published successfully!");
-                        ForumJFrame.this.postEditorJTextArea.setText(new String());
-                    } else {
-                        JOptionPane.showMessageDialog(null, "The post failed to be published!");
-                    }
+                if (result != null && result) {
+                    JOptionPane.showMessageDialog(null, "The post was published successfully!");
+                    ForumJFrame.this.postEditorJTextArea.setText(new String());
+                } else {
+                    JOptionPane.showMessageDialog(null, "The post failed to be published!");
                 }
             }
         });
@@ -512,10 +646,8 @@ public class ForumJFrame extends javax.swing.JFrame {
         // </editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ForumJFrame(contract).setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new ForumJFrame(contract).setVisible(true);
         });
     }
 
@@ -543,6 +675,22 @@ public class ForumJFrame extends javax.swing.JFrame {
     private javax.swing.JTextField userPrivateKeyJTextField;
     private javax.swing.JTextField userPublicKeyJTextField;
     private javax.swing.JSeparator userSearchJSeparator;
+    private javax.swing.JScrollPane viewLikeJScrollPane;
+    private javax.swing.JSplitPane viewLikeJSplitPane;
+    private javax.swing.JTextArea viewLikeJTextArea;
+    private javax.swing.JList<String> viewLikeKeysJList;
+    private javax.swing.JScrollPane viewLikeKeysJScrollPane;
+    private javax.swing.JComboBox<String> viewLikeKeysQueryJComboBox;
+    private javax.swing.JPanel viewLikeLeftJPanel;
+    private javax.swing.JPanel viewLikeRightJPanel;
+    private javax.swing.JScrollPane viewPointTransactionJScrollPane;
+    private javax.swing.JSplitPane viewPointTransactionJSplitPane;
+    private javax.swing.JTextArea viewPointTransactionJTextArea;
+    private javax.swing.JList<String> viewPointTransactionKeysJList;
+    private javax.swing.JScrollPane viewPointTransactionKeysJScrollPane;
+    private javax.swing.JComboBox<String> viewPointTransactionKeysQueryJComboBox;
+    private javax.swing.JPanel viewPointTransactionLeftJPanel;
+    private javax.swing.JPanel viewPointTransactionRightJPanel;
     private javax.swing.JScrollPane viewPostJScrollPane;
     private javax.swing.JSplitPane viewPostJSplitPane;
     private javax.swing.JTextArea viewPostJTextArea;
