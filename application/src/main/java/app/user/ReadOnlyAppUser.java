@@ -43,14 +43,10 @@ public class ReadOnlyAppUser extends AnynomousAppUser {
         return null;
     }
 
-    public String[] fetchAllUserPosts() throws Exception {
-        return super.getPostRepository().selectObjectsByCustomKeys(this.getPublicKeyString());
-    }
-
-    public String fetchPostByPostKey(String key) {
+    public String[] fetchAllUserPosts() {
         try {
-            return super.getPostRepository().selectObjectsByKeys(key)[0];
-        } catch (ContractException e) {
+            return super.getPostRepository().selectObjectsByCustomKeys(this.getPublicKeyString());
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -65,7 +61,12 @@ public class ReadOnlyAppUser extends AnynomousAppUser {
         return null;
     }
 
-    public String getPointAmount() throws ContractException {
-        return new String(super.getContract().evaluateTransaction("getPointAmountByUserId", this.getPublicKeyString()));
+    public String getPointAmount() {
+        try {
+            return new String(super.getContract().evaluateTransaction("getPointAmountByUserId", this.getPublicKeyString()));
+        } catch (ContractException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
