@@ -4,6 +4,7 @@ import java.beans.PropertyChangeEvent;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.util.concurrent.ExecutionException;
@@ -546,13 +547,26 @@ public class ForumJFrame extends javax.swing.JFrame {
     }// GEN-LAST:event_publishPostResetJButtonActionPerformed
 
     private void publishPostSubmitJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_publishPostSubmitJButtonActionPerformed
-        final String publicKeyString = this.userPublicKeyJTextField.getText();
-        final String privateKeyString = this.userPrivateKeyJTextField.getText();
-
-        if (publicKeyString.isEmpty() || privateKeyString.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please provide a Public/Private Key Pair!");
-            return;
+        PublicKey publicKeyCandidate = null;
+        PrivateKey privateKeyCandidate = null;
+        try {
+            final String publicKeyString = this.userPublicKeyJTextField.getText();
+            publicKeyCandidate = Cryptography.parsePublicKey(ByteUtils.toByteArray(publicKeyString));
+            final String privateKeyString = this.userPrivateKeyJTextField.getText();
+            privateKeyCandidate = Cryptography.parsePrivateKey(ByteUtils.toByteArray(privateKeyString));
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException | IllegalArgumentException e1) {
+            publicKeyCandidate = null;
+            privateKeyCandidate = null;
+        } finally {
+            if (publicKeyCandidate == null || privateKeyCandidate == null
+                    || !Cryptography.verifyKeyPair(publicKeyCandidate, privateKeyCandidate)) {
+                JOptionPane.showMessageDialog(null, "Invalid Public/Private Key Pair!");
+                return;
+            }
         }
+
+        final PublicKey publicKey = publicKeyCandidate;
+        final PrivateKey privateKey = privateKeyCandidate;
 
         final int choice = JOptionPane.showConfirmDialog(null,
                 "Do you want to publish the post using the provided Public and/or Private Keys?", "Confirm",
@@ -566,20 +580,12 @@ public class ForumJFrame extends javax.swing.JFrame {
         final SwingWorker<Boolean, Void> task = new SwingWorker<Boolean, Void>() {
             @Override
             public Boolean doInBackground() {
-                try {
-                    final var appUser = new PublishableAppUser(ForumJFrame.this.contract,
-                            Cryptography.parsePublicKey(ByteUtils.toByteArray(publicKeyString)),
-                            Cryptography.parsePrivateKey(ByteUtils.toByteArray(privateKeyString)));
+                final var appUser = new PublishableAppUser(ForumJFrame.this.contract, publicKey, privateKey);
 
-                    appUser.publishNewPost(ForumJFrame.this.postEditorJTextArea.getText());
+                appUser.publishNewPost(ForumJFrame.this.postEditorJTextArea.getText());
 
-                    setProgress(100);
-                    return true;
-                } catch (NoSuchAlgorithmException | InvalidKeySpecException e1) {
-                    e1.printStackTrace();
-                    setProgress(100);
-                    return false;
-                }
+                setProgress(100);
+                return true;
             }
         };
 

@@ -17,6 +17,9 @@ import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Cryptography {
     static {
@@ -62,5 +65,17 @@ public class Cryptography {
         sig2.initVerify(publicKey);
         sig2.update(content);
         return sig2.verify(signature);
+    }
+
+    public static boolean verifyKeyPair(final PublicKey publicKey, final PrivateKey privateKey) {
+        final String timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
+        final byte[] timestampBytes = timestamp.getBytes();
+
+        try {
+            final byte[] signatureBytes = sign(privateKey, timestampBytes);
+            return verify(publicKey, timestampBytes, signatureBytes);
+        } catch (InvalidKeyException | NoSuchAlgorithmException | SignatureException e) {
+            return false;
+        }
     }
 }
