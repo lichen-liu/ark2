@@ -34,26 +34,31 @@ public class ReadOnlyAppUser extends AnynomousAppUser {
         return ByteUtils.toHexString(this.publicKey.getEncoded());
     }
 
-    public String[] fetchUserPostKeys() throws Exception {
-        return super.getPostRepository().selectObjectKeysByCustomKey(this.getPublicKeyString());
+    public String[] fetchUserPostKeys() {
+        try {
+            return super.getPostRepository().selectObjectKeysByCustomKey(this.getPublicKeyString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String[] fetchAllUserPosts() throws Exception {
         return super.getPostRepository().selectObjectsByCustomKeys(this.getPublicKeyString());
     }
 
-    public String[] fetchPostByPostKey(String key) {
+    public String fetchPostByPostKey(String key) {
         try {
-            return super.getPostRepository().selectObjectsByKeys(key);
+            return super.getPostRepository().selectObjectsByKeys(key)[0];
         } catch (ContractException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public String fetchAllLikesByPostKey(final String postKey) {
+    public String[] fetchAllLikesByPostKey(final String postKey) {
         try {
-            return this.getLikeRepository().selectObjectsByCustomKeys(postKey)[0];
+            return this.getLikeRepository().selectObjectsByCustomKeys(postKey);
         } catch (final Exception e) {
             e.printStackTrace();
         }
