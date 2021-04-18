@@ -154,15 +154,21 @@ public final class ForumRepository implements ContractInterface {
             throws Exception {
         final ChaincodeStub stub = ctx.getStub();
 
+        System.out.println("Step 1");
+
         final var payerEntry = genson.deserialize(payerEntryString, PointTransaction.Entry.class);
         final Post post = this.getPostByKey(ctx, postKey);
         final KeyValue[] postLikesKeyValue = this.getAllLikesByPostKey(ctx, postKey);
+
+        System.out.println("Step 2");
 
         final long existingNumberLikes = postLikesKeyValue.length;
         final long existingTotalNumberLikes = ChaincodeStubTools.getNumberStatesByPartialCompositeKey(stub,
                 new CompositeKey(Like.getObjectTypeName()));
         final LikeRewarding rewarding = new LikeRewarding(existingNumberLikes, existingTotalNumberLikes,
                 payerEntry.getPointAmount());
+
+        System.out.println("Step 3");
 
         final List<PointTransaction.Entry> payeeEntries = new ArrayList<PointTransaction.Entry>();
         payeeEntries.add(new PointTransaction.Entry(post.getUserId(), rewarding.determineAuthorRewarding()));
@@ -176,6 +182,8 @@ public final class ForumRepository implements ContractInterface {
                     new PointTransaction.Entry(currentLike.getUserId(), rewarding.determineLikerRewarding(likerRank)));
         }
 
+        System.out.println("Step 4");
+
         System.out.println("publishNewLike");
         System.out.println("payer: " + genson.serialize(payerEntry));
         System.out.println("payees: " + genson.serialize(payeeEntries));
@@ -184,10 +192,14 @@ public final class ForumRepository implements ContractInterface {
                 this.determineRelativeOrderForLike(ctx, postKey));
         final String likeKey = ChaincodeStubTools.generateKey(stub, like);
 
+        System.out.println("Step 5");
+
         final String pointTransactionKey = this.publishNewPointTransaction(ctx, timestamp, payerEntryString,
                 payerEntry.getUserId(), pointTransactionSignature, likeKey,
                 genson.serialize(payeeEntries.toArray(PointTransaction.Entry[]::new)));
         like.setPointTransactionKey(pointTransactionKey);
+
+        System.out.println("Step 6");
 
         stub.putStringState(likeKey, genson.serialize(like));
         return likeKey;

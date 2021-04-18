@@ -1,246 +1,245 @@
 package app.tests;
 
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.security.InvalidAlgorithmParameterException;
-import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.hyperledger.fabric.gateway.Contract;
+import org.hyperledger.fabric.gateway.ContractException;
+import org.hyperledger.fabric.gateway.Wallet;
 
+import app.backend.ContractFactory;
+import app.backend.WalletFactory;
 import app.repository.contracts.Transaction;
 import app.repository.contracts.Transaction.Entry;
+import app.tests.utils.Logger;
+import app.tests.utils.TestClient;
+import app.tests.utils.TestRunner;
+import app.tests.utils.TestVoid;
 import app.user.PublishableAppUser;
 import app.utils.ByteUtils;
-import app.utils.Cryptography;
 
 public class TransactionTests {
     private int testId = 0;
     private final ObjectMapper objectMapper;
+    private final Logger logger;
+
 
     public TransactionTests() {
         objectMapper = new ObjectMapper();
+        this.logger = new Logger();
     }
 
-    public void benchmark(final PublishableAppUser appClient) {
+    public void benchmark() throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, ContractException {
         try {
-            final Contract contract = appClient.getContract();
-
-            final String ray = "ray";
-            final String charles = "charles";
-            final String bank = "bank";
-            final String zac = "zac";
-
-            final var users = new HashMap<String, PublishableAppUser>();
-            for (final String name : List.of(ray, charles, bank, zac)) {
-                users.put(name, createClient(contract));
-            }
-
-            final String bankId = users.get(bank).getPublicKeyString();
-            final String rayId = users.get(ray).getPublicKeyString();
-            final String zacId = users.get(zac).getPublicKeyString();
-            final String charlesId = users.get(charles).getPublicKeyString();
-
-            print(appClient.getContract().submitTransaction("publishNewPost", "a", "a", "a", "a"));
-
-            {
-                final String p0 = appClient.publishNewPost("hahaha");
-                print(p0);
-                print(contract.evaluateTransaction("getPostByKey", p0));
-            }
-
-            {
-                final String post = "This is a post This is a post This is a post This is a post This is a post";
-                final long startTime = System.nanoTime();
-                for (int i = 0; i < 100; ++i) {
-                    appClient.publishNewPost(post);
-                }
-                final long endTime = System.nanoTime();
-                final long average = (endTime - startTime) / (long) 100;
-                System.out.println("Average 1: " + Long.toString(average));
-            }
-
-            {
-                final String post = "This is a post This is a post This is a post This is a post This is a post";
-                users.get(ray).publishNewPost(post);
-                final long startTime = System.nanoTime();
-                for (int i = 0; i < 100; ++i) {
-                    users.get(ray).fetchAllUserPosts();
-                }
-                final long endTime = System.nanoTime();
-                final long average = (endTime - startTime) / (long) 100;
-                System.out.println("Average 2: " + Long.toString(average));
-            }
-
-            {
-                final Transaction transaction = new Transaction();
-                transaction.reference = "reference";
-                transaction.payer = new Entry(rayId, (double) 100);
-                transaction.payees = Arrays.asList(new Entry(rayId, (double) 100));
-
-                final long startTime = System.nanoTime();
-                for (int i = 0; i < 100; ++i) {
-                    users.get(ray).publishNewTransaction(transaction);
-                }
-                final long endTime = System.nanoTime();
-                final long average = (endTime - startTime) / (long) 100;
-                System.out.println("Average 3: " + Long.toString(average));
-            }
-
-            {
-                final long startTime = System.nanoTime();
-                for (int i = 0; i < 100; ++i) {
-                    users.get(ray).getPointAmount();
-                }
-                final long endTime = System.nanoTime();
-                final long average = (endTime - startTime) / (long) 100;
-                System.out.println("Average 4: " + Long.toString(average));
-            }
-        } catch (final Exception e) {
+            singleThreadTests();
+            multiThreadWithoutDependencyTests();
+            multiThreadWithDependencyTests();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void test(final PublishableAppUser appClient) {
+    private void singleThreadTests() throws Exception{
+
+        final Wallet wallet = WalletFactory.GetWallet("admin");
+
+        final var contractCreation = new ContractFactory.Entity();
+        contractCreation.userId = "appUser3";
+        contractCreation.channel = "mychannel";
+        contractCreation.contractName = "ForumAgreement";
+        contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
+                "peerOrganizations", "org1.example.com", "connection-org1.yaml");
+        ;
+
+        final var contract = ContractFactory.CreateContract(wallet, contractCreation);
+        final TestRunner runner = new TestRunner();
+
+        final var client1 = TestClient.createTestClient(contract);
+        final var client2 = TestClient.createTestClient(contract);
+        final var client3 = TestClient.createTestClient(contract);
+
+        final var client1Id = ByteUtils.toHexString(client1.getPublicKey().getEncoded());
+        final var client2Id = ByteUtils.toHexString(client2.getPublicKey().getEncoded());
+        final var client3Id = ByteUtils.toHexString(client3.getPublicKey().getEncoded());
+
+        final Transaction transaction = new Transaction();
+        transaction.reference = "reference";
+        transaction.payer = new Entry(client1Id, (double) 20);
+        transaction.payees = Arrays.asList(new Entry(client2Id, (double) 10), new Entry(client3Id, (double) 10));
+        runner.insertNewTest((TestVoid)() -> { return client2.publishNewTransaction(transaction); }, 1);
+
+        final Transaction transaction2 = new Transaction();
+        transaction2.reference = "reference";
+        transaction2.payer = new Entry(client2Id, (double) 10);
+        transaction2.payees = Arrays.asList(new Entry(client1Id, (double) 10));
+        runner.insertNewTest((TestVoid)() -> { return client2.publishNewTransaction(transaction2); }, 1);
+
+        final Transaction transaction3 = new Transaction();
+        transaction3.reference = "reference";
+        transaction3.payer = new Entry(client3Id, (double) 30);
+        transaction3.payees = Arrays.asList(new Entry(client1Id, (double) 30));
+        runner.insertNewTest((TestVoid)() -> { return client2.publishNewTransaction(transaction3); }, 1);
+    
+        final Thread thread = new Thread(runner);
+
+        thread.start();
 
         try {
-            print(appClient.fetchAllPosts());
-
-            print(appClient.fetchAllPostKeys());
-
-            final Contract contract = appClient.getContract();
-
-            final String ray = "ray";
-            final String charles = "charles";
-            final String bank = "bank";
-            final String zac = "zac";
-
-            final var users = new HashMap<String, PublishableAppUser>();
-            for (final String name : List.of(ray, charles, bank, zac)) {
-                users.put(name, createClient(contract));
-            }
-
-            final String bankId = ByteUtils.toHexString(users.get(bank).getPublicKey().getEncoded());
-            final String rayId = ByteUtils.toHexString(users.get(ray).getPublicKey().getEncoded());
-            final String zacId = ByteUtils.toHexString(users.get(zac).getPublicKey().getEncoded());
-            final String charlesId = ByteUtils.toHexString(users.get(charles).getPublicKey().getEncoded());
-
-            {
-                final Transaction transaction = new Transaction();
-                transaction.reference = "reference";
-                transaction.payer = new Entry(bankId, (double) 100);
-                transaction.payees = Arrays.asList(new Entry(rayId, (double) 100));
-
-                final var t0 = users.get(bank).publishNewTransaction(transaction);
-                print(t0);
-                print(contract.evaluateTransaction("getPointTransactionByKey", t0));
-            }
-
-            {
-                final Transaction transaction = new Transaction();
-                transaction.reference = "reference";
-                transaction.payer = new Entry(rayId, (double) 100);
-                transaction.payees = Arrays.asList(new Entry(charlesId, (double) 50), new Entry(zacId, (double) 50));
-
-                final var t1 = users.get(ray).publishNewTransaction(transaction);
-                print(t1);
-                print(contract.evaluateTransaction("getPointTransactionByKey", t1));
-            }
-
-            {
-                final Transaction transaction = new Transaction();
-                transaction.reference = "reference";
-                transaction.payer = new Entry(bankId, (double) 100);
-                transaction.payees = Arrays.asList(new Entry(rayId, (double) 100));
-
-                final var t2 = users.get(bank).publishNewTransaction(transaction);
-                print(t2);
-                print(contract.evaluateTransaction("getPointTransactionByKey", t2));
-            }
-
-            {
-
-                final Transaction transaction = new Transaction();
-                transaction.reference = "reference";
-                transaction.payer = new Entry(bankId, (double) 100);
-                transaction.payees = Arrays.asList(new Entry(rayId, (double) 100));
-
-                final var t3 = users.get(bank).publishNewTransaction(transaction);
-                print(t3);
-                print(contract.evaluateTransaction("getPointTransactionByKey", t3));
-            }
-
-            {
-                final Transaction transaction = new Transaction();
-                transaction.reference = "reference";
-                transaction.payer = new Entry(rayId, (double) 150);
-                transaction.payees = Arrays.asList(new Entry(charlesId, (double) 50), new Entry(zacId, (double) 100));
-
-                final var t4 = users.get(ray).publishNewTransaction(transaction);
-                print(t4);
-                print(contract.evaluateTransaction("getPointTransactionByKey", t4));
-            }
-
-            print("bank: " + bankId + " : "
-                    + new String(contract.evaluateTransaction("getPointAmountByUserId", bankId)));
-            print("ray: " + rayId + " : " + new String(contract.evaluateTransaction("getPointAmountByUserId", rayId)));
-            print("charles: " + charlesId + " : "
-                    + new String(contract.evaluateTransaction("getPointAmountByUserId", charlesId)));
-            print("zac: " + zacId + " : " + new String(contract.evaluateTransaction("getPointAmountByUserId", zacId)));
-            print(contract.evaluateTransaction("getAllPointTransactionKeys"));
-        } catch (final Exception e) {
+            thread.join();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        logger.print(contract.evaluateTransaction("getPointAmountByUserId", client1Id));
+        logger.print(contract.evaluateTransaction("getPointAmountByUserId", client2Id));
+        logger.print(contract.evaluateTransaction("getPointAmountByUserId", client3Id));
     }
 
-    private void print(final byte[] result) {
-        this.print(toString(result));
-    }
+    private void multiThreadWithDependencyTests() throws Exception{
 
-    private void print(final String result) {
-        System.out.println("\n[" + this.testId + "] result: " + prettifyJson(result));
-        this.testId++;
-    }
+        final Wallet wallet = WalletFactory.GetWallet("admin");
 
-    private void print(final String[] results) {
+        final var contractCreation = new ContractFactory.Entity();
+        contractCreation.userId = "appUser3";
+        contractCreation.channel = "mychannel";
+        contractCreation.contractName = "ForumAgreement";
+        contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
+                "peerOrganizations", "org1.example.com", "connection-org1.yaml");
+        ;
 
-        System.out.println("\n[" + this.testId + "] result: ");
+        final var contract = ContractFactory.CreateContract(wallet, contractCreation);
 
-        for (final var result : results) {
-            System.out.println(prettifyJson(result));
-        }
+        final TestRunner runner1 = new TestRunner();
+        final TestRunner runner2 = new TestRunner();
 
-        this.testId++;
-    }
+        final var client1 = TestClient.createTestClient(contract);
+        final var client2 = TestClient.createTestClient(contract);
 
-    private static String toString(final byte[] result) {
-        return new String(result);
-    }
+        final var client1Id = ByteUtils.toHexString(client1.getPublicKey().getEncoded());
+        final var client2Id = ByteUtils.toHexString(client2.getPublicKey().getEncoded());
 
-    private String prettifyJson(final String raw) {
+        final var runner1Tests = new ArrayList<TestVoid>();
+        final var runner2Tests = new ArrayList<TestVoid>();
+
+        final Transaction transaction = new Transaction();
+        transaction.reference = "reference";
+        transaction.payer = new Entry(client1Id, (double) 100);
+        transaction.payees = Arrays.asList(new Entry(client2Id, (double) 100));
+        runner1Tests.add((TestVoid)() -> { return client1.publishNewTransaction(transaction); });
+
+        final Transaction transaction2 = new Transaction();
+        transaction2.reference = "reference";
+        transaction2.payer = new Entry(client1Id, (double) 200);
+        transaction2.payees = Arrays.asList(new Entry(client2Id, (double) 200));
+        runner1Tests.add((TestVoid)() -> { return client1.publishNewTransaction(transaction2); });
+
+        for(var test : runner1Tests) {
+            runner1.insertNewTest(test, 1);
+        }       
+        
+        final Transaction transaction3 = new Transaction();
+        transaction3.reference = "reference";
+        transaction3.payer = new Entry(client2Id, (double) 5);
+        transaction3.payees = Arrays.asList(new Entry(client1Id, (double) 5));
+
+        runner2Tests.add((TestVoid)() -> { return client2.publishNewTransaction(transaction3); });
+
+        final Transaction transaction4 = new Transaction();
+        transaction4.reference = "reference";
+        transaction4.payer = new Entry(client2Id, (double) 10);
+        transaction4.payees = Arrays.asList(new Entry(client1Id, (double) 10));
+        runner2Tests.add((TestVoid)() -> { return client2.publishNewTransaction(transaction4); });
+
+        for(var test : runner2Tests) {
+            runner2.insertNewTest(test, 1);
+        }  
+
+        final Thread thread1 = new Thread(runner1);
+        final Thread thread2 = new Thread(runner2);
+
+        thread1.start();
+        thread2.start();
+        
         try {
-            final Object json = objectMapper.readValue(raw, Object.class);
-            final String prettified = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
-            return prettified;
-        } catch (final JsonParseException e) {
-            return raw;
-        } catch (final Exception e) {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return null;
+
+        logger.print(contract.evaluateTransaction("getPointAmountByUserId", client1Id));
+        logger.print(contract.evaluateTransaction("getPointAmountByUserId", client2Id));
     }
 
-    private PublishableAppUser createClient(final Contract contract)
-            throws InvalidAlgorithmParameterException, NoSuchAlgorithmException {
-        final KeyPair pair = Cryptography.generateRandomKeyPair();
-        final PrivateKey priv = pair.getPrivate();
-        final PublicKey pub = pair.getPublic();
-        return new PublishableAppUser(contract, pub, priv);
+    private void multiThreadWithoutDependencyTests() throws IOException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, ContractException {
+        final Wallet wallet = WalletFactory.GetWallet("admin");
+
+        final var contractCreation = new ContractFactory.Entity();
+        contractCreation.userId = "appUser3";
+        contractCreation.channel = "mychannel";
+        contractCreation.contractName = "ForumAgreement";
+        contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
+                "peerOrganizations", "org1.example.com", "connection-org1.yaml");
+        ;
+
+        final var contract = ContractFactory.CreateContract(wallet, contractCreation);
+
+        final TestRunner runner1 = new TestRunner();
+        final TestRunner runner2 = new TestRunner();
+
+        final var client1 = TestClient.createTestClient(contract);
+        final var client2 = TestClient.createTestClient(contract);
+        final var client3 = TestClient.createTestClient(contract);
+        final var client4 = TestClient.createTestClient(contract);
+
+        final var client1Id = ByteUtils.toHexString(client1.getPublicKey().getEncoded());
+        final var client2Id = ByteUtils.toHexString(client2.getPublicKey().getEncoded());
+        final var client3Id = ByteUtils.toHexString(client3.getPublicKey().getEncoded());
+        final var client4Id = ByteUtils.toHexString(client4.getPublicKey().getEncoded());
+
+        final var runner1Tests = new ArrayList<TestVoid>();
+        final var runner2Tests = new ArrayList<TestVoid>();
+
+        final Transaction transaction = new Transaction();
+        transaction.reference = "reference";
+        transaction.payer = new Entry(client1Id, (double) 100);
+        transaction.payees = Arrays.asList(new Entry(client2Id, (double) 100));
+        runner1Tests.add((TestVoid)() -> { return client1.publishNewTransaction(transaction); });
+
+        for(var test : runner1Tests) {
+            runner1.insertNewTest(test, 5);
+        }       
+        
+        final Transaction transaction2 = new Transaction();
+        transaction2.reference = "reference";
+        transaction2.payer = new Entry(client3Id, (double) 5);
+        transaction2.payees = Arrays.asList(new Entry(client4Id, (double) 5));
+        runner2Tests.add((TestVoid)() -> { return client3.publishNewTransaction(transaction2); });
+
+        for(var test : runner2Tests) {
+            runner2.insertNewTest(test, 5);
+        }  
+
+        final Thread thread1 = new Thread(runner1);
+        final Thread thread2 = new Thread(runner2);
+
+        thread1.start();
+        thread2.start();
+        
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        logger.print(contract.evaluateTransaction("getPointAmountByUserId", client2Id));
+        logger.print(contract.evaluateTransaction("getPointAmountByUserId", client4Id));
     }
 }

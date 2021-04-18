@@ -2,6 +2,7 @@ package app.tests.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class TestRunner implements Runnable {
     private Logger logger;
