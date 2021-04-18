@@ -33,7 +33,8 @@ public class ForumRepositoryCC {
             final String signature) throws Exception {
         final ChaincodeStub stub = ctx.getStub();
 
-        final Post post = new Post(timestamp, content, userId, signature, this.determineRelativeOrderForPost(ctx));
+        // final Post post = new Post(timestamp, content, userId, signature, this.determineRelativeOrderForPost(ctx));
+        final Post post = new Post(timestamp, content, userId, signature, 0L);
         if (shouldVerifyIntegrity) {
             if (!post.isMatchingSignature()) {
                 final String errorMessage = genson.serialize(post) + " has non-matching signature";
