@@ -264,6 +264,11 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         viewLikeKeysQueryJComboBox.setModel(
                 new javax.swing.DefaultComboBoxModel<>(new String[] { "Search By Post Key", "Search By Like Key" }));
+        viewLikeKeysQueryJComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
+                viewLikeKeysQueryJComboBoxActionPerformed(evt);
+            }
+        });
 
         viewLikeKeysJScrollPane.setPreferredSize(new java.awt.Dimension(400, 500));
 
@@ -442,6 +447,31 @@ public class ForumJFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void viewLikeKeysQueryJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewLikeKeysQueryJComboBoxActionPerformed
+        final String selectedQueryMethod = (String) this.viewLikeKeysQueryJComboBox.getSelectedItem();
+        final String searchString = this.searchJTextField.getText();
+        this.viewLikeKeysJList.setListData(new String[0]);
+
+        if ("Search By Post Key".equals(selectedQueryMethod)) {
+            final var userApp = new AnynomousAppUser(this.contract);
+            try {
+                final String[] likeKeys = userApp.getLikeRepository().selectObjectKeysByCustomKey(searchString);
+                this.viewLikeKeysJList.setListData(likeKeys);
+            } catch (final Exception e) {
+                e.printStackTrace();
+            }
+        } else if ("Search By Like Key".equals(selectedQueryMethod)) {
+            try {
+                System.out.println(new String(this.contract.evaluateTransaction("getLikeByKey", searchString)));
+                this.viewLikeKeysJList.setListData(new String[] { searchString });
+            } catch (final ContractException e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new UnsupportedOperationException();
+        }
+    }// GEN-LAST:event_viewLikeKeysQueryJComboBoxActionPerformed
+
     private void viewPostKeysJListValueChanged(final javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_viewPostKeysJListValueChanged
         if (this.viewPostKeysJList.getSelectedIndex() == -1) {
             return;
@@ -476,19 +506,17 @@ public class ForumJFrame extends javax.swing.JFrame {
 
     private void viewPostKeysQueryJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPostKeysQueryJComboBoxActionPerformed
         final String selectedQueryMethod = (String) this.viewPostKeysQueryJComboBox.getSelectedItem();
-        switch (selectedQueryMethod) {
-        case "All": {
+        this.viewPostKeysJList.setListData(new String[0]);
+
+        if ("All".equals(selectedQueryMethod)) {
             final var userApp = new AnynomousAppUser(this.contract);
             final String[] postKeys = userApp.fetchAllPostKeys();
             this.viewPostKeysJList.setListData(postKeys);
-            break;
-        }
-        case "Search By Author": {
+        } else if ("Search By Author".equals(selectedQueryMethod)) {
             PublicKey publicKey = null;
             try {
                 publicKey = Cryptography.parsePublicKey(ByteUtils.toByteArray(this.searchJTextField.getText()));
             } catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException e) {
-                this.viewPostKeysJList.setListData(new String[0]);
                 return;
             }
             final var userApp = new ReadOnlyAppUser(this.contract, publicKey);
@@ -496,23 +524,16 @@ public class ForumJFrame extends javax.swing.JFrame {
                 final String[] postKeys = userApp.fetchUserPostKeys();
                 this.viewPostKeysJList.setListData(postKeys);
             } catch (final Exception e) {
-                this.viewPostKeysJList.setListData(new String[0]);
                 e.printStackTrace();
             }
-            break;
-        }
-        case "Search By Post Key":
+        } else if ("Search By Post Key".equals(selectedQueryMethod)) {
             final var postKey = this.searchJTextField.getText();
-            String[] postKeyResult;
             try {
                 this.contract.evaluateTransaction("getPostByKey", postKey);
-                postKeyResult = new String[] { postKey };
+                this.viewPostKeysJList.setListData(new String[] { postKey });
             } catch (final ContractException e) {
-                postKeyResult = new String[0];
             }
-            this.viewPostKeysJList.setListData(postKeyResult);
-            break;
-        default:
+        } else {
             throw new UnsupportedOperationException();
         }
     }// GEN-LAST:event_viewPostKeysQueryJComboBoxActionPerformed
