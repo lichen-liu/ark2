@@ -384,8 +384,7 @@ public class ForumJFrame extends javax.swing.JFrame {
 
                     setProgress(100);
                     return true;
-                } catch (NoSuchAlgorithmException | InvalidKeySpecException | InvalidKeyException | ContractException
-                        | SignatureException | TimeoutException | InterruptedException e1) {
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e1) {
                     e1.printStackTrace();
                     setProgress(100);
                     return false;

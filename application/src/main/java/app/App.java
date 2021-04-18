@@ -37,8 +37,8 @@ class App {
 
     public static void main(final String[] args) throws Exception {
         final App app = new App();
-        app.gui();
-        //app.test();
+        //app.gui();
+        app.test();
     }
 
     public App() {
@@ -79,7 +79,7 @@ class App {
     private void test() {
         try {
             new LikeTests(this.contract).benchmark();
-            new TransactionTests().test(this.appClient);
+            //new TransactionTests().test(this.appClient);
         } catch (final Exception e) {
             e.printStackTrace();
         }

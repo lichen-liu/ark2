@@ -44,7 +44,7 @@ public class LikeRepository extends ReadableRepository {
         final var likeSignature = NewPostSignature.sign(privateKey, likeHash);
 
         return new String(contract.submitTransaction("publishNewLike", timestamp, postKey, like,
-                ByteUtils.toHexString(signature), ByteUtils.toHexString(likeSignature)));
+        ByteUtils.toHexString(likeSignature), ByteUtils.toHexString(signature)));
     }
 
     @Override
