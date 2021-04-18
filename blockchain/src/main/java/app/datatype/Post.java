@@ -1,5 +1,6 @@
 package app.datatype;
 
+import com.owlike.genson.annotation.JsonIgnore;
 import com.owlike.genson.annotation.JsonProperty;
 
 import org.hyperledger.fabric.contract.annotation.DataType;
@@ -65,17 +66,20 @@ public final class Post implements KeyGeneration, ComparableByTimestamp, Signatu
     }
 
     @Override
+    @JsonIgnore
     public String getExpectedSignatureContent() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
+    @JsonIgnore
     public String getSignatureForVerification() {
         return getSignature();
     }
 
     @Override
+    @JsonIgnore
     public String getVerificationKey() {
         return getUserId();
     }
