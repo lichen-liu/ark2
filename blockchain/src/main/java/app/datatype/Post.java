@@ -68,8 +68,8 @@ public final class Post
     }
 
     @Override
-    public String generateKey(final String salt) {
-        return new CompositeKey(getObjectTypeName(), userId, String.valueOf(relativeOrder), salt).toString();
+    public CompositeKey generateKey(final String salt) {
+        return new CompositeKey(getObjectTypeName(), userId, String.valueOf(relativeOrder), salt);
     }
 
     public static String getObjectTypeName() {

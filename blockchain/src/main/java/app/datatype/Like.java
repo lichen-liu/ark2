@@ -81,8 +81,8 @@ public final class Like implements KeyGeneration, ComparableByTimestamp, Compara
     }
 
     @Override
-    public String generateKey(final String salt) {
-        return new CompositeKey(getObjectTypeName(), postKey, String.valueOf(relativeOrder), salt).toString();
+    public CompositeKey generateKey(final String salt) {
+        return new CompositeKey(getObjectTypeName(), postKey, String.valueOf(relativeOrder), salt);
     }
 
     public static String getObjectTypeName() {
