@@ -619,7 +619,7 @@ public class ForumJFrame extends javax.swing.JFrame {
             final var appUser = new ReadOnlyAppUser(this.contract,
                     Cryptography.parsePublicKey(ByteUtils.toByteArray(userPublicKey)));
             pointAmount = appUser.getPointAmount();
-        } catch (ContractException | InvalidKeySpecException | NoSuchAlgorithmException e) {
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         this.pointAmountJTextField.setText(pointAmount);

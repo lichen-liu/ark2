@@ -1,6 +1,7 @@
 package app.user;
 
 import org.hyperledger.fabric.gateway.Contract;
+import org.hyperledger.fabric.gateway.ContractException;
 
 import app.repository.LikeRepository;
 import app.repository.PointTransactionRepository;
@@ -44,7 +45,21 @@ public class AnynomousAppUser {
         return null;
     }
 
-    public String[] fetchAllPosts() throws Exception {
-        return postRepository.selectObjectsByCustomKeys();
+    public String[] fetchAllPosts() {
+        try {
+            return postRepository.selectObjectsByCustomKeys();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String fetchPostByPostKey(String key) {
+        try {
+            return postRepository.selectObjectsByKeys(key)[0];
+        } catch (ContractException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

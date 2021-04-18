@@ -9,7 +9,6 @@ import java.util.stream.StreamSupport;
 import javax.annotation.Nullable;
 
 import com.owlike.genson.Genson;
-import com.owlike.genson.GensonBuilder;
 
 import org.apache.commons.codec.DecoderException;
 import org.hyperledger.fabric.contract.Context;
@@ -28,7 +27,7 @@ import app.util.ChaincodeStubTools.Key;
 public class ForumRepositoryCC {
     private static final boolean shouldVerifyIntegrity = false;
 
-    private final Genson genson = new GensonBuilder().failOnMissingProperty(true).create();
+    private final Genson genson = new Genson();
 
     public String publishNewPost(final Context ctx, final String timestamp, final String content, final String userId,
             final String signature) throws Exception {
