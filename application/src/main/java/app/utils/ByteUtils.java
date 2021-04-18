@@ -19,7 +19,7 @@ public class ByteUtils {
         return DatatypeConverter.printHexBinary(bytes);
     }
 
-    public static byte[] toByteArray(final String hexString) {
+    public static byte[] toByteArray(final String hexString) throws IllegalArgumentException {
         return DatatypeConverter.parseHexBinary(hexString);
     }
 }
