@@ -51,9 +51,9 @@ public class ReadOnlyAppUser extends AnynomousAppUser {
         return null;
     }
 
-    public String[] fetchAllLikesByPostKey(final String postKey) {
+    public String fetchAllLikesByPostKey(final String postKey) {
         try {
-            return this.getLikeRepository().selectObjectsByCustomKeys(postKey);
+            return this.getLikeRepository().selectObjectsByCustomKeys(postKey)[0];
         } catch (final Exception e) {
             e.printStackTrace();
         }
