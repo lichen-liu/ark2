@@ -58,7 +58,7 @@ cd blockchain
 cd hlf2-network
 
 # Quick Run
-pushd ../.; ./gradlew build; ./gradlew install; popd; ./network.sh down; ./network.sh up createChannel -ca;./network.sh deployCC -l java;
+pushd ../.; gradle build; gradle install; popd; ./network.sh down; ./network.sh up createChannel -ca;./network.sh deployCC -l java;
 ```
 
 ### Step 0 - (Optional) Download bin, config and Docker image
