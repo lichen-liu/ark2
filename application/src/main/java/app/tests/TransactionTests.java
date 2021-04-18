@@ -38,8 +38,8 @@ public class TransactionTests {
     public void benchmark() throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, ContractException {
         try {
             singleThreadTests();
-            multiThreadWithoutDependencyTests();
-            multiThreadWithDependencyTests();
+            // multiThreadWithoutDependencyTests();
+            // multiThreadWithDependencyTests();
         } catch (Exception e) {
             e.printStackTrace();
         }

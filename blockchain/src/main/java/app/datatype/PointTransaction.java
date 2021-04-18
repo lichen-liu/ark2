@@ -158,9 +158,9 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
     }
 
     @Override
-    public String generateKey(final String salt) {
+    public CompositeKey generateKey(final String salt) {
         return new CompositeKey(getObjectTypeName(), this.getPayerEntry().getUserId(), String.valueOf(relativeOrder),
-                salt).toString();
+                salt);
     }
 
     public static String getObjectTypeName() {

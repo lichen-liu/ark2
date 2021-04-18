@@ -1,5 +1,6 @@
 package app;
 
+import org.apache.commons.codec.DecoderException;
 import org.hyperledger.fabric.contract.Context;
 import org.hyperledger.fabric.contract.ContractInterface;
 import org.hyperledger.fabric.contract.annotation.Contract;
@@ -165,7 +166,12 @@ public final class ForumRepository implements ContractInterface {
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public Post getPostByKey(final Context ctx, final String postKey) {
-        return this.cc.getPostByKey(ctx, postKey);
+        try {
+            return this.cc.getPostByKey(ctx, postKey);
+        } catch (final DecoderException e) {
+            e.printStackTrace();
+            throw new ChaincodeException(e);
+        }
     }
 
     /**
@@ -193,7 +199,12 @@ public final class ForumRepository implements ContractInterface {
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public Like getLikeByKey(final Context ctx, final String likeKey) {
-        return this.cc.getLikeByKey(ctx, likeKey);
+        try {
+            return this.cc.getLikeByKey(ctx, likeKey);
+        } catch (final DecoderException e) {
+            e.printStackTrace();
+            throw new ChaincodeException(e);
+        }
     }
 
     /**
@@ -237,7 +248,12 @@ public final class ForumRepository implements ContractInterface {
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public PointTransaction getPointTransactionByKey(final Context ctx, final String pointTransactionKey) {
-        return this.cc.getPointTransactionByKey(ctx, pointTransactionKey);
+        try {
+            return this.cc.getPointTransactionByKey(ctx, pointTransactionKey);
+        } catch (final DecoderException e) {
+            e.printStackTrace();
+            throw new ChaincodeException(e);
+        }
     }
 
     /**

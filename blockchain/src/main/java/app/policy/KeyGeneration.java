@@ -2,6 +2,10 @@ package app.policy;
 
 import java.util.function.Predicate;
 
+import org.hyperledger.fabric.shim.ledger.CompositeKey;
+
+import app.util.ChaincodeStubTools.Key;
+
 public interface KeyGeneration {
     /**
      * Generate a composite key. The composite key is usually formed as:
@@ -11,15 +15,15 @@ public interface KeyGeneration {
      * </pre>
      * 
      * @param salt extra field in the composite key for uniqueness
-     * @return composite key in String
+     * @return CompositeKey
      */
-    public abstract String generateKey(final String salt);
+    public abstract CompositeKey generateKey(final String salt);
 
-    public default String generateKey(final Predicate<String> isKeyInvalid) {
-        String key;
+    public default Key generateKey(final Predicate<Key> isKeyInvalid) {
+        Key key = null;
         int attempt = 0;
         do {
-            key = generateKey(String.valueOf(attempt));
+            key = new Key(generateKey(String.valueOf(attempt)));
             attempt++;
         } while (isKeyInvalid.test(key));
 

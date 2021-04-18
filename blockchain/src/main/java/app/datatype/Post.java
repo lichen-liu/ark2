@@ -67,9 +67,14 @@ public final class Post
         this.relativeOrder = relativeOrder;
     }
 
+    // @Override
+    // public CompositeKey generateKey(final String salt) {
+    //     return new CompositeKey(getObjectTypeName(), userId, String.valueOf(relativeOrder), salt);
+    // }
+
     @Override
-    public String generateKey(final String salt) {
-        return new CompositeKey(getObjectTypeName(), userId, String.valueOf(relativeOrder), salt).toString();
+    public CompositeKey generateKey(final String salt) {
+        return new CompositeKey(getObjectTypeName(), userId, signature, salt);
     }
 
     public static String getObjectTypeName() {
