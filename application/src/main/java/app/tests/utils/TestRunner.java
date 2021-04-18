@@ -2,7 +2,6 @@ package app.tests.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class TestRunner implements Runnable {
     private Logger logger;
@@ -37,7 +36,7 @@ public class TestRunner implements Runnable {
                 } else {
                     System.out.println("Unhandled type: " + output);
                 }
-                
+
                 outputs.put(test, output);
                 }
             }
