@@ -28,10 +28,10 @@ public class PostRepository extends ReadableRepository {
             final PrivateKey privateKey) throws InvalidKeyException, NoSuchAlgorithmException, SignatureException,
             ContractException, TimeoutException, InterruptedException {
 
-        final var timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
-        final var publicKeyString = ByteUtils.toHexString(publicKey.getEncoded());
-        final var hash = ByteUtils.getSHA(String.join("", timestamp, content, publicKeyString));
-        final var signature = Cryptography.sign(privateKey, hash);
+        final String timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
+        final String publicKeyString = ByteUtils.toHexString(publicKey.getEncoded());
+        final byte[] hash = ByteUtils.getSHA(String.join("", timestamp, content, publicKeyString));
+        final byte[] signature = Cryptography.sign(privateKey, hash);
 
         return new String(contract.submitTransaction("publishNewPost", timestamp, content, publicKeyString,
                 ByteUtils.toHexString(signature)));

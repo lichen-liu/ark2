@@ -34,14 +34,14 @@ public class LikeRepository extends ReadableRepository {
             throws InvalidKeyException, NoSuchAlgorithmException, SignatureException, ContractException,
             TimeoutException, InterruptedException, JsonParseException, JsonMappingException, IOException {
 
-        final var timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
-        final var like = this.deserializer.transactionEntriesToJson(likeInfo);
-        final var publicKeyString = ByteUtils.toHexString(publicKey.getEncoded());
+        final String timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
+        final String like = this.deserializer.transactionEntriesToJson(likeInfo);
+        final String publicKeyString = ByteUtils.toHexString(publicKey.getEncoded());
 
-        final var hash = ByteUtils.getSHA(String.join("", timestamp, postKey, publicKeyString));
-        final var likeHash = ByteUtils.getSHA(like);
-        final var signature = Cryptography.sign(privateKey, hash);
-        final var likeSignature = Cryptography.sign(privateKey, likeHash);
+        final byte[] hash = ByteUtils.getSHA(String.join("", timestamp, postKey, publicKeyString));
+        final byte[] likeHash = ByteUtils.getSHA(like);
+        final byte[] signature = Cryptography.sign(privateKey, hash);
+        final byte[] likeSignature = Cryptography.sign(privateKey, likeHash);
 
         return new String(contract.submitTransaction("publishNewLike", timestamp, postKey, like,
                 ByteUtils.toHexString(likeSignature), ByteUtils.toHexString(signature)));

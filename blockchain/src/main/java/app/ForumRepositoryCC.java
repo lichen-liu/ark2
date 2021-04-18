@@ -27,6 +27,8 @@ import app.util.ChaincodeStubTools.Key;
 public class ForumRepositoryCC {
     private static final boolean shouldVerifyIntegrity = false;
 
+    // private final Genson genson = new
+    // GensonBuilder().failOnMissingProperty(true).create();
     private final Genson genson = new Genson();
 
     public String publishNewPost(final Context ctx, final String timestamp, final String content, final String userId,
