@@ -42,7 +42,7 @@ public final class ForumRepository implements ContractInterface {
     public String publishNewPost(final Context ctx, final String timestamp, final String content, final String userId,
             final String signature) {
         try {
-            return cc.publishNewPost(ctx, timestamp, content, userId, signature);
+            return this.cc.publishNewPost(ctx, timestamp, content, userId, signature);
         } catch (final Exception e) {
             e.printStackTrace();
             throw new ChaincodeException(e);
@@ -81,8 +81,8 @@ public final class ForumRepository implements ContractInterface {
             final String issuerUserId, final String signature, final String reference,
             final String payeeEntriesString) {
         try {
-            return cc.publishNewPointTransaction(ctx, timestamp, payerEntryString, issuerUserId, signature, reference,
-                    payeeEntriesString);
+            return this.cc.publishNewPointTransaction(ctx, timestamp, payerEntryString, issuerUserId, signature,
+                    reference, payeeEntriesString);
         } catch (final Exception e) {
             e.printStackTrace();
             throw new ChaincodeException(e);
@@ -116,7 +116,7 @@ public final class ForumRepository implements ContractInterface {
             final String payerEntryString, final String likeSignature, final String pointTransactionSignature) {
 
         try {
-            return cc.publishNewLike(ctx, timestamp, postKey, payerEntryString, likeSignature,
+            return this.cc.publishNewLike(ctx, timestamp, postKey, payerEntryString, likeSignature,
                     pointTransactionSignature);
         } catch (final Exception e) {
             e.printStackTrace();
@@ -133,7 +133,7 @@ public final class ForumRepository implements ContractInterface {
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public String[] getAllPostKeys(final Context ctx) {
         try {
-            return cc.getAllPostKeys(ctx);
+            return this.cc.getAllPostKeys(ctx);
         } catch (final Exception e) {
             e.printStackTrace();
             throw new ChaincodeException(e);
@@ -150,7 +150,7 @@ public final class ForumRepository implements ContractInterface {
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public String[] getAllPostKeysByUserId(final Context ctx, final String userId) {
         try {
-            return cc.getAllPostKeysByUserId(ctx, userId);
+            return this.cc.getAllPostKeysByUserId(ctx, userId);
         } catch (final Exception e) {
             e.printStackTrace();
             throw new ChaincodeException(e);
@@ -165,7 +165,7 @@ public final class ForumRepository implements ContractInterface {
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public Post getPostByKey(final Context ctx, final String postKey) {
-        return cc.getPostByKey(ctx, postKey);
+        return this.cc.getPostByKey(ctx, postKey);
     }
 
     /**
@@ -178,7 +178,7 @@ public final class ForumRepository implements ContractInterface {
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public String[] getAllLikeKeysByPostKey(final Context ctx, final String postKey) {
         try {
-            return cc.getAllLikeKeysByPostKey(ctx, postKey);
+            return this.cc.getAllLikeKeysByPostKey(ctx, postKey);
         } catch (final Exception e) {
             e.printStackTrace();
             throw new ChaincodeException(e);
@@ -193,7 +193,7 @@ public final class ForumRepository implements ContractInterface {
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public Like getLikeByKey(final Context ctx, final String likeKey) {
-        return cc.getLikeByKey(ctx, likeKey);
+        return this.cc.getLikeByKey(ctx, likeKey);
     }
 
     /**
@@ -205,7 +205,7 @@ public final class ForumRepository implements ContractInterface {
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public String[] getAllPointTransactionKeys(final Context ctx) {
         try {
-            return cc.getAllPointTransactionKeys(ctx);
+            return this.cc.getAllPointTransactionKeys(ctx);
         } catch (final Exception e) {
             e.printStackTrace();
             throw new ChaincodeException(e);
@@ -222,7 +222,7 @@ public final class ForumRepository implements ContractInterface {
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public String[] getAllPointTransactionKeysByPayerUserId(final Context ctx, final String payerUserId) {
         try {
-            return cc.getAllPointTransactionKeysByPayerUserId(ctx, payerUserId);
+            return this.cc.getAllPointTransactionKeysByPayerUserId(ctx, payerUserId);
         } catch (final Exception e) {
             e.printStackTrace();
             throw new ChaincodeException(e);
@@ -237,7 +237,7 @@ public final class ForumRepository implements ContractInterface {
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public PointTransaction getPointTransactionByKey(final Context ctx, final String pointTransactionKey) {
-        return cc.getPointTransactionByKey(ctx, pointTransactionKey);
+        return this.cc.getPointTransactionByKey(ctx, pointTransactionKey);
     }
 
     /**
@@ -249,7 +249,7 @@ public final class ForumRepository implements ContractInterface {
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public double getPointAmountByUserId(final Context ctx, final String userId) {
         try {
-            return cc.getPointAmountByUserId(ctx, userId);
+            return this.cc.getPointAmountByUserId(ctx, userId);
         } catch (final Exception e) {
             e.printStackTrace();
             throw new ChaincodeException(e);
