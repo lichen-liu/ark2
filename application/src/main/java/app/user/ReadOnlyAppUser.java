@@ -42,6 +42,15 @@ public class ReadOnlyAppUser extends AnynomousAppUser {
         return super.getPostRepository().selectObjectsByCustomKeys(this.getPublicKeyString());
     }
 
+    public String[] fetchPostByPostKey(String key) {
+        try {
+            return super.getPostRepository().selectObjectsByKeys(key);
+        } catch (ContractException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public String[] fetchAllLikesByPostKey(final String postKey) {
         try {
             return this.getLikeRepository().selectObjectsByCustomKeys(postKey);
