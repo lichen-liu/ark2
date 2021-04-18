@@ -3,13 +3,10 @@ package app.gui;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
 import javax.swing.JOptionPane;
@@ -367,20 +364,17 @@ public class ForumJFrame extends javax.swing.JFrame {
             return;
         }
 
-        final String content = this.postEditorJTextArea.getText();
-        final Contract contract = this.contract;
-
-        this.statusJProgressBar.setIndeterminate(true);
+        this.setBusy(true);
 
         final SwingWorker<Boolean, Void> task = new SwingWorker<Boolean, Void>() {
             @Override
             public Boolean doInBackground() {
                 try {
-                    final var appUser = new PublishableAppUser(contract,
+                    final var appUser = new PublishableAppUser(ForumJFrame.this.contract,
                             Cryptography.parsePublicKey(ByteUtils.toByteArray(publicKeyString)),
                             Cryptography.parsePrivateKey(ByteUtils.toByteArray(privateKeyString)));
 
-                    appUser.publishNewPost(content);
+                    appUser.publishNewPost(ForumJFrame.this.postEditorJTextArea.getText());
 
                     setProgress(100);
                     return true;
@@ -392,8 +386,6 @@ public class ForumJFrame extends javax.swing.JFrame {
             }
         };
 
-        final var statusJProgressBar = this.statusJProgressBar;
-        final var postEditorJTextArea = this.postEditorJTextArea;
         task.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
@@ -405,11 +397,11 @@ public class ForumJFrame extends javax.swing.JFrame {
                         e.printStackTrace();
                     }
 
-                    statusJProgressBar.setIndeterminate(false);
+                    ForumJFrame.this.setBusy(false);
 
                     if (result != null && result.booleanValue()) {
                         JOptionPane.showMessageDialog(null, "The post was published successfully!");
-                        postEditorJTextArea.setText(new String());
+                        ForumJFrame.this.postEditorJTextArea.setText(new String());
                     } else {
                         JOptionPane.showMessageDialog(null, "The post failed to be published!");
                     }
@@ -432,6 +424,16 @@ public class ForumJFrame extends javax.swing.JFrame {
         }
         this.pointAmountJTextField.setText(pointAmount);
     }// GEN-LAST:event_refreshPointAmountJButtonActionPerformed
+
+    private void setBusy(final boolean isBusy) {
+        if (isBusy) {
+            this.statusJProgressBar.setIndeterminate(true);
+            this.setEnabled(false);
+        } else {
+            this.statusJProgressBar.setIndeterminate(false);
+            this.setEnabled(true);
+        }
+    }
 
     public static void run(final Contract contract) {
         /* Set the Nimbus look and feel */
