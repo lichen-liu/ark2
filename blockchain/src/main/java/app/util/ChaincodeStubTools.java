@@ -66,5 +66,10 @@ public class ChaincodeStubTools {
         private String getCCKeyString() {
             return this.key;
         }
+
+        public String getObjectTypeString() {
+            final CompositeKey compositeKey = CompositeKey.parseCompositeKey(this.key);
+            return compositeKey.getObjectType();
+        }
     }
 }

@@ -34,7 +34,6 @@ public class PostTests {
     }
 
     private void singleThreadTests() throws Exception {
-        
         final Wallet wallet = WalletFactory.GetWallet("admin");
 
         final var contractCreation = new ContractFactory.Entity();
@@ -43,18 +42,13 @@ public class PostTests {
         contractCreation.contractName = "ForumAgreement";
         contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
                 "peerOrganizations", "org1.example.com", "connection-org1.yaml");
-        ;
 
         final var contract = ContractFactory.CreateContract(wallet, contractCreation);
 
-        final TestRunner runner1 = new TestRunner("Runner 1");
-
-        final var client1 = TestClient.createTestClient(contract);
-        final var postKey = client1.publishNewPost("hahaha");
-
-        final var actualPost = client1.fetchPostByPostKey(postKey);
-        System.out.println("Actual post is: " + actualPost);
-
+        final var client = TestClient.createTestClient(contract);
+        final String postKey = client.publishNewPost("singleThreadTests");
+        logger.print(postKey);
+        logger.print(client.fetchPostByPostKey(postKey));
     }
 
     private void multiThreadWithDependencyTests() throws Exception {
@@ -67,7 +61,6 @@ public class PostTests {
         contractCreation.contractName = "ForumAgreement";
         contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
                 "peerOrganizations", "org1.example.com", "connection-org1.yaml");
-        ;
 
         final var contract = ContractFactory.CreateContract(wallet, contractCreation);
 

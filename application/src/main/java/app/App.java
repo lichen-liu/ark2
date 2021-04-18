@@ -90,7 +90,7 @@ class App {
     private void test() {
         try {
             new PostTests().benchmark();
-            //new LikeTests(this.contract).benchmark();
+            new LikeTests(this.contract).benchmark();
             // new TransactionTests().benchmark();
             // new TransactionTests().test(this.appClient);
         } catch (final Exception e) {
