@@ -22,6 +22,7 @@ import app.backend.ContractFactory;
 import app.backend.UserRegistrationService;
 import app.backend.WalletFactory;
 import app.gui.ForumJFrame;
+import app.tests.PostTests;
 import app.tests.LikeTests;
 import app.tests.TransactionTests;
 import app.user.PublishableAppUser;
@@ -83,8 +84,9 @@ class App {
 
     private void test() {
         try {
+            new PostTests().benchmark();
             //new LikeTests(this.contract).benchmark();
-            new TransactionTests().benchmark();
+            //new TransactionTests().benchmark();
             //new TransactionTests().test(this.appClient);
         } catch (final Exception e) {
             e.printStackTrace();

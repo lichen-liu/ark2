@@ -9,12 +9,14 @@ public class TestRunner implements Runnable {
     private final ArrayList<TestVoid> tests;
     private final ArrayList<Integer> exectutions;
     private final HashMap<TestVoid, Object> outputs;
+    private final String identifier;
 
-    public TestRunner() {
+    public TestRunner(String identifier) {
         this.tests = new ArrayList<TestVoid>();
         this.exectutions = new ArrayList<>();
         this.outputs = new HashMap<TestVoid, Object>();
         this.logger = new Logger();
+        this.identifier = identifier;
     }
 
     @Override
@@ -25,6 +27,9 @@ public class TestRunner implements Runnable {
             for (int j = 0; j < exectutions.get(i); ++j) {
                 TestVoid test = tests.get(i);
                 Object output = test.Test();
+
+                System.out.println(String.format("\n%s output : ", identifier)); 
+
                 if(output instanceof String){
                     logger.print((String)output);
                 } else if(output instanceof String[] ) {
@@ -32,6 +37,7 @@ public class TestRunner implements Runnable {
                 } else {
                     System.out.println("Unhandled type: " + output);
                 }
+                
                 outputs.put(test, output);
                 }
             }

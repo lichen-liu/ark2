@@ -22,7 +22,7 @@ public class LikeTests {
 
     public void benchmark() throws Exception {
 
-        final TestRunner runner = new TestRunner();
+        final TestRunner runner = new TestRunner("Runner 1");
         final var client = TestClient.createTestClient(contract);
 
         String postKey = client.publishNewPost("testPost1");

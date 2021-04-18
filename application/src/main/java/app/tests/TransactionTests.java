@@ -58,7 +58,7 @@ public class TransactionTests {
         ;
 
         final var contract = ContractFactory.CreateContract(wallet, contractCreation);
-        final TestRunner runner = new TestRunner();
+        final TestRunner runner = new TestRunner("Runner 1");
 
         final var client1 = TestClient.createTestClient(contract);
         final var client2 = TestClient.createTestClient(contract);
@@ -115,8 +115,8 @@ public class TransactionTests {
 
         final var contract = ContractFactory.CreateContract(wallet, contractCreation);
 
-        final TestRunner runner1 = new TestRunner();
-        final TestRunner runner2 = new TestRunner();
+        final TestRunner runner1 = new TestRunner("Runner 1");
+        final TestRunner runner2 = new TestRunner("Runner 2");
 
         final var client1 = TestClient.createTestClient(contract);
         final var client2 = TestClient.createTestClient(contract);
@@ -190,8 +190,8 @@ public class TransactionTests {
 
         final var contract = ContractFactory.CreateContract(wallet, contractCreation);
 
-        final TestRunner runner1 = new TestRunner();
-        final TestRunner runner2 = new TestRunner();
+        final TestRunner runner1 = new TestRunner("Runner 1");
+        final TestRunner runner2 = new TestRunner("Runner 2");
 
         final var client1 = TestClient.createTestClient(contract);
         final var client2 = TestClient.createTestClient(contract);
