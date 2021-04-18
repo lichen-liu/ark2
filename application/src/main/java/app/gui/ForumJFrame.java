@@ -418,7 +418,6 @@ public class ForumJFrame extends javax.swing.JFrame {
         });
 
         task.execute();
-        task.run();
     }// GEN-LAST:event_publishPostSubmitJButtonActionPerformed
 
     private void refreshPointAmountJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_refreshPointAmountJButtonActionPerformed
