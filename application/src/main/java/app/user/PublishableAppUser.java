@@ -1,16 +1,11 @@
 package app.user;
 
 import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.concurrent.TimeoutException;
 
 import org.hyperledger.fabric.gateway.Contract;
-import org.hyperledger.fabric.gateway.ContractException;
 import org.hyperledger.fabric.gateway.Wallet;
 import org.hyperledger.fabric.gateway.X509Identity;
 
@@ -35,9 +30,13 @@ public class PublishableAppUser extends ReadOnlyAppUser {
         return privateKey;
     }
 
-    public String publishNewPost(final String content) throws ContractException, TimeoutException, InterruptedException,
-            InvalidKeyException, NoSuchAlgorithmException, SignatureException {
-        return super.getPostRepository().insertNewPost(super.getContract(), content, super.getPublicKey(), privateKey);
+    public String publishNewPost(final String content)  {
+        try {
+            return super.getPostRepository().insertNewPost(super.getContract(), content, super.getPublicKey(), privateKey);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String publishNewTransaction(final Transaction transaction) throws Exception {
@@ -49,9 +48,7 @@ public class PublishableAppUser extends ReadOnlyAppUser {
         try {
             return new String(super.getLikeRepository().insertNewLike(super.getContract(), postKey, likeInfo,
                     super.getPublicKey(), privateKey));
-        } catch (final Exception e) {
-        }
-
-        return postKey;
+        } catch (final Exception e) { e.printStackTrace(); }
+        return null;
     }
 }

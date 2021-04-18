@@ -346,8 +346,7 @@ public class ForumJFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "The post was published successfully!");
 
             this.postEditorJTextArea.setText(new String());
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException | InvalidKeyException | ContractException
-                | SignatureException | TimeoutException | InterruptedException e1) {
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e1) {
             JOptionPane.showMessageDialog(null, "The post failed to be published!");
             e1.printStackTrace();
         }
