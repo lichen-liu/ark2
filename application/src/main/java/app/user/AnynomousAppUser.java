@@ -62,4 +62,24 @@ public class AnynomousAppUser {
         }
         return null;
     }
+
+    public String[] fetchLikeKeysByPostKey(String postKey){
+        try {
+            return likeRepository.selectObjectKeysByCustomKey(postKey);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String fetchLikeByLikeKey(String likeKey){
+        try {
+            return likeRepository.selectObjectsByKeys(likeKey)[0];
+        } catch (ContractException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+   
 }

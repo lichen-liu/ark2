@@ -455,16 +455,17 @@ public class ForumJFrame extends javax.swing.JFrame {
         if ("Search By Post Key".equals(selectedQueryMethod)) {
             final var userApp = new AnynomousAppUser(this.contract);
             try {
-                final String[] likeKeys = userApp.getLikeRepository().selectObjectKeysByCustomKey(searchString);
+                final String[] likeKeys = userApp.fetchLikeKeysByPostKey(searchString);
                 this.viewLikeKeysJList.setListData(likeKeys);
             } catch (final Exception e) {
                 e.printStackTrace();
             }
         } else if ("Search By Like Key".equals(selectedQueryMethod)) {
+            final var userApp = new AnynomousAppUser(this.contract);
             try {
-                System.out.println(new String(this.contract.evaluateTransaction("getLikeByKey", searchString)));
+                System.out.println(userApp.fetchLikeByLikeKey(searchString));
                 this.viewLikeKeysJList.setListData(new String[] { searchString });
-            } catch (final ContractException e) {
+            } catch (final Exception e) {
                 e.printStackTrace();
             }
         } else {
@@ -494,12 +495,13 @@ public class ForumJFrame extends javax.swing.JFrame {
         final String selectedPostKey = this.viewPostKeysJList.getSelectedValue();
         try {
             // TODO: use standard api here
-            final String postString = new String(this.contract.evaluateTransaction("getPostByKey", selectedPostKey));
+            final var userApp = new AnynomousAppUser(this.contract);
+            final String postString = userApp.fetchPostByPostKey(selectedPostKey);
             final String beautifulPostString = getPrettyJson.apply(postString);
             String postTextArea = "PostKey: " + selectedPostKey + "\n";
             postTextArea += beautifulPostString;
             this.viewPostJTextArea.setText(postTextArea);
-        } catch (final ContractException e1) {
+        } catch (final Exception e1) {
             e1.printStackTrace();
         }
     }// GEN-LAST:event_viewPostKeysJListValueChanged
@@ -529,9 +531,10 @@ public class ForumJFrame extends javax.swing.JFrame {
         } else if ("Search By Post Key".equals(selectedQueryMethod)) {
             final var postKey = this.searchJTextField.getText();
             try {
-                this.contract.evaluateTransaction("getPostByKey", postKey);
+                final var userApp = new AnynomousAppUser(this.contract);
+                userApp.fetchPostByPostKey(postKey);
                 this.viewPostKeysJList.setListData(new String[] { postKey });
-            } catch (final ContractException e) {
+            } catch (final Exception e) {
             }
         } else {
             throw new UnsupportedOperationException();
@@ -639,7 +642,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         try {
             final var appUser = new ReadOnlyAppUser(this.contract,
                     Cryptography.parsePublicKey(ByteUtils.toByteArray(userPublicKey)));
-            pointAmount = appUser.getPointAmount();
+            pointAmount = appUser.getUserPointAmount();
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }

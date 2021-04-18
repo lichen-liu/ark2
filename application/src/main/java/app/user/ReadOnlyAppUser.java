@@ -61,7 +61,7 @@ public class ReadOnlyAppUser extends AnynomousAppUser {
         return null;
     }
 
-    public String getPointAmount() {
+    public String getUserPointAmount() {
         try {
             return new String(super.getContract().evaluateTransaction("getPointAmountByUserId", this.getPublicKeyString()));
         } catch (ContractException e) {
