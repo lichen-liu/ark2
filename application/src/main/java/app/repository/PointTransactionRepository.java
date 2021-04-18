@@ -10,8 +10,8 @@ import org.hyperledger.fabric.gateway.Contract;
 
 import app.repository.contracts.Transaction;
 import app.utils.ByteUtils;
+import app.utils.Cryptography;
 import app.utils.GensonDeserializer;
-import app.utils.NewPostSignature;
 
 public class PointTransactionRepository extends ReadableRepository {
 
@@ -30,7 +30,7 @@ public class PointTransactionRepository extends ReadableRepository {
         final var publicKeyString = ByteUtils.toHexString(publicKey.getEncoded());
 
         final var hash = ByteUtils.getSHA(String.join("", timestamp, payer, publicKeyString, reference));
-        final var signature = NewPostSignature.sign(privateKey, hash);
+        final var signature = Cryptography.sign(privateKey, hash);
 
         return new String(contract.submitTransaction("publishNewPointTransaction", timestamp, payer, publicKeyString,
                 ByteUtils.toHexString(signature), reference, payees));

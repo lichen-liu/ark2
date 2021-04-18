@@ -19,8 +19,8 @@ import org.hyperledger.fabric.gateway.ContractException;
 
 import app.repository.contracts.Transaction;
 import app.utils.ByteUtils;
+import app.utils.Cryptography;
 import app.utils.GensonDeserializer;
-import app.utils.NewPostSignature;
 
 public class LikeRepository extends ReadableRepository {
 
@@ -40,8 +40,8 @@ public class LikeRepository extends ReadableRepository {
 
         final var hash = ByteUtils.getSHA(String.join("", timestamp, postKey, publicKeyString));
         final var likeHash = ByteUtils.getSHA(like);
-        final var signature = NewPostSignature.sign(privateKey, hash);
-        final var likeSignature = NewPostSignature.sign(privateKey, likeHash);
+        final var signature = Cryptography.sign(privateKey, hash);
+        final var likeSignature = Cryptography.sign(privateKey, likeHash);
 
         return new String(contract.submitTransaction("publishNewLike", timestamp, postKey, like,
                 ByteUtils.toHexString(likeSignature), ByteUtils.toHexString(signature)));

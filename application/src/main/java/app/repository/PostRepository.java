@@ -14,8 +14,8 @@ import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
 
 import app.utils.ByteUtils;
+import app.utils.Cryptography;
 import app.utils.GensonDeserializer;
-import app.utils.NewPostSignature;
 
 public class PostRepository extends ReadableRepository {
 
@@ -31,7 +31,7 @@ public class PostRepository extends ReadableRepository {
         final var timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
         final var publicKeyString = ByteUtils.toHexString(publicKey.getEncoded());
         final var hash = ByteUtils.getSHA(String.join("", timestamp, content, publicKeyString));
-        final var signature = NewPostSignature.sign(privateKey, hash);
+        final var signature = Cryptography.sign(privateKey, hash);
 
         return new String(contract.submitTransaction("publishNewPost", timestamp, content, publicKeyString,
                 ByteUtils.toHexString(signature)));
