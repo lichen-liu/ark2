@@ -24,7 +24,6 @@ import app.backend.UserRegistrationService;
 import app.backend.WalletFactory;
 import app.gui.ForumJFrame;
 import app.tests.LikeTests;
-import app.user.PublishableAppUser;
 
 class App {
 
@@ -32,10 +31,7 @@ class App {
         System.setProperty("org.hyperledger.fabric.sdk.service_discovery.as_localhost", "true");
     }
 
-    private PublishableAppUser appClient;
     private Contract contract;
-
-    private Contract contract2;
 
     public static void main(final String[] args) throws Exception {
         final App app = new App();
@@ -54,7 +50,6 @@ class App {
         final ObjectMapper om = new ObjectMapper(new YAMLFactory());
 
         try {
-
             final PeerInfo peerInfo = om.readValue(file, PeerInfo.class);
             final Wallet wallet = WalletFactory.GetWallet(peerInfo.getAdminName());
             final HFCAClient client = CaClientFactory.CreateCaClient(peerInfo.getCaUrl(), peerInfo.getPemPath());
@@ -68,21 +63,13 @@ class App {
             contractCreation.contractName = peerInfo.getContractName();
             contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
                     "peerOrganizations", "org1.example.com", "connection-org1.yaml");
-            ;
 
-            final var contract = ContractFactory.CreateContract(wallet, contractCreation);
-            final var appClient = new PublishableAppUser(wallet, contract, peerInfo.getUserId());
-
-            this.appClient = appClient;
-            this.contract = contract;
-
-            this.contract2 = ContractFactory.CreateContract(wallet, contractCreation);
-
+            this.contract = ContractFactory.CreateContract(wallet, contractCreation);
+            // final var appClient = new PublishableAppUser(wallet, contract,
+            // peerInfo.getUserId());
         } catch (final Exception e) {
             System.out.println("An error occurred when fetching wallet or client");
-            System.err.println(e);
             e.printStackTrace();
-
         }
     }
 
