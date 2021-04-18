@@ -35,6 +35,8 @@ class App {
     private PublishableAppUser appClient;
     private Contract contract;
 
+    private Contract contract2;
+
     public static void main(final String[] args) throws Exception {
         final App app = new App();
         //app.gui();
@@ -68,6 +70,9 @@ class App {
             this.appClient = appClient;
             this.contract = contract;
 
+            this.contract2 = ContractFactory.CreateContract(wallet, contractCreation);
+
+
         } catch (final Exception e) {
             System.out.println("An error occurred when fetching wallet or client");
             System.err.println(e);
@@ -78,7 +83,8 @@ class App {
 
     private void test() {
         try {
-            new LikeTests(this.contract).benchmark();
+            //new LikeTests(this.contract).benchmark();
+            new TransactionTests().benchmark();
             //new TransactionTests().test(this.appClient);
         } catch (final Exception e) {
             e.printStackTrace();
