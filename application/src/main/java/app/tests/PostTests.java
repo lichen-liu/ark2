@@ -6,8 +6,6 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.hyperledger.fabric.gateway.ContractException;
 import org.hyperledger.fabric.gateway.Wallet;
 
@@ -17,16 +15,11 @@ import app.tests.utils.Logger;
 import app.tests.utils.TestClient;
 import app.tests.utils.TestRunner;
 import app.tests.utils.TestVoid;
-import app.utils.ByteUtils;
 
 public class PostTests {
-    private int testId = 0;
-    private final ObjectMapper objectMapper;
     private final Logger logger;
 
-
     public PostTests() {
-        objectMapper = new ObjectMapper();
         this.logger = new Logger();
     }
 
