@@ -152,6 +152,9 @@
       </Properties>
     </Component>
     <Container class="javax.swing.JTabbedPane" name="contentJTabbedPane">
+      <AccessibilityProperties>
+        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value=""/>
+      </AccessibilityProperties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
@@ -539,8 +542,8 @@
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Point Transaction">
-                <Property name="tabTitle" type="java.lang.String" value="Point Transaction"/>
+              <JTabbedPaneConstraints tabName="Point Transactions">
+                <Property name="tabTitle" type="java.lang.String" value="Point Transactions"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>

@@ -371,7 +371,7 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         viewPointTransactionJSplitPane.setRightComponent(viewPointTransactionRightJPanel);
 
-        contentJTabbedPane.addTab("Point Transaction", viewPointTransactionJSplitPane);
+        contentJTabbedPane.addTab("Point Transactions", viewPointTransactionJSplitPane);
 
         final javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -435,6 +435,8 @@ public class ForumJFrame extends javax.swing.JFrame {
                                         javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
                                         Short.MAX_VALUE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+
+        contentJTabbedPane.getAccessibleContext().setAccessibleName("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
