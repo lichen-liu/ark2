@@ -48,6 +48,7 @@ public class ForumJFrame extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -199,6 +200,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPostJScrollPane.setViewportView(viewPostJTextArea);
 
         viewPostLikeJButton.setText("LIKE");
+        viewPostLikeJButton.setEnabled(false);
 
         javax.swing.GroupLayout viewPostRightJPanelLayout = new javax.swing.GroupLayout(viewPostRightJPanel);
         viewPostRightJPanel.setLayout(viewPostRightJPanelLayout);
@@ -547,8 +549,16 @@ public class ForumJFrame extends javax.swing.JFrame {
             postTextArea += "Author: " + post.userId + "\n";
 
             this.viewPostJTextArea.setText(postTextArea);
+            this.viewPostLikeJButton.setEnabled(true);
+
+            // // non-verified
+            // this.viewPostJTextArea.setBackground(new java.awt.Color(255, 200, 200));
+            // // verified
+            // this.viewPostJTextArea.setBackground(new java.awt.Color(200, 255, 200));
         } else {
             this.viewPostJTextArea.setText(new String());
+            this.viewPostLikeJButton.setEnabled(false);
+            this.viewPostJTextArea.setBackground(java.awt.Color.WHITE);
         }
     }// GEN-LAST:event_viewPostKeysJListValueChanged
 
