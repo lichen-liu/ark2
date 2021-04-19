@@ -51,7 +51,7 @@ public class PointTransactionRepository extends ReadableRepository<PointTransact
 
     @Override
     protected String getKeysByCustomKeysQuery() {
-        return "getAllPointTransactionKeysByUserId";
+        return "getAllPointTransactionKeysByPayerUserId";
     }
 
     @Override
