@@ -9,6 +9,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JOptionPane;
@@ -544,7 +545,7 @@ public class ForumJFrame extends javax.swing.JFrame {
             pointTransactionTextArea += "Timestamp: " + pointTransaction.timestamp + "\n\n";
             pointTransactionTextArea += "IssuerUserId: " + pointTransaction.issuerUserId + "\n\n";
             pointTransactionTextArea += "PayerEntry: " + pointTransaction.payerEntry.toString() + "\n\n";
-            pointTransactionTextArea += "PayeeEntries: " + pointTransaction.payeeEntries.toString() + "\n\n";
+            pointTransactionTextArea += "PayeeEntries: " + Arrays.toString(pointTransaction.payeeEntries) + "\n\n";
             pointTransactionTextArea += "Reference: " + pointTransaction.reference + "\n\n";
             pointTransactionTextArea += "RelativeOrder: " + pointTransaction.relativeOrder + "\n\n";
             pointTransactionTextArea += "Tracking: " + pointTransaction.payerPointTransactionTracking + "\n\n";
