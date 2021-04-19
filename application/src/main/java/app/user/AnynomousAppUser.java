@@ -1,7 +1,6 @@
 package app.user;
 
 import org.hyperledger.fabric.gateway.Contract;
-import org.hyperledger.fabric.gateway.ContractException;
 
 import app.repository.LikeRepository;
 import app.repository.PointTransactionRepository;

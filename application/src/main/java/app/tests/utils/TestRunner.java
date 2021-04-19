@@ -27,8 +27,8 @@ public class TestRunner implements Runnable {
         System.out.println("Test runner starts");
         assert tests.size() == exectutions.size();
         for (int i = 0; i < tests.size(); ++i) {
+            final TestVoid test = tests.get(i);
             for (int j = 0; j < exectutions.get(i); ++j) {
-                final TestVoid test = tests.get(i);
                 final Object output = test.Test();
 
                 System.out.println(String.format("\n%s output : ", identifier));
