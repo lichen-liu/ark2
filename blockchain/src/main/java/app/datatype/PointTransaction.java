@@ -24,6 +24,7 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
      * The issuerUserId for this PointTransaction. Also the verficationKey of the
      * signature.
      */
+    @Property
     private final String issuerUserId;
 
     /**
