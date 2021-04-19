@@ -176,7 +176,7 @@ public class ForumRepositoryCC {
         final ChaincodeStub stub = ctx.getStub();
         final Key key = Key.createFromHexKeyString(pointTransactionKey);
         if (!PointTransaction.getObjectTypeName().equals(key.getObjectTypeString())) {
-            throw new ChaincodeException("getLikeByKey(): key is not a PointTransactionKey");
+            throw new ChaincodeException("getPointTransactionByKey(): key is not a PointTransactionKey");
         }
         final String pointTransactionString = ChaincodeStubTools.tryGetStringStateByKey(stub, key);
         return genson.deserialize(pointTransactionString, PointTransaction.class);
