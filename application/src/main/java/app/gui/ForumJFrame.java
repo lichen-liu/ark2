@@ -17,6 +17,7 @@ import javax.swing.ListModel;
 import javax.swing.SwingWorker;
 
 import org.hyperledger.fabric.gateway.Contract;
+import org.hyperledger.fabric.gateway.ContractException;
 
 import app.repository.Hash;
 import app.repository.data.Like;
@@ -536,6 +537,14 @@ public class ForumJFrame extends javax.swing.JFrame {
         }
 
         final String selectedPointTransactionKey = this.viewPointTransactionKeysJList.getSelectedValue();
+
+        try {
+            System.out.println(selectedPointTransactionKey);
+            System.out.println(new String(this.contract.evaluateTransaction("getPointTransactionByKey", selectedPointTransactionKey)) + "\n");
+        } catch (ContractException e1) {
+            e1.printStackTrace();
+        }
+
         final var userApp = new AnynomousAppUser(this.contract);
         final PointTransaction pointTransaction = userApp
                 .fetchPointTransactionByPointTransactionKey(selectedPointTransactionKey);
