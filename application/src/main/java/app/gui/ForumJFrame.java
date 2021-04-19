@@ -17,7 +17,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.hyperledger.fabric.gateway.Contract;
-import org.hyperledger.fabric.gateway.ContractException;
 
 import app.user.AnynomousAppUser;
 import app.user.PublishableAppUser;
@@ -454,19 +453,14 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         if ("Search By Post Key".equals(selectedQueryMethod)) {
             final var userApp = new AnynomousAppUser(this.contract);
-            try {
-                final String[] likeKeys = userApp.fetchLikeKeysByPostKey(searchString);
+            final String[] likeKeys = userApp.fetchLikeKeysByPostKey(searchString);
+            if (likeKeys != null) {
                 this.viewLikeKeysJList.setListData(likeKeys);
-            } catch (final Exception e) {
-                e.printStackTrace();
             }
         } else if ("Search By Like Key".equals(selectedQueryMethod)) {
             final var userApp = new AnynomousAppUser(this.contract);
-            try {
-                System.out.println(userApp.fetchLikeByLikeKey(searchString));
+            if (userApp.fetchLikeByLikeKey(searchString) != null) {
                 this.viewLikeKeysJList.setListData(new String[] { searchString });
-            } catch (final Exception e) {
-                e.printStackTrace();
             }
         } else {
             throw new UnsupportedOperationException();
@@ -493,16 +487,15 @@ public class ForumJFrame extends javax.swing.JFrame {
         };
 
         final String selectedPostKey = this.viewPostKeysJList.getSelectedValue();
-        try {
-            // TODO: use standard api here
-            final var userApp = new AnynomousAppUser(this.contract);
-            final String postString = userApp.fetchPostByPostKey(selectedPostKey);
+        final var userApp = new AnynomousAppUser(this.contract);
+        final String postString = userApp.fetchPostByPostKey(selectedPostKey);
+        if (postString != null) {
             final String beautifulPostString = getPrettyJson.apply(postString);
             String postTextArea = "PostKey: " + selectedPostKey + "\n";
             postTextArea += beautifulPostString;
             this.viewPostJTextArea.setText(postTextArea);
-        } catch (final Exception e1) {
-            e1.printStackTrace();
+        } else {
+            this.viewPostJTextArea.setText(new String());
         }
     }// GEN-LAST:event_viewPostKeysJListValueChanged
 
@@ -522,19 +515,15 @@ public class ForumJFrame extends javax.swing.JFrame {
                 return;
             }
             final var userApp = new ReadOnlyAppUser(this.contract, publicKey);
-            try {
-                final String[] postKeys = userApp.fetchUserPostKeys();
+            final String[] postKeys = userApp.fetchUserPostKeys();
+            if (postKeys != null) {
                 this.viewPostKeysJList.setListData(postKeys);
-            } catch (final Exception e) {
-                e.printStackTrace();
             }
         } else if ("Search By Post Key".equals(selectedQueryMethod)) {
             final var postKey = this.searchJTextField.getText();
-            try {
-                final var userApp = new AnynomousAppUser(this.contract);
-                userApp.fetchPostByPostKey(postKey);
+            final var userApp = new AnynomousAppUser(this.contract);
+            if (userApp.fetchPostByPostKey(postKey) != null) {
                 this.viewPostKeysJList.setListData(new String[] { postKey });
-            } catch (final Exception e) {
             }
         } else {
             throw new UnsupportedOperationException();
@@ -637,16 +626,20 @@ public class ForumJFrame extends javax.swing.JFrame {
     }// GEN-LAST:event_publishPostSubmitJButtonActionPerformed
 
     private void refreshPointAmountJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_refreshPointAmountJButtonActionPerformed
+        this.pointAmountJTextField.setText(new String());
         final String userPublicKey = this.userPublicKeyJTextField.getText();
-        String pointAmount = new String();
+        PublicKey publicKey;
         try {
-            final var appUser = new ReadOnlyAppUser(this.contract,
-                    Cryptography.parsePublicKey(ByteUtils.toByteArray(userPublicKey)));
-            pointAmount = appUser.getUserPointAmount();
-        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            publicKey = Cryptography.parsePublicKey(ByteUtils.toByteArray(userPublicKey));
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException e1) {
+            JOptionPane.showMessageDialog(null, "Invalid Public Key!");
+            return;
         }
-        this.pointAmountJTextField.setText(pointAmount);
+        final var appUser = new ReadOnlyAppUser(this.contract, publicKey);
+        final String pointAmount = appUser.getUserPointAmount();
+        if (pointAmount != null) {
+            this.pointAmountJTextField.setText(pointAmount);
+        }
     }// GEN-LAST:event_refreshPointAmountJButtonActionPerformed
 
     private void setBusy(final boolean isBusy) {

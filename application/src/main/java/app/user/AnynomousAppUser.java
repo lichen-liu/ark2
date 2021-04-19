@@ -48,38 +48,34 @@ public class AnynomousAppUser {
     public String[] fetchAllPosts() {
         try {
             return postRepository.selectObjectsByCustomKeys();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public String fetchPostByPostKey(String key) {
+    public String fetchPostByPostKey(final String key) {
         try {
             return postRepository.selectObjectsByKeys(key)[0];
-        } catch (ContractException e) {
-            e.printStackTrace();
+        } catch (final ContractException e) {
         }
         return null;
     }
 
-    public String[] fetchLikeKeysByPostKey(String postKey){
+    public String[] fetchLikeKeysByPostKey(final String postKey) {
         try {
             return likeRepository.selectObjectKeysByCustomKey(postKey);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public String fetchLikeByLikeKey(String likeKey){
+    public String fetchLikeByLikeKey(final String likeKey) {
         try {
             return likeRepository.selectObjectsByKeys(likeKey)[0];
-        } catch (ContractException e) {
-            e.printStackTrace();
+        } catch (final ContractException e) {
         }
         return null;
     }
-
-   
 }
