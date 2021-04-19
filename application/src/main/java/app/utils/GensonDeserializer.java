@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import app.repository.contracts.Transaction.Entry;
+import app.repository.data.Transaction.Entry;
 
 public class GensonDeserializer implements Deserializer {
     private final ObjectMapper om;

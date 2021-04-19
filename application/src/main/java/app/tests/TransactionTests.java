@@ -12,8 +12,8 @@ import org.hyperledger.fabric.gateway.Wallet;
 
 import app.backend.ContractFactory;
 import app.backend.WalletFactory;
-import app.repository.contracts.Transaction;
-import app.repository.contracts.Transaction.Entry;
+import app.repository.data.Transaction;
+import app.repository.data.Transaction.Entry;
 import app.tests.utils.Logger;
 import app.tests.utils.TestClient;
 import app.tests.utils.TestRunner;

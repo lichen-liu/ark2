@@ -9,7 +9,7 @@ import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.Wallet;
 import org.hyperledger.fabric.gateway.X509Identity;
 
-import app.repository.contracts.Transaction;
+import app.repository.data.Transaction;
 
 public class PublishableAppUser extends ReadOnlyAppUser {
     private final PrivateKey privateKey;

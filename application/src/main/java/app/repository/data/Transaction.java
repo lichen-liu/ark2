@@ -1,4 +1,4 @@
-package app.repository.contracts;
+package app.repository.data;
 
 import java.util.List;
 

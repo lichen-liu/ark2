@@ -2,7 +2,7 @@ package app.repository.data;
 
 import lombok.ToString;
 
-@ToString(callSuper=true, includeFieldNames=true)
+@ToString(includeFieldNames=true)
 public class Like {
     public String timestamp;
 
