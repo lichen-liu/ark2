@@ -1,7 +1,9 @@
 package app.repository.data;
 
+import lombok.ToString;
 import app.repository.contracts.Transaction.Entry;
 
+@ToString(callSuper=true, includeFieldNames=true)
 public class PointTransaction {
     public String timestamp;
 

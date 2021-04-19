@@ -49,6 +49,7 @@ public class PostTests {
         final String postKey = client.publishNewPost("singleThreadTests");
         logger.print(postKey);
         logger.print(client.fetchPostByPostKey(postKey));
+        
     }
 
     private void multiThreadWithDependencyTests() throws Exception {

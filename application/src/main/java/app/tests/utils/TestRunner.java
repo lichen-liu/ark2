@@ -3,6 +3,10 @@ package app.tests.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import app.repository.data.Like;
+import app.repository.data.PointTransaction;
+import app.repository.data.Post;
+
 public class TestRunner implements Runnable {
     private final Logger logger;
     private final ArrayList<TestVoid> tests;
@@ -33,6 +37,8 @@ public class TestRunner implements Runnable {
                     logger.print((String) output);
                 } else if (output instanceof String[]) {
                     logger.print((String[]) output);
+                } else if (output instanceof Post || output instanceof Like || output instanceof PointTransaction) {
+                    logger.print(output.toString());
                 } else {
                     System.out.println("Unhandled type: " + output);
                 }

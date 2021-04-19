@@ -47,7 +47,7 @@ public class ReadOnlyAppUser extends AnynomousAppUser {
 
     public Post[] fetchAllUserPosts() {
         try {
-            return super.getPostRepository().selectObjectsByCustomKeys(this.getPublicKeyString());
+            return super.getPostRepository().selectObjectsByCustomKeys(this.getPublicKeyString()).toArray(Post[]::new);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,7 +56,7 @@ public class ReadOnlyAppUser extends AnynomousAppUser {
 
     public Like[] fetchAllLikesByPostKey(final String postKey) {
         try {
-            return this.getLikeRepository().selectObjectsByCustomKeys(postKey);
+            return this.getLikeRepository().selectObjectsByCustomKeys(postKey).toArray(Like[]::new);
         } catch (final Exception e) {
             e.printStackTrace();
         }

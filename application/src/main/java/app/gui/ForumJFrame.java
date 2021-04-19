@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.repository.data.Post;
 import app.user.AnynomousAppUser;
 import app.user.PublishableAppUser;
 import app.user.ReadOnlyAppUser;
@@ -502,11 +503,14 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         final String selectedPostKey = this.viewPostKeysJList.getSelectedValue();
         final var userApp = new AnynomousAppUser(this.contract);
-        final String postString = userApp.fetchPostByPostKey(selectedPostKey);
-        if (postString != null) {
-            final String beautifulPostString = getPrettyJson.apply(postString);
+        final Post post = userApp.fetchPostByPostKey(selectedPostKey);
+        if (post.content != null) {
             String postTextArea = "PostKey: " + selectedPostKey + "\n";
-            postTextArea += beautifulPostString;
+            postTextArea += "Content: " + post.content + "\n";
+            postTextArea += "Signature: " + post.signature + "\n";
+            postTextArea += "Timestamp: " + post.timestamp + "\n";
+            postTextArea += "Author: " + post.userId + "\n";
+
             this.viewPostJTextArea.setText(postTextArea);
         } else {
             this.viewPostJTextArea.setText(new String());
