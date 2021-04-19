@@ -8,13 +8,9 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Function;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.hyperledger.fabric.gateway.Contract;
 
@@ -112,7 +108,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         generateKeyPairJButton.setText("Generate Key Pair");
         generateKeyPairJButton.setName(""); // NOI18N
         generateKeyPairJButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 generateKeyPairJButtonActionPerformed(evt);
             }
         });
@@ -124,7 +120,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         refreshPointAmountJButton.setText("Refresh");
         refreshPointAmountJButton.setName(""); // NOI18N
         refreshPointAmountJButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 refreshPointAmountJButtonActionPerformed(evt);
             }
         });
@@ -146,7 +142,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPostKeysQueryJComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(
                 new String[] { "All", "Search By Author", "Search By Post Key" }));
         viewPostKeysQueryJComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 viewPostKeysQueryJComboBoxActionPerformed(evt);
             }
         });
@@ -155,7 +151,7 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         viewPostKeysJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         viewPostKeysJList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+            public void valueChanged(final javax.swing.event.ListSelectionEvent evt) {
                 viewPostKeysJListValueChanged(evt);
             }
         });
@@ -163,7 +159,7 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         viewPostKeysQueryCountsJTextField.setEditable(false);
 
-        javax.swing.GroupLayout viewPostLeftJPanelLayout = new javax.swing.GroupLayout(viewPostLeftJPanel);
+        final javax.swing.GroupLayout viewPostLeftJPanelLayout = new javax.swing.GroupLayout(viewPostLeftJPanel);
         viewPostLeftJPanel.setLayout(viewPostLeftJPanelLayout);
         viewPostLeftJPanelLayout.setHorizontalGroup(
                 viewPostLeftJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -202,7 +198,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPostLikeJButton.setText("LIKE");
         viewPostLikeJButton.setEnabled(false);
 
-        javax.swing.GroupLayout viewPostRightJPanelLayout = new javax.swing.GroupLayout(viewPostRightJPanel);
+        final javax.swing.GroupLayout viewPostRightJPanelLayout = new javax.swing.GroupLayout(viewPostRightJPanel);
         viewPostRightJPanel.setLayout(viewPostRightJPanelLayout);
         viewPostRightJPanelLayout.setHorizontalGroup(
                 viewPostRightJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -236,19 +232,19 @@ public class ForumJFrame extends javax.swing.JFrame {
         publishPostSubmitJButton.setText("Publish");
         publishPostSubmitJButton.setToolTipText("");
         publishPostSubmitJButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 publishPostSubmitJButtonActionPerformed(evt);
             }
         });
 
         publishPostResetJButton.setText("Reset");
         publishPostResetJButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 publishPostResetJButtonActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout publishPostJPanelLayout = new javax.swing.GroupLayout(publishPostJPanel);
+        final javax.swing.GroupLayout publishPostJPanelLayout = new javax.swing.GroupLayout(publishPostJPanel);
         publishPostJPanel.setLayout(publishPostJPanelLayout);
         publishPostJPanelLayout.setHorizontalGroup(
                 publishPostJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -278,7 +274,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewLikeKeysQueryJComboBox.setModel(
                 new javax.swing.DefaultComboBoxModel<>(new String[] { "Search By Post Key", "Search By Like Key" }));
         viewLikeKeysQueryJComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 viewLikeKeysQueryJComboBoxActionPerformed(evt);
             }
         });
@@ -287,7 +283,7 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         viewLikeKeysJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         viewLikeKeysJList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+            public void valueChanged(final javax.swing.event.ListSelectionEvent evt) {
                 viewLikeKeysJListValueChanged(evt);
             }
         });
@@ -295,7 +291,7 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         viewLikeKeysQueryCountsJTextField.setEditable(false);
 
-        javax.swing.GroupLayout viewLikeLeftJPanelLayout = new javax.swing.GroupLayout(viewLikeLeftJPanel);
+        final javax.swing.GroupLayout viewLikeLeftJPanelLayout = new javax.swing.GroupLayout(viewLikeLeftJPanel);
         viewLikeLeftJPanel.setLayout(viewLikeLeftJPanelLayout);
         viewLikeLeftJPanelLayout.setHorizontalGroup(
                 viewLikeLeftJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -330,7 +326,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewLikeJTextArea.setWrapStyleWord(true);
         viewLikeJScrollPane.setViewportView(viewLikeJTextArea);
 
-        javax.swing.GroupLayout viewLikeRightJPanelLayout = new javax.swing.GroupLayout(viewLikeRightJPanel);
+        final javax.swing.GroupLayout viewLikeRightJPanelLayout = new javax.swing.GroupLayout(viewLikeRightJPanel);
         viewLikeRightJPanel.setLayout(viewLikeRightJPanelLayout);
         viewLikeRightJPanelLayout.setHorizontalGroup(viewLikeRightJPanelLayout
                 .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(viewLikeJScrollPane,
@@ -351,7 +347,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPointTransactionKeysQueryJComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(
                 new String[] { "All", "Search By Payer", "Search By Point Transaction Key" }));
         viewPointTransactionKeysQueryJComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 viewPointTransactionKeysQueryJComboBoxActionPerformed(evt);
             }
         });
@@ -363,7 +359,7 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         viewPointTransactionKeysQueryCountsJTextField.setEditable(false);
 
-        javax.swing.GroupLayout viewPointTransactionLeftJPanelLayout = new javax.swing.GroupLayout(
+        final javax.swing.GroupLayout viewPointTransactionLeftJPanelLayout = new javax.swing.GroupLayout(
                 viewPointTransactionLeftJPanel);
         viewPointTransactionLeftJPanel.setLayout(viewPointTransactionLeftJPanelLayout);
         viewPointTransactionLeftJPanelLayout.setHorizontalGroup(viewPointTransactionLeftJPanelLayout
@@ -399,7 +395,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPointTransactionJTextArea.setWrapStyleWord(true);
         viewPointTransactionJScrollPane.setViewportView(viewPointTransactionJTextArea);
 
-        javax.swing.GroupLayout viewPointTransactionRightJPanelLayout = new javax.swing.GroupLayout(
+        final javax.swing.GroupLayout viewPointTransactionRightJPanelLayout = new javax.swing.GroupLayout(
                 viewPointTransactionRightJPanel);
         viewPointTransactionRightJPanel.setLayout(viewPointTransactionRightJPanelLayout);
         viewPointTransactionRightJPanelLayout.setHorizontalGroup(
@@ -415,7 +411,7 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         contentJTabbedPane.addTab("Point Transactions", viewPointTransactionJSplitPane);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        final javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(userSearchJSeparator)
@@ -483,7 +479,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void viewLikeKeysJListValueChanged(javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_viewLikeKeysJListValueChanged
+    private void viewLikeKeysJListValueChanged(final javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_viewLikeKeysJListValueChanged
         // TODO add your handling code here:
     }// GEN-LAST:event_viewLikeKeysJListValueChanged
 
@@ -513,7 +509,8 @@ public class ForumJFrame extends javax.swing.JFrame {
         } else if ("Search By Point Transaction Key".equals(selectedQueryMethod)) {
             final var userApp = new AnynomousAppUser(this.contract);
             // if (userApp.fetch fetchPostByPostKey(searchString) != null) {
-            //     this.viewPointTransactionKeysJList.setListData(new String[] { searchString });
+            // this.viewPointTransactionKeysJList.setListData(new String[] { searchString
+            // });
             // }
         } else {
             throw new UnsupportedOperationException();
@@ -550,11 +547,11 @@ public class ForumJFrame extends javax.swing.JFrame {
         final var userApp = new AnynomousAppUser(this.contract);
         final Post post = userApp.fetchPostByPostKey(selectedPostKey);
         if (post.content != null) {
-            String postTextArea = "PostKey: " + selectedPostKey + "\n";
-            postTextArea += "Content: " + post.content + "\n";
-            postTextArea += "Signature: " + post.signature + "\n";
-            postTextArea += "Timestamp: " + post.timestamp + "\n";
-            postTextArea += "Author: " + post.userId + "\n";
+            String postTextArea = "PostKey: " + selectedPostKey + "\n\n";
+            postTextArea += "Content: " + post.content + "\n\n";
+            postTextArea += "Signature: " + post.signature + "\n\n";
+            postTextArea += "Timestamp: " + post.timestamp + "\n\n";
+            postTextArea += "Author: " + post.userId + "\n\n";
 
             this.viewPostJTextArea.setText(postTextArea);
             this.viewPostLikeJButton.setEnabled(true);
