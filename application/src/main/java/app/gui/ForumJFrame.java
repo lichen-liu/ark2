@@ -2,12 +2,10 @@ package app.gui;
 
 import java.beans.PropertyChangeEvent;
 import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
@@ -19,10 +17,10 @@ import javax.swing.SwingWorker;
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
 
-import app.repository.Hash;
 import app.repository.data.Like;
 import app.repository.data.PointTransaction;
 import app.repository.data.Post;
+import app.user.AnonymousService;
 import app.user.ServiceProvider;
 import app.utils.ByteUtils;
 import app.utils.Cryptography;
@@ -558,22 +556,9 @@ public class ForumJFrame extends javax.swing.JFrame {
             pointTransactionTextArea += "RelativeOrder: " + pointTransaction.relativeOrder + "\n\n";
             pointTransactionTextArea += "Tracking: " + pointTransaction.payerPointTransactionTracking + "\n\n";
 
-            boolean isSignatureVerified = false;
-            try {
-                final byte[] hashedContentBytes = Hash.GeneratePointTransactionHash(pointTransaction.timestamp,
-                        pointTransaction.payerEntry.userId, String.valueOf(pointTransaction.payerEntry.pointAmount),
-                        pointTransaction.issuerUserId);
-                final PublicKey publicKey = Cryptography
-                        .parsePublicKey(ByteUtils.toByteArray(pointTransaction.issuerUserId));
-                isSignatureVerified = Cryptography.verify(publicKey, hashedContentBytes,
-                        ByteUtils.toByteArray(pointTransaction.signature));
-            } catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException | InvalidKeyException
-                    | SignatureException | NullPointerException e) {
-            }
-
             this.viewPointTransactionJTextArea.setText(pointTransactionTextArea);
 
-            if (isSignatureVerified) {
+            if (AnonymousService.verifyPointTransactionSignature(pointTransaction)) {
                 this.viewPointTransactionStatusJTextField.setText("Signature Verification Passed");
                 this.viewPointTransactionStatusJTextField.setBackground(new java.awt.Color(200, 255, 200));
             } else {
@@ -624,19 +609,9 @@ public class ForumJFrame extends javax.swing.JFrame {
             likeTextArea += "Liker: " + like.userId + "\n\n";
             likeTextArea += "RelativeOrder: " + like.relativeOrder + "\n\n";
 
-            boolean isSignatureVerified = false;
-            try {
-                final byte[] hashedContentBytes = Hash.GenerateLikeHash(like.timestamp, like.postKey, like.userId);
-                final PublicKey publicKey = Cryptography.parsePublicKey(ByteUtils.toByteArray(like.userId));
-                isSignatureVerified = Cryptography.verify(publicKey, hashedContentBytes,
-                        ByteUtils.toByteArray(like.signature));
-            } catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException | InvalidKeyException
-                    | SignatureException e) {
-            }
-
             this.viewLikeJTextArea.setText(likeTextArea);
 
-            if (isSignatureVerified) {
+            if (AnonymousService.verifyLikeSignature(like)) {
                 this.viewLikeStatusJTextField.setText("Signature Verification Passed");
                 this.viewLikeStatusJTextField.setBackground(new java.awt.Color(200, 255, 200));
             } else {
@@ -712,20 +687,10 @@ public class ForumJFrame extends javax.swing.JFrame {
             postTextArea += "Author: " + post.userId + "\n\n";
             postTextArea += "Content: " + post.content + "\n\n";
 
-            boolean isSignatureVerified = false;
-            try {
-                final byte[] hashedContentBytes = Hash.GeneratePostHash(post.timestamp, post.content, post.userId);
-                final PublicKey publicKey = Cryptography.parsePublicKey(ByteUtils.toByteArray(post.userId));
-                isSignatureVerified = Cryptography.verify(publicKey, hashedContentBytes,
-                        ByteUtils.toByteArray(post.signature));
-            } catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException | InvalidKeyException
-                    | SignatureException e) {
-            }
-
             this.viewPostJTextArea.setText(postTextArea);
             this.viewPostLikeJButton.setEnabled(true);
 
-            if (isSignatureVerified) {
+            if (AnonymousService.verifyPostSignature(post)) {
                 this.viewPostStatusJTextField.setText("Signature Verification Passed");
                 this.viewPostStatusJTextField.setBackground(new java.awt.Color(200, 255, 200));
             } else {

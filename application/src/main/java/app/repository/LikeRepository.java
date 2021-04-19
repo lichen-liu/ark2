@@ -39,10 +39,10 @@ public class LikeRepository extends ReadableRepository<Like> {
         final String timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
         final String publicKeyString = ByteUtils.toHexString(publicKey.getEncoded());
 
-        final byte[] likeHash = Hash.GenerateLikeHash(timestamp, postKey, publicKeyString);
+        final byte[] likeHash = Hash.generateLikeHash(timestamp, postKey, publicKeyString);
         final byte[] likeSignature = Cryptography.sign(privateKey, likeHash);
 
-        final byte[] pointTransactionHash = Hash.GeneratePointTransactionHash(timestamp, publicKeyString,
+        final byte[] pointTransactionHash = Hash.generatePointTransactionHash(timestamp, publicKeyString,
                 String.valueOf(pointAmount), publicKeyString);
         final byte[] pointTransactionSignature = Cryptography.sign(privateKey, pointTransactionHash);
 

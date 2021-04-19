@@ -1,10 +1,19 @@
 package app.user;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
+
 import org.hyperledger.fabric.gateway.ContractException;
 
+import app.repository.Hash;
 import app.repository.data.Like;
 import app.repository.data.PointTransaction;
 import app.repository.data.Post;
+import app.utils.ByteUtils;
+import app.utils.Cryptography;
 
 public interface AnonymousService extends Repository {
     public default String[] fetchPostKeys() {
@@ -92,5 +101,42 @@ public interface AnonymousService extends Repository {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static boolean verifyPostSignature(final Post post) {
+        try {
+            final byte[] hashedContentBytes = Hash.generatePostHash(post.timestamp, post.content, post.userId);
+            final PublicKey publicKey = Cryptography.parsePublicKey(ByteUtils.toByteArray(post.userId));
+            return Cryptography.verify(publicKey, hashedContentBytes, ByteUtils.toByteArray(post.signature));
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException | InvalidKeyException
+                | SignatureException e) {
+            return false;
+        }
+    }
+
+    public static boolean verifyLikeSignature(final Like like) {
+        try {
+            final byte[] hashedContentBytes = Hash.generateLikeHash(like.timestamp, like.postKey, like.userId);
+            final PublicKey publicKey = Cryptography.parsePublicKey(ByteUtils.toByteArray(like.userId));
+            return Cryptography.verify(publicKey, hashedContentBytes, ByteUtils.toByteArray(like.signature));
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException | InvalidKeyException
+                | SignatureException e) {
+            return false;
+        }
+    }
+
+    public static boolean verifyPointTransactionSignature(final PointTransaction pointTransaction) {
+        try {
+            final byte[] hashedContentBytes = Hash.generatePointTransactionHash(pointTransaction.timestamp,
+                    pointTransaction.payerEntry.userId, String.valueOf(pointTransaction.payerEntry.pointAmount),
+                    pointTransaction.issuerUserId);
+            final PublicKey publicKey = Cryptography
+                    .parsePublicKey(ByteUtils.toByteArray(pointTransaction.issuerUserId));
+            return Cryptography.verify(publicKey, hashedContentBytes,
+                    ByteUtils.toByteArray(pointTransaction.signature));
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException | InvalidKeyException
+                | SignatureException | NullPointerException e) {
+            return false;
+        }
     }
 }
