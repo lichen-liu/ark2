@@ -9,13 +9,15 @@ import java.time.format.DateTimeFormatter;
 import org.hyperledger.fabric.gateway.Contract;
 
 import app.repository.contracts.Transaction;
+import app.repository.data.PointTransaction;
 import app.utils.ByteUtils;
 import app.utils.Cryptography;
 import app.utils.GensonDeserializer;
 
-public class PointTransactionRepository extends ReadableRepository {
+public class PointTransactionRepository extends ReadableRepository<PointTransaction> {
 
     public PointTransactionRepository(final Contract contract) {
+        super(PointTransaction.class);
         this.deserializer = new GensonDeserializer();
         this.contract = contract;
     }

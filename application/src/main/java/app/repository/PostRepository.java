@@ -13,13 +13,15 @@ import java.util.concurrent.TimeoutException;
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
 
+import app.repository.data.Post;
 import app.utils.ByteUtils;
 import app.utils.Cryptography;
 import app.utils.GensonDeserializer;
 
-public class PostRepository extends ReadableRepository {
+public class PostRepository extends ReadableRepository<Post> {
 
     public PostRepository(final Contract contract) {
+        super(Post.class);
         this.deserializer = new GensonDeserializer();
         this.contract = contract;
     }

@@ -6,6 +6,8 @@ import org.hyperledger.fabric.gateway.ContractException;
 import app.repository.LikeRepository;
 import app.repository.PointTransactionRepository;
 import app.repository.PostRepository;
+import app.repository.data.Like;
+import app.repository.data.Post;
 
 public class AnynomousAppUser {
     private final Contract contract;
@@ -45,7 +47,7 @@ public class AnynomousAppUser {
         return null;
     }
 
-    public String[] fetchAllPosts() {
+    public Post[] fetchAllPosts() {
         try {
             return postRepository.selectObjectsByCustomKeys();
         } catch (Exception e) {
@@ -54,10 +56,10 @@ public class AnynomousAppUser {
         return null;
     }
 
-    public String fetchPostByPostKey(String key) {
+    public Post fetchPostByPostKey(String key) {
         try {
             return postRepository.selectObjectsByKeys(key)[0];
-        } catch (ContractException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -72,10 +74,10 @@ public class AnynomousAppUser {
         return null;
     }
 
-    public String fetchLikeByLikeKey(String likeKey){
+    public Like fetchLikeByLikeKey(String likeKey){
         try {
             return likeRepository.selectObjectsByKeys(likeKey)[0];
-        } catch (ContractException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

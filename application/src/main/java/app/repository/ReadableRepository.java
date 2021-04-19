@@ -1,15 +1,21 @@
 package app.repository;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.bouncycastle.asn1.x509.TBSCertList;
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
 
 import app.utils.Deserializer;
 
-public abstract class ReadableRepository {
+public abstract class ReadableRepository<T> {
     protected Deserializer deserializer;
     protected Contract contract;
 
@@ -18,6 +24,13 @@ public abstract class ReadableRepository {
     protected abstract String getKeysByCustomKeysQuery();
 
     protected abstract String getObjectByKeyQuery();
+
+    private final ObjectMapper om = new ObjectMapper();
+    private final Class<T> dataType;
+
+    public ReadableRepository(Class<T> dataType) {
+        this.dataType = dataType;
+    }
 
     public String[] selectObjectKeysByCustomKey(final String... customKeys) throws Exception {
         if (customKeys.length == 0) {
@@ -35,17 +48,18 @@ public abstract class ReadableRepository {
         return usersPostKeys.toArray(String[]::new);
     }
 
-    public String[] selectObjectsByKeys(final String... keys) throws ContractException {
+    public T[] selectObjectsByKeys(final String... keys) throws ContractException, JsonParseException, JsonMappingException, IOException {
 
-        final List<String> objects = new ArrayList<String>();
+        final var objects = new ArrayList<T>();
         for (final var key : keys) {
-            final var objectString = new String(contract.evaluateTransaction(getObjectByKeyQuery(), key));
-            objects.add(objectString);
+            String raw = new String(contract.evaluateTransaction(getObjectByKeyQuery(), key));
+            T data = om.readValue(raw, dataType);
+            objects.add(data);
         }
-        return objects.toArray(String[]::new);
+        return (T[]) objects.toArray();
     }
 
-    public String[] selectObjectsByCustomKeys(final String... keys) throws Exception {
+    public T[] selectObjectsByCustomKeys(final String... keys) throws Exception {
         return selectObjectsByKeys(selectObjectKeysByCustomKey(keys));
     }
 }

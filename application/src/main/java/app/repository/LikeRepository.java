@@ -18,13 +18,15 @@ import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
 
 import app.repository.contracts.Transaction;
+import app.repository.data.Like;
 import app.utils.ByteUtils;
 import app.utils.Cryptography;
 import app.utils.GensonDeserializer;
 
-public class LikeRepository extends ReadableRepository {
+public class LikeRepository extends ReadableRepository<Like> {
 
     public LikeRepository(final Contract contract) {
+        super(Like.class);
         this.deserializer = new GensonDeserializer();
         this.contract = contract;
     }
