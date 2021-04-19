@@ -34,7 +34,7 @@ public class PointTransaction {
 
     public Tracking payerPointTransactionTracking;
 
-    @ToString(callSuper = true, includeFieldNames = true)
+    @ToString(includeFieldNames = true)
     public static class Tracking {
         /**
          * With respect to the payerEntry.getUserId(), the key to the most recent
