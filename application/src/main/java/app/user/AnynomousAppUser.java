@@ -50,16 +50,16 @@ public class AnynomousAppUser {
     public String[] fetchAllPointTransactionKeys() {
         try {
             return transactionRepository.selectObjectKeysByCustomKey();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public PointTransaction fetchPointTransactionByPointTransactionKey(String key) {
+    public PointTransaction fetchPointTransactionByPointTransactionKey(final String key) {
         try {
             return transactionRepository.selectObjectsByKeys(key).get(0);
-        } catch (Exception e) {
+        } catch (final Exception e) {
         }
         return null;
     }
@@ -73,10 +73,10 @@ public class AnynomousAppUser {
         return null;
     }
 
-    public Post fetchPostByPostKey(String key) {
+    public Post fetchPostByPostKey(final String key) {
         try {
             return postRepository.selectObjectsByKeys(key).get(0);
-        } catch (Exception e) {
+        } catch (final Exception e) {
         }
         return null;
     }
@@ -90,10 +90,10 @@ public class AnynomousAppUser {
         return null;
     }
 
-    public Like fetchLikeByLikeKey(String likeKey){
+    public Like fetchLikeByLikeKey(final String likeKey) {
         try {
             return likeRepository.selectObjectsByKeys(likeKey).get(0);
-        } catch (Exception e) {
+        } catch (final Exception e) {
         }
         return null;
     }

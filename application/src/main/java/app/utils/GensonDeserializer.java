@@ -43,6 +43,6 @@ public class GensonDeserializer implements Deserializer {
     }
 
     private Map<String, String> participantMap(final Entry participant) {
-        return Map.of("userId", participant.userId, "pointAmount", Double.toString(participant.amount));
+        return Map.of("userId", participant.userId, "pointAmount", Double.toString(participant.pointAmount));
     }
 }

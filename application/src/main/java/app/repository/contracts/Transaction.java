@@ -9,14 +9,17 @@ public class Transaction {
     public List<Entry> payees;
     public String reference;
 
-    @ToString(callSuper = true, includeFieldNames = true)
+    @ToString(includeFieldNames = true)
     public static class Entry {
-        public Entry(final String userId, final Double amount) {
+        public Entry() {
+        }
+
+        public Entry(final String userId, final Double pointAmount) {
             this.userId = userId;
-            this.amount = amount;
+            this.pointAmount = pointAmount;
         }
 
         public String userId;
-        public Double amount;
+        public Double pointAmount;
     }
 }

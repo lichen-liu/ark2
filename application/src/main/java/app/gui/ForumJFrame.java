@@ -538,7 +538,6 @@ public class ForumJFrame extends javax.swing.JFrame {
         final var userApp = new AnynomousAppUser(this.contract);
         final PointTransaction pointTransaction = userApp
                 .fetchPointTransactionByPointTransactionKey(selectedPointTransactionKey);
-        System.out.println(pointTransaction);
         if (pointTransaction != null) {
             String pointTransactionTextArea = "PointTransactionKey: " + selectedPointTransactionKey + "\n\n";
 
@@ -553,14 +552,14 @@ public class ForumJFrame extends javax.swing.JFrame {
             boolean isSignatureVerified = false;
             try {
                 final byte[] hashedContentBytes = Hash.GeneratePointTransactionHash(pointTransaction.timestamp,
-                        pointTransaction.payerEntry.userId, String.valueOf(pointTransaction.payerEntry.amount),
+                        pointTransaction.payerEntry.userId, String.valueOf(pointTransaction.payerEntry.pointAmount),
                         pointTransaction.issuerUserId);
                 final PublicKey publicKey = Cryptography
                         .parsePublicKey(ByteUtils.toByteArray(pointTransaction.issuerUserId));
                 isSignatureVerified = Cryptography.verify(publicKey, hashedContentBytes,
                         ByteUtils.toByteArray(pointTransaction.signature));
             } catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException | InvalidKeyException
-                    | SignatureException e) {
+                    | SignatureException | NullPointerException e) {
             }
 
             this.viewPointTransactionJTextArea.setText(pointTransactionTextArea);
