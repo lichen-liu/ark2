@@ -45,6 +45,15 @@ public class ReadOnlyAppUser extends AnynomousAppUser {
         return null;
     }
 
+    public String[] fetchUserPointTransactionKeys() {
+        try {
+            return super.getPostRepository().selectObjectKeysByCustomKey(this.getPublicKeyString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public Post[] fetchAllUserPosts() {
         try {
             return super.getPostRepository().selectObjectsByCustomKeys(this.getPublicKeyString()).toArray(Post[]::new);
@@ -65,7 +74,8 @@ public class ReadOnlyAppUser extends AnynomousAppUser {
 
     public String getUserPointAmount() {
         try {
-            return new String(super.getContract().evaluateTransaction("getPointAmountByUserId", this.getPublicKeyString()));
+            return new String(
+                    super.getContract().evaluateTransaction("getPointAmountByUserId", this.getPublicKeyString()));
         } catch (ContractException e) {
             e.printStackTrace();
         }

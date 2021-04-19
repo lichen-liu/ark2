@@ -493,19 +493,27 @@ public class ForumJFrame extends javax.swing.JFrame {
         this.viewPointTransactionKeysJList.setListData(new String[0]);
 
         if ("All".equals(selectedQueryMethod)) {
-            // final var userApp = new AnynomousAppUser(this.contract);
-            // final String[] postKeys = userApp.fetchAllPostKeys();
-            // this.viewPostKeysJList.setListData(postKeys);
+            final var userApp = new AnynomousAppUser(this.contract);
+            final String[] pointTransactionKeys = userApp.fetchAllPointTransactionKeys();
+            if (pointTransactionKeys != null) {
+                this.viewPointTransactionKeysJList.setListData(pointTransactionKeys);
+            }
         } else if ("Search By Payer".equals(selectedQueryMethod)) {
-            // final var userApp = new AnynomousAppUser(this.contract);
-            // final String[] likeKeys = userApp.fetchLikeKeysByPostKey(searchString);
-            // if (likeKeys != null) {
-            // this.viewLikeKeysJList.setListData(likeKeys);
-            // }
+            PublicKey publicKey = null;
+            try {
+                publicKey = Cryptography.parsePublicKey(ByteUtils.toByteArray(searchString));
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException e) {
+                return;
+            }
+            final var userApp = new ReadOnlyAppUser(this.contract, publicKey);
+            final String[] pointTransactionKeys = userApp.fetchUserPointTransactionKeys();
+            if (pointTransactionKeys != null) {
+                this.viewPointTransactionKeysJList.setListData(pointTransactionKeys);
+            }
         } else if ("Search By Point Transaction Key".equals(selectedQueryMethod)) {
-            // final var userApp = new AnynomousAppUser(this.contract);
-            // if (userApp.fetchLikeByLikeKey(searchString) != null) {
-            // this.viewLikeKeysJList.setListData(new String[] { searchString });
+            final var userApp = new AnynomousAppUser(this.contract);
+            // if (userApp.fetch fetchPostByPostKey(searchString) != null) {
+            //     this.viewPointTransactionKeysJList.setListData(new String[] { searchString });
             // }
         } else {
             throw new UnsupportedOperationException();
@@ -564,16 +572,19 @@ public class ForumJFrame extends javax.swing.JFrame {
 
     private void viewPostKeysQueryJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPostKeysQueryJComboBoxActionPerformed
         final String selectedQueryMethod = (String) this.viewPostKeysQueryJComboBox.getSelectedItem();
+        final String searchString = this.searchJTextField.getText();
         this.viewPostKeysJList.setListData(new String[0]);
 
         if ("All".equals(selectedQueryMethod)) {
             final var userApp = new AnynomousAppUser(this.contract);
             final String[] postKeys = userApp.fetchAllPostKeys();
-            this.viewPostKeysJList.setListData(postKeys);
+            if (postKeys != null) {
+                this.viewPostKeysJList.setListData(postKeys);
+            }
         } else if ("Search By Author".equals(selectedQueryMethod)) {
             PublicKey publicKey = null;
             try {
-                publicKey = Cryptography.parsePublicKey(ByteUtils.toByteArray(this.searchJTextField.getText()));
+                publicKey = Cryptography.parsePublicKey(ByteUtils.toByteArray(searchString));
             } catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException e) {
                 return;
             }
@@ -583,10 +594,9 @@ public class ForumJFrame extends javax.swing.JFrame {
                 this.viewPostKeysJList.setListData(postKeys);
             }
         } else if ("Search By Post Key".equals(selectedQueryMethod)) {
-            final var postKey = this.searchJTextField.getText();
             final var userApp = new AnynomousAppUser(this.contract);
-            if (userApp.fetchPostByPostKey(postKey) != null) {
-                this.viewPostKeysJList.setListData(new String[] { postKey });
+            if (userApp.fetchPostByPostKey(searchString) != null) {
+                this.viewPostKeysJList.setListData(new String[] { searchString });
             }
         } else {
             throw new UnsupportedOperationException();

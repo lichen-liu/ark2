@@ -55,15 +55,6 @@ public class AnynomousAppUser {
         return null;
     }
 
-    public String[] fetchPointTransactionKeysByUserKey(final String userKey){
-        try {
-            return transactionRepository.selectObjectKeysByCustomKey(userKey);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public Post[] fetchAllPosts() {
         try {
             return postRepository.selectObjectsByCustomKeys().toArray(Post[]::new);
