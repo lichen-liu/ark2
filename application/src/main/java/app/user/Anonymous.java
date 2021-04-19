@@ -84,4 +84,13 @@ public interface Anonymous extends Repository {
         }
         return null;
     }
+
+    public default Like[] fetchLikesByPostKey(final String postKey) {
+        try {
+            return getLikeRepository().selectObjectsByCustomKeys(postKey).toArray(Like[]::new);
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

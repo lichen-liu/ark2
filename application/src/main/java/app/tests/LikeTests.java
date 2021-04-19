@@ -35,7 +35,7 @@ public class LikeTests {
         runner.insertNewTest(test, 5);
 
         test = () -> {
-            return client.fetchAllLikesByPostKey(postKey);
+            return client.fetchLikesByPostKey(postKey);
         };
         runner.insertNewTest(test, 1);
 

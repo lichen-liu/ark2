@@ -8,7 +8,7 @@ import java.security.PublicKey;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.user.PublishableAppUser;
+import app.user.service.PublishableAppUser;
 import app.utils.Cryptography;
 
 public class TestClient {
