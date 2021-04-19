@@ -508,10 +508,9 @@ public class ForumJFrame extends javax.swing.JFrame {
             }
         } else if ("Search By Point Transaction Key".equals(selectedQueryMethod)) {
             final var userApp = new AnynomousAppUser(this.contract);
-            // if (userApp.fetch fetchPostByPostKey(searchString) != null) {
-            // this.viewPointTransactionKeysJList.setListData(new String[] { searchString
-            // });
-            // }
+            if (userApp.fetchPointTransactionByPointTransactionKey(searchString) != null) {
+                this.viewPointTransactionKeysJList.setListData(new String[] { searchString });
+            }
         } else {
             throw new UnsupportedOperationException();
         }
