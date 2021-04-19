@@ -63,6 +63,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPostKeysQueryJComboBox = new javax.swing.JComboBox<>();
         viewPostKeysJScrollPane = new javax.swing.JScrollPane();
         viewPostKeysJList = new javax.swing.JList<>();
+        viewPostKeysQueryCountsJTextField = new javax.swing.JTextField();
         viewPostRightJPanel = new javax.swing.JPanel();
         viewPostJScrollPane = new javax.swing.JScrollPane();
         viewPostJTextArea = new javax.swing.JTextArea();
@@ -77,6 +78,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewLikeKeysQueryJComboBox = new javax.swing.JComboBox<>();
         viewLikeKeysJScrollPane = new javax.swing.JScrollPane();
         viewLikeKeysJList = new javax.swing.JList<>();
+        viewLikeKeysQueryCountsJTextField = new javax.swing.JTextField();
         viewLikeRightJPanel = new javax.swing.JPanel();
         viewLikeJScrollPane = new javax.swing.JScrollPane();
         viewLikeJTextArea = new javax.swing.JTextArea();
@@ -85,6 +87,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPointTransactionKeysQueryJComboBox = new javax.swing.JComboBox<>();
         viewPointTransactionKeysJScrollPane = new javax.swing.JScrollPane();
         viewPointTransactionKeysJList = new javax.swing.JList<>();
+        viewPointTransactionKeysQueryCountsJTextField = new javax.swing.JTextField();
         viewPointTransactionRightJPanel = new javax.swing.JPanel();
         viewPointTransactionJScrollPane = new javax.swing.JScrollPane();
         viewPointTransactionJTextArea = new javax.swing.JTextArea();
@@ -154,19 +157,24 @@ public class ForumJFrame extends javax.swing.JFrame {
         });
         viewPostKeysJScrollPane.setViewportView(viewPostKeysJList);
 
+        viewPostKeysQueryCountsJTextField.setEditable(false);
+
         javax.swing.GroupLayout viewPostLeftJPanelLayout = new javax.swing.GroupLayout(viewPostLeftJPanel);
         viewPostLeftJPanel.setLayout(viewPostLeftJPanelLayout);
         viewPostLeftJPanelLayout.setHorizontalGroup(
             viewPostLeftJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(viewPostKeysJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addComponent(viewPostKeysQueryJComboBox, 0, 299, Short.MAX_VALUE)
+            .addComponent(viewPostKeysQueryCountsJTextField)
         );
         viewPostLeftJPanelLayout.setVerticalGroup(
             viewPostLeftJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewPostLeftJPanelLayout.createSequentialGroup()
                 .addComponent(viewPostKeysQueryJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(viewPostKeysJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 527, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(viewPostKeysJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(viewPostKeysQueryCountsJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         viewPostJSplitPane.setLeftComponent(viewPostLeftJPanel);
@@ -277,19 +285,24 @@ public class ForumJFrame extends javax.swing.JFrame {
         });
         viewLikeKeysJScrollPane.setViewportView(viewLikeKeysJList);
 
+        viewLikeKeysQueryCountsJTextField.setEditable(false);
+
         javax.swing.GroupLayout viewLikeLeftJPanelLayout = new javax.swing.GroupLayout(viewLikeLeftJPanel);
         viewLikeLeftJPanel.setLayout(viewLikeLeftJPanelLayout);
         viewLikeLeftJPanelLayout.setHorizontalGroup(
             viewLikeLeftJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(viewLikeKeysJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addComponent(viewLikeKeysQueryJComboBox, 0, 299, Short.MAX_VALUE)
+            .addComponent(viewLikeKeysQueryCountsJTextField)
         );
         viewLikeLeftJPanelLayout.setVerticalGroup(
             viewLikeLeftJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewLikeLeftJPanelLayout.createSequentialGroup()
                 .addComponent(viewLikeKeysQueryJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(viewLikeKeysJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 527, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(viewLikeKeysJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(viewLikeKeysQueryCountsJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         viewLikeJSplitPane.setLeftComponent(viewLikeLeftJPanel);
@@ -337,19 +350,24 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPointTransactionKeysJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         viewPointTransactionKeysJScrollPane.setViewportView(viewPointTransactionKeysJList);
 
+        viewPointTransactionKeysQueryCountsJTextField.setEditable(false);
+
         javax.swing.GroupLayout viewPointTransactionLeftJPanelLayout = new javax.swing.GroupLayout(viewPointTransactionLeftJPanel);
         viewPointTransactionLeftJPanel.setLayout(viewPointTransactionLeftJPanelLayout);
         viewPointTransactionLeftJPanelLayout.setHorizontalGroup(
             viewPointTransactionLeftJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(viewPointTransactionKeysJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addComponent(viewPointTransactionKeysQueryJComboBox, 0, 299, Short.MAX_VALUE)
+            .addComponent(viewPointTransactionKeysQueryCountsJTextField)
         );
         viewPointTransactionLeftJPanelLayout.setVerticalGroup(
             viewPointTransactionLeftJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewPointTransactionLeftJPanelLayout.createSequentialGroup()
                 .addComponent(viewPointTransactionKeysQueryJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(viewPointTransactionKeysJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 527, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(viewPointTransactionKeysJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(viewPointTransactionKeysQueryCountsJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         viewPointTransactionJSplitPane.setLeftComponent(viewPointTransactionLeftJPanel);
@@ -741,6 +759,7 @@ public class ForumJFrame extends javax.swing.JFrame {
     private javax.swing.JTextArea viewLikeJTextArea;
     private javax.swing.JList<String> viewLikeKeysJList;
     private javax.swing.JScrollPane viewLikeKeysJScrollPane;
+    private javax.swing.JTextField viewLikeKeysQueryCountsJTextField;
     private javax.swing.JComboBox<String> viewLikeKeysQueryJComboBox;
     private javax.swing.JPanel viewLikeLeftJPanel;
     private javax.swing.JPanel viewLikeRightJPanel;
@@ -749,6 +768,7 @@ public class ForumJFrame extends javax.swing.JFrame {
     private javax.swing.JTextArea viewPointTransactionJTextArea;
     private javax.swing.JList<String> viewPointTransactionKeysJList;
     private javax.swing.JScrollPane viewPointTransactionKeysJScrollPane;
+    private javax.swing.JTextField viewPointTransactionKeysQueryCountsJTextField;
     private javax.swing.JComboBox<String> viewPointTransactionKeysQueryJComboBox;
     private javax.swing.JPanel viewPointTransactionLeftJPanel;
     private javax.swing.JPanel viewPointTransactionRightJPanel;
@@ -757,6 +777,7 @@ public class ForumJFrame extends javax.swing.JFrame {
     private javax.swing.JTextArea viewPostJTextArea;
     private javax.swing.JList<String> viewPostKeysJList;
     private javax.swing.JScrollPane viewPostKeysJScrollPane;
+    private javax.swing.JTextField viewPostKeysQueryCountsJTextField;
     private javax.swing.JComboBox<String> viewPostKeysQueryJComboBox;
     private javax.swing.JPanel viewPostLeftJPanel;
     private javax.swing.JButton viewPostLikeJButton;
