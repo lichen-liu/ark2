@@ -52,6 +52,7 @@ public class ForumJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -301,6 +302,11 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewLikeKeysJScrollPane.setPreferredSize(new java.awt.Dimension(400, 500));
 
         viewLikeKeysJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        viewLikeKeysJList.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(final java.beans.PropertyChangeEvent evt) {
+                viewLikeKeysJListPropertyChange(evt);
+            }
+        });
         viewLikeKeysJList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(final javax.swing.event.ListSelectionEvent evt) {
                 viewLikeKeysJListValueChanged(evt);
@@ -374,6 +380,11 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPointTransactionKeysJScrollPane.setPreferredSize(new java.awt.Dimension(400, 500));
 
         viewPointTransactionKeysJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        viewPointTransactionKeysJList.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(final java.beans.PropertyChangeEvent evt) {
+                viewPointTransactionKeysJListPropertyChange(evt);
+            }
+        });
         viewPointTransactionKeysJScrollPane.setViewportView(viewPointTransactionKeysJList);
 
         viewPointTransactionKeysQueryCountsJTextField.setEditable(false);
@@ -497,6 +508,20 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void viewLikeKeysJListPropertyChange(final java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_viewLikeKeysJListPropertyChange
+        if ("model".equals(evt.getPropertyName())) {
+            this.viewLikeKeysQueryCountsJTextField
+                    .setText(String.valueOf(((ListModel<?>) evt.getNewValue()).getSize()));
+        }
+    }// GEN-LAST:event_viewLikeKeysJListPropertyChange
+
+    private void viewPointTransactionKeysJListPropertyChange(final java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_viewPointTransactionKeysJListPropertyChange
+        if ("model".equals(evt.getPropertyName())) {
+            this.viewPointTransactionKeysQueryCountsJTextField
+                    .setText(String.valueOf(((ListModel<?>) evt.getNewValue()).getSize()));
+        }
+    }// GEN-LAST:event_viewPointTransactionKeysJListPropertyChange
 
     private void viewPostKeysJListPropertyChange(final java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_viewPostKeysJListPropertyChange
         if ("model".equals(evt.getPropertyName())) {
