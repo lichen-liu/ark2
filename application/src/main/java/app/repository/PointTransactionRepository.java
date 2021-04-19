@@ -13,6 +13,7 @@ import app.repository.data.PointTransaction;
 import app.utils.ByteUtils;
 import app.utils.Cryptography;
 import app.utils.GensonDeserializer;
+import app.utils.Hash;
 
 public class PointTransactionRepository extends ReadableRepository<PointTransaction> {
 
@@ -31,7 +32,7 @@ public class PointTransactionRepository extends ReadableRepository<PointTransact
         final String payees = this.deserializer.transactionEntryToJson(transaction.payees);
         final String publicKeyString = ByteUtils.toHexString(publicKey.getEncoded());
 
-        final byte[] hash = ByteUtils.getSHA(String.join("", timestamp, payer, publicKeyString, reference));
+        final byte[] hash = Hash.GeneratePointTransactionHash(timestamp, transaction.payer.userId, transaction.payer.amount.toString(), publicKeyString, reference);
         final byte[] signature = Cryptography.sign(privateKey, hash);
 
         return new String(contract.submitTransaction("publishNewPointTransaction", timestamp, payer, publicKeyString,

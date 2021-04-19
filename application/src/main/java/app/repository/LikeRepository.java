@@ -22,6 +22,7 @@ import app.repository.data.Like;
 import app.utils.ByteUtils;
 import app.utils.Cryptography;
 import app.utils.GensonDeserializer;
+import app.utils.Hash;
 
 public class LikeRepository extends ReadableRepository<Like> {
 
@@ -40,7 +41,7 @@ public class LikeRepository extends ReadableRepository<Like> {
         final String like = this.deserializer.transactionEntriesToJson(likeInfo);
         final String publicKeyString = ByteUtils.toHexString(publicKey.getEncoded());
 
-        final byte[] hash = ByteUtils.getSHA(String.join("", timestamp, postKey, publicKeyString));
+        final byte[] hash = Hash.GenerateLikeHash(timestamp, postKey, publicKeyString);
         final byte[] likeHash = ByteUtils.getSHA(like);
         final byte[] signature = Cryptography.sign(privateKey, hash);
         final byte[] likeSignature = Cryptography.sign(privateKey, likeHash);

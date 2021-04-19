@@ -6,6 +6,7 @@ import app.repository.LikeRepository;
 import app.repository.PointTransactionRepository;
 import app.repository.PostRepository;
 import app.repository.data.Like;
+import app.repository.data.PointTransaction;
 import app.repository.data.Post;
 
 public class AnynomousAppUser {
@@ -60,6 +61,14 @@ public class AnynomousAppUser {
             return transactionRepository.selectObjectKeysByCustomKey(userKey);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    public PointTransaction fetchPointTransactionByPointTransactionKey(String key) {
+        try {
+            return transactionRepository.selectObjectsByKeys(key).get(0);
+        } catch (Exception e) {
         }
         return null;
     }

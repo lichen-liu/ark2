@@ -17,6 +17,7 @@ import app.repository.data.Post;
 import app.utils.ByteUtils;
 import app.utils.Cryptography;
 import app.utils.GensonDeserializer;
+import app.utils.Hash;
 
 public class PostRepository extends ReadableRepository<Post> {
 
@@ -32,7 +33,7 @@ public class PostRepository extends ReadableRepository<Post> {
 
         final String timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
         final String publicKeyString = ByteUtils.toHexString(publicKey.getEncoded());
-        final byte[] hash = ByteUtils.getSHA(String.join("", timestamp, content, publicKeyString));
+        final byte[] hash = Hash.GeneratePostHash(timestamp, content, publicKeyString);
         final byte[] signature = Cryptography.sign(privateKey, hash);
 
         return new String(contract.submitTransaction("publishNewPost", timestamp, content, publicKeyString,
