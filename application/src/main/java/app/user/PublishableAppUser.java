@@ -50,9 +50,9 @@ public class PublishableAppUser extends ReadOnlyAppUser {
         return null;
     }
 
-    public String publishNewLike(final String postKey, final Transaction.Entry likeInfo) {
+    public String publishNewLike(final String postKey) {
         try {
-            return new String(super.getLikeRepository().insertNewLike(super.getContract(), postKey, likeInfo,
+            return new String(super.getLikeRepository().insertNewLike(super.getContract(), postKey, 1.0,
                     super.getPublicKey(), privateKey));
         } catch (final Exception e) {
             e.printStackTrace();

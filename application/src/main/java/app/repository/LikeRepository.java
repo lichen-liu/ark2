@@ -31,22 +31,24 @@ public class LikeRepository extends ReadableRepository<Like> {
         this.contract = contract;
     }
 
-    public String insertNewLike(final Contract contract, final String postKey, final Transaction.Entry likeInfo,
+    public String insertNewLike(final Contract contract, final String postKey, final double pointAmount,
             final PublicKey publicKey, final PrivateKey privateKey)
             throws InvalidKeyException, NoSuchAlgorithmException, SignatureException, ContractException,
             TimeoutException, InterruptedException, JsonParseException, JsonMappingException, IOException {
 
         final String timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
-        final String like = this.deserializer.transactionEntriesToJson(likeInfo);
         final String publicKeyString = ByteUtils.toHexString(publicKey.getEncoded());
 
-        final byte[] hash = Hash.GenerateLikeHash(timestamp, postKey, publicKeyString);
-        final byte[] likeHash = ByteUtils.getSHA(like);
-        final byte[] signature = Cryptography.sign(privateKey, hash);
+        final byte[] likeHash = Hash.GenerateLikeHash(timestamp, postKey, publicKeyString);
         final byte[] likeSignature = Cryptography.sign(privateKey, likeHash);
 
-        return new String(contract.submitTransaction("publishNewLike", timestamp, postKey, like,
-                ByteUtils.toHexString(likeSignature), ByteUtils.toHexString(signature)));
+        final byte[] pointTransactionHash = Hash.GeneratePointTransactionHash(timestamp, publicKeyString,
+                String.valueOf(pointAmount), publicKeyString);
+        final byte[] pointTransactionSignature = Cryptography.sign(privateKey, pointTransactionHash);
+
+        return new String(contract.submitTransaction("publishNewLike", timestamp, postKey,
+                this.deserializer.transactionEntriesToJson(new Transaction.Entry(publicKeyString, pointAmount)),
+                ByteUtils.toHexString(likeSignature), ByteUtils.toHexString(pointTransactionSignature)));
     }
 
     @Override

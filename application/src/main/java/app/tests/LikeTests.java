@@ -11,7 +11,6 @@ import org.hyperledger.fabric.gateway.Wallet;
 
 import app.backend.ContractFactory;
 import app.backend.WalletFactory;
-import app.repository.data.Transaction;
 import app.tests.utils.TestClient;
 import app.tests.utils.TestRunner;
 import app.tests.utils.TestVoid;
@@ -30,9 +29,8 @@ public class LikeTests {
 
         final String postKey = client.publishNewPost("testPost1");
 
-        final var likeEntry = new Transaction.Entry(client.getPublicKeyString(), 100.00);
         TestVoid test = () -> {
-            return client.publishNewLike(postKey, likeEntry);
+            return client.publishNewLike(postKey);
         };
         runner.insertNewTest(test, 5);
 
@@ -45,7 +43,8 @@ public class LikeTests {
         thread.start();
     }
 
-    private void multiThreadWithoutDependencyTests() throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, IOException {
+    private void multiThreadWithoutDependencyTests()
+            throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, IOException {
         final Wallet wallet = WalletFactory.GetWallet("admin");
 
         final var contractCreation = new ContractFactory.Entity();
@@ -67,17 +66,13 @@ public class LikeTests {
         final var runner2Tests = new ArrayList<TestVoid>();
 
         final String postKey = client1.publishNewPost("testPost1");
-        final String postKey2 = client2.publishNewPost("testPost1");
 
-        final var likeEntry = new Transaction.Entry(client1.getPublicKeyString(), 100.00);
-        TestVoid test = () -> {
-            return client1.publishNewLike(postKey, likeEntry);
+        final TestVoid test = () -> {
+            return client1.publishNewLike(postKey);
         };
         runner1.insertNewTest(test, 5);
-
-        final var likeEntry2 = new Transaction.Entry(client2.getPublicKeyString(), 200.00);
-        TestVoid test2 = () -> {
-            return client2.publishNewLike(postKey, likeEntry2);
+        final TestVoid test2 = () -> {
+            return client2.publishNewLike(postKey);
         };
         runner2.insertNewTest(test2, 5);
 
