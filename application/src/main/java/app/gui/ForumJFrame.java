@@ -19,6 +19,7 @@ import org.hyperledger.fabric.gateway.Contract;
 
 import app.repository.Hash;
 import app.repository.data.Like;
+import app.repository.data.PointTransaction;
 import app.repository.data.Post;
 import app.user.AnynomousAppUser;
 import app.user.PublishableAppUser;
@@ -529,7 +530,53 @@ public class ForumJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void viewPointTransactionKeysJListValueChanged(final javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_viewPointTransactionKeysJListValueChanged
-        // TODO add your handling code here:
+        if (this.viewPointTransactionKeysJList.getSelectedIndex() == -1) {
+            return;
+        }
+
+        final String selectedPointTransactionKey = this.viewPointTransactionKeysJList.getSelectedValue();
+        final var userApp = new AnynomousAppUser(this.contract);
+        final PointTransaction pointTransaction = userApp
+                .fetchPointTransactionByPointTransactionKey(selectedPointTransactionKey);
+        System.out.println(pointTransaction);
+        if (pointTransaction != null) {
+            String pointTransactionTextArea = "PointTransactionKey: " + selectedPointTransactionKey + "\n\n";
+
+            pointTransactionTextArea += "Timestamp: " + pointTransaction.timestamp + "\n\n";
+            pointTransactionTextArea += "IssuerUserId: " + pointTransaction.issuerUserId + "\n\n";
+            pointTransactionTextArea += "PayerEntry: " + pointTransaction.payerEntry.toString() + "\n\n";
+            pointTransactionTextArea += "PayeeEntries: " + pointTransaction.payeeEntries.toString() + "\n\n";
+            pointTransactionTextArea += "Reference: " + pointTransaction.reference + "\n\n";
+            pointTransactionTextArea += "RelativeOrder: " + pointTransaction.relativeOrder + "\n\n";
+            pointTransactionTextArea += "Tracking: " + pointTransaction.payerPointTransactionTracking + "\n\n";
+
+            boolean isSignatureVerified = false;
+            try {
+                final byte[] hashedContentBytes = Hash.GeneratePointTransactionHash(pointTransaction.timestamp,
+                        pointTransaction.payerEntry.userId, String.valueOf(pointTransaction.payerEntry.amount),
+                        pointTransaction.issuerUserId);
+                final PublicKey publicKey = Cryptography
+                        .parsePublicKey(ByteUtils.toByteArray(pointTransaction.issuerUserId));
+                isSignatureVerified = Cryptography.verify(publicKey, hashedContentBytes,
+                        ByteUtils.toByteArray(pointTransaction.signature));
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException | InvalidKeyException
+                    | SignatureException e) {
+            }
+
+            this.viewPointTransactionJTextArea.setText(pointTransactionTextArea);
+
+            if (isSignatureVerified) {
+                this.viewPointTransactionStatusJTextField.setText("Signature Verification Passed");
+                this.viewPointTransactionStatusJTextField.setBackground(new java.awt.Color(200, 255, 200));
+            } else {
+                this.viewPointTransactionStatusJTextField.setText("Signature Verification Failed");
+                this.viewPointTransactionStatusJTextField.setBackground(new java.awt.Color(255, 200, 200));
+            }
+        } else {
+            this.viewPointTransactionJTextArea.setText(new String());
+            this.viewPointTransactionStatusJTextField.setBackground(java.awt.Color.WHITE);
+            this.viewPointTransactionStatusJTextField.setText(new String());
+        }
     }// GEN-LAST:event_viewPointTransactionKeysJListValueChanged
 
     private void viewLikeKeysJListPropertyChange(final java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_viewLikeKeysJListPropertyChange
@@ -563,9 +610,9 @@ public class ForumJFrame extends javax.swing.JFrame {
         final Like like = userApp.fetchLikeByLikeKey(selectedLikeKey);
         if (like != null) {
             String likeTextArea = "LikeKey: " + selectedLikeKey + "\n\n";
+            likeTextArea += "Timestamp: " + like.timestamp + "\n\n";
             likeTextArea += "PostKey: " + like.postKey + "\n\n";
             likeTextArea += "PointTransactionKey: " + like.pointTransactionKey + "\n\n";
-            likeTextArea += "Timestamp: " + like.timestamp + "\n\n";
             likeTextArea += "Liker: " + like.userId + "\n\n";
             likeTextArea += "RelativeOrder: " + like.relativeOrder + "\n\n";
 

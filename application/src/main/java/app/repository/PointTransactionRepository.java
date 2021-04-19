@@ -32,7 +32,7 @@ public class PointTransactionRepository extends ReadableRepository<PointTransact
         final String publicKeyString = ByteUtils.toHexString(publicKey.getEncoded());
 
         final byte[] hash = Hash.GeneratePointTransactionHash(timestamp, transaction.payer.userId,
-                transaction.payer.amount.toString(), publicKeyString, reference);
+                transaction.payer.amount.toString(), publicKeyString);
         final byte[] signature = Cryptography.sign(privateKey, hash);
 
         return new String(contract.submitTransaction("publishNewPointTransaction", timestamp, payer, publicKeyString,

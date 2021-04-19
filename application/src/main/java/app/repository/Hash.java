@@ -16,8 +16,7 @@ public class Hash {
     }
 
     public static byte[] GeneratePointTransactionHash(final String timestamp, final String payerId,
-            final String payerAmount, final String publicKeyString, final String reference)
-            throws NoSuchAlgorithmException {
-        return ByteUtils.getSHA(String.join("", timestamp, payerId, payerAmount, publicKeyString, reference));
+            final String payerAmount, final String issuerId) throws NoSuchAlgorithmException {
+        return ByteUtils.getSHA(String.join("", timestamp, payerId, payerAmount, issuerId));
     }
 }

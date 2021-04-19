@@ -1,9 +1,9 @@
 package app.repository.data;
 
-import lombok.ToString;
 import app.repository.contracts.Transaction.Entry;
+import lombok.ToString;
 
-@ToString(callSuper=true, includeFieldNames=true)
+@ToString(callSuper = true, includeFieldNames = true)
 public class PointTransaction {
     public String timestamp;
 
@@ -34,12 +34,13 @@ public class PointTransaction {
 
     public Tracking payerPointTransactionTracking;
 
+    @ToString(callSuper = true, includeFieldNames = true)
     public static class Tracking {
         /**
          * With respect to the payerEntry.getUserId(), the key to the most recent
          * spending PointTransaction (appears in payerEntry).
          */
-     
+
         public String recentSpendingPointTransactionKey;
 
         /**
@@ -49,5 +50,5 @@ public class PointTransaction {
          */
         public String[] recentEarningPointTransactionKeys;
     }
-    
+
 }
