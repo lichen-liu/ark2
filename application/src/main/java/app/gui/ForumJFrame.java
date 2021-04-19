@@ -53,6 +53,7 @@ public class ForumJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -385,6 +386,11 @@ public class ForumJFrame extends javax.swing.JFrame {
                 viewPointTransactionKeysJListPropertyChange(evt);
             }
         });
+        viewPointTransactionKeysJList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(final javax.swing.event.ListSelectionEvent evt) {
+                viewPointTransactionKeysJListValueChanged(evt);
+            }
+        });
         viewPointTransactionKeysJScrollPane.setViewportView(viewPointTransactionKeysJList);
 
         viewPointTransactionKeysQueryCountsJTextField.setEditable(false);
@@ -508,6 +514,10 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void viewPointTransactionKeysJListValueChanged(final javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_viewPointTransactionKeysJListValueChanged
+        // TODO add your handling code here:
+    }// GEN-LAST:event_viewPointTransactionKeysJListValueChanged
 
     private void viewLikeKeysJListPropertyChange(final java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_viewLikeKeysJListPropertyChange
         if ("model".equals(evt.getPropertyName())) {
