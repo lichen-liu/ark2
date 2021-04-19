@@ -2,10 +2,12 @@ package app.gui;
 
 import java.beans.PropertyChangeEvent;
 import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.concurrent.ExecutionException;
 
@@ -14,6 +16,7 @@ import javax.swing.SwingWorker;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.repository.Hash;
 import app.repository.data.Post;
 import app.user.AnynomousAppUser;
 import app.user.PublishableAppUser;
@@ -547,20 +550,29 @@ public class ForumJFrame extends javax.swing.JFrame {
         final Post post = userApp.fetchPostByPostKey(selectedPostKey);
         if (post.content != null) {
             String postTextArea = "PostKey: " + selectedPostKey + "\n\n";
-            postTextArea += "Content: " + post.content + "\n\n";
-            postTextArea += "Signature: " + post.signature + "\n\n";
             postTextArea += "Timestamp: " + post.timestamp + "\n\n";
             postTextArea += "Author: " + post.userId + "\n\n";
+            postTextArea += "Content: " + post.content + "\n\n";
+
+            boolean isSignatureVerified = false;
+            try {
+                final byte[] hashedContentBytes = Hash.GeneratePostHash(post.timestamp, post.content, post.userId);
+                final PublicKey publicKey = Cryptography.parsePublicKey(ByteUtils.toByteArray(post.userId));
+                isSignatureVerified = Cryptography.verify(publicKey, hashedContentBytes,
+                        ByteUtils.toByteArray(post.signature));
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException | InvalidKeyException
+                    | SignatureException e) {
+            }
 
             this.viewPostJTextArea.setText(postTextArea);
             this.viewPostLikeJButton.setEnabled(true);
 
-            
+            if (isSignatureVerified) {
+                this.viewPostJTextArea.setBackground(new java.awt.Color(200, 255, 200));
+            } else {
+                this.viewPostJTextArea.setBackground(new java.awt.Color(255, 200, 200));
+            }
 
-            // // non-verified
-            // this.viewPostJTextArea.setBackground(new java.awt.Color(255, 200, 200));
-            // // verified
-            // this.viewPostJTextArea.setBackground(new java.awt.Color(200, 255, 200));
         } else {
             this.viewPostJTextArea.setText(new String());
             this.viewPostLikeJButton.setEnabled(false);
