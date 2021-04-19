@@ -36,7 +36,7 @@ public interface Anonymous extends Repository {
 
     public default String[] fetchPointTransactionKeysByUserId(final String userId) {
         try {
-            return getPostRepository().selectObjectKeysByCustomKey(userId);
+            return getPointTransactionRepository().selectObjectKeysByCustomKey(userId);
         } catch (final Exception e) {
             e.printStackTrace();
         }
