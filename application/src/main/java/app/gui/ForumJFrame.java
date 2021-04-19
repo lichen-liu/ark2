@@ -270,6 +270,11 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewLikeKeysJScrollPane.setPreferredSize(new java.awt.Dimension(400, 500));
 
         viewLikeKeysJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        viewLikeKeysJList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                viewLikeKeysJListValueChanged(evt);
+            }
+        });
         viewLikeKeysJScrollPane.setViewportView(viewLikeKeysJList);
 
         javax.swing.GroupLayout viewLikeLeftJPanelLayout = new javax.swing.GroupLayout(viewLikeLeftJPanel);
@@ -434,6 +439,10 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void viewLikeKeysJListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_viewLikeKeysJListValueChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_viewLikeKeysJListValueChanged
 
     private void viewPointTransactionKeysQueryJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPointTransactionKeysQueryJComboBoxActionPerformed
         final String selectedQueryMethod = (String) this.viewPointTransactionKeysQueryJComboBox.getSelectedItem();
