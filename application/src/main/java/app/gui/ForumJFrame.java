@@ -670,9 +670,7 @@ public class ForumJFrame extends javax.swing.JFrame {
             @Override
             public Boolean doInBackground() {
                 final var appUser = new PublishableAppUser(ForumJFrame.this.contract, publicKey, privateKey);
-
                 appUser.publishNewPost(ForumJFrame.this.postEditorJTextArea.getText());
-
                 setProgress(100);
                 return true;
             }
@@ -686,9 +684,7 @@ public class ForumJFrame extends javax.swing.JFrame {
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
-
                 ForumJFrame.this.setBusy(false);
-
                 if (result != null && result) {
                     JOptionPane.showMessageDialog(null, "The post was published successfully!");
                     ForumJFrame.this.postEditorJTextArea.setText(new String());
