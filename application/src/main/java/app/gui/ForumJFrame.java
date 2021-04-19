@@ -25,7 +25,6 @@ import app.repository.data.PointTransaction;
 import app.repository.data.Post;
 import app.user.service.AnonymousAppUser;
 import app.user.service.PublishableAppUser;
-import app.user.service.ReadonlyAppUser;
 import app.utils.ByteUtils;
 import app.utils.Cryptography;
 
@@ -664,14 +663,8 @@ public class ForumJFrame extends javax.swing.JFrame {
                 this.viewPointTransactionKeysJList.setListData(pointTransactionKeys);
             }
         } else if ("Search By Payer".equals(selectedQueryMethod)) {
-            PublicKey publicKey = null;
-            try {
-                publicKey = Cryptography.parsePublicKey(ByteUtils.toByteArray(searchString));
-            } catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException e) {
-                return;
-            }
-            final var userApp = new ReadonlyAppUser(this.contract, publicKey);
-            final String[] pointTransactionKeys = userApp.fetchMyPointTransactionKeys();
+            final var userApp = new AnonymousAppUser(this.contract);
+            final String[] pointTransactionKeys = userApp.fetchPointTransactionKeysByUserId(searchString);
             if (pointTransactionKeys != null) {
                 this.viewPointTransactionKeysJList.setListData(pointTransactionKeys);
             }
@@ -760,14 +753,8 @@ public class ForumJFrame extends javax.swing.JFrame {
                 this.viewPostKeysJList.setListData(postKeys);
             }
         } else if ("Search By Author".equals(selectedQueryMethod)) {
-            PublicKey publicKey = null;
-            try {
-                publicKey = Cryptography.parsePublicKey(ByteUtils.toByteArray(searchString));
-            } catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException e) {
-                return;
-            }
-            final var userApp = new ReadonlyAppUser(this.contract, publicKey);
-            final String[] postKeys = userApp.fetchMyPostKeys();
+            final var userApp = new AnonymousAppUser(this.contract);
+            final String[] postKeys = userApp.fetchPostKeysByUserId(searchString);
             if (postKeys != null) {
                 this.viewPostKeysJList.setListData(postKeys);
             }
@@ -881,16 +868,8 @@ public class ForumJFrame extends javax.swing.JFrame {
 
     private void refreshPointAmountJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_refreshPointAmountJButtonActionPerformed
         this.pointAmountJTextField.setText(new String());
-        final String userPublicKey = this.userPublicKeyJTextField.getText();
-        PublicKey publicKey;
-        try {
-            publicKey = Cryptography.parsePublicKey(ByteUtils.toByteArray(userPublicKey));
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException e1) {
-            JOptionPane.showMessageDialog(null, "Invalid Public Key!");
-            return;
-        }
-        final var appUser = new ReadonlyAppUser(this.contract, publicKey);
-        final String pointAmount = appUser.getMyPointAmount();
+        final var appUser = new AnonymousAppUser(this.contract);
+        final String pointAmount = appUser.getPointAmountByUserId(this.userPublicKeyJTextField.getText());
         if (pointAmount != null) {
             this.pointAmountJTextField.setText(pointAmount);
         }
