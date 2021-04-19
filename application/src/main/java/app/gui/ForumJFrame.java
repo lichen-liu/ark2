@@ -555,6 +555,8 @@ public class ForumJFrame extends javax.swing.JFrame {
             this.viewPostJTextArea.setText(postTextArea);
             this.viewPostLikeJButton.setEnabled(true);
 
+            
+
             // // non-verified
             // this.viewPostJTextArea.setBackground(new java.awt.Color(255, 200, 200));
             // // verified

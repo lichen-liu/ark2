@@ -22,7 +22,6 @@ import app.repository.data.Like;
 import app.utils.ByteUtils;
 import app.utils.Cryptography;
 import app.utils.GensonDeserializer;
-import app.utils.Hash;
 
 public class LikeRepository extends ReadableRepository<Like> {
 
