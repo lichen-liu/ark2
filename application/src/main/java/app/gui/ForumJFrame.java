@@ -324,6 +324,11 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         viewPointTransactionKeysQueryJComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(
                 new String[] { "All", "Search By Payer", "Search By Point Transaction Key" }));
+        viewPointTransactionKeysQueryJComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
+                viewPointTransactionKeysQueryJComboBoxActionPerformed(evt);
+            }
+        });
 
         viewPointTransactionKeysJScrollPane.setPreferredSize(new java.awt.Dimension(400, 500));
 
@@ -445,6 +450,31 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void viewPointTransactionKeysQueryJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPointTransactionKeysQueryJComboBoxActionPerformed
+        final String selectedQueryMethod = (String) this.viewPointTransactionKeysQueryJComboBox.getSelectedItem();
+        final String searchString = this.searchJTextField.getText();
+        this.viewPointTransactionKeysJList.setListData(new String[0]);
+
+        if ("All".equals(selectedQueryMethod)) {
+            // final var userApp = new AnynomousAppUser(this.contract);
+            // final String[] postKeys = userApp.fetchAllPostKeys();
+            // this.viewPostKeysJList.setListData(postKeys);
+        } else if ("Search By Payer".equals(selectedQueryMethod)) {
+            // final var userApp = new AnynomousAppUser(this.contract);
+            // final String[] likeKeys = userApp.fetchLikeKeysByPostKey(searchString);
+            // if (likeKeys != null) {
+            // this.viewLikeKeysJList.setListData(likeKeys);
+            // }
+        } else if ("Search By Point Transaction Key".equals(selectedQueryMethod)) {
+            // final var userApp = new AnynomousAppUser(this.contract);
+            // if (userApp.fetchLikeByLikeKey(searchString) != null) {
+            // this.viewLikeKeysJList.setListData(new String[] { searchString });
+            // }
+        } else {
+            throw new UnsupportedOperationException();
+        }
+    }// GEN-LAST:event_viewPointTransactionKeysQueryJComboBoxActionPerformed
 
     private void viewLikeKeysQueryJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewLikeKeysQueryJComboBoxActionPerformed
         final String selectedQueryMethod = (String) this.viewLikeKeysQueryJComboBox.getSelectedItem();
