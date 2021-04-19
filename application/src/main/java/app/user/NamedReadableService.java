@@ -1,6 +1,6 @@
 package app.user;
 
-public interface NamedReadable extends Anonymous, Identifiable {
+public interface NamedReadableService extends AnonymousService, Identifiable {
     public default String[] fetchMyPostKeys() {
         return fetchPostKeysByUserId(getPublicKeyString());
     }

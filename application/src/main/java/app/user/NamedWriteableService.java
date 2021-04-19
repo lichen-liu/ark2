@@ -2,7 +2,7 @@ package app.user;
 
 import app.repository.data.Transaction;
 
-public interface NamedWriteable extends Repository, Signable {
+public interface NamedWriteableService extends Repository, Signable {
     public default String publishNewPost(final String content) {
         try {
             return getPostRepository().insertNewPost(content, getPublicKey(), getPrivateKey());

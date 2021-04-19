@@ -1,12 +1,13 @@
-package app.user;
+package app.user.internal;
 
 import org.hyperledger.fabric.gateway.Contract;
 
 import app.repository.LikeRepository;
 import app.repository.PointTransactionRepository;
 import app.repository.PostRepository;
+import app.user.Repository;
 
-public class RepositoryProvider implements Repository {
+public class RepositoryState implements Repository {
     private final PostRepository postRepository;
     private final LikeRepository likeRepository;
     private final PointTransactionRepository pointTransactionRepository;
@@ -26,7 +27,7 @@ public class RepositoryProvider implements Repository {
         return pointTransactionRepository;
     }
 
-    public RepositoryProvider(final Contract contract) {
+    public RepositoryState(final Contract contract) {
         this.postRepository = new PostRepository(contract);
         this.pointTransactionRepository = new PointTransactionRepository(contract);
         this.likeRepository = new LikeRepository(contract);

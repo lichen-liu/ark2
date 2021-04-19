@@ -6,7 +6,7 @@ import app.repository.data.Like;
 import app.repository.data.PointTransaction;
 import app.repository.data.Post;
 
-public interface Anonymous extends Repository {
+public interface AnonymousService extends Repository {
     public default String[] fetchPostKeys() {
         try {
             return getPostRepository().selectObjectKeysByCustomKey();
