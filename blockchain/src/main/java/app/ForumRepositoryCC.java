@@ -133,7 +133,7 @@ public class ForumRepositoryCC {
         final ChaincodeStub stub = ctx.getStub();
         final Key key = Key.createFromHexKeyString(postKey);
         if (!Post.getObjectTypeName().equals(key.getObjectTypeString())) {
-            throw new ChaincodeException("getPostByKey(): key is not a PostKey");
+            throw new ChaincodeException("getPostByKey(): key is not a PostKey", key.getObjectTypeString());
         }
         final String postString = ChaincodeStubTools.tryGetStringStateByKey(stub, key);
         return genson.deserialize(postString, Post.class);
@@ -150,7 +150,7 @@ public class ForumRepositoryCC {
         final ChaincodeStub stub = ctx.getStub();
         final Key key = Key.createFromHexKeyString(likeKey);
         if (!Like.getObjectTypeName().equals(key.getObjectTypeString())) {
-            throw new ChaincodeException("getLikeByKey(): key is not a LikeKey");
+            throw new ChaincodeException("getLikeByKey(): key is not a LikeKey", key.getObjectTypeString());
         }
         final String likeString = ChaincodeStubTools.tryGetStringStateByKey(stub, key);
         return genson.deserialize(likeString, Like.class);
@@ -176,7 +176,8 @@ public class ForumRepositoryCC {
         final ChaincodeStub stub = ctx.getStub();
         final Key key = Key.createFromHexKeyString(pointTransactionKey);
         if (!PointTransaction.getObjectTypeName().equals(key.getObjectTypeString())) {
-            throw new ChaincodeException("getPointTransactionByKey(): key is not a PointTransactionKey");
+            throw new ChaincodeException("getPointTransactionByKey(): key is not a PointTransactionKey",
+                    key.getObjectTypeString());
         }
         final String pointTransactionString = ChaincodeStubTools.tryGetStringStateByKey(stub, key);
         return genson.deserialize(pointTransactionString, PointTransaction.class);
