@@ -21,6 +21,7 @@ import app.repository.data.Like;
 import app.repository.data.PointTransaction;
 import app.repository.data.Post;
 import app.user.AnonymousService;
+import app.user.NamedWriteableService;
 import app.user.ServiceProvider;
 import app.utils.ByteUtils;
 import app.utils.Cryptography;
@@ -48,6 +49,8 @@ public class ForumJFrame extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -71,6 +74,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPostJTextArea = new javax.swing.JTextArea();
         viewPostLikeJButton = new javax.swing.JButton();
         viewPostStatusJTextField = new javax.swing.JTextField();
+        viewPostPostKeyJTextField = new javax.swing.JTextField();
         publishPostJPanel = new javax.swing.JPanel();
         postEditorJScrollPane = new javax.swing.JScrollPane();
         postEditorJTextArea = new javax.swing.JTextArea();
@@ -208,8 +212,16 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         viewPostLikeJButton.setText("LIKE");
         viewPostLikeJButton.setEnabled(false);
+        viewPostLikeJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
+                viewPostLikeJButtonActionPerformed(evt);
+            }
+        });
 
         viewPostStatusJTextField.setEditable(false);
+
+        viewPostPostKeyJTextField.setEditable(false);
+        viewPostPostKeyJTextField.setToolTipText("Post Key");
 
         final javax.swing.GroupLayout viewPostRightJPanelLayout = new javax.swing.GroupLayout(viewPostRightJPanel);
         viewPostRightJPanel.setLayout(viewPostRightJPanelLayout);
@@ -218,15 +230,18 @@ public class ForumJFrame extends javax.swing.JFrame {
                         .addComponent(viewPostJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 981, Short.MAX_VALUE)
                         .addComponent(viewPostLikeJButton, javax.swing.GroupLayout.DEFAULT_SIZE,
                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(viewPostStatusJTextField));
+                        .addComponent(viewPostStatusJTextField).addComponent(viewPostPostKeyJTextField));
         viewPostRightJPanelLayout.setVerticalGroup(
                 viewPostRightJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
                         javax.swing.GroupLayout.Alignment.TRAILING,
                         viewPostRightJPanelLayout.createSequentialGroup().addComponent(viewPostLikeJButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
                                         javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(viewPostJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                .addComponent(viewPostPostKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
                                         javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(viewPostJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 473,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(viewPostStatusJTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
                                         javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)));
@@ -682,11 +697,11 @@ public class ForumJFrame extends javax.swing.JFrame {
         final var userApp = ServiceProvider.createAnonymousService(this.contract);
         final Post post = userApp.fetchPostByPostKey(selectedPostKey);
         if (post != null) {
-            String postTextArea = "PostKey: " + selectedPostKey + "\n\n";
-            postTextArea += "Timestamp: " + post.timestamp + "\n\n";
+            String postTextArea = "Timestamp: " + post.timestamp + "\n\n";
             postTextArea += "Author: " + post.userId + "\n\n";
             postTextArea += "Content: " + post.content + "\n\n";
 
+            this.viewPostPostKeyJTextField.setText(selectedPostKey);
             this.viewPostJTextArea.setText(postTextArea);
             this.viewPostLikeJButton.setEnabled(true);
 
@@ -698,6 +713,7 @@ public class ForumJFrame extends javax.swing.JFrame {
                 this.viewPostStatusJTextField.setBackground(new java.awt.Color(255, 200, 200));
             }
         } else {
+            this.viewPostPostKeyJTextField.setText(new String());
             this.viewPostJTextArea.setText(new String());
             this.viewPostLikeJButton.setEnabled(false);
             this.viewPostStatusJTextField.setBackground(java.awt.Color.WHITE);
@@ -761,6 +777,77 @@ public class ForumJFrame extends javax.swing.JFrame {
         this.postEditorJTextArea.setText(new String());
     }// GEN-LAST:event_publishPostResetJButtonActionPerformed
 
+    private void viewPostLikeJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPostLikeJButtonActionPerformed
+        PublicKey publicKeyCandidate = null;
+        PrivateKey privateKeyCandidate = null;
+        try {
+            final String publicKeyString = this.userPublicKeyJTextField.getText();
+            publicKeyCandidate = Cryptography.parsePublicKey(ByteUtils.toByteArray(publicKeyString));
+            final String privateKeyString = this.userPrivateKeyJTextField.getText();
+            privateKeyCandidate = Cryptography.parsePrivateKey(ByteUtils.toByteArray(privateKeyString));
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException | IllegalArgumentException e1) {
+            publicKeyCandidate = null;
+            privateKeyCandidate = null;
+        } finally {
+            if (publicKeyCandidate == null || privateKeyCandidate == null) {
+                JOptionPane.showMessageDialog(null, "Please provide valid Public/Private Key Pair!");
+                return;
+            }
+            if (!Cryptography.verifyKeyPair(publicKeyCandidate, privateKeyCandidate)) {
+                final int choice = JOptionPane.showConfirmDialog(null,
+                        "Non-matching Public/Private Key Pair! Do you still want to proceed?", "Warning",
+                        JOptionPane.OK_CANCEL_OPTION);
+                if (choice == JOptionPane.CANCEL_OPTION) {
+                    return;
+                }
+            }
+        }
+
+        final int choice = JOptionPane.showConfirmDialog(null,
+                "Do you want to consume " + NamedWriteableService.getPointCostForPublishingLike()
+                        + " Point to like the post using the provided Public/Private Key Pair?",
+                "Confirm", JOptionPane.OK_CANCEL_OPTION);
+        if (choice == JOptionPane.CANCEL_OPTION) {
+            return;
+        }
+
+        this.setBusy(true);
+
+        final PublicKey publicKey = publicKeyCandidate;
+        final PrivateKey privateKey = privateKeyCandidate;
+        final String postKey = this.viewPostPostKeyJTextField.getText();
+        final SwingWorker<Boolean, Void> task = new SwingWorker<Boolean, Void>() {
+            @Override
+            public Boolean doInBackground() {
+                final var appUser = ServiceProvider.createNamedService(ForumJFrame.this.contract, publicKey,
+                        privateKey);
+                appUser.publishNewLike(postKey);
+                setProgress(100);
+                return true;
+            }
+        };
+
+        task.addPropertyChangeListener((final PropertyChangeEvent evt1) -> {
+            if ("progress".equals(evt1.getPropertyName()) && (Integer) evt1.getNewValue() == 100) {
+                Boolean result = false;
+                try {
+                    result = task.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+                ForumJFrame.this.setBusy(false);
+                if (result != null && result) {
+                    JOptionPane.showMessageDialog(null, "The like was published successfully!");
+                    ForumJFrame.this.postEditorJTextArea.setText(new String());
+                } else {
+                    JOptionPane.showMessageDialog(null, "The like failed to be published!");
+                }
+            }
+        });
+
+        task.execute();
+    }// GEN-LAST:event_viewPostLikeJButtonActionPerformed
+
     private void publishPostSubmitJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_publishPostSubmitJButtonActionPerformed
         PublicKey publicKeyCandidate = null;
         PrivateKey privateKeyCandidate = null;
@@ -787,9 +874,6 @@ public class ForumJFrame extends javax.swing.JFrame {
             }
         }
 
-        final PublicKey publicKey = publicKeyCandidate;
-        final PrivateKey privateKey = privateKeyCandidate;
-
         final int choice = JOptionPane.showConfirmDialog(null,
                 "Do you want to publish the post using the provided Public/Private Key Pair?", "Confirm",
                 JOptionPane.OK_CANCEL_OPTION);
@@ -799,6 +883,8 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         this.setBusy(true);
 
+        final PublicKey publicKey = publicKeyCandidate;
+        final PrivateKey privateKey = privateKeyCandidate;
         final SwingWorker<Boolean, Void> task = new SwingWorker<Boolean, Void>() {
             @Override
             public Boolean doInBackground() {
@@ -940,6 +1026,7 @@ public class ForumJFrame extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> viewPostKeysQueryJComboBox;
     private javax.swing.JPanel viewPostLeftJPanel;
     private javax.swing.JButton viewPostLikeJButton;
+    private javax.swing.JTextField viewPostPostKeyJTextField;
     private javax.swing.JPanel viewPostRightJPanel;
     private javax.swing.JTextField viewPostStatusJTextField;
     // End of variables declaration//GEN-END:variables

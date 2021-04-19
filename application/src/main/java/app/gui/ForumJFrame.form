@@ -281,6 +281,7 @@
                       <Component id="viewPostJScrollPane" pref="981" max="32767" attributes="0"/>
                       <Component id="viewPostLikeJButton" alignment="0" max="32767" attributes="0"/>
                       <Component id="viewPostStatusJTextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="viewPostPostKeyJTextField" alignment="0" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -288,7 +289,9 @@
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="viewPostLikeJButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
-                          <Component id="viewPostJScrollPane" min="-2" max="-2" attributes="0"/>
+                          <Component id="viewPostPostKeyJTextField" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="viewPostJScrollPane" min="-2" pref="473" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="viewPostStatusJTextField" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -328,10 +331,19 @@
                   <AccessibilityProperties>
                     <Property name="AccessibleContext.accessibleName" type="java.lang.String" value=""/>
                   </AccessibilityProperties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewPostLikeJButtonActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="viewPostStatusJTextField">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="viewPostPostKeyJTextField">
+                  <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Post Key"/>
                   </Properties>
                 </Component>
               </SubComponents>

@@ -22,9 +22,14 @@ public interface NamedWriteableService extends Repository, Signable {
         return null;
     }
 
+    public static double getPointCostForPublishingLike() {
+        return 1.0;
+    }
+
     public default String publishNewLike(final String postKey) {
         try {
-            return new String(getLikeRepository().insertNewLike(postKey, 1.0, getPublicKey(), getPrivateKey()));
+            return new String(getLikeRepository().insertNewLike(postKey, getPointCostForPublishingLike(),
+                    getPublicKey(), getPrivateKey()));
         } catch (final Exception e) {
             e.printStackTrace();
         }
