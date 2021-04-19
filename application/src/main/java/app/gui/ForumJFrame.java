@@ -48,6 +48,7 @@ public class ForumJFrame extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -70,6 +71,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPostJScrollPane = new javax.swing.JScrollPane();
         viewPostJTextArea = new javax.swing.JTextArea();
         viewPostLikeJButton = new javax.swing.JButton();
+        viewPostStatusJTextField = new javax.swing.JTextField();
         publishPostJPanel = new javax.swing.JPanel();
         postEditorJScrollPane = new javax.swing.JScrollPane();
         postEditorJTextArea = new javax.swing.JTextArea();
@@ -201,21 +203,27 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPostLikeJButton.setText("LIKE");
         viewPostLikeJButton.setEnabled(false);
 
+        viewPostStatusJTextField.setEditable(false);
+
         final javax.swing.GroupLayout viewPostRightJPanelLayout = new javax.swing.GroupLayout(viewPostRightJPanel);
         viewPostRightJPanel.setLayout(viewPostRightJPanelLayout);
         viewPostRightJPanelLayout.setHorizontalGroup(
                 viewPostRightJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(viewPostJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 981, Short.MAX_VALUE)
                         .addComponent(viewPostLikeJButton, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(viewPostStatusJTextField));
         viewPostRightJPanelLayout.setVerticalGroup(
                 viewPostRightJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
                         javax.swing.GroupLayout.Alignment.TRAILING,
                         viewPostRightJPanelLayout.createSequentialGroup().addComponent(viewPostLikeJButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
                                         javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(viewPostJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 527,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)));
+                                .addComponent(viewPostJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(viewPostStatusJTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)));
 
         viewPostLikeJButton.getAccessibleContext().setAccessibleName("");
 
@@ -568,15 +576,18 @@ public class ForumJFrame extends javax.swing.JFrame {
             this.viewPostLikeJButton.setEnabled(true);
 
             if (isSignatureVerified) {
-                this.viewPostJTextArea.setBackground(new java.awt.Color(200, 255, 200));
+                this.viewPostStatusJTextField.setText("Signature Verification Passed");
+                this.viewPostStatusJTextField.setBackground(new java.awt.Color(200, 255, 200));
             } else {
-                this.viewPostJTextArea.setBackground(new java.awt.Color(255, 200, 200));
+                this.viewPostStatusJTextField.setText("Signature Verification Failed");
+                this.viewPostStatusJTextField.setBackground(new java.awt.Color(255, 200, 200));
             }
 
         } else {
             this.viewPostJTextArea.setText(new String());
             this.viewPostLikeJButton.setEnabled(false);
-            this.viewPostJTextArea.setBackground(java.awt.Color.WHITE);
+            this.viewPostStatusJTextField.setBackground(java.awt.Color.WHITE);
+            this.viewPostStatusJTextField.setText(new String());
         }
     }// GEN-LAST:event_viewPostKeysJListValueChanged
 
@@ -827,6 +838,7 @@ public class ForumJFrame extends javax.swing.JFrame {
     private javax.swing.JPanel viewPostLeftJPanel;
     private javax.swing.JButton viewPostLikeJButton;
     private javax.swing.JPanel viewPostRightJPanel;
+    private javax.swing.JTextField viewPostStatusJTextField;
     // End of variables declaration//GEN-END:variables
 
     private final Contract contract;

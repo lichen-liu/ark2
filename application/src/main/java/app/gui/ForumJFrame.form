@@ -279,6 +279,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="viewPostJScrollPane" pref="981" max="32767" attributes="0"/>
                       <Component id="viewPostLikeJButton" alignment="0" max="32767" attributes="0"/>
+                      <Component id="viewPostStatusJTextField" alignment="0" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -286,7 +287,9 @@
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="viewPostLikeJButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
-                          <Component id="viewPostJScrollPane" min="-2" pref="527" max="-2" attributes="0"/>
+                          <Component id="viewPostJScrollPane" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="viewPostStatusJTextField" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -324,6 +327,11 @@
                   <AccessibilityProperties>
                     <Property name="AccessibleContext.accessibleName" type="java.lang.String" value=""/>
                   </AccessibilityProperties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="viewPostStatusJTextField">
+                  <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
+                  </Properties>
                 </Component>
               </SubComponents>
             </Container>
