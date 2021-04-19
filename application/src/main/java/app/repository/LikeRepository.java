@@ -31,8 +31,8 @@ public class LikeRepository extends ReadableRepository<Like> {
         this.contract = contract;
     }
 
-    public String insertNewLike(final Contract contract, final String postKey, final double pointAmount,
-            final PublicKey publicKey, final PrivateKey privateKey)
+    public String insertNewLike(final String postKey, final double pointAmount, final PublicKey publicKey,
+            final PrivateKey privateKey)
             throws InvalidKeyException, NoSuchAlgorithmException, SignatureException, ContractException,
             TimeoutException, InterruptedException, JsonParseException, JsonMappingException, IOException {
 

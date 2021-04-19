@@ -32,8 +32,7 @@ public class PublishableAppUser extends ReadOnlyAppUser {
 
     public String publishNewPost(final String content) {
         try {
-            return super.getPostRepository().insertNewPost(super.getContract(), content, super.getPublicKey(),
-                    privateKey);
+            return super.getPostRepository().insertNewPost(content, super.getPublicKey(), privateKey);
         } catch (final Exception e) {
             e.printStackTrace();
         }
@@ -42,8 +41,8 @@ public class PublishableAppUser extends ReadOnlyAppUser {
 
     public String publishNewTransaction(final Transaction transaction) {
         try {
-            return super.getTransactionRepository().insertNewTransaction(super.getContract(), transaction.reference,
-                    transaction, super.getPublicKey(), privateKey);
+            return super.getTransactionRepository().insertNewTransaction(transaction.reference, transaction,
+                    super.getPublicKey(), privateKey);
         } catch (final Exception e) {
             e.printStackTrace();
         }
@@ -52,8 +51,7 @@ public class PublishableAppUser extends ReadOnlyAppUser {
 
     public String publishNewLike(final String postKey) {
         try {
-            return new String(super.getLikeRepository().insertNewLike(super.getContract(), postKey, 1.0,
-                    super.getPublicKey(), privateKey));
+            return new String(super.getLikeRepository().insertNewLike(postKey, 1.0, super.getPublicKey(), privateKey));
         } catch (final Exception e) {
             e.printStackTrace();
         }

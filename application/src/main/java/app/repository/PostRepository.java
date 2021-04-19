@@ -26,9 +26,9 @@ public class PostRepository extends ReadableRepository<Post> {
         this.contract = contract;
     }
 
-    public String insertNewPost(final Contract contract, final String content, final PublicKey publicKey,
-            final PrivateKey privateKey) throws InvalidKeyException, NoSuchAlgorithmException, SignatureException,
-            ContractException, TimeoutException, InterruptedException {
+    public String insertNewPost(final String content, final PublicKey publicKey, final PrivateKey privateKey)
+            throws InvalidKeyException, NoSuchAlgorithmException, SignatureException, ContractException,
+            TimeoutException, InterruptedException {
 
         final String timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
         final String publicKeyString = ByteUtils.toHexString(publicKey.getEncoded());

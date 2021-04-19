@@ -7,6 +7,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.hyperledger.fabric.gateway.Contract;
+import org.hyperledger.fabric.gateway.ContractException;
 
 import app.repository.data.PointTransaction;
 import app.repository.data.Transaction;
@@ -22,8 +23,8 @@ public class PointTransactionRepository extends ReadableRepository<PointTransact
         this.contract = contract;
     }
 
-    public String insertNewTransaction(final Contract contract, final String reference, final Transaction transaction,
-            final PublicKey publicKey, final PrivateKey privateKey) throws Exception {
+    public String insertNewTransaction(final String reference, final Transaction transaction, final PublicKey publicKey,
+            final PrivateKey privateKey) throws Exception {
 
         final String timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
 
@@ -37,6 +38,10 @@ public class PointTransactionRepository extends ReadableRepository<PointTransact
 
         return new String(contract.submitTransaction("publishNewPointTransaction", timestamp, payer, publicKeyString,
                 ByteUtils.toHexString(signature), reference, payees));
+    }
+
+    public String getPointAmount(final String userId) throws ContractException {
+        return new String(this.contract.evaluateTransaction("getPointAmountByUserId", userId));
     }
 
     @Override
