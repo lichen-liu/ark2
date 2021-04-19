@@ -194,6 +194,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="viewPostKeysJScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
                       <Component id="viewPostKeysQueryJComboBox" alignment="0" pref="299" max="32767" attributes="0"/>
+                      <Component id="viewPostKeysQueryCountsJTextField" alignment="0" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -201,7 +202,9 @@
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="viewPostKeysQueryJComboBox" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="viewPostKeysJScrollPane" min="-2" pref="527" max="-2" attributes="0"/>
+                          <Component id="viewPostKeysJScrollPane" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="viewPostKeysQueryCountsJTextField" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -252,6 +255,11 @@
                     </Component>
                   </SubComponents>
                 </Container>
+                <Component class="javax.swing.JTextField" name="viewPostKeysQueryCountsJTextField">
+                  <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
+                  </Properties>
+                </Component>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="viewPostRightJPanel">
@@ -430,6 +438,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="viewLikeKeysJScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
                       <Component id="viewLikeKeysQueryJComboBox" alignment="0" pref="299" max="32767" attributes="0"/>
+                      <Component id="viewLikeKeysQueryCountsJTextField" alignment="0" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -437,7 +446,9 @@
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="viewLikeKeysQueryJComboBox" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="viewLikeKeysJScrollPane" min="-2" pref="527" max="-2" attributes="0"/>
+                          <Component id="viewLikeKeysJScrollPane" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="viewLikeKeysQueryCountsJTextField" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -478,12 +489,20 @@
                         </Property>
                         <Property name="selectionMode" type="int" value="0"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="viewLikeKeysJListValueChanged"/>
+                      </Events>
                       <AuxValues>
                         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                       </AuxValues>
                     </Component>
                   </SubComponents>
                 </Container>
+                <Component class="javax.swing.JTextField" name="viewLikeKeysQueryCountsJTextField">
+                  <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
+                  </Properties>
+                </Component>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="viewLikeRightJPanel">
@@ -570,6 +589,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="viewPointTransactionKeysJScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
                       <Component id="viewPointTransactionKeysQueryJComboBox" alignment="0" pref="299" max="32767" attributes="0"/>
+                      <Component id="viewPointTransactionKeysQueryCountsJTextField" alignment="0" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -577,7 +597,9 @@
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="viewPointTransactionKeysQueryJComboBox" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="viewPointTransactionKeysJScrollPane" min="-2" pref="527" max="-2" attributes="0"/>
+                          <Component id="viewPointTransactionKeysJScrollPane" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="viewPointTransactionKeysQueryCountsJTextField" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -625,6 +647,11 @@
                     </Component>
                   </SubComponents>
                 </Container>
+                <Component class="javax.swing.JTextField" name="viewPointTransactionKeysQueryCountsJTextField">
+                  <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
+                  </Properties>
+                </Component>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="viewPointTransactionRightJPanel">
