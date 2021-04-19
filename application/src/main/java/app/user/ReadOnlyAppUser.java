@@ -13,7 +13,7 @@ import app.repository.data.Like;
 import app.repository.data.Post;
 import app.utils.ByteUtils;
 
-public class ReadOnlyAppUser extends AnynomousAppUser {
+public class ReadOnlyAppUser extends AnonymousAppUser {
     private final PublicKey publicKey;
 
     public ReadOnlyAppUser(final Wallet wallet, final Contract contract, final String userId)
@@ -39,7 +39,7 @@ public class ReadOnlyAppUser extends AnynomousAppUser {
     public String[] fetchUserPostKeys() {
         try {
             return super.getPostRepository().selectObjectKeysByCustomKey(this.getPublicKeyString());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -48,7 +48,7 @@ public class ReadOnlyAppUser extends AnynomousAppUser {
     public String[] fetchUserPointTransactionKeys() {
         try {
             return super.getPostRepository().selectObjectKeysByCustomKey(this.getPublicKeyString());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -57,7 +57,7 @@ public class ReadOnlyAppUser extends AnynomousAppUser {
     public Post[] fetchAllUserPosts() {
         try {
             return super.getPostRepository().selectObjectsByCustomKeys(this.getPublicKeyString()).toArray(Post[]::new);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -76,7 +76,7 @@ public class ReadOnlyAppUser extends AnynomousAppUser {
         try {
             return new String(
                     super.getContract().evaluateTransaction("getPointAmountByUserId", this.getPublicKeyString()));
-        } catch (ContractException e) {
+        } catch (final ContractException e) {
             e.printStackTrace();
         }
         return null;

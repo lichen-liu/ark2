@@ -9,7 +9,7 @@ import app.repository.data.Like;
 import app.repository.data.PointTransaction;
 import app.repository.data.Post;
 
-public class AnynomousAppUser {
+public class AnonymousAppUser {
     private final Contract contract;
     private final PostRepository postRepository;
     private final LikeRepository likeRepository;
@@ -31,7 +31,7 @@ public class AnynomousAppUser {
         return transactionRepository;
     }
 
-    public AnynomousAppUser(final Contract contract) {
+    public AnonymousAppUser(final Contract contract) {
         this.contract = contract;
         this.postRepository = new PostRepository(contract);
         this.transactionRepository = new PointTransactionRepository(contract);

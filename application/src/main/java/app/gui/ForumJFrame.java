@@ -23,7 +23,7 @@ import app.repository.Hash;
 import app.repository.data.Like;
 import app.repository.data.PointTransaction;
 import app.repository.data.Post;
-import app.user.AnynomousAppUser;
+import app.user.AnonymousAppUser;
 import app.user.PublishableAppUser;
 import app.user.ReadOnlyAppUser;
 import app.utils.ByteUtils;
@@ -540,12 +540,13 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         try {
             System.out.println(selectedPointTransactionKey);
-            System.out.println(new String(this.contract.evaluateTransaction("getPointTransactionByKey", selectedPointTransactionKey)) + "\n");
-        } catch (ContractException e1) {
+            System.out.println(new String(
+                    this.contract.evaluateTransaction("getPointTransactionByKey", selectedPointTransactionKey)) + "\n");
+        } catch (final ContractException e1) {
             e1.printStackTrace();
         }
 
-        final var userApp = new AnynomousAppUser(this.contract);
+        final var userApp = new AnonymousAppUser(this.contract);
         final PointTransaction pointTransaction = userApp
                 .fetchPointTransactionByPointTransactionKey(selectedPointTransactionKey);
         if (pointTransaction != null) {
@@ -615,7 +616,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         }
 
         final String selectedLikeKey = this.viewLikeKeysJList.getSelectedValue();
-        final var userApp = new AnynomousAppUser(this.contract);
+        final var userApp = new AnonymousAppUser(this.contract);
         final Like like = userApp.fetchLikeByLikeKey(selectedLikeKey);
         if (like != null) {
             String likeTextArea = "LikeKey: " + selectedLikeKey + "\n\n";
@@ -657,7 +658,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         this.viewPointTransactionKeysJList.setListData(new String[0]);
 
         if ("All".equals(selectedQueryMethod)) {
-            final var userApp = new AnynomousAppUser(this.contract);
+            final var userApp = new AnonymousAppUser(this.contract);
             final String[] pointTransactionKeys = userApp.fetchAllPointTransactionKeys();
             if (pointTransactionKeys != null) {
                 this.viewPointTransactionKeysJList.setListData(pointTransactionKeys);
@@ -675,7 +676,7 @@ public class ForumJFrame extends javax.swing.JFrame {
                 this.viewPointTransactionKeysJList.setListData(pointTransactionKeys);
             }
         } else if ("Search By Point Transaction Key".equals(selectedQueryMethod)) {
-            final var userApp = new AnynomousAppUser(this.contract);
+            final var userApp = new AnonymousAppUser(this.contract);
             if (userApp.fetchPointTransactionByPointTransactionKey(searchString) != null) {
                 this.viewPointTransactionKeysJList.setListData(new String[] { searchString });
             }
@@ -690,13 +691,13 @@ public class ForumJFrame extends javax.swing.JFrame {
         this.viewLikeKeysJList.setListData(new String[0]);
 
         if ("Search By Post Key".equals(selectedQueryMethod)) {
-            final var userApp = new AnynomousAppUser(this.contract);
+            final var userApp = new AnonymousAppUser(this.contract);
             final String[] likeKeys = userApp.fetchLikeKeysByPostKey(searchString);
             if (likeKeys != null) {
                 this.viewLikeKeysJList.setListData(likeKeys);
             }
         } else if ("Search By Like Key".equals(selectedQueryMethod)) {
-            final var userApp = new AnynomousAppUser(this.contract);
+            final var userApp = new AnonymousAppUser(this.contract);
             if (userApp.fetchLikeByLikeKey(searchString) != null) {
                 this.viewLikeKeysJList.setListData(new String[] { searchString });
             }
@@ -711,7 +712,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         }
 
         final String selectedPostKey = this.viewPostKeysJList.getSelectedValue();
-        final var userApp = new AnynomousAppUser(this.contract);
+        final var userApp = new AnonymousAppUser(this.contract);
         final Post post = userApp.fetchPostByPostKey(selectedPostKey);
         if (post != null) {
             String postTextArea = "PostKey: " + selectedPostKey + "\n\n";
@@ -753,7 +754,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         this.viewPostKeysJList.setListData(new String[0]);
 
         if ("All".equals(selectedQueryMethod)) {
-            final var userApp = new AnynomousAppUser(this.contract);
+            final var userApp = new AnonymousAppUser(this.contract);
             final String[] postKeys = userApp.fetchAllPostKeys();
             if (postKeys != null) {
                 this.viewPostKeysJList.setListData(postKeys);
@@ -771,7 +772,7 @@ public class ForumJFrame extends javax.swing.JFrame {
                 this.viewPostKeysJList.setListData(postKeys);
             }
         } else if ("Search By Post Key".equals(selectedQueryMethod)) {
-            final var userApp = new AnynomousAppUser(this.contract);
+            final var userApp = new AnonymousAppUser(this.contract);
             if (userApp.fetchPostByPostKey(searchString) != null) {
                 this.viewPostKeysJList.setListData(new String[] { searchString });
             }
