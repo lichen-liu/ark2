@@ -50,7 +50,7 @@ public class AnynomousAppUser {
     public Post[] fetchAllPosts() {
         try {
             return postRepository.selectObjectsByCustomKeys();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -60,15 +60,14 @@ public class AnynomousAppUser {
         try {
             return postRepository.selectObjectsByKeys(key)[0];
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return null;
     }
 
-    public String[] fetchLikeKeysByPostKey(String postKey){
+    public String[] fetchLikeKeysByPostKey(final String postKey) {
         try {
             return likeRepository.selectObjectKeysByCustomKey(postKey);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -78,10 +77,7 @@ public class AnynomousAppUser {
         try {
             return likeRepository.selectObjectsByKeys(likeKey)[0];
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return null;
     }
-
-   
 }
