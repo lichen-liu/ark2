@@ -3,8 +3,7 @@ package app.utils;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import javax.xml.bind.DatatypeConverter;
+import java.util.Base64;
 
 public class ByteUtils {
 
@@ -25,10 +24,10 @@ public class ByteUtils {
      * </pre>
      * 
      * @param bytes
-     * @return
+     * @return Base64, URL and Filename safe, encoded ascii String
      */
     public static String toAsciiString(final byte[] bytes) {
-        return DatatypeConverter.printHexBinary(bytes);
+        return Base64.getUrlEncoder().encodeToString(bytes);
     }
 
     /**
@@ -40,11 +39,11 @@ public class ByteUtils {
      * String toAsciiString(byte[])
      * </pre>
      * 
-     * @param asciiString
-     * @return
+     * @param asciiString, Base64, URL and Filename safe, encoded ascii String
+     * @return bytes
      * @throws IllegalArgumentException
      */
     public static byte[] fromAsciiString(final String asciiString) throws IllegalArgumentException {
-        return DatatypeConverter.parseHexBinary(asciiString);
+        return Base64.getUrlDecoder().decode(asciiString);
     }
 }
