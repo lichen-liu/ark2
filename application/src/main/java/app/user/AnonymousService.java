@@ -150,7 +150,6 @@ public interface AnonymousService extends Repository {
         }
 
         public static final VerificationResult INVALID = new VerificationResult() {
-
             @Override
             public boolean isValid() {
                 return false;
@@ -160,7 +159,6 @@ public interface AnonymousService extends Repository {
             public String[] getItems() {
                 return new String[] { "Invalid!" };
             }
-
         };
     }
 
