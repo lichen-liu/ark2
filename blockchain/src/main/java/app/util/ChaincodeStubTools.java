@@ -1,9 +1,8 @@
 package app.util;
 
+import java.util.Base64;
 import java.util.stream.StreamSupport;
 
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
 import org.hyperledger.fabric.shim.ChaincodeException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
@@ -50,8 +49,9 @@ public class ChaincodeStubTools {
             this.key = key.toString();
         }
 
-        public static Key createFromHexKeyString(final String hexKeyString) throws DecoderException {
-            final byte[] keyBytes = Hex.decodeHex(hexKeyString);
+        public static Key createFromBase64UrlKeyString(final String base64UrlKeyString)
+                throws IllegalArgumentException {
+            final byte[] keyBytes = Base64.getUrlDecoder().decode(base64UrlKeyString);
             return new Key(new String(keyBytes));
         }
 
@@ -59,8 +59,8 @@ public class ChaincodeStubTools {
             return new Key(ccKeyString);
         }
 
-        public String getHexKeyString() {
-            return Hex.encodeHexString(this.key.getBytes());
+        public String getBase64UrlKeyString() {
+            return Base64.getUrlEncoder().encodeToString(this.key.getBytes());
         }
 
         private String getCCKeyString() {

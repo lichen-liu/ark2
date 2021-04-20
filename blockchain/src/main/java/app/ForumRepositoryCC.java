@@ -10,7 +10,6 @@ import javax.annotation.Nullable;
 
 import com.owlike.genson.Genson;
 
-import org.apache.commons.codec.DecoderException;
 import org.hyperledger.fabric.contract.Context;
 import org.hyperledger.fabric.shim.ChaincodeException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
@@ -46,7 +45,7 @@ public class ForumRepositoryCC {
 
         ChaincodeStubTools.putStringState(stub, postKey, genson.serialize(post));
 
-        return postKey.getHexKeyString();
+        return postKey.getBase64UrlKeyString();
     }
 
     public String publishNewPointTransaction(final Context ctx, final String timestamp, final String payerEntryString,
@@ -67,7 +66,7 @@ public class ForumRepositoryCC {
 
         ChaincodeStubTools.putStringState(stub, pointTransactionKey, genson.serialize(pointTransaction));
 
-        return pointTransactionKey.getHexKeyString();
+        return pointTransactionKey.getBase64UrlKeyString();
     }
 
     public String publishNewLike(final Context ctx, final String timestamp, final String postKey,
@@ -106,32 +105,32 @@ public class ForumRepositoryCC {
         final Key likeKey = ChaincodeStubTools.generateKey(stub, like);
 
         final String pointTransactionKey = this.publishNewPointTransaction(ctx, timestamp, payerEntryString,
-                payerEntry.getUserId(), pointTransactionSignature, likeKey.getHexKeyString(),
+                payerEntry.getUserId(), pointTransactionSignature, likeKey.getBase64UrlKeyString(),
                 genson.serialize(payeeEntries.toArray(PointTransaction.Entry[]::new)));
         like.setPointTransactionKey(pointTransactionKey);
 
         ChaincodeStubTools.putStringState(stub, likeKey, genson.serialize(like));
 
-        return likeKey.getHexKeyString();
+        return likeKey.getBase64UrlKeyString();
     }
 
     public String[] getAllPostKeys(final Context ctx) throws Exception {
         final List<String> postKeys = Arrays.stream(this.getAllPosts(ctx, null))
-                .map(keyValue -> Key.createFromCCKeyString(keyValue.getKey()).getHexKeyString())
+                .map(keyValue -> Key.createFromCCKeyString(keyValue.getKey()).getBase64UrlKeyString())
                 .collect(Collectors.toList());
         return postKeys.toArray(String[]::new);
     }
 
     public String[] getAllPostKeysByUserId(final Context ctx, final String userId) throws Exception {
         final List<String> postKeys = Arrays.stream(this.getAllPosts(ctx, userId))
-                .map(keyValue -> Key.createFromCCKeyString(keyValue.getKey()).getHexKeyString())
+                .map(keyValue -> Key.createFromCCKeyString(keyValue.getKey()).getBase64UrlKeyString())
                 .collect(Collectors.toList());
         return postKeys.toArray(String[]::new);
     }
 
-    public Post getPostByKey(final Context ctx, final String postKey) throws DecoderException {
+    public Post getPostByKey(final Context ctx, final String postKey) throws IllegalArgumentException {
         final ChaincodeStub stub = ctx.getStub();
-        final Key key = Key.createFromHexKeyString(postKey);
+        final Key key = Key.createFromBase64UrlKeyString(postKey);
         if (!Post.getObjectTypeName().equals(key.getObjectTypeString())) {
             throw new ChaincodeException("getPostByKey(): key is not a PostKey", key.getObjectTypeString());
         }
@@ -141,14 +140,14 @@ public class ForumRepositoryCC {
 
     public String[] getAllLikeKeysByPostKey(final Context ctx, final String postKey) throws Exception {
         final List<String> likeKeys = Arrays.stream(this.getAllLikesByPostKey(ctx, postKey))
-                .map(keyValue -> Key.createFromCCKeyString(keyValue.getKey()).getHexKeyString())
+                .map(keyValue -> Key.createFromCCKeyString(keyValue.getKey()).getBase64UrlKeyString())
                 .collect(Collectors.toList());
         return likeKeys.toArray(String[]::new);
     }
 
-    public Like getLikeByKey(final Context ctx, final String likeKey) throws DecoderException {
+    public Like getLikeByKey(final Context ctx, final String likeKey) throws IllegalArgumentException {
         final ChaincodeStub stub = ctx.getStub();
-        final Key key = Key.createFromHexKeyString(likeKey);
+        final Key key = Key.createFromBase64UrlKeyString(likeKey);
         if (!Like.getObjectTypeName().equals(key.getObjectTypeString())) {
             throw new ChaincodeException("getLikeByKey(): key is not a LikeKey", key.getObjectTypeString());
         }
@@ -158,7 +157,7 @@ public class ForumRepositoryCC {
 
     public String[] getAllPointTransactionKeys(final Context ctx) throws Exception {
         final List<String> pointTransactionKeys = Arrays.stream(this.getAllPointTransactions(ctx, null))
-                .map(keyValue -> Key.createFromCCKeyString(keyValue.getKey()).getHexKeyString())
+                .map(keyValue -> Key.createFromCCKeyString(keyValue.getKey()).getBase64UrlKeyString())
                 .collect(Collectors.toList());
         return pointTransactionKeys.toArray(String[]::new);
     }
@@ -166,15 +165,15 @@ public class ForumRepositoryCC {
     public String[] getAllPointTransactionKeysByPayerUserId(final Context ctx, final String payerUserId)
             throws Exception {
         final List<String> pointTransactionKeys = Arrays.stream(this.getAllPointTransactions(ctx, payerUserId))
-                .map(keyValue -> Key.createFromCCKeyString(keyValue.getKey()).getHexKeyString())
+                .map(keyValue -> Key.createFromCCKeyString(keyValue.getKey()).getBase64UrlKeyString())
                 .collect(Collectors.toList());
         return pointTransactionKeys.toArray(String[]::new);
     }
 
     public PointTransaction getPointTransactionByKey(final Context ctx, final String pointTransactionKey)
-            throws DecoderException {
+            throws IllegalArgumentException {
         final ChaincodeStub stub = ctx.getStub();
-        final Key key = Key.createFromHexKeyString(pointTransactionKey);
+        final Key key = Key.createFromBase64UrlKeyString(pointTransactionKey);
         if (!PointTransaction.getObjectTypeName().equals(key.getObjectTypeString())) {
             throw new ChaincodeException("getPointTransactionByKey(): key is not a PointTransactionKey",
                     key.getObjectTypeString());
@@ -326,7 +325,7 @@ public class ForumRepositoryCC {
         final List<String> recentEarningPointTransactionKeys = new ArrayList<String>();
         final KeyValue[] allPointTransactions = this.getAllPointTransactions(ctx, null);
         for (final KeyValue pointTransactionKV : allPointTransactions) {
-            if (Key.createFromCCKeyString(pointTransactionKV.getKey()).getHexKeyString()
+            if (Key.createFromCCKeyString(pointTransactionKV.getKey()).getBase64UrlKeyString()
                     .equals(recentSpendingPointTransactionKey)) {
                 break;
             }
@@ -334,7 +333,7 @@ public class ForumRepositoryCC {
                     PointTransaction.class);
             if (Arrays.stream(pointTransaction.getPayeeEntries()).anyMatch(payee -> payee.getUserId().equals(userId))) {
                 recentEarningPointTransactionKeys
-                        .add(Key.createFromCCKeyString(pointTransactionKV.getKey()).getHexKeyString());
+                        .add(Key.createFromCCKeyString(pointTransactionKV.getKey()).getBase64UrlKeyString());
             }
         }
 

@@ -1,6 +1,5 @@
 package app;
 
-import org.apache.commons.codec.DecoderException;
 import org.hyperledger.fabric.contract.Context;
 import org.hyperledger.fabric.contract.ContractInterface;
 import org.hyperledger.fabric.contract.annotation.Contract;
@@ -168,7 +167,7 @@ public final class ForumRepository implements ContractInterface {
     public Post getPostByKey(final Context ctx, final String postKey) {
         try {
             return this.cc.getPostByKey(ctx, postKey);
-        } catch (final DecoderException e) {
+        } catch (final IllegalArgumentException e) {
             e.printStackTrace();
             throw new ChaincodeException(e);
         }
@@ -201,7 +200,7 @@ public final class ForumRepository implements ContractInterface {
     public Like getLikeByKey(final Context ctx, final String likeKey) {
         try {
             return this.cc.getLikeByKey(ctx, likeKey);
-        } catch (final DecoderException e) {
+        } catch (final IllegalArgumentException e) {
             e.printStackTrace();
             throw new ChaincodeException(e);
         }
@@ -250,7 +249,7 @@ public final class ForumRepository implements ContractInterface {
     public PointTransaction getPointTransactionByKey(final Context ctx, final String pointTransactionKey) {
         try {
             return this.cc.getPointTransactionByKey(ctx, pointTransactionKey);
-        } catch (final DecoderException e) {
+        } catch (final IllegalArgumentException e) {
             e.printStackTrace();
             throw new ChaincodeException(e);
         }
