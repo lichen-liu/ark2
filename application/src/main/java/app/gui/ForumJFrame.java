@@ -914,13 +914,10 @@ public class ForumJFrame extends javax.swing.JFrame {
             this.viewLikeLikeKeyJTextField.setText(selectedLikeKey);
             this.viewLikeJTextArea.setText(likeTextArea);
 
-            if (AnonymousService.verifyLikeSignature(like)) {
-                this.viewLikeStatusJTextField.setText("Signature Verification Passed");
-                this.viewLikeStatusJTextField.setBackground(new java.awt.Color(200, 255, 200));
-            } else {
-                this.viewLikeStatusJTextField.setText("Signature Verification Failed");
-                this.viewLikeStatusJTextField.setBackground(new java.awt.Color(255, 200, 200));
-            }
+            final var verify = userApp.verifyLike(like);
+            this.viewLikeStatusJTextField.setText(verify.getItemsString());
+            this.viewLikeStatusJTextField.setBackground(
+                    verify.isValid() ? new java.awt.Color(200, 255, 200) : new java.awt.Color(255, 200, 200));
         } else {
             this.viewLikeLikeKeyJTextField.setText(new String());
             this.viewLikeJTextArea.setText(new String());

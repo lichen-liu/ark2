@@ -5,7 +5,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hyperledger.fabric.gateway.ContractException;
@@ -153,13 +152,8 @@ public interface AnonymousService extends Repository {
     }
 
     public default VerificationResult verifyPost(final Post post) {
-        final List<String> items = new ArrayList<String>();
         final boolean isSignatureValid = verifyPostSignature(post);
-        if (isSignatureValid) {
-            items.add("Signature Passed!");
-        } else {
-            items.add("Signature Failed!");
-        }
+        final String signatureItem = isSignatureValid ? "Signature Passed!" : "Signature Failed!";
 
         return new VerificationResult() {
             @Override
@@ -169,7 +163,23 @@ public interface AnonymousService extends Repository {
 
             @Override
             public List<String> getItems() {
-                return items;
+                return List.of(signatureItem);
+            }
+        };
+    }
+
+    public default VerificationResult verifyLike(final Like like) {
+        final boolean isSignatureValid = verifyLikeSignature(like);
+        final String signatureItem = isSignatureValid ? "Signature Passed!" : "Signature Failed!";
+        return new VerificationResult() {
+            @Override
+            public boolean isValid() {
+                return isSignatureValid;
+            }
+
+            @Override
+            public List<String> getItems() {
+                return List.of(signatureItem);
             }
         };
     }
