@@ -24,7 +24,6 @@ import app.backend.UserRegistrationService;
 import app.backend.WalletFactory;
 import app.gui.ForumJFrame;
 import app.tests.LikeTests;
-import app.tests.PostTests;
 
 class App {
 
@@ -89,7 +88,7 @@ class App {
 
     private void test() {
         try {
-            //new PostTests().benchmark();
+            // new PostTests().benchmark();
             new LikeTests(this.contract).benchmark();
             // new TransactionTests().benchmark();
             // new TransactionTests().test(this.appClient);

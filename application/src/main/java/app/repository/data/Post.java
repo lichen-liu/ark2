@@ -2,7 +2,7 @@ package app.repository.data;
 
 import lombok.ToString;
 
-@ToString(includeFieldNames=true)
+@ToString(includeFieldNames = true)
 public class Post {
     public String timestamp;
 

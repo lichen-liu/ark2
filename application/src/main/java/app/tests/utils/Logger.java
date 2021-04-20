@@ -3,9 +3,9 @@ package app.tests.utils;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import app.repository.data.Post;
 import app.repository.data.Like;
 import app.repository.data.PointTransaction;
+import app.repository.data.Post;
 
 public class Logger {
     private int testId;
@@ -16,15 +16,15 @@ public class Logger {
         objectMapper = new ObjectMapper();
     }
 
-    public void print(Post result){
+    public void print(final Post result) {
         print(result.toString());
     }
 
-    public void print(Like result){
+    public void print(final Like result) {
         print(result.toString());
     }
 
-    public void print(PointTransaction result){
+    public void print(final PointTransaction result) {
         print(result.toString());
     }
 

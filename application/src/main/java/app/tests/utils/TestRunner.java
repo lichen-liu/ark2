@@ -39,8 +39,9 @@ public class TestRunner implements Runnable {
                     logger.print((String[]) output);
                 } else if (output instanceof Post || output instanceof Like || output instanceof PointTransaction) {
                     logger.print(output.toString());
-                }  else if (output instanceof Post[] || output instanceof Like[] || output instanceof PointTransaction[]) {
-                    for(var o : (Object[]) output){
+                } else if (output instanceof Post[] || output instanceof Like[]
+                        || output instanceof PointTransaction[]) {
+                    for (final var o : (Object[]) output) {
                         logger.print(o.toString());
                     }
                 } else {

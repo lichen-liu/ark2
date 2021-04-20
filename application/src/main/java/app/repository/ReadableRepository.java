@@ -27,7 +27,7 @@ public abstract class ReadableRepository<T> {
     private final ObjectMapper om = new ObjectMapper();
     private final Class<T> dataType;
 
-    public ReadableRepository(Class<T> dataType) {
+    public ReadableRepository(final Class<T> dataType) {
         this.dataType = dataType;
     }
 
@@ -47,12 +47,13 @@ public abstract class ReadableRepository<T> {
         return usersPostKeys.toArray(String[]::new);
     }
 
-    public List<T> selectObjectsByKeys(final String... keys) throws ContractException, JsonParseException, JsonMappingException, IOException {
+    public List<T> selectObjectsByKeys(final String... keys)
+            throws ContractException, JsonParseException, JsonMappingException, IOException {
 
         final var objects = new ArrayList<T>();
         for (final var key : keys) {
-            String raw = new String(contract.evaluateTransaction(getObjectByKeyQuery(), key));
-            T data = om.readValue(raw, dataType);
+            final String raw = new String(contract.evaluateTransaction(getObjectByKeyQuery(), key));
+            final T data = om.readValue(raw, dataType);
             objects.add(data);
         }
 
