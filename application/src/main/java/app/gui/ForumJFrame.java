@@ -867,9 +867,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         final PointTransaction pointTransaction = userApp
                 .fetchPointTransactionByPointTransactionKey(selectedPointTransactionKey);
         if (pointTransaction != null) {
-            String pointTransactionTextArea = "PointTransactionKey: " + selectedPointTransactionKey + "\n\n";
-
-            pointTransactionTextArea += "Timestamp: " + pointTransaction.timestamp + "\n\n";
+            String pointTransactionTextArea = "Timestamp: " + pointTransaction.timestamp + "\n\n";
             pointTransactionTextArea += "IssuerUserId: " + pointTransaction.issuerUserId + "\n\n";
             pointTransactionTextArea += "PayerEntry: " + pointTransaction.payerEntry.toString() + "\n\n";
             pointTransactionTextArea += "PayeeEntries: " + Arrays.toString(pointTransaction.payeeEntries) + "\n\n";
@@ -907,8 +905,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         final var userApp = ServiceProvider.createAnonymousService(this.contract);
         final Like like = userApp.fetchLikeByLikeKey(selectedLikeKey);
         if (like != null) {
-            String likeTextArea = "LikeKey: " + selectedLikeKey + "\n\n";
-            likeTextArea += "Timestamp: " + like.timestamp + "\n\n";
+            String likeTextArea = "Timestamp: " + like.timestamp + "\n\n";
             likeTextArea += "PostKey: " + like.postKey + "\n\n";
             likeTextArea += "PointTransactionKey: " + like.pointTransactionKey + "\n\n";
             likeTextArea += "Liker: " + like.userId + "\n\n";
