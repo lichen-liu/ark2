@@ -51,6 +51,7 @@ public class ForumJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -144,6 +145,11 @@ public class ForumJFrame extends javax.swing.JFrame {
         MessageJTextField.setToolTipText("Message");
 
         searchJTextField.setToolTipText("Search Bar");
+        searchJTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
+                searchJTextFieldActionPerformed(evt);
+            }
+        });
 
         viewPostJSplitPane.setDividerLocation(300);
 
@@ -542,6 +548,188 @@ public class ForumJFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void generateKeyPairJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_generateKeyPairJButtonActionPerformed
+        if (!this.userPublicKeyJTextField.getText().isEmpty() || !this.userPrivateKeyJTextField.getText().isEmpty()) {
+            final int choice = JOptionPane.showConfirmDialog(null,
+                    "Do you want to overwrite the existing Public and/or Private Keys?", "Warning",
+                    JOptionPane.OK_CANCEL_OPTION);
+            if (choice == JOptionPane.CANCEL_OPTION) {
+                return;
+            }
+        }
+        try {
+            final KeyPair keyPair = Cryptography.generateRandomKeyPair();
+            final String publicKeyString = ByteUtils.toHexString(keyPair.getPublic().getEncoded());
+            final String privateKeyString = ByteUtils.toHexString(keyPair.getPrivate().getEncoded());
+            this.userPublicKeyJTextField.setText(publicKeyString);
+            this.userPrivateKeyJTextField.setText(privateKeyString);
+        } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+    }// GEN-LAST:event_generateKeyPairJButtonActionPerformed
+
+    private void refreshPointAmountJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_refreshPointAmountJButtonActionPerformed
+        this.pointAmountJTextField.setText(new String());
+        final var appUser = ServiceProvider.createAnonymousService(this.contract);
+        final String pointAmount = appUser.getPointAmountByUserId(this.userPublicKeyJTextField.getText());
+        if (pointAmount != null) {
+            this.pointAmountJTextField.setText(pointAmount);
+        }
+    }// GEN-LAST:event_refreshPointAmountJButtonActionPerformed
+
+    private void searchJTextFieldActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_searchJTextFieldActionPerformed
+        this.refreshContentJTabbedPane();
+    }// GEN-LAST:event_searchJTextFieldActionPerformed
+
+    private void viewPostLikeJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPostLikeJButtonActionPerformed
+        PublicKey publicKeyCandidate = null;
+        PrivateKey privateKeyCandidate = null;
+        try {
+            final String publicKeyString = this.userPublicKeyJTextField.getText();
+            publicKeyCandidate = Cryptography.parsePublicKey(ByteUtils.toByteArray(publicKeyString));
+            final String privateKeyString = this.userPrivateKeyJTextField.getText();
+            privateKeyCandidate = Cryptography.parsePrivateKey(ByteUtils.toByteArray(privateKeyString));
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException | IllegalArgumentException e1) {
+            publicKeyCandidate = null;
+            privateKeyCandidate = null;
+        } finally {
+            if (publicKeyCandidate == null || privateKeyCandidate == null) {
+                JOptionPane.showMessageDialog(null, "Please provide valid Public/Private Key Pair!");
+                return;
+            }
+            if (!Cryptography.verifyKeyPair(publicKeyCandidate, privateKeyCandidate)) {
+                final int choice = JOptionPane.showConfirmDialog(null,
+                        "Non-matching Public/Private Key Pair! Do you still want to proceed?", "Warning",
+                        JOptionPane.OK_CANCEL_OPTION);
+                if (choice == JOptionPane.CANCEL_OPTION) {
+                    return;
+                }
+            }
+        }
+
+        final int choice = JOptionPane.showConfirmDialog(null,
+                "Do you want to consume " + NamedWriteableService.getPointCostForPublishingLike()
+                        + " Point to like the post using the provided Public/Private Key Pair?",
+                "Confirm", JOptionPane.OK_CANCEL_OPTION);
+        if (choice == JOptionPane.CANCEL_OPTION) {
+            return;
+        }
+
+        this.setBusy(true);
+
+        final PublicKey publicKey = publicKeyCandidate;
+        final PrivateKey privateKey = privateKeyCandidate;
+        final String postKey = this.viewPostPostKeyJTextField.getText();
+        final SwingWorker<Boolean, Void> task = new SwingWorker<Boolean, Void>() {
+            @Override
+            public Boolean doInBackground() {
+                final var appUser = ServiceProvider.createNamedService(ForumJFrame.this.contract, publicKey,
+                        privateKey);
+                appUser.publishNewLike(postKey);
+                setProgress(100);
+                return true;
+            }
+        };
+
+        task.addPropertyChangeListener((final PropertyChangeEvent evt1) -> {
+            if ("progress".equals(evt1.getPropertyName()) && (Integer) evt1.getNewValue() == 100) {
+                Boolean result = false;
+                try {
+                    result = task.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+                ForumJFrame.this.setBusy(false);
+                if (result != null && result) {
+                    JOptionPane.showMessageDialog(null, "The like was published successfully!");
+                    ForumJFrame.this.postEditorJTextArea.setText(new String());
+                } else {
+                    JOptionPane.showMessageDialog(null, "The like failed to be published!");
+                }
+            }
+        });
+
+        task.execute();
+    }// GEN-LAST:event_viewPostLikeJButtonActionPerformed
+
+    private void publishPostSubmitJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_publishPostSubmitJButtonActionPerformed
+        PublicKey publicKeyCandidate = null;
+        PrivateKey privateKeyCandidate = null;
+        try {
+            final String publicKeyString = this.userPublicKeyJTextField.getText();
+            publicKeyCandidate = Cryptography.parsePublicKey(ByteUtils.toByteArray(publicKeyString));
+            final String privateKeyString = this.userPrivateKeyJTextField.getText();
+            privateKeyCandidate = Cryptography.parsePrivateKey(ByteUtils.toByteArray(privateKeyString));
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException | IllegalArgumentException e1) {
+            publicKeyCandidate = null;
+            privateKeyCandidate = null;
+        } finally {
+            if (publicKeyCandidate == null || privateKeyCandidate == null) {
+                JOptionPane.showMessageDialog(null, "Please provide valid Public/Private Key Pair!");
+                return;
+            }
+            if (!Cryptography.verifyKeyPair(publicKeyCandidate, privateKeyCandidate)) {
+                final int choice = JOptionPane.showConfirmDialog(null,
+                        "Non-matching Public/Private Key Pair! Do you still want to proceed?", "Warning",
+                        JOptionPane.OK_CANCEL_OPTION);
+                if (choice == JOptionPane.CANCEL_OPTION) {
+                    return;
+                }
+            }
+        }
+
+        final int choice = JOptionPane.showConfirmDialog(null,
+                "Do you want to publish the post using the provided Public/Private Key Pair?", "Confirm",
+                JOptionPane.OK_CANCEL_OPTION);
+        if (choice == JOptionPane.CANCEL_OPTION) {
+            return;
+        }
+
+        this.setBusy(true);
+
+        final PublicKey publicKey = publicKeyCandidate;
+        final PrivateKey privateKey = privateKeyCandidate;
+        final SwingWorker<Boolean, Void> task = new SwingWorker<Boolean, Void>() {
+            @Override
+            public Boolean doInBackground() {
+                final var appUser = ServiceProvider.createNamedService(ForumJFrame.this.contract, publicKey,
+                        privateKey);
+                appUser.publishNewPost(ForumJFrame.this.postEditorJTextArea.getText());
+                setProgress(100);
+                return true;
+            }
+        };
+
+        task.addPropertyChangeListener((final PropertyChangeEvent evt1) -> {
+            if ("progress".equals(evt1.getPropertyName()) && (Integer) evt1.getNewValue() == 100) {
+                Boolean result = false;
+                try {
+                    result = task.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+                ForumJFrame.this.setBusy(false);
+                if (result != null && result) {
+                    JOptionPane.showMessageDialog(null, "The post was published successfully!");
+                    ForumJFrame.this.postEditorJTextArea.setText(new String());
+                } else {
+                    JOptionPane.showMessageDialog(null, "The post failed to be published!");
+                }
+            }
+        });
+
+        task.execute();
+    }// GEN-LAST:event_publishPostSubmitJButtonActionPerformed
+
+    private void publishPostResetJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_publishPostResetJButtonActionPerformed
+        final int choice = JOptionPane.showConfirmDialog(null, "Do you want to discard the content?", "Warning",
+                JOptionPane.OK_CANCEL_OPTION);
+        if (choice == JOptionPane.CANCEL_OPTION) {
+            return;
+        }
+        this.postEditorJTextArea.setText(new String());
+    }// GEN-LAST:event_publishPostResetJButtonActionPerformed
+
     private void viewPointTransactionKeysQueryJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPointTransactionKeysQueryJComboBoxActionPerformed
         final String selectedQueryMethod = (String) this.viewPointTransactionKeysQueryJComboBox.getSelectedItem();
         final String searchString = this.searchJTextField.getText();
@@ -763,184 +951,6 @@ public class ForumJFrame extends javax.swing.JFrame {
         }
     }// GEN-LAST:event_viewPostKeysJListValueChanged
 
-    private void generateKeyPairJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_generateKeyPairJButtonActionPerformed
-        if (!this.userPublicKeyJTextField.getText().isEmpty() || !this.userPrivateKeyJTextField.getText().isEmpty()) {
-            final int choice = JOptionPane.showConfirmDialog(null,
-                    "Do you want to overwrite the existing Public and/or Private Keys?", "Warning",
-                    JOptionPane.OK_CANCEL_OPTION);
-            if (choice == JOptionPane.CANCEL_OPTION) {
-                return;
-            }
-        }
-        try {
-            final KeyPair keyPair = Cryptography.generateRandomKeyPair();
-            final String publicKeyString = ByteUtils.toHexString(keyPair.getPublic().getEncoded());
-            final String privateKeyString = ByteUtils.toHexString(keyPair.getPrivate().getEncoded());
-            this.userPublicKeyJTextField.setText(publicKeyString);
-            this.userPrivateKeyJTextField.setText(privateKeyString);
-        } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-    }// GEN-LAST:event_generateKeyPairJButtonActionPerformed
-
-    private void refreshPointAmountJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_refreshPointAmountJButtonActionPerformed
-        this.pointAmountJTextField.setText(new String());
-        final var appUser = ServiceProvider.createAnonymousService(this.contract);
-        final String pointAmount = appUser.getPointAmountByUserId(this.userPublicKeyJTextField.getText());
-        if (pointAmount != null) {
-            this.pointAmountJTextField.setText(pointAmount);
-        }
-    }// GEN-LAST:event_refreshPointAmountJButtonActionPerformed
-
-    private void viewPostLikeJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPostLikeJButtonActionPerformed
-        PublicKey publicKeyCandidate = null;
-        PrivateKey privateKeyCandidate = null;
-        try {
-            final String publicKeyString = this.userPublicKeyJTextField.getText();
-            publicKeyCandidate = Cryptography.parsePublicKey(ByteUtils.toByteArray(publicKeyString));
-            final String privateKeyString = this.userPrivateKeyJTextField.getText();
-            privateKeyCandidate = Cryptography.parsePrivateKey(ByteUtils.toByteArray(privateKeyString));
-        } catch (InvalidKeySpecException | NoSuchAlgorithmException | IllegalArgumentException e1) {
-            publicKeyCandidate = null;
-            privateKeyCandidate = null;
-        } finally {
-            if (publicKeyCandidate == null || privateKeyCandidate == null) {
-                JOptionPane.showMessageDialog(null, "Please provide valid Public/Private Key Pair!");
-                return;
-            }
-            if (!Cryptography.verifyKeyPair(publicKeyCandidate, privateKeyCandidate)) {
-                final int choice = JOptionPane.showConfirmDialog(null,
-                        "Non-matching Public/Private Key Pair! Do you still want to proceed?", "Warning",
-                        JOptionPane.OK_CANCEL_OPTION);
-                if (choice == JOptionPane.CANCEL_OPTION) {
-                    return;
-                }
-            }
-        }
-
-        final int choice = JOptionPane.showConfirmDialog(null,
-                "Do you want to consume " + NamedWriteableService.getPointCostForPublishingLike()
-                        + " Point to like the post using the provided Public/Private Key Pair?",
-                "Confirm", JOptionPane.OK_CANCEL_OPTION);
-        if (choice == JOptionPane.CANCEL_OPTION) {
-            return;
-        }
-
-        this.setBusy(true);
-
-        final PublicKey publicKey = publicKeyCandidate;
-        final PrivateKey privateKey = privateKeyCandidate;
-        final String postKey = this.viewPostPostKeyJTextField.getText();
-        final SwingWorker<Boolean, Void> task = new SwingWorker<Boolean, Void>() {
-            @Override
-            public Boolean doInBackground() {
-                final var appUser = ServiceProvider.createNamedService(ForumJFrame.this.contract, publicKey,
-                        privateKey);
-                appUser.publishNewLike(postKey);
-                setProgress(100);
-                return true;
-            }
-        };
-
-        task.addPropertyChangeListener((final PropertyChangeEvent evt1) -> {
-            if ("progress".equals(evt1.getPropertyName()) && (Integer) evt1.getNewValue() == 100) {
-                Boolean result = false;
-                try {
-                    result = task.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
-                ForumJFrame.this.setBusy(false);
-                if (result != null && result) {
-                    JOptionPane.showMessageDialog(null, "The like was published successfully!");
-                    ForumJFrame.this.postEditorJTextArea.setText(new String());
-                } else {
-                    JOptionPane.showMessageDialog(null, "The like failed to be published!");
-                }
-            }
-        });
-
-        task.execute();
-    }// GEN-LAST:event_viewPostLikeJButtonActionPerformed
-
-    private void publishPostSubmitJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_publishPostSubmitJButtonActionPerformed
-        PublicKey publicKeyCandidate = null;
-        PrivateKey privateKeyCandidate = null;
-        try {
-            final String publicKeyString = this.userPublicKeyJTextField.getText();
-            publicKeyCandidate = Cryptography.parsePublicKey(ByteUtils.toByteArray(publicKeyString));
-            final String privateKeyString = this.userPrivateKeyJTextField.getText();
-            privateKeyCandidate = Cryptography.parsePrivateKey(ByteUtils.toByteArray(privateKeyString));
-        } catch (InvalidKeySpecException | NoSuchAlgorithmException | IllegalArgumentException e1) {
-            publicKeyCandidate = null;
-            privateKeyCandidate = null;
-        } finally {
-            if (publicKeyCandidate == null || privateKeyCandidate == null) {
-                JOptionPane.showMessageDialog(null, "Please provide valid Public/Private Key Pair!");
-                return;
-            }
-            if (!Cryptography.verifyKeyPair(publicKeyCandidate, privateKeyCandidate)) {
-                final int choice = JOptionPane.showConfirmDialog(null,
-                        "Non-matching Public/Private Key Pair! Do you still want to proceed?", "Warning",
-                        JOptionPane.OK_CANCEL_OPTION);
-                if (choice == JOptionPane.CANCEL_OPTION) {
-                    return;
-                }
-            }
-        }
-
-        final int choice = JOptionPane.showConfirmDialog(null,
-                "Do you want to publish the post using the provided Public/Private Key Pair?", "Confirm",
-                JOptionPane.OK_CANCEL_OPTION);
-        if (choice == JOptionPane.CANCEL_OPTION) {
-            return;
-        }
-
-        this.setBusy(true);
-
-        final PublicKey publicKey = publicKeyCandidate;
-        final PrivateKey privateKey = privateKeyCandidate;
-        final SwingWorker<Boolean, Void> task = new SwingWorker<Boolean, Void>() {
-            @Override
-            public Boolean doInBackground() {
-                final var appUser = ServiceProvider.createNamedService(ForumJFrame.this.contract, publicKey,
-                        privateKey);
-                appUser.publishNewPost(ForumJFrame.this.postEditorJTextArea.getText());
-                setProgress(100);
-                return true;
-            }
-        };
-
-        task.addPropertyChangeListener((final PropertyChangeEvent evt1) -> {
-            if ("progress".equals(evt1.getPropertyName()) && (Integer) evt1.getNewValue() == 100) {
-                Boolean result = false;
-                try {
-                    result = task.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
-                ForumJFrame.this.setBusy(false);
-                if (result != null && result) {
-                    JOptionPane.showMessageDialog(null, "The post was published successfully!");
-                    ForumJFrame.this.postEditorJTextArea.setText(new String());
-                } else {
-                    JOptionPane.showMessageDialog(null, "The post failed to be published!");
-                }
-            }
-        });
-
-        task.execute();
-    }// GEN-LAST:event_publishPostSubmitJButtonActionPerformed
-
-    private void publishPostResetJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_publishPostResetJButtonActionPerformed
-        final int choice = JOptionPane.showConfirmDialog(null, "Do you want to discard the content?", "Warning",
-                JOptionPane.OK_CANCEL_OPTION);
-        if (choice == JOptionPane.CANCEL_OPTION) {
-            return;
-        }
-        this.postEditorJTextArea.setText(new String());
-    }// GEN-LAST:event_publishPostResetJButtonActionPerformed
-
     private void setBusy(final boolean isBusy) {
         if (isBusy) {
             this.statusJProgressBar.setIndeterminate(true);
@@ -952,7 +962,15 @@ public class ForumJFrame extends javax.swing.JFrame {
     }
 
     private void refreshContentJTabbedPane() {
-        // TODO: sd
+        final var selected_pane = this.contentJTabbedPane.getSelectedComponent();
+        if (selected_pane == this.viewPostJSplitPane) {
+            this.viewPostKeysQueryJComboBox.setSelectedIndex(this.viewPostKeysQueryJComboBox.getSelectedIndex());
+        } else if (selected_pane == this.viewLikeJScrollPane) {
+            this.viewLikeKeysQueryJComboBox.setSelectedIndex(this.viewLikeKeysQueryJComboBox.getSelectedIndex());
+        } else if (selected_pane == this.viewPointTransactionJScrollPane) {
+            this.viewPointTransactionKeysQueryJComboBox
+                    .setSelectedIndex(this.viewPointTransactionKeysQueryJComboBox.getSelectedIndex());
+        }
     }
 
     public static void run(final Contract contract, final String frameTitleString) {
