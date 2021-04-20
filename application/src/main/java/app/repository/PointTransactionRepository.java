@@ -40,8 +40,8 @@ public class PointTransactionRepository extends ReadableRepository<PointTransact
                 ByteUtils.toAsciiString(signature), reference, payees));
     }
 
-    public String getPointAmount(final String userId) throws ContractException {
-        return new String(this.contract.evaluateTransaction("getPointAmountByUserId", userId));
+    public String computePointAmount(final String userId) throws ContractException {
+        return new String(this.contract.evaluateTransaction("computePointAmountByUserId", userId));
     }
 
     @Override

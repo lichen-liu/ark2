@@ -94,9 +94,9 @@ public class TransactionTests {
             e.printStackTrace();
         }
 
-        logger.print(contract.evaluateTransaction("getPointAmountByUserId", client1Id));
-        logger.print(contract.evaluateTransaction("getPointAmountByUserId", client2Id));
-        logger.print(contract.evaluateTransaction("getPointAmountByUserId", client3Id));
+        logger.print(contract.evaluateTransaction("computePointAmountByUserId", client1Id));
+        logger.print(contract.evaluateTransaction("computePointAmountByUserId", client2Id));
+        logger.print(contract.evaluateTransaction("computePointAmountByUserId", client3Id));
     }
 
     private void multiThreadWithDependencyTests() throws Exception {
@@ -179,8 +179,8 @@ public class TransactionTests {
             e.printStackTrace();
         }
 
-        logger.print(contract.evaluateTransaction("getPointAmountByUserId", client1Id));
-        logger.print(contract.evaluateTransaction("getPointAmountByUserId", client2Id));
+        logger.print(contract.evaluateTransaction("computePointAmountByUserId", client1Id));
+        logger.print(contract.evaluateTransaction("computePointAmountByUserId", client2Id));
     }
 
     private void multiThreadWithoutDependencyTests()
@@ -250,7 +250,7 @@ public class TransactionTests {
             e.printStackTrace();
         }
 
-        logger.print(contract.evaluateTransaction("getPointAmountByUserId", client2Id));
-        logger.print(contract.evaluateTransaction("getPointAmountByUserId", client4Id));
+        logger.print(contract.evaluateTransaction("computePointAmountByUserId", client2Id));
+        logger.print(contract.evaluateTransaction("computePointAmountByUserId", client4Id));
     }
 }

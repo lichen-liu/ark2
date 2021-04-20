@@ -262,9 +262,9 @@ public final class ForumRepository implements ContractInterface {
      * @return
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public double getPointAmountByUserId(final Context ctx, final String userId) {
+    public double computePointAmountByUserId(final Context ctx, final String userId) {
         try {
-            return this.cc.getPointAmountByUserId(ctx, userId);
+            return this.cc.computePointAmountByUserId(ctx, userId);
         } catch (final Exception e) {
             e.printStackTrace();
             throw new ChaincodeException(e);

@@ -585,7 +585,7 @@ public class ForumJFrame extends javax.swing.JFrame {
     private void refreshPointAmountJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_refreshPointAmountJButtonActionPerformed
         this.pointAmountJTextField.setText(new String());
         final var appUser = ServiceProvider.createAnonymousService(this.contract);
-        final String pointAmount = appUser.getPointAmountByUserId(this.userPublicKeyJTextField.getText());
+        final String pointAmount = appUser.computePointAmountByUserId(this.userPublicKeyJTextField.getText());
         if (pointAmount != null) {
             this.pointAmountJTextField.setText(pointAmount);
         }

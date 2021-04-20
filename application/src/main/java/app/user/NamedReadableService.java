@@ -10,6 +10,6 @@ public interface NamedReadableService extends AnonymousService, Identifiable {
     }
 
     public default String getMyPointAmount() {
-        return getPointAmountByUserId(getPublicKeyString());
+        return computePointAmountByUserId(getPublicKeyString());
     }
 }
