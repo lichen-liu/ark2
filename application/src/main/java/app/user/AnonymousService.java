@@ -199,7 +199,23 @@ public interface AnonymousService extends Repository {
         final boolean isSignatureValid = verifyLikeSignature(like);
         final String signatureItem = isSignatureValid ? "Like Signature Ok!" : "Like Signature Failed!";
 
-        final var pointTransactionValidity = verifyPointTransaction(like.pointTransactionKey);
+        final Function<PointTransaction, ? extends VerificationResult> crossReferenceVerifier = (pointTransaction) -> {
+            final boolean isCrossReferenced = likeKey.equals(pointTransaction.reference);
+            final String crossReferenceString = isCrossReferenced ? "Like-Point Transaction Reference Ok!"
+                    : "Like-Point Transaction Reference Failed!";
+            return new VerificationResult() {
+                @Override
+                public boolean isValid() {
+                    return isCrossReferenced;
+                }
+
+                @Override
+                public List<String> getItems() {
+                    return List.of(crossReferenceString);
+                }
+            };
+        };
+        final var pointTransactionValidity = verifyPointTransaction(like.pointTransactionKey, crossReferenceVerifier);
 
         return new VerificationResult() {
             @Override
