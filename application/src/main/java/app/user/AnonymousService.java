@@ -141,24 +141,33 @@ public interface AnonymousService extends Repository {
     }
 
     public interface VerificationResult {
-        public default boolean isValid() {
-            return false;
-        }
+        public abstract boolean isValid();
 
-        public default String[] getItems() {
-            return new String[] { "Invalid" };
-        }
+        public abstract String[] getItems();
 
         public default String getItemsString() {
             return String.join(" ", getItems());
         }
+
+        public static final VerificationResult INVALID = new VerificationResult() {
+
+            @Override
+            public boolean isValid() {
+                return false;
+            }
+
+            @Override
+            public String[] getItems() {
+                return new String[] { "Invalid!" };
+            }
+
+        };
     }
 
     public default VerificationResult verifyPost(final String postKey) {
         final Post post = fetchPostByPostKey(postKey);
         if (post == null) {
-            return new VerificationResult() {
-            };
+            return VerificationResult.INVALID;
         }
 
         final boolean isSignatureValid = verifyPostSignature(post);
@@ -179,8 +188,7 @@ public interface AnonymousService extends Repository {
     public default VerificationResult verifyLike(final String likeKey) {
         final Like like = fetchLikeByLikeKey(likeKey);
         if (like == null) {
-            return new VerificationResult() {
-            };
+            return VerificationResult.INVALID;
         }
 
         final boolean isSignatureValid = verifyLikeSignature(like);
@@ -201,8 +209,7 @@ public interface AnonymousService extends Repository {
     public default VerificationResult verifyPointTransaction(final String pointTransactionKey) {
         final PointTransaction pointTransaction = fetchPointTransactionByPointTransactionKey(pointTransactionKey);
         if (pointTransaction == null) {
-            return new VerificationResult() {
-            };
+            return VerificationResult.INVALID;
         }
 
         final boolean isSignatureValid = verifyPointTransactionSignature(pointTransaction);
