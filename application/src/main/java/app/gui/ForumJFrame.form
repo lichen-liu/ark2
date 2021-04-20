@@ -163,7 +163,7 @@
       <SubComponents>
         <Container class="javax.swing.JSplitPane" name="viewPostJSplitPane">
           <Properties>
-            <Property name="dividerLocation" type="int" value="300"/>
+            <Property name="dividerLocation" type="int" value="220"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
@@ -196,7 +196,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="viewPostKeysJScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
-                      <Component id="viewPostKeysQueryJComboBox" alignment="0" pref="299" max="32767" attributes="0"/>
+                      <Component id="viewPostKeysQueryJComboBox" alignment="0" pref="219" max="32767" attributes="0"/>
                       <Component id="viewPostKeysQueryCountsJTextField" alignment="0" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
@@ -281,7 +281,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="viewPostJScrollPane" pref="981" max="32767" attributes="0"/>
+                      <Component id="viewPostJScrollPane" pref="1061" max="32767" attributes="0"/>
                       <Component id="viewPostLikeJButton" alignment="0" max="32767" attributes="0"/>
                       <Component id="viewPostStatusJTextField" alignment="0" max="32767" attributes="0"/>
                       <Component id="viewPostPostKeyJTextField" alignment="0" max="32767" attributes="0"/>
@@ -434,7 +434,7 @@
         </Container>
         <Container class="javax.swing.JSplitPane" name="viewLikeJSplitPane">
           <Properties>
-            <Property name="dividerLocation" type="int" value="300"/>
+            <Property name="dividerLocation" type="int" value="220"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
@@ -462,7 +462,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="viewLikeKeysJScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
-                      <Component id="viewLikeKeysQueryJComboBox" alignment="0" pref="299" max="32767" attributes="0"/>
+                      <Component id="viewLikeKeysQueryJComboBox" alignment="0" pref="219" max="32767" attributes="0"/>
                       <Component id="viewLikeKeysQueryCountsJTextField" alignment="0" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
@@ -546,7 +546,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="viewLikeJScrollPane" pref="981" max="32767" attributes="0"/>
+                      <Component id="viewLikeJScrollPane" pref="1061" max="32767" attributes="0"/>
                       <Component id="viewLikeStatusJTextField" alignment="0" max="32767" attributes="0"/>
                       <Component id="viewLikeLikeKeyJTextField" alignment="0" max="32767" attributes="0"/>
                   </Group>
@@ -605,7 +605,7 @@
         </Container>
         <Container class="javax.swing.JSplitPane" name="viewPointTransactionJSplitPane">
           <Properties>
-            <Property name="dividerLocation" type="int" value="300"/>
+            <Property name="dividerLocation" type="int" value="220"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
@@ -633,7 +633,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="viewPointTransactionKeysJScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
-                      <Component id="viewPointTransactionKeysQueryJComboBox" alignment="0" pref="299" max="32767" attributes="0"/>
+                      <Component id="viewPointTransactionKeysQueryJComboBox" alignment="0" pref="219" max="32767" attributes="0"/>
                       <Component id="viewPointTransactionKeysQueryCountsJTextField" alignment="0" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
@@ -718,7 +718,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="viewPointTransactionJScrollPane" pref="981" max="32767" attributes="0"/>
+                      <Component id="viewPointTransactionJScrollPane" pref="1061" max="32767" attributes="0"/>
                       <Component id="viewPointTransactionStatusJTextField" alignment="0" max="32767" attributes="0"/>
                       <Component id="viewPointTransactionPointTransactionKeyJTextField" alignment="0" max="32767" attributes="0"/>
                   </Group>
