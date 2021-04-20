@@ -847,15 +847,6 @@ public class ForumJFrame extends javax.swing.JFrame {
         }
 
         final String selectedPointTransactionKey = this.viewPointTransactionKeysJList.getSelectedValue();
-
-        try {
-            System.out.println(selectedPointTransactionKey);
-            System.out.println(new String(
-                    this.contract.evaluateTransaction("getPointTransactionByKey", selectedPointTransactionKey)) + "\n");
-        } catch (final ContractException e1) {
-            e1.printStackTrace();
-        }
-
         final var userApp = ServiceProvider.createAnonymousService(this.contract);
         final PointTransaction pointTransaction = userApp
                 .fetchPointTransactionByPointTransactionKey(selectedPointTransactionKey);
@@ -976,6 +967,8 @@ public class ForumJFrame extends javax.swing.JFrame {
         } else if (selected_pane == this.viewPointTransactionJScrollPane) {
             this.viewPointTransactionKeysQueryJComboBox
                     .setSelectedIndex(this.viewPointTransactionKeysQueryJComboBox.getSelectedIndex());
+        } else {
+            System.out.println("selected_pane is null?" + selected_pane==null);
         }
     }
 
