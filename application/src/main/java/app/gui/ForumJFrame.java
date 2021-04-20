@@ -842,6 +842,10 @@ public class ForumJFrame extends javax.swing.JFrame {
     }// GEN-LAST:event_viewPostKeysJListPropertyChange
 
     private void viewPointTransactionKeysJListValueChanged(final javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_viewPointTransactionKeysJListValueChanged
+        if (evt.getValueIsAdjusting()) {
+            return;
+        }
+
         if (this.viewPointTransactionKeysJList.getSelectedIndex() == -1) {
             return;
         }
@@ -887,6 +891,9 @@ public class ForumJFrame extends javax.swing.JFrame {
     }// GEN-LAST:event_viewPointTransactionKeysJListValueChanged
 
     private void viewLikeKeysJListValueChanged(final javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_viewLikeKeysJListValueChanged
+        if (evt.getValueIsAdjusting()) {
+            return;
+        }
         if (this.viewLikeKeysJList.getSelectedIndex() == -1) {
             return;
         }
@@ -919,6 +926,9 @@ public class ForumJFrame extends javax.swing.JFrame {
     }// GEN-LAST:event_viewLikeKeysJListValueChanged
 
     private void viewPostKeysJListValueChanged(final javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_viewPostKeysJListValueChanged
+        if (evt.getValueIsAdjusting()) {
+            return;
+        }
         if (this.viewPostKeysJList.getSelectedIndex() == -1) {
             return;
         }
