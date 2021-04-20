@@ -542,104 +542,6 @@ public class ForumJFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void viewPointTransactionKeysJListValueChanged(final javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_viewPointTransactionKeysJListValueChanged
-        if (this.viewPointTransactionKeysJList.getSelectedIndex() == -1) {
-            return;
-        }
-
-        final String selectedPointTransactionKey = this.viewPointTransactionKeysJList.getSelectedValue();
-
-        try {
-            System.out.println(selectedPointTransactionKey);
-            System.out.println(new String(
-                    this.contract.evaluateTransaction("getPointTransactionByKey", selectedPointTransactionKey)) + "\n");
-        } catch (final ContractException e1) {
-            e1.printStackTrace();
-        }
-
-        final var userApp = ServiceProvider.createAnonymousService(this.contract);
-        final PointTransaction pointTransaction = userApp
-                .fetchPointTransactionByPointTransactionKey(selectedPointTransactionKey);
-        if (pointTransaction != null) {
-            String pointTransactionTextArea = "PointTransactionKey: " + selectedPointTransactionKey + "\n\n";
-
-            pointTransactionTextArea += "Timestamp: " + pointTransaction.timestamp + "\n\n";
-            pointTransactionTextArea += "IssuerUserId: " + pointTransaction.issuerUserId + "\n\n";
-            pointTransactionTextArea += "PayerEntry: " + pointTransaction.payerEntry.toString() + "\n\n";
-            pointTransactionTextArea += "PayeeEntries: " + Arrays.toString(pointTransaction.payeeEntries) + "\n\n";
-            pointTransactionTextArea += "Reference: " + pointTransaction.reference + "\n\n";
-            pointTransactionTextArea += "RelativeOrder: " + pointTransaction.relativeOrder + "\n\n";
-            pointTransactionTextArea += "Tracking: " + pointTransaction.payerPointTransactionTracking + "\n\n";
-
-            this.viewPointTransactionJTextArea.setText(pointTransactionTextArea);
-
-            if (AnonymousService.verifyPointTransactionSignature(pointTransaction)) {
-                this.viewPointTransactionStatusJTextField.setText("Signature Verification Passed");
-                this.viewPointTransactionStatusJTextField.setBackground(new java.awt.Color(200, 255, 200));
-            } else {
-                this.viewPointTransactionStatusJTextField.setText("Signature Verification Failed");
-                this.viewPointTransactionStatusJTextField.setBackground(new java.awt.Color(255, 200, 200));
-            }
-        } else {
-            this.viewPointTransactionJTextArea.setText(new String());
-            this.viewPointTransactionStatusJTextField.setBackground(java.awt.Color.WHITE);
-            this.viewPointTransactionStatusJTextField.setText(new String());
-        }
-    }// GEN-LAST:event_viewPointTransactionKeysJListValueChanged
-
-    private void viewLikeKeysJListPropertyChange(final java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_viewLikeKeysJListPropertyChange
-        if ("model".equals(evt.getPropertyName())) {
-            this.viewLikeKeysQueryCountsJTextField
-                    .setText(String.valueOf(((ListModel<?>) evt.getNewValue()).getSize()));
-        }
-    }// GEN-LAST:event_viewLikeKeysJListPropertyChange
-
-    private void viewPointTransactionKeysJListPropertyChange(final java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_viewPointTransactionKeysJListPropertyChange
-        if ("model".equals(evt.getPropertyName())) {
-            this.viewPointTransactionKeysQueryCountsJTextField
-                    .setText(String.valueOf(((ListModel<?>) evt.getNewValue()).getSize()));
-        }
-    }// GEN-LAST:event_viewPointTransactionKeysJListPropertyChange
-
-    private void viewPostKeysJListPropertyChange(final java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_viewPostKeysJListPropertyChange
-        if ("model".equals(evt.getPropertyName())) {
-            this.viewPostKeysQueryCountsJTextField
-                    .setText(String.valueOf(((ListModel<?>) evt.getNewValue()).getSize()));
-        }
-    }// GEN-LAST:event_viewPostKeysJListPropertyChange
-
-    private void viewLikeKeysJListValueChanged(final javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_viewLikeKeysJListValueChanged
-        if (this.viewLikeKeysJList.getSelectedIndex() == -1) {
-            return;
-        }
-
-        final String selectedLikeKey = this.viewLikeKeysJList.getSelectedValue();
-        final var userApp = ServiceProvider.createAnonymousService(this.contract);
-        final Like like = userApp.fetchLikeByLikeKey(selectedLikeKey);
-        if (like != null) {
-            String likeTextArea = "LikeKey: " + selectedLikeKey + "\n\n";
-            likeTextArea += "Timestamp: " + like.timestamp + "\n\n";
-            likeTextArea += "PostKey: " + like.postKey + "\n\n";
-            likeTextArea += "PointTransactionKey: " + like.pointTransactionKey + "\n\n";
-            likeTextArea += "Liker: " + like.userId + "\n\n";
-            likeTextArea += "RelativeOrder: " + like.relativeOrder + "\n\n";
-
-            this.viewLikeJTextArea.setText(likeTextArea);
-
-            if (AnonymousService.verifyLikeSignature(like)) {
-                this.viewLikeStatusJTextField.setText("Signature Verification Passed");
-                this.viewLikeStatusJTextField.setBackground(new java.awt.Color(200, 255, 200));
-            } else {
-                this.viewLikeStatusJTextField.setText("Signature Verification Failed");
-                this.viewLikeStatusJTextField.setBackground(new java.awt.Color(255, 200, 200));
-            }
-        } else {
-            this.viewLikeJTextArea.setText(new String());
-            this.viewLikeStatusJTextField.setBackground(java.awt.Color.WHITE);
-            this.viewLikeStatusJTextField.setText(new String());
-        }
-    }// GEN-LAST:event_viewLikeKeysJListValueChanged
-
     private void viewPointTransactionKeysQueryJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPointTransactionKeysQueryJComboBoxActionPerformed
         final String selectedQueryMethod = (String) this.viewPointTransactionKeysQueryJComboBox.getSelectedItem();
         final String searchString = this.searchJTextField.getText();
@@ -688,6 +590,146 @@ public class ForumJFrame extends javax.swing.JFrame {
         }
     }// GEN-LAST:event_viewLikeKeysQueryJComboBoxActionPerformed
 
+    private void viewPostKeysQueryJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPostKeysQueryJComboBoxActionPerformed
+        final String selectedQueryMethod = (String) this.viewPostKeysQueryJComboBox.getSelectedItem();
+        final String searchString = this.searchJTextField.getText();
+        this.viewPostKeysJList.setListData(new String[0]);
+
+        if ("All".equals(selectedQueryMethod)) {
+            final var userApp = ServiceProvider.createAnonymousService(this.contract);
+            final String[] postKeys = userApp.fetchPostKeys();
+            if (postKeys != null) {
+                this.viewPostKeysJList.setListData(postKeys);
+            }
+        } else if ("Search By Author".equals(selectedQueryMethod)) {
+            final var userApp = ServiceProvider.createAnonymousService(this.contract);
+            final String[] postKeys = userApp.fetchPostKeysByUserId(searchString);
+            if (postKeys != null) {
+                this.viewPostKeysJList.setListData(postKeys);
+            }
+        } else if ("Search By Post Key".equals(selectedQueryMethod)) {
+            final var userApp = ServiceProvider.createAnonymousService(this.contract);
+            if (userApp.fetchPostByPostKey(searchString) != null) {
+                this.viewPostKeysJList.setListData(new String[] { searchString });
+            }
+        } else {
+            throw new UnsupportedOperationException();
+        }
+    }// GEN-LAST:event_viewPostKeysQueryJComboBoxActionPerformed
+
+    private void viewLikeKeysJListPropertyChange(final java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_viewLikeKeysJListPropertyChange
+        if ("model".equals(evt.getPropertyName())) {
+            final int jListSize = ((ListModel<?>) evt.getNewValue()).getSize();
+            this.viewLikeKeysQueryCountsJTextField.setText(String.valueOf(jListSize));
+            if (jListSize == 0) {
+                this.viewLikeKeysJList.setSelectedIndex(-1);
+            } else {
+                this.viewLikeKeysJList.setSelectedIndex(0);
+            }
+        }
+    }// GEN-LAST:event_viewLikeKeysJListPropertyChange
+
+    private void viewPointTransactionKeysJListPropertyChange(final java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_viewPointTransactionKeysJListPropertyChange
+        if ("model".equals(evt.getPropertyName())) {
+            final int jListSize = ((ListModel<?>) evt.getNewValue()).getSize();
+            this.viewPointTransactionKeysQueryCountsJTextField.setText(String.valueOf(jListSize));
+            if (jListSize == 0) {
+                this.viewPointTransactionKeysJList.setSelectedIndex(-1);
+            } else {
+                this.viewPointTransactionKeysJList.setSelectedIndex(0);
+            }
+        }
+    }// GEN-LAST:event_viewPointTransactionKeysJListPropertyChange
+
+    private void viewPostKeysJListPropertyChange(final java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_viewPostKeysJListPropertyChange
+        if ("model".equals(evt.getPropertyName())) {
+            final int jListSize = ((ListModel<?>) evt.getNewValue()).getSize();
+            this.viewPostKeysQueryCountsJTextField.setText(String.valueOf(jListSize));
+            if (jListSize == 0) {
+                this.viewPostKeysJList.setSelectedIndex(-1);
+            } else {
+                this.viewPostKeysJList.setSelectedIndex(0);
+            }
+        }
+    }// GEN-LAST:event_viewPostKeysJListPropertyChange
+
+    private void viewPointTransactionKeysJListValueChanged(final javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_viewPointTransactionKeysJListValueChanged
+        if (this.viewPointTransactionKeysJList.getSelectedIndex() == -1) {
+            return;
+        }
+
+        final String selectedPointTransactionKey = this.viewPointTransactionKeysJList.getSelectedValue();
+
+        try {
+            System.out.println(selectedPointTransactionKey);
+            System.out.println(new String(
+                    this.contract.evaluateTransaction("getPointTransactionByKey", selectedPointTransactionKey)) + "\n");
+        } catch (final ContractException e1) {
+            e1.printStackTrace();
+        }
+
+        final var userApp = ServiceProvider.createAnonymousService(this.contract);
+        final PointTransaction pointTransaction = userApp
+                .fetchPointTransactionByPointTransactionKey(selectedPointTransactionKey);
+        if (pointTransaction != null) {
+            String pointTransactionTextArea = "PointTransactionKey: " + selectedPointTransactionKey + "\n\n";
+
+            pointTransactionTextArea += "Timestamp: " + pointTransaction.timestamp + "\n\n";
+            pointTransactionTextArea += "IssuerUserId: " + pointTransaction.issuerUserId + "\n\n";
+            pointTransactionTextArea += "PayerEntry: " + pointTransaction.payerEntry.toString() + "\n\n";
+            pointTransactionTextArea += "PayeeEntries: " + Arrays.toString(pointTransaction.payeeEntries) + "\n\n";
+            pointTransactionTextArea += "Reference: " + pointTransaction.reference + "\n\n";
+            pointTransactionTextArea += "RelativeOrder: " + pointTransaction.relativeOrder + "\n\n";
+            pointTransactionTextArea += "Tracking: " + pointTransaction.payerPointTransactionTracking + "\n\n";
+
+            this.viewPointTransactionJTextArea.setText(pointTransactionTextArea);
+
+            if (AnonymousService.verifyPointTransactionSignature(pointTransaction)) {
+                this.viewPointTransactionStatusJTextField.setText("Signature Verification Passed");
+                this.viewPointTransactionStatusJTextField.setBackground(new java.awt.Color(200, 255, 200));
+            } else {
+                this.viewPointTransactionStatusJTextField.setText("Signature Verification Failed");
+                this.viewPointTransactionStatusJTextField.setBackground(new java.awt.Color(255, 200, 200));
+            }
+        } else {
+            this.viewPointTransactionJTextArea.setText(new String());
+            this.viewPointTransactionStatusJTextField.setBackground(java.awt.Color.WHITE);
+            this.viewPointTransactionStatusJTextField.setText(new String());
+        }
+    }// GEN-LAST:event_viewPointTransactionKeysJListValueChanged
+
+    private void viewLikeKeysJListValueChanged(final javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_viewLikeKeysJListValueChanged
+        if (this.viewLikeKeysJList.getSelectedIndex() == -1) {
+            return;
+        }
+
+        final String selectedLikeKey = this.viewLikeKeysJList.getSelectedValue();
+        final var userApp = ServiceProvider.createAnonymousService(this.contract);
+        final Like like = userApp.fetchLikeByLikeKey(selectedLikeKey);
+        if (like != null) {
+            String likeTextArea = "LikeKey: " + selectedLikeKey + "\n\n";
+            likeTextArea += "Timestamp: " + like.timestamp + "\n\n";
+            likeTextArea += "PostKey: " + like.postKey + "\n\n";
+            likeTextArea += "PointTransactionKey: " + like.pointTransactionKey + "\n\n";
+            likeTextArea += "Liker: " + like.userId + "\n\n";
+            likeTextArea += "RelativeOrder: " + like.relativeOrder + "\n\n";
+
+            this.viewLikeJTextArea.setText(likeTextArea);
+
+            if (AnonymousService.verifyLikeSignature(like)) {
+                this.viewLikeStatusJTextField.setText("Signature Verification Passed");
+                this.viewLikeStatusJTextField.setBackground(new java.awt.Color(200, 255, 200));
+            } else {
+                this.viewLikeStatusJTextField.setText("Signature Verification Failed");
+                this.viewLikeStatusJTextField.setBackground(new java.awt.Color(255, 200, 200));
+            }
+        } else {
+            this.viewLikeJTextArea.setText(new String());
+            this.viewLikeStatusJTextField.setBackground(java.awt.Color.WHITE);
+            this.viewLikeStatusJTextField.setText(new String());
+        }
+    }// GEN-LAST:event_viewLikeKeysJListValueChanged
+
     private void viewPostKeysJListValueChanged(final javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_viewPostKeysJListValueChanged
         if (this.viewPostKeysJList.getSelectedIndex() == -1) {
             return;
@@ -721,33 +763,6 @@ public class ForumJFrame extends javax.swing.JFrame {
         }
     }// GEN-LAST:event_viewPostKeysJListValueChanged
 
-    private void viewPostKeysQueryJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPostKeysQueryJComboBoxActionPerformed
-        final String selectedQueryMethod = (String) this.viewPostKeysQueryJComboBox.getSelectedItem();
-        final String searchString = this.searchJTextField.getText();
-        this.viewPostKeysJList.setListData(new String[0]);
-
-        if ("All".equals(selectedQueryMethod)) {
-            final var userApp = ServiceProvider.createAnonymousService(this.contract);
-            final String[] postKeys = userApp.fetchPostKeys();
-            if (postKeys != null) {
-                this.viewPostKeysJList.setListData(postKeys);
-            }
-        } else if ("Search By Author".equals(selectedQueryMethod)) {
-            final var userApp = ServiceProvider.createAnonymousService(this.contract);
-            final String[] postKeys = userApp.fetchPostKeysByUserId(searchString);
-            if (postKeys != null) {
-                this.viewPostKeysJList.setListData(postKeys);
-            }
-        } else if ("Search By Post Key".equals(selectedQueryMethod)) {
-            final var userApp = ServiceProvider.createAnonymousService(this.contract);
-            if (userApp.fetchPostByPostKey(searchString) != null) {
-                this.viewPostKeysJList.setListData(new String[] { searchString });
-            }
-        } else {
-            throw new UnsupportedOperationException();
-        }
-    }// GEN-LAST:event_viewPostKeysQueryJComboBoxActionPerformed
-
     private void generateKeyPairJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_generateKeyPairJButtonActionPerformed
         if (!this.userPublicKeyJTextField.getText().isEmpty() || !this.userPrivateKeyJTextField.getText().isEmpty()) {
             final int choice = JOptionPane.showConfirmDialog(null,
@@ -768,14 +783,14 @@ public class ForumJFrame extends javax.swing.JFrame {
         }
     }// GEN-LAST:event_generateKeyPairJButtonActionPerformed
 
-    private void publishPostResetJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_publishPostResetJButtonActionPerformed
-        final int choice = JOptionPane.showConfirmDialog(null, "Do you want to discard the content?", "Warning",
-                JOptionPane.OK_CANCEL_OPTION);
-        if (choice == JOptionPane.CANCEL_OPTION) {
-            return;
+    private void refreshPointAmountJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_refreshPointAmountJButtonActionPerformed
+        this.pointAmountJTextField.setText(new String());
+        final var appUser = ServiceProvider.createAnonymousService(this.contract);
+        final String pointAmount = appUser.getPointAmountByUserId(this.userPublicKeyJTextField.getText());
+        if (pointAmount != null) {
+            this.pointAmountJTextField.setText(pointAmount);
         }
-        this.postEditorJTextArea.setText(new String());
-    }// GEN-LAST:event_publishPostResetJButtonActionPerformed
+    }// GEN-LAST:event_refreshPointAmountJButtonActionPerformed
 
     private void viewPostLikeJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPostLikeJButtonActionPerformed
         PublicKey publicKeyCandidate = null;
@@ -917,14 +932,14 @@ public class ForumJFrame extends javax.swing.JFrame {
         task.execute();
     }// GEN-LAST:event_publishPostSubmitJButtonActionPerformed
 
-    private void refreshPointAmountJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_refreshPointAmountJButtonActionPerformed
-        this.pointAmountJTextField.setText(new String());
-        final var appUser = ServiceProvider.createAnonymousService(this.contract);
-        final String pointAmount = appUser.getPointAmountByUserId(this.userPublicKeyJTextField.getText());
-        if (pointAmount != null) {
-            this.pointAmountJTextField.setText(pointAmount);
+    private void publishPostResetJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_publishPostResetJButtonActionPerformed
+        final int choice = JOptionPane.showConfirmDialog(null, "Do you want to discard the content?", "Warning",
+                JOptionPane.OK_CANCEL_OPTION);
+        if (choice == JOptionPane.CANCEL_OPTION) {
+            return;
         }
-    }// GEN-LAST:event_refreshPointAmountJButtonActionPerformed
+        this.postEditorJTextArea.setText(new String());
+    }// GEN-LAST:event_publishPostResetJButtonActionPerformed
 
     private void setBusy(final boolean isBusy) {
         if (isBusy) {
@@ -934,6 +949,10 @@ public class ForumJFrame extends javax.swing.JFrame {
             this.statusJProgressBar.setIndeterminate(false);
             this.setEnabled(true);
         }
+    }
+
+    private void refreshContentJTabbedPane() {
+        // TODO: sd
     }
 
     public static void run(final Contract contract, final String frameTitleString) {
