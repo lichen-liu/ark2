@@ -222,6 +222,7 @@ public class ForumRepositoryCC {
     }
 
     /**
+     * Sorted by timestamp, most recent first
      * 
      * @param ctx
      * @param userId
@@ -244,6 +245,7 @@ public class ForumRepositoryCC {
     }
 
     /**
+     * Sorted by relativeOrder, most recent first
      * 
      * @param ctx
      * @param postKey
@@ -264,6 +266,7 @@ public class ForumRepositoryCC {
     }
 
     /**
+     * Sorted by relativeOrder, most recent first
      * 
      * @param ctx
      * @param payerUserId
@@ -306,6 +309,15 @@ public class ForumRepositoryCC {
         return Math.max(keys.length, recentPointTransaction.getRelativeOrder() + 1);
     }
 
+    /**
+     * Tracking.recentEarningPointTransactionKeys sorted by relativeOrder, most
+     * recent first
+     * 
+     * @param ctx
+     * @param userId
+     * @return
+     * @throws Exception
+     */
     private PointTransaction.Tracking determinePointTransactionTrackingForUserId(final Context ctx, final String userId)
             throws Exception {
         final String[] spendingKeys = this.getAllPointTransactionKeysByPayerUserId(ctx, userId);

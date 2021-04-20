@@ -126,7 +126,7 @@ public final class ForumRepository implements ContractInterface {
     }
 
     /**
-     * Sorted by relativeOrder, most recent first
+     * Sorted by timestamp, most recent first
      * 
      * @param ctx
      * @return postKeys
