@@ -183,4 +183,20 @@ public interface AnonymousService extends Repository {
             }
         };
     }
+
+    public default VerificationResult verifyPointTransaction(final PointTransaction pointTransaction) {
+        final boolean isSignatureValid = verifyPointTransactionSignature(pointTransaction);
+        final String signatureItem = isSignatureValid ? "Signature Passed!" : "Signature Failed!";
+        return new VerificationResult() {
+            @Override
+            public boolean isValid() {
+                return isSignatureValid;
+            }
+
+            @Override
+            public List<String> getItems() {
+                return List.of(signatureItem);
+            }
+        };
+    }
 }

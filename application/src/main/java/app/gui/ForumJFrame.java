@@ -19,7 +19,6 @@ import org.hyperledger.fabric.gateway.Contract;
 import app.repository.data.Like;
 import app.repository.data.PointTransaction;
 import app.repository.data.Post;
-import app.user.AnonymousService;
 import app.user.NamedWriteableService;
 import app.user.ServiceProvider;
 import app.utils.ByteUtils;
@@ -878,13 +877,10 @@ public class ForumJFrame extends javax.swing.JFrame {
             this.viewPointTransactionPointTransactionKeyJTextField.setText(selectedPointTransactionKey);
             this.viewPointTransactionJTextArea.setText(pointTransactionTextArea);
 
-            if (AnonymousService.verifyPointTransactionSignature(pointTransaction)) {
-                this.viewPointTransactionStatusJTextField.setText("Signature Verification Passed");
-                this.viewPointTransactionStatusJTextField.setBackground(new java.awt.Color(200, 255, 200));
-            } else {
-                this.viewPointTransactionStatusJTextField.setText("Signature Verification Failed");
-                this.viewPointTransactionStatusJTextField.setBackground(new java.awt.Color(255, 200, 200));
-            }
+            final var verify = userApp.verifyPointTransaction(pointTransaction);
+            this.viewPointTransactionStatusJTextField.setText(verify.getItemsString());
+            this.viewPointTransactionStatusJTextField.setBackground(
+                    verify.isValid() ? new java.awt.Color(200, 255, 200) : new java.awt.Color(255, 200, 200));
         } else {
             this.viewPointTransactionPointTransactionKeyJTextField.setText(new String());
             this.viewPointTransactionJTextArea.setText(new String());
