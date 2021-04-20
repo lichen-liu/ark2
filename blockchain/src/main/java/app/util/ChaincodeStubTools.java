@@ -60,7 +60,7 @@ public class ChaincodeStubTools {
         }
 
         public String getBase64UrlKeyString() {
-            return Base64.getUrlEncoder().encodeToString(this.key.getBytes());
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(this.key.getBytes());
         }
 
         private String getCCKeyString() {

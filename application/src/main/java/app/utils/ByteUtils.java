@@ -27,7 +27,7 @@ public class ByteUtils {
      * @return Base64, URL and Filename safe, encoded ascii String
      */
     public static String toAsciiString(final byte[] bytes) {
-        return Base64.getUrlEncoder().encodeToString(bytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
     }
 
     /**
