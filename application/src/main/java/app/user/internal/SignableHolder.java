@@ -11,17 +11,17 @@ import org.hyperledger.fabric.gateway.X509Identity;
 
 import app.user.Signable;
 
-public class SignableState extends IdentifiableState implements Signable {
+public class SignableHolder extends IdentifiableHolder implements Signable {
     private final PrivateKey privateKey;
 
-    public SignableState(final Wallet wallet, final Contract contract, final String userName)
+    public SignableHolder(final Wallet wallet, final Contract contract, final String userName)
             throws InvalidKeySpecException, IOException {
         super(wallet, contract, userName);
         final X509Identity adminIdentity = (X509Identity) wallet.get(userName);
         this.privateKey = adminIdentity.getPrivateKey();
     }
 
-    public SignableState(final Contract contract, final PublicKey publicKey, final PrivateKey privateKey) {
+    public SignableHolder(final Contract contract, final PublicKey publicKey, final PrivateKey privateKey) {
         super(contract, publicKey);
         this.privateKey = privateKey;
     }

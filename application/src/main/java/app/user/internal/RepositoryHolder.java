@@ -7,7 +7,7 @@ import app.repository.PointTransactionRepository;
 import app.repository.PostRepository;
 import app.user.Repository;
 
-public class RepositoryState implements Repository {
+public class RepositoryHolder implements Repository {
     private final PostRepository postRepository;
     private final LikeRepository likeRepository;
     private final PointTransactionRepository pointTransactionRepository;
@@ -27,7 +27,7 @@ public class RepositoryState implements Repository {
         return pointTransactionRepository;
     }
 
-    public RepositoryState(final Contract contract) {
+    public RepositoryHolder(final Contract contract) {
         this.postRepository = new PostRepository(contract);
         this.pointTransactionRepository = new PointTransactionRepository(contract);
         this.likeRepository = new LikeRepository(contract);

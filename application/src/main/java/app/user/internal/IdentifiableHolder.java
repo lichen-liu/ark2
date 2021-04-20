@@ -10,17 +10,17 @@ import org.hyperledger.fabric.gateway.X509Identity;
 
 import app.user.Identifiable;
 
-public class IdentifiableState extends RepositoryState implements Identifiable {
+public class IdentifiableHolder extends RepositoryHolder implements Identifiable {
     private final PublicKey publicKey;
 
-    public IdentifiableState(final Wallet wallet, final Contract contract, final String userName)
+    public IdentifiableHolder(final Wallet wallet, final Contract contract, final String userName)
             throws InvalidKeySpecException, IOException {
         super(contract);
         final X509Identity adminIdentity = (X509Identity) wallet.get(userName);
         this.publicKey = adminIdentity.getCertificate().getPublicKey();
     }
 
-    public IdentifiableState(final Contract contract, final PublicKey publicKey) {
+    public IdentifiableHolder(final Contract contract, final PublicKey publicKey) {
         super(contract);
         this.publicKey = publicKey;
     }
