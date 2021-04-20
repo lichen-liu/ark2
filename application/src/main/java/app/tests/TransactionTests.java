@@ -56,9 +56,9 @@ public class TransactionTests {
         final var client2 = TestClient.createTestClient(contract);
         final var client3 = TestClient.createTestClient(contract);
 
-        final var client1Id = ByteUtils.toHexString(client1.getPublicKey().getEncoded());
-        final var client2Id = ByteUtils.toHexString(client2.getPublicKey().getEncoded());
-        final var client3Id = ByteUtils.toHexString(client3.getPublicKey().getEncoded());
+        final var client1Id = ByteUtils.toAsciiString(client1.getPublicKey().getEncoded());
+        final var client2Id = ByteUtils.toAsciiString(client2.getPublicKey().getEncoded());
+        final var client3Id = ByteUtils.toAsciiString(client3.getPublicKey().getEncoded());
 
         final Transaction transaction = new Transaction();
         transaction.reference = "reference";
@@ -119,8 +119,8 @@ public class TransactionTests {
         final var client1 = TestClient.createTestClient(contract);
         final var client2 = TestClient.createTestClient(contract);
 
-        final var client1Id = ByteUtils.toHexString(client1.getPublicKey().getEncoded());
-        final var client2Id = ByteUtils.toHexString(client2.getPublicKey().getEncoded());
+        final var client1Id = ByteUtils.toAsciiString(client1.getPublicKey().getEncoded());
+        final var client2Id = ByteUtils.toAsciiString(client2.getPublicKey().getEncoded());
 
         final var runner1Tests = new ArrayList<TestVoid>();
         final var runner2Tests = new ArrayList<TestVoid>();
@@ -205,10 +205,10 @@ public class TransactionTests {
         final var client3 = TestClient.createTestClient(contract);
         final var client4 = TestClient.createTestClient(contract);
 
-        final var client1Id = ByteUtils.toHexString(client1.getPublicKey().getEncoded());
-        final var client2Id = ByteUtils.toHexString(client2.getPublicKey().getEncoded());
-        final var client3Id = ByteUtils.toHexString(client3.getPublicKey().getEncoded());
-        final var client4Id = ByteUtils.toHexString(client4.getPublicKey().getEncoded());
+        final var client1Id = ByteUtils.toAsciiString(client1.getPublicKey().getEncoded());
+        final var client2Id = ByteUtils.toAsciiString(client2.getPublicKey().getEncoded());
+        final var client3Id = ByteUtils.toAsciiString(client3.getPublicKey().getEncoded());
+        final var client4Id = ByteUtils.toAsciiString(client4.getPublicKey().getEncoded());
 
         final var runner1Tests = new ArrayList<TestVoid>();
         final var runner2Tests = new ArrayList<TestVoid>();

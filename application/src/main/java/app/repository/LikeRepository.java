@@ -37,7 +37,7 @@ public class LikeRepository extends ReadableRepository<Like> {
             TimeoutException, InterruptedException, JsonParseException, JsonMappingException, IOException {
 
         final String timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
-        final String publicKeyString = ByteUtils.toHexString(publicKey.getEncoded());
+        final String publicKeyString = ByteUtils.toAsciiString(publicKey.getEncoded());
 
         final byte[] likeHash = Hash.generateLikeHash(timestamp, postKey, publicKeyString);
         final byte[] likeSignature = Cryptography.sign(privateKey, likeHash);
@@ -48,7 +48,7 @@ public class LikeRepository extends ReadableRepository<Like> {
 
         return new String(contract.submitTransaction("publishNewLike", timestamp, postKey,
                 this.deserializer.transactionEntriesToJson(new Transaction.Entry(publicKeyString, pointAmount)),
-                ByteUtils.toHexString(likeSignature), ByteUtils.toHexString(pointTransactionSignature)));
+                ByteUtils.toAsciiString(likeSignature), ByteUtils.toAsciiString(pointTransactionSignature)));
     }
 
     @Override

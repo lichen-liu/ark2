@@ -15,11 +15,36 @@ public class ByteUtils {
         return hash;
     }
 
-    public static String toHexString(final byte[] bytes) {
+    /**
+     * Converts byte[] into ascii String that can be printed
+     * 
+     * For inversion:
+     * 
+     * <pre>
+     * byte[] ByteUtils.fromAsciiString(String)
+     * </pre>
+     * 
+     * @param bytes
+     * @return
+     */
+    public static String toAsciiString(final byte[] bytes) {
         return DatatypeConverter.printHexBinary(bytes);
     }
 
-    public static byte[] toByteArray(final String hexString) throws IllegalArgumentException {
-        return DatatypeConverter.parseHexBinary(hexString);
+    /**
+     * Converts ascii String into byte[]
+     * 
+     * The ascii String must be generated via:
+     * 
+     * <pre>
+     * String toAsciiString(byte[])
+     * </pre>
+     * 
+     * @param asciiString
+     * @return
+     * @throws IllegalArgumentException
+     */
+    public static byte[] fromAsciiString(final String asciiString) throws IllegalArgumentException {
+        return DatatypeConverter.parseHexBinary(asciiString);
     }
 }

@@ -8,6 +8,6 @@ public interface Identifiable {
     public abstract PublicKey getPublicKey();
 
     public default String getPublicKeyString() {
-        return ByteUtils.toHexString(getPublicKey().getEncoded());
+        return ByteUtils.toAsciiString(getPublicKey().getEncoded());
     }
 }

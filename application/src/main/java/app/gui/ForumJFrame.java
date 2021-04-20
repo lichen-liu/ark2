@@ -542,8 +542,8 @@ public class ForumJFrame extends javax.swing.JFrame {
         }
         try {
             final KeyPair keyPair = Cryptography.generateRandomKeyPair();
-            final String publicKeyString = ByteUtils.toHexString(keyPair.getPublic().getEncoded());
-            final String privateKeyString = ByteUtils.toHexString(keyPair.getPrivate().getEncoded());
+            final String publicKeyString = ByteUtils.toAsciiString(keyPair.getPublic().getEncoded());
+            final String privateKeyString = ByteUtils.toAsciiString(keyPair.getPrivate().getEncoded());
             this.userPublicKeyJTextField.setText(publicKeyString);
             this.userPrivateKeyJTextField.setText(privateKeyString);
         } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException e) {
@@ -569,9 +569,9 @@ public class ForumJFrame extends javax.swing.JFrame {
         PrivateKey privateKeyCandidate = null;
         try {
             final String publicKeyString = this.userPublicKeyJTextField.getText();
-            publicKeyCandidate = Cryptography.parsePublicKey(ByteUtils.toByteArray(publicKeyString));
+            publicKeyCandidate = Cryptography.parsePublicKey(ByteUtils.fromAsciiString(publicKeyString));
             final String privateKeyString = this.userPrivateKeyJTextField.getText();
-            privateKeyCandidate = Cryptography.parsePrivateKey(ByteUtils.toByteArray(privateKeyString));
+            privateKeyCandidate = Cryptography.parsePrivateKey(ByteUtils.fromAsciiString(privateKeyString));
         } catch (InvalidKeySpecException | NoSuchAlgorithmException | IllegalArgumentException e1) {
             publicKeyCandidate = null;
             privateKeyCandidate = null;
@@ -640,9 +640,9 @@ public class ForumJFrame extends javax.swing.JFrame {
         PrivateKey privateKeyCandidate = null;
         try {
             final String publicKeyString = this.userPublicKeyJTextField.getText();
-            publicKeyCandidate = Cryptography.parsePublicKey(ByteUtils.toByteArray(publicKeyString));
+            publicKeyCandidate = Cryptography.parsePublicKey(ByteUtils.fromAsciiString(publicKeyString));
             final String privateKeyString = this.userPrivateKeyJTextField.getText();
-            privateKeyCandidate = Cryptography.parsePrivateKey(ByteUtils.toByteArray(privateKeyString));
+            privateKeyCandidate = Cryptography.parsePrivateKey(ByteUtils.fromAsciiString(privateKeyString));
         } catch (InvalidKeySpecException | NoSuchAlgorithmException | IllegalArgumentException e1) {
             publicKeyCandidate = null;
             privateKeyCandidate = null;

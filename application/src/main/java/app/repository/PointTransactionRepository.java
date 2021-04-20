@@ -30,14 +30,14 @@ public class PointTransactionRepository extends ReadableRepository<PointTransact
 
         final String payer = this.deserializer.transactionEntriesToJson(transaction.payer);
         final String payees = this.deserializer.transactionEntryToJson(transaction.payees);
-        final String publicKeyString = ByteUtils.toHexString(publicKey.getEncoded());
+        final String publicKeyString = ByteUtils.toAsciiString(publicKey.getEncoded());
 
         final byte[] hash = Hash.generatePointTransactionHash(timestamp, transaction.payer.userId,
                 transaction.payer.pointAmount.toString(), publicKeyString);
         final byte[] signature = Cryptography.sign(privateKey, hash);
 
         return new String(contract.submitTransaction("publishNewPointTransaction", timestamp, payer, publicKeyString,
-                ByteUtils.toHexString(signature), reference, payees));
+                ByteUtils.toAsciiString(signature), reference, payees));
     }
 
     public String getPointAmount(final String userId) throws ContractException {
