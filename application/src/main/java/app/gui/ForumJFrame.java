@@ -15,7 +15,6 @@ import javax.swing.ListModel;
 import javax.swing.SwingWorker;
 
 import org.hyperledger.fabric.gateway.Contract;
-import org.hyperledger.fabric.gateway.ContractException;
 
 import app.repository.data.Like;
 import app.repository.data.PointTransaction;
@@ -962,13 +961,11 @@ public class ForumJFrame extends javax.swing.JFrame {
         final var selected_pane = this.contentJTabbedPane.getSelectedComponent();
         if (selected_pane == this.viewPostJSplitPane) {
             this.viewPostKeysQueryJComboBox.setSelectedIndex(this.viewPostKeysQueryJComboBox.getSelectedIndex());
-        } else if (selected_pane == this.viewLikeJScrollPane) {
+        } else if (selected_pane == this.viewLikeJSplitPane) {
             this.viewLikeKeysQueryJComboBox.setSelectedIndex(this.viewLikeKeysQueryJComboBox.getSelectedIndex());
-        } else if (selected_pane == this.viewPointTransactionJScrollPane) {
+        } else if (selected_pane == this.viewPointTransactionJSplitPane) {
             this.viewPointTransactionKeysQueryJComboBox
                     .setSelectedIndex(this.viewPointTransactionKeysQueryJComboBox.getSelectedIndex());
-        } else {
-            System.out.println("selected_pane is null?" + selected_pane==null);
         }
     }
 
