@@ -877,7 +877,7 @@ public class ForumJFrame extends javax.swing.JFrame {
             this.viewPointTransactionPointTransactionKeyJTextField.setText(selectedPointTransactionKey);
             this.viewPointTransactionJTextArea.setText(pointTransactionTextArea);
 
-            final var verify = userApp.verifyPointTransaction(pointTransaction);
+            final var verify = userApp.verifyPointTransaction(selectedPointTransactionKey);
             this.viewPointTransactionStatusJTextField.setText(verify.getItemsString());
             this.viewPointTransactionStatusJTextField.setBackground(
                     verify.isValid() ? new java.awt.Color(200, 255, 200) : new java.awt.Color(255, 200, 200));
@@ -910,7 +910,7 @@ public class ForumJFrame extends javax.swing.JFrame {
             this.viewLikeLikeKeyJTextField.setText(selectedLikeKey);
             this.viewLikeJTextArea.setText(likeTextArea);
 
-            final var verify = userApp.verifyLike(like);
+            final var verify = userApp.verifyLike(selectedLikeKey);
             this.viewLikeStatusJTextField.setText(verify.getItemsString());
             this.viewLikeStatusJTextField.setBackground(
                     verify.isValid() ? new java.awt.Color(200, 255, 200) : new java.awt.Color(255, 200, 200));
@@ -942,7 +942,7 @@ public class ForumJFrame extends javax.swing.JFrame {
             this.viewPostJTextArea.setText(postTextArea);
             this.viewPostLikeJButton.setEnabled(true);
 
-            final var verify = userApp.verifyPost(post);
+            final var verify = userApp.verifyPost(selectedPostKey);
             this.viewPostStatusJTextField.setText(verify.getItemsString());
             this.viewPostStatusJTextField.setBackground(
                     verify.isValid() ? new java.awt.Color(200, 255, 200) : new java.awt.Color(255, 200, 200));

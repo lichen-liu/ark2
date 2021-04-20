@@ -5,7 +5,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.List;
 
 import org.hyperledger.fabric.gateway.ContractException;
 
@@ -142,19 +141,28 @@ public interface AnonymousService extends Repository {
     }
 
     public interface VerificationResult {
-        public abstract boolean isValid();
+        public default boolean isValid() {
+            return false;
+        }
 
-        public abstract List<String> getItems();
+        public default String[] getItems() {
+            return new String[] { "Invalid" };
+        }
 
         public default String getItemsString() {
             return String.join(" ", getItems());
         }
     }
 
-    public default VerificationResult verifyPost(final Post post) {
+    public default VerificationResult verifyPost(final String postKey) {
+        final Post post = fetchPostByPostKey(postKey);
+        if (post == null) {
+            return new VerificationResult() {
+            };
+        }
+
         final boolean isSignatureValid = verifyPostSignature(post);
         final String signatureItem = isSignatureValid ? "Signature Passed!" : "Signature Failed!";
-
         return new VerificationResult() {
             @Override
             public boolean isValid() {
@@ -162,13 +170,19 @@ public interface AnonymousService extends Repository {
             }
 
             @Override
-            public List<String> getItems() {
-                return List.of(signatureItem);
+            public String[] getItems() {
+                return new String[] { signatureItem };
             }
         };
     }
 
-    public default VerificationResult verifyLike(final Like like) {
+    public default VerificationResult verifyLike(final String likeKey) {
+        final Like like = fetchLikeByLikeKey(likeKey);
+        if (like == null) {
+            return new VerificationResult() {
+            };
+        }
+
         final boolean isSignatureValid = verifyLikeSignature(like);
         final String signatureItem = isSignatureValid ? "Signature Passed!" : "Signature Failed!";
         return new VerificationResult() {
@@ -178,13 +192,19 @@ public interface AnonymousService extends Repository {
             }
 
             @Override
-            public List<String> getItems() {
-                return List.of(signatureItem);
+            public String[] getItems() {
+                return new String[] { signatureItem };
             }
         };
     }
 
-    public default VerificationResult verifyPointTransaction(final PointTransaction pointTransaction) {
+    public default VerificationResult verifyPointTransaction(final String pointTransactionKey) {
+        final PointTransaction pointTransaction = fetchPointTransactionByPointTransactionKey(pointTransactionKey);
+        if (pointTransaction == null) {
+            return new VerificationResult() {
+            };
+        }
+
         final boolean isSignatureValid = verifyPointTransactionSignature(pointTransaction);
         final String signatureItem = isSignatureValid ? "Signature Passed!" : "Signature Failed!";
         return new VerificationResult() {
@@ -194,8 +214,8 @@ public interface AnonymousService extends Repository {
             }
 
             @Override
-            public List<String> getItems() {
-                return List.of(signatureItem);
+            public String[] getItems() {
+                return new String[] { signatureItem };
             }
         };
     }
