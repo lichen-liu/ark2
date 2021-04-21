@@ -215,7 +215,7 @@ public class ForumRepositoryCC {
         return genson.deserialize(pointTransactionString, PointTransaction.class);
     }
 
-    public double computePointAmountByUserId(final Context ctx, final String userId) throws Exception {
+    public double computePointBalanceByUserId(final Context ctx, final String userId) throws Exception {
         double totalEarningPointAmount = 0;
         double totalSpendingPointAmount = 0;
 
@@ -235,8 +235,6 @@ public class ForumRepositoryCC {
             }
         }
 
-        System.out.println("computePointAmountByUserId(" + userId + "): " + "totalEarningPointAmount="
-                + totalEarningPointAmount + ", totalSpendingPointAmount=" + totalSpendingPointAmount);
         return totalEarningPointAmount - totalSpendingPointAmount;
     }
 
