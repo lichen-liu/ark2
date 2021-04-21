@@ -787,17 +787,27 @@ public class ForumJFrame extends javax.swing.JFrame {
         for (final String pointTransactionKey : pointTransactionKeys) {
             final PointTransaction pointTransaction = userApp
                     .fetchPointTransactionByPointTransactionKey(pointTransactionKey);
+
             final var payerEntry = pointTransaction.payerEntry;
             if (userId.equals(payerEntry.userId)) {
                 pointBalance -= payerEntry.pointAmount;
             }
             for (final var payeeEntry : pointTransaction.payeeEntries) {
                 if (userId.equals(payeeEntry.userId)) {
-
+                    pointBalance += payeeEntry.pointAmount;
                 }
             }
+
+            orderedTransactionTimestamp.add(pointTransaction.timestamp);
+            orderedPointBalanceHistory.add(pointBalance);
         }
-        // TODO add your handling code here:
+
+        for (int index = 0; index < pointTransactionKeys.length; index++) {
+            System.out.println(pointTransactionKeys[index]);
+            System.out.println(orderedTransactionTimestamp.get(index));
+            System.out.println(orderedPointBalanceHistory.get(index));
+            System.out.println(" ");
+        }
     }// GEN-LAST:event_viewPointBalanceRefreshJButtonActionPerformed
 
     private void viewPointTransactionKeysQueryJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPointTransactionKeysQueryJComboBoxActionPerformed
