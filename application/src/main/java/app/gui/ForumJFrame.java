@@ -152,8 +152,9 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         viewPostLeftJPanel.setPreferredSize(new java.awt.Dimension(400, 500));
 
-        viewPostKeysQueryJComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(
-                new String[] { "All", "Search By Author", "Search By Post Key" }));
+        viewPostKeysQueryJComboBox.setModel(
+                new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Get By Post Key", "Query By Author" }));
+        viewPostKeysQueryJComboBox.setSelectedIndex(-1);
         viewPostKeysQueryJComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 viewPostKeysQueryJComboBoxActionPerformed(evt);
@@ -308,7 +309,8 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewLikeLeftJPanel.setPreferredSize(new java.awt.Dimension(400, 500));
 
         viewLikeKeysQueryJComboBox.setModel(
-                new javax.swing.DefaultComboBoxModel<>(new String[] { "Search By Post Key", "Search By Like Key" }));
+                new javax.swing.DefaultComboBoxModel<>(new String[] { "Get By Like Key", "Query By Post Key" }));
+        viewLikeKeysQueryJComboBox.setSelectedIndex(-1);
         viewLikeKeysQueryJComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 viewLikeKeysQueryJComboBoxActionPerformed(evt);
@@ -401,7 +403,8 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPointTransactionLeftJPanel.setPreferredSize(new java.awt.Dimension(400, 500));
 
         viewPointTransactionKeysQueryJComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(
-                new String[] { "All", "Search By Payer", "Search By Point Transaction Key" }));
+                new String[] { "All", "Get By Point Transaction Key", "Query By Payer", "Query By Related User" }));
+        viewPointTransactionKeysQueryJComboBox.setSelectedIndex(-1);
         viewPointTransactionKeysQueryJComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 viewPointTransactionKeysQueryJComboBoxActionPerformed(evt);
@@ -755,16 +758,22 @@ public class ForumJFrame extends javax.swing.JFrame {
             if (pointTransactionKeys != null) {
                 this.viewPointTransactionKeysJList.setListData(pointTransactionKeys);
             }
-        } else if ("Search By Payer".equals(selectedQueryMethod)) {
+        } else if ("Query By Payer".equals(selectedQueryMethod)) {
             final var userApp = ServiceProvider.createAnonymousService(this.contract);
             final String[] pointTransactionKeys = userApp.fetchPointTransactionKeysByPayerUserId(searchString);
             if (pointTransactionKeys != null) {
                 this.viewPointTransactionKeysJList.setListData(pointTransactionKeys);
             }
-        } else if ("Search By Point Transaction Key".equals(selectedQueryMethod)) {
+        } else if ("Get By Point Transaction Key".equals(selectedQueryMethod)) {
             final var userApp = ServiceProvider.createAnonymousService(this.contract);
             if (userApp.fetchPointTransactionByPointTransactionKey(searchString) != null) {
                 this.viewPointTransactionKeysJList.setListData(new String[] { searchString });
+            }
+        } else if ("Query By Related User".equals(selectedQueryMethod)) {
+            final var userApp = ServiceProvider.createAnonymousService(this.contract);
+            final String[] pointTransactionKeys = userApp.computePointTransactionKeysByUserId(searchString);
+            if (pointTransactionKeys != null) {
+                this.viewPointTransactionKeysJList.setListData(pointTransactionKeys);
             }
         } else {
             throw new UnsupportedOperationException();
@@ -776,13 +785,13 @@ public class ForumJFrame extends javax.swing.JFrame {
         final String searchString = this.searchJTextField.getText();
         this.viewLikeKeysJList.setListData(new String[0]);
 
-        if ("Search By Post Key".equals(selectedQueryMethod)) {
+        if ("Query By Post Key".equals(selectedQueryMethod)) {
             final var userApp = ServiceProvider.createAnonymousService(this.contract);
             final String[] likeKeys = userApp.fetchLikeKeysByPostKey(searchString);
             if (likeKeys != null) {
                 this.viewLikeKeysJList.setListData(likeKeys);
             }
-        } else if ("Search By Like Key".equals(selectedQueryMethod)) {
+        } else if ("Get By Like Key".equals(selectedQueryMethod)) {
             final var userApp = ServiceProvider.createAnonymousService(this.contract);
             if (userApp.fetchLikeByLikeKey(searchString) != null) {
                 this.viewLikeKeysJList.setListData(new String[] { searchString });
@@ -803,13 +812,13 @@ public class ForumJFrame extends javax.swing.JFrame {
             if (postKeys != null) {
                 this.viewPostKeysJList.setListData(postKeys);
             }
-        } else if ("Search By Author".equals(selectedQueryMethod)) {
+        } else if ("Query By Author".equals(selectedQueryMethod)) {
             final var userApp = ServiceProvider.createAnonymousService(this.contract);
             final String[] postKeys = userApp.fetchPostKeysByUserId(searchString);
             if (postKeys != null) {
                 this.viewPostKeysJList.setListData(postKeys);
             }
-        } else if ("Search By Post Key".equals(selectedQueryMethod)) {
+        } else if ("Get By Post Key".equals(selectedQueryMethod)) {
             final var userApp = ServiceProvider.createAnonymousService(this.contract);
             if (userApp.fetchPostByPostKey(searchString) != null) {
                 this.viewPostKeysJList.setListData(new String[] { searchString });

@@ -218,10 +218,11 @@
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="3">
                         <StringItem index="0" value="All"/>
-                        <StringItem index="1" value="Search By Author"/>
-                        <StringItem index="2" value="Search By Post Key"/>
+                        <StringItem index="1" value="Get By Post Key"/>
+                        <StringItem index="2" value="Query By Author"/>
                       </StringArray>
                     </Property>
+                    <Property name="selectedIndex" type="int" value="-1"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewPostKeysQueryJComboBoxActionPerformed"/>
@@ -486,10 +487,11 @@
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="2">
-                        <StringItem index="0" value="Search By Post Key"/>
-                        <StringItem index="1" value="Search By Like Key"/>
+                        <StringItem index="0" value="Get By Like Key"/>
+                        <StringItem index="1" value="Query By Post Key"/>
                       </StringArray>
                     </Property>
+                    <Property name="selectedIndex" type="int" value="-1"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewLikeKeysQueryJComboBoxActionPerformed"/>
@@ -659,12 +661,14 @@
                 <Component class="javax.swing.JComboBox" name="viewPointTransactionKeysQueryJComboBox">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="3">
+                      <StringArray count="4">
                         <StringItem index="0" value="All"/>
-                        <StringItem index="1" value="Search By Payer"/>
-                        <StringItem index="2" value="Search By Point Transaction Key"/>
+                        <StringItem index="1" value="Get By Point Transaction Key"/>
+                        <StringItem index="2" value="Query By Payer"/>
+                        <StringItem index="3" value="Query By Related User"/>
                       </StringArray>
                     </Property>
+                    <Property name="selectedIndex" type="int" value="-1"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewPointTransactionKeysQueryJComboBoxActionPerformed"/>
