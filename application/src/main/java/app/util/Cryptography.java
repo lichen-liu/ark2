@@ -1,4 +1,4 @@
-package app.utils;
+package app.util;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;

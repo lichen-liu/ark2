@@ -2,7 +2,7 @@ package app.user;
 
 import java.security.PublicKey;
 
-import app.utils.ByteUtils;
+import app.util.ByteUtils;
 
 public interface Identifiable {
     public abstract PublicKey getPublicKey();

@@ -17,8 +17,8 @@ import app.repository.Hash;
 import app.repository.data.Like;
 import app.repository.data.PointTransaction;
 import app.repository.data.Post;
-import app.utils.ByteUtils;
-import app.utils.Cryptography;
+import app.util.ByteUtils;
+import app.util.Cryptography;
 
 public interface AnonymousService extends Repository {
     public default String[] fetchPostKeys() {

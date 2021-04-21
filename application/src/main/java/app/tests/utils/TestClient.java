@@ -10,7 +10,7 @@ import org.hyperledger.fabric.gateway.Contract;
 
 import app.user.NamedService;
 import app.user.ServiceProvider;
-import app.utils.Cryptography;
+import app.util.Cryptography;
 
 public class TestClient {
     public static NamedService createTestClient(final Contract contract)

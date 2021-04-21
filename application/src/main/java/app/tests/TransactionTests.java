@@ -18,7 +18,7 @@ import app.tests.utils.Logger;
 import app.tests.utils.TestClient;
 import app.tests.utils.TestRunner;
 import app.tests.utils.TestVoid;
-import app.utils.ByteUtils;
+import app.util.ByteUtils;
 
 public class TransactionTests {
     private final Logger logger;

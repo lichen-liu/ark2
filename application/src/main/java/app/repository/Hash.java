@@ -2,7 +2,7 @@ package app.repository;
 
 import java.security.NoSuchAlgorithmException;
 
-import app.utils.ByteUtils;
+import app.util.ByteUtils;
 
 public class Hash {
     public static byte[] generateLikeHash(final String timestamp, final String postKey, final String publicKeyString)

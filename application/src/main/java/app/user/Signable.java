@@ -2,7 +2,7 @@ package app.user;
 
 import java.security.PrivateKey;
 
-import app.utils.ByteUtils;
+import app.util.ByteUtils;
 
 public interface Signable extends Identifiable {
     public abstract PrivateKey getPrivateKey();

@@ -11,9 +11,9 @@ import org.hyperledger.fabric.gateway.ContractException;
 
 import app.repository.data.PointTransaction;
 import app.repository.data.Transaction;
-import app.utils.ByteUtils;
-import app.utils.Cryptography;
-import app.utils.GensonDeserializer;
+import app.util.ByteUtils;
+import app.util.Cryptography;
+import app.util.GensonDeserializer;
 
 public class PointTransactionRepository extends ReadableRepository<PointTransaction> {
 

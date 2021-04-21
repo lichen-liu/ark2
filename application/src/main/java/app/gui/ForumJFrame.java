@@ -7,7 +7,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JOptionPane;
@@ -22,8 +24,8 @@ import app.repository.data.PointTransaction;
 import app.repository.data.Post;
 import app.user.NamedWriteableService;
 import app.user.ServiceProvider;
-import app.utils.ByteUtils;
-import app.utils.Cryptography;
+import app.util.ByteUtils;
+import app.util.Cryptography;
 
 public class ForumJFrame extends javax.swing.JFrame {
 
@@ -774,6 +776,27 @@ public class ForumJFrame extends javax.swing.JFrame {
     }// GEN-LAST:event_publishPostResetJButtonActionPerformed
 
     private void viewPointBalanceRefreshJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPointBalanceRefreshJButtonActionPerformed
+        final String userId = this.searchJTextField.getText();
+        final var userApp = ServiceProvider.createAnonymousService(this.contract);
+        final String[] pointTransactionKeys = userApp.computePointTransactionKeysByUserId(userId);
+
+        final List<String> orderedTransactionTimestamp = new ArrayList<String>();
+        final List<Double> orderedPointBalanceHistory = new ArrayList<Double>();
+
+        double pointBalance = 0.0;
+        for (final String pointTransactionKey : pointTransactionKeys) {
+            final PointTransaction pointTransaction = userApp
+                    .fetchPointTransactionByPointTransactionKey(pointTransactionKey);
+            final var payerEntry = pointTransaction.payerEntry;
+            if (userId.equals(payerEntry.userId)) {
+                pointBalance -= payerEntry.pointAmount;
+            }
+            for (final var payeeEntry : pointTransaction.payeeEntries) {
+                if (userId.equals(payeeEntry.userId)) {
+
+                }
+            }
+        }
         // TODO add your handling code here:
     }// GEN-LAST:event_viewPointBalanceRefreshJButtonActionPerformed
 

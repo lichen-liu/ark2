@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
 
-import app.utils.Deserializer;
+import app.util.Deserializer;
 
 public abstract class ReadableRepository<T> {
     protected Deserializer deserializer;
