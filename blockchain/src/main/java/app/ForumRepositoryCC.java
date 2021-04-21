@@ -219,33 +219,20 @@ public class ForumRepositoryCC {
         double totalEarningPointAmount = 0;
         double totalSpendingPointAmount = 0;
 
-        PointTransaction.Tracking nextTracking = this.determinePointTransactionTrackingForUserId(ctx, userId);
+        final String[] pointTransactionKeys = this.computeAllPointTransactionKeysByUserId(ctx, userId);
 
-        while (nextTracking != null) {
-            final var tracking = nextTracking;
-            nextTracking = null;
-            double earningPointAmount = 0;
-            for (final String earningKey : tracking.getRecentEarningPointTransactionKeys()) {
-                final var earningPointTransaction = this.getPointTransactionByKey(ctx, earningKey);
-                for (final var earningPointTransactionPayee : earningPointTransaction.getPayeeEntries()) {
-                    if (userId.equals(earningPointTransactionPayee.getUserId())) {
-                        earningPointAmount += earningPointTransactionPayee.getPointAmount();
-                    }
+        for (final String pointTransactionKey : pointTransactionKeys) {
+            final PointTransaction pointTransaction = this.getPointTransactionByKey(ctx, pointTransactionKey);
+
+            final var payerEntry = pointTransaction.getPayerEntry();
+            if (userId.equals(payerEntry.getUserId())) {
+                totalSpendingPointAmount += payerEntry.getPointAmount();
+            }
+            for (final var payeeEntry : pointTransaction.getPayeeEntries()) {
+                if (userId.equals(payeeEntry.getUserId())) {
+                    totalEarningPointAmount += payeeEntry.getPointAmount();
                 }
             }
-            double spendingPointAmount = 0;
-            final String spendingKey = tracking.getRecentSpendingPointTransactionKey();
-            if (spendingKey != null) {
-                final var spendingPointTransaction = this.getPointTransactionByKey(ctx, spendingKey);
-                final var spendingPointTransactionPayer = spendingPointTransaction.getPayerEntry();
-                if (userId.equals(spendingPointTransactionPayer.getUserId())) {
-                    spendingPointAmount += spendingPointTransactionPayer.getPointAmount();
-                    nextTracking = spendingPointTransaction.getPayerPointTransactionTracking();
-                }
-            }
-
-            totalEarningPointAmount += earningPointAmount;
-            totalSpendingPointAmount += spendingPointAmount;
         }
 
         System.out.println("computePointAmountByUserId(" + userId + "): " + "totalEarningPointAmount="
