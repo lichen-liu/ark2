@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
@@ -20,14 +18,6 @@ import javax.swing.SwingWorker;
 import javax.swing.text.DefaultCaret;
 
 import org.hyperledger.fabric.gateway.Contract;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.block.BlockBorder;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.LineAndShapeRenderer;
-import org.jfree.data.category.CategoryDataset;
-import org.jfree.data.general.DatasetUtils;
 
 import app.repository.data.Like;
 import app.repository.data.PointTransaction;
@@ -842,31 +832,9 @@ public class ForumJFrame extends javax.swing.JFrame {
             System.out.println(" ");
         }
 
-        final CategoryDataset dataset = DatasetUtils.createCategoryDataset(
-                new String[] { "Point Balance By Transaction Order" },
-                IntStream.rangeClosed(0, orderedPointBalanceHistory.size() - 1).boxed().collect(Collectors.toList())
-                        .toArray(Integer[]::new),
-                new double[][] { orderedPointBalanceHistory.stream().mapToDouble(Double::doubleValue).toArray() });
-
-        final JFreeChart chart = ChartFactory.createLineChart("Point Balance By Transaction Order", "Transaction Order",
-                "Point Balance", dataset, PlotOrientation.VERTICAL, true, true, false);
-
-        final LineAndShapeRenderer renderer = new LineAndShapeRenderer();
-        renderer.setSeriesPaint(0, java.awt.Color.RED);
-        renderer.setSeriesStroke(0, new java.awt.BasicStroke(2.0f));
-
-        final CategoryPlot plot = chart.getCategoryPlot();
-        plot.setRenderer(renderer);
-        plot.setBackgroundPaint(java.awt.Color.white);
-        plot.setRangeGridlinesVisible(true);
-        plot.setRangeGridlinePaint(java.awt.Color.BLACK);
-        plot.setDomainGridlinesVisible(true);
-        plot.setDomainGridlinePaint(java.awt.Color.BLACK);
-        chart.getLegend().setFrame(BlockBorder.NONE);
-
-        this.viewPointBalanceChartPanel.setChart(chart);
-
-        // this.viewPointBalanceChartPanel.
+        this.viewPointBalanceChartPanel
+                .setDataModel(orderedPointBalanceHistory.stream().mapToDouble(Double::doubleValue).toArray());
+        this.viewPointBalanceChartPanel.displayPointBalanceHistory();
     }// GEN-LAST:event_viewPointBalanceRefreshJButtonActionPerformed
 
     private void viewPointTransactionKeysQueryJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPointTransactionKeysQueryJComboBoxActionPerformed
