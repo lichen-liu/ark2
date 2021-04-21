@@ -968,13 +968,13 @@ public class ForumJFrame extends javax.swing.JFrame {
         final PointTransaction pointTransaction = userApp
                 .fetchPointTransactionByPointTransactionKey(selectedPointTransactionKey);
         if (pointTransaction != null) {
-            String pointTransactionTextArea = "Timestamp: " + pointTransaction.timestamp + "\n\n";
-            pointTransactionTextArea += "IssuerUserId: " + pointTransaction.issuerUserId + "\n\n";
-            pointTransactionTextArea += "PayerEntry: " + pointTransaction.payerEntry.toString() + "\n\n";
-            pointTransactionTextArea += "PayeeEntries: " + Arrays.toString(pointTransaction.payeeEntries) + "\n\n";
-            pointTransactionTextArea += "Reference: " + pointTransaction.reference + "\n\n";
-            pointTransactionTextArea += "RelativeOrder: " + pointTransaction.relativeOrder + "\n\n";
-            pointTransactionTextArea += "Tracking: " + pointTransaction.payerPointTransactionTracking + "\n\n";
+            String pointTransactionTextArea = "Timestamp:\n" + pointTransaction.timestamp + "\n\n";
+            pointTransactionTextArea += "IssuerUserId:\n" + pointTransaction.issuerUserId + "\n\n";
+            pointTransactionTextArea += "PayerEntry:\n" + pointTransaction.payerEntry.toString() + "\n\n";
+            pointTransactionTextArea += "PayeeEntries:\n" + Arrays.toString(pointTransaction.payeeEntries) + "\n\n";
+            pointTransactionTextArea += "Reference:\n" + pointTransaction.reference + "\n\n";
+            pointTransactionTextArea += "RelativeOrder:\n" + pointTransaction.relativeOrder + "\n\n";
+            pointTransactionTextArea += "Tracking:\n" + pointTransaction.payerPointTransactionTracking + "\n\n";
 
             this.viewPointTransactionPointTransactionKeyJTextField.setText(selectedPointTransactionKey);
             this.viewPointTransactionJTextArea.setText(pointTransactionTextArea);
@@ -1003,11 +1003,11 @@ public class ForumJFrame extends javax.swing.JFrame {
         final var userApp = ServiceProvider.createAnonymousService(this.contract);
         final Like like = userApp.fetchLikeByLikeKey(selectedLikeKey);
         if (like != null) {
-            String likeTextArea = "Timestamp: " + like.timestamp + "\n\n";
-            likeTextArea += "PostKey: " + like.postKey + "\n\n";
-            likeTextArea += "PointTransactionKey: " + like.pointTransactionKey + "\n\n";
-            likeTextArea += "Liker: " + like.userId + "\n\n";
-            likeTextArea += "RelativeOrder: " + like.relativeOrder + "\n\n";
+            String likeTextArea = "Timestamp:\n" + like.timestamp + "\n\n";
+            likeTextArea += "PostKey:\n" + like.postKey + "\n\n";
+            likeTextArea += "PointTransactionKey:\n" + like.pointTransactionKey + "\n\n";
+            likeTextArea += "Liker:\n" + like.userId + "\n\n";
+            likeTextArea += "RelativeOrder:\n" + like.relativeOrder + "\n\n";
 
             this.viewLikeLikeKeyJTextField.setText(selectedLikeKey);
             this.viewLikeJTextArea.setText(likeTextArea);
@@ -1036,9 +1036,9 @@ public class ForumJFrame extends javax.swing.JFrame {
         final var userApp = ServiceProvider.createAnonymousService(this.contract);
         final Post post = userApp.fetchPostByPostKey(selectedPostKey);
         if (post != null) {
-            String postTextArea = "Timestamp: " + post.timestamp + "\n\n";
-            postTextArea += "Author: " + post.userId + "\n\n";
-            postTextArea += "Content: " + post.content + "\n\n";
+            String postTextArea = "Timestamp:\n" + post.timestamp + "\n\n";
+            postTextArea += "Author:\n" + post.userId + "\n\n";
+            postTextArea += "Content:\n" + post.content + "\n\n";
 
             this.viewPostPostKeyJTextField.setText(selectedPostKey);
             this.viewPostJTextArea.setText(postTextArea);
