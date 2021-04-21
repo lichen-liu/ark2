@@ -757,7 +757,7 @@ public class ForumJFrame extends javax.swing.JFrame {
             }
         } else if ("Search By Payer".equals(selectedQueryMethod)) {
             final var userApp = ServiceProvider.createAnonymousService(this.contract);
-            final String[] pointTransactionKeys = userApp.fetchPointTransactionKeysByUserId(searchString);
+            final String[] pointTransactionKeys = userApp.fetchPointTransactionKeysByPayerUserId(searchString);
             if (pointTransactionKeys != null) {
                 this.viewPointTransactionKeysJList.setListData(pointTransactionKeys);
             }

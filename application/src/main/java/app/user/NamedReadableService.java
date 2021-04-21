@@ -5,8 +5,8 @@ public interface NamedReadableService extends AnonymousService, Identifiable {
         return fetchPostKeysByUserId(getPublicKeyString());
     }
 
-    public default String[] fetchMyPointTransactionKeys() {
-        return fetchPointTransactionKeysByUserId(getPublicKeyString());
+    public default String[] fetchMyPayerPointTransactionKeys() {
+        return fetchPointTransactionKeysByPayerUserId(getPublicKeyString());
     }
 
     public default String getMyPointAmount() {

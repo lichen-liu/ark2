@@ -48,7 +48,7 @@ public interface AnonymousService extends Repository {
         return null;
     }
 
-    public default String[] fetchPointTransactionKeysByUserId(final String userId) {
+    public default String[] fetchPointTransactionKeysByPayerUserId(final String userId) {
         try {
             return getPointTransactionRepository().selectObjectKeysByCustomKey(userId);
         } catch (final Exception e) {
