@@ -658,7 +658,7 @@ public class ForumJFrame extends javax.swing.JFrame {
     private void refreshPointBalanceJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_refreshPointBalanceJButtonActionPerformed
         this.pointBalanceJTextField.setText(new String());
         final var appUser = ServiceProvider.createAnonymousService(this.contract);
-        final String pointBalance = appUser.computePointAmountByUserId(this.userPublicKeyJTextField.getText());
+        final String pointBalance = appUser.computePointBalanceByUserId(this.userPublicKeyJTextField.getText());
         if (pointBalance != null) {
             this.pointBalanceJTextField.setText(pointBalance);
         }

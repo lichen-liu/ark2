@@ -99,9 +99,9 @@ public interface AnonymousService extends Repository {
         return null;
     }
 
-    public default String computePointAmountByUserId(final String userId) {
+    public default String computePointBalanceByUserId(final String userId) {
         try {
-            return getPointTransactionRepository().computePointAmount(userId);
+            return getPointTransactionRepository().computePointBalanceByUserId(userId);
         } catch (final ContractException e) {
             e.printStackTrace();
         }
