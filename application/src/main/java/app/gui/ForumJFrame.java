@@ -21,7 +21,6 @@ import javax.swing.text.DefaultCaret;
 
 import org.hyperledger.fabric.gateway.Contract;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.plot.CategoryPlot;
@@ -51,10 +50,7 @@ public class ForumJFrame extends javax.swing.JFrame {
     private ForumJFrame(final Contract contract, final String frameTitleString) {
         this.contract = contract;
         this.frameTitleString = frameTitleString;
-        this.viewPointBalanceChartPanel = new ChartPanel(null);
-
-        this.viewPointBalanceChartPanel.setFillZoomRectangle(true);
-        this.viewPointBalanceChartPanel.setMouseWheelEnabled(true);
+        this.viewPointBalanceChartPanel = new PointHistoryChartPanel();
 
         initComponents();
     }
@@ -1217,5 +1213,5 @@ public class ForumJFrame extends javax.swing.JFrame {
 
     private final Contract contract;
     private final String frameTitleString;
-    private final ChartPanel viewPointBalanceChartPanel;
+    private final PointHistoryChartPanel viewPointBalanceChartPanel;
 }
