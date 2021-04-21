@@ -14,10 +14,10 @@ import app.backend.ContractFactory;
 import app.backend.WalletFactory;
 import app.repository.data.Transaction;
 import app.repository.data.Transaction.Entry;
-import app.tests.utils.Logger;
-import app.tests.utils.TestClient;
-import app.tests.utils.TestRunner;
-import app.tests.utils.TestVoid;
+import app.tests.util.Logger;
+import app.tests.util.TestClient;
+import app.tests.util.TestRunner;
+import app.tests.util.TestVoid;
 import app.util.ByteUtils;
 
 public class TransactionTests {
@@ -181,6 +181,10 @@ public class TransactionTests {
 
         logger.print(contract.evaluateTransaction("computePointAmountByUserId", client1Id));
         logger.print(contract.evaluateTransaction("computePointAmountByUserId", client2Id));
+    }
+
+    public Logger getLogger() {
+        return logger;
     }
 
     private void multiThreadWithoutDependencyTests()

@@ -1,4 +1,4 @@
-package app.tests.utils;
+package app.tests.util;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;

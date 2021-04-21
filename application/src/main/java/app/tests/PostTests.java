@@ -11,10 +11,10 @@ import org.hyperledger.fabric.gateway.Wallet;
 
 import app.backend.ContractFactory;
 import app.backend.WalletFactory;
-import app.tests.utils.Logger;
-import app.tests.utils.TestClient;
-import app.tests.utils.TestRunner;
-import app.tests.utils.TestVoid;
+import app.tests.util.Logger;
+import app.tests.util.TestClient;
+import app.tests.util.TestRunner;
+import app.tests.util.TestVoid;
 
 public class PostTests {
     private final Logger logger;

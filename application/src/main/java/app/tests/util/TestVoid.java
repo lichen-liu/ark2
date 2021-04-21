@@ -1,4 +1,4 @@
-package app.tests.utils;
+package app.tests.util;
 
 @FunctionalInterface
 public interface TestVoid {
