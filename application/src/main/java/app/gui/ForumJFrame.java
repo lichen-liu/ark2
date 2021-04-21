@@ -782,30 +782,35 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         final List<String> orderedTransactionTimestamp = new ArrayList<String>();
         final List<Double> orderedPointBalanceHistory = new ArrayList<Double>();
+        final List<Double> orderedPointBalanceChangesHistory = new ArrayList<Double>();
 
         double pointBalance = 0.0;
         for (final String pointTransactionKey : pointTransactionKeys) {
             final PointTransaction pointTransaction = userApp
                     .fetchPointTransactionByPointTransactionKey(pointTransactionKey);
+            double pointBalanceChanges = 0.0;
 
             final var payerEntry = pointTransaction.payerEntry;
             if (userId.equals(payerEntry.userId)) {
-                pointBalance -= payerEntry.pointAmount;
+                pointBalanceChanges -= payerEntry.pointAmount;
             }
             for (final var payeeEntry : pointTransaction.payeeEntries) {
                 if (userId.equals(payeeEntry.userId)) {
-                    pointBalance += payeeEntry.pointAmount;
+                    pointBalanceChanges += payeeEntry.pointAmount;
                 }
             }
 
+            pointBalance += pointBalanceChanges;
             orderedTransactionTimestamp.add(pointTransaction.timestamp);
             orderedPointBalanceHistory.add(pointBalance);
+            orderedPointBalanceChangesHistory.add(pointBalanceChanges);
         }
 
         for (int index = 0; index < pointTransactionKeys.length; index++) {
-            System.out.println(pointTransactionKeys[index]);
-            System.out.println(orderedTransactionTimestamp.get(index));
-            System.out.println(orderedPointBalanceHistory.get(index));
+            System.out.println("PointTransactionKey: " + pointTransactionKeys[index]);
+            System.out.println("Timestamp: " + orderedTransactionTimestamp.get(index));
+            System.out.println("Balance: " + orderedPointBalanceHistory.get(index));
+            System.out.println("Changes: " + orderedPointBalanceChangesHistory.get(index));
             System.out.println(" ");
         }
     }// GEN-LAST:event_viewPointBalanceRefreshJButtonActionPerformed
