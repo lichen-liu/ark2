@@ -859,7 +859,10 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         this.viewPointBalanceChartPanel.setDataModel(
                 orderedPointBalanceHistory.stream().mapToDouble(Double::doubleValue).toArray(),
-                orderedPointBalanceChangesHistory.stream().mapToDouble(Double::doubleValue).toArray());
+                orderedPointBalanceChangesHistory.stream().mapToDouble(Double::doubleValue).toArray(), null);
+        // orderedPointTransaction.stream()
+        // .map((transaction) -> ZonedDateTime.parse(transaction.timestamp))
+        // .toArray(ZonedDateTime[]::new)
 
         this.viewPointBalancePointBalanceJTextField.setText(String.valueOf(pointBalance));
         this.viewPointBalanceModeJComboBox.setSelectedIndex(this.viewPointBalanceModeJComboBox.getSelectedIndex());

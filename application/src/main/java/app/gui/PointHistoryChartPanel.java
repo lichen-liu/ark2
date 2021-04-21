@@ -1,5 +1,6 @@
 package app.gui;
 
+import java.time.ZonedDateTime;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -24,7 +25,8 @@ public class PointHistoryChartPanel extends ChartPanel {
         super.setMouseWheelEnabled(true);
     }
 
-    public void setDataModel(final double[] pointBalanceHistory, final double[] pointBalanceChangesHistory) {
+    public void setDataModel(final double[] pointBalanceHistory, final double[] pointBalanceChangesHistory,
+            final ZonedDateTime[] transactionTimestamps) {
         this.pointBalanceHistoryDataset = DatasetUtils
                 .createCategoryDataset(
                         new String[] { "Point Balance" }, IntStream.rangeClosed(0, pointBalanceHistory.length - 1)
