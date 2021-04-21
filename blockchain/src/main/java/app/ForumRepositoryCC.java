@@ -2,7 +2,9 @@ package app;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -168,6 +170,40 @@ public class ForumRepositoryCC {
                 .map(keyValue -> Key.createFromCCKeyString(keyValue.getKey()).getBase64UrlKeyString())
                 .collect(Collectors.toList());
         return pointTransactionKeys.toArray(String[]::new);
+    }
+
+    public String[] computeAllPointTransactionKeysByUserId(final Context ctx, final String userId) throws Exception {
+        final Map<String, PointTransaction> relatedPointTransactions = new HashMap<String, PointTransaction>();
+
+        PointTransaction.Tracking nextTracking = this.determinePointTransactionTrackingForUserId(ctx, userId);
+
+        while (nextTracking != null) {
+            final var tracking = nextTracking;
+            nextTracking = null;
+            for (final String earningKey : tracking.getRecentEarningPointTransactionKeys()) {
+                final var earningPointTransaction = this.getPointTransactionByKey(ctx, earningKey);
+                if (Arrays.stream(earningPointTransaction.getPayeeEntries()).anyMatch(
+                        (earningPointTransactionPayee) -> userId.equals(earningPointTransactionPayee.getUserId()))) {
+                    relatedPointTransactions.put(earningKey, earningPointTransaction);
+                }
+            }
+            final String spendingKey = tracking.getRecentSpendingPointTransactionKey();
+            if (spendingKey != null) {
+                final var spendingPointTransaction = this.getPointTransactionByKey(ctx, spendingKey);
+                final var spendingPointTransactionPayer = spendingPointTransaction.getPayerEntry();
+                if (userId.equals(spendingPointTransactionPayer.getUserId())) {
+                    relatedPointTransactions.put(spendingKey, spendingPointTransaction);
+                    nextTracking = spendingPointTransaction.getPayerPointTransactionTracking();
+                }
+            }
+        }
+
+        final List<String> keys = relatedPointTransactions.entrySet().stream().sorted((leftEntry, rightEntry) -> {
+            final var leftPointTransaction = leftEntry.getValue();
+            final var rightPointTransaction = rightEntry.getValue();
+            return leftPointTransaction.compareToByRelativeOrder(rightPointTransaction);
+        }).map(entry -> entry.getKey()).collect(Collectors.toList());
+        return keys.toArray(String[]::new);
     }
 
     public PointTransaction getPointTransactionByKey(final Context ctx, final String pointTransactionKey)

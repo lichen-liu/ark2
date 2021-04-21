@@ -240,6 +240,23 @@ public final class ForumRepository implements ContractInterface {
     }
 
     /**
+     * Sorted by relativeOrder, oldest first
+     * 
+     * @param ctx
+     * @param userId
+     * @return
+     */
+    @Transaction(intent = Transaction.TYPE.EVALUATE)
+    public String[] computeAllPointTransactionKeysByUserId(final Context ctx, final String userId) {
+        try {
+            return this.cc.computeAllPointTransactionKeysByUserId(ctx, userId);
+        } catch (final Exception e) {
+            e.printStackTrace();
+            throw new ChaincodeException(e);
+        }
+    }
+
+    /**
      * 
      * @param ctx
      * @param pointTransactionKey
