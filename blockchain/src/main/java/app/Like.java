@@ -1,4 +1,4 @@
-package app.datatype;
+package app;
 
 import javax.annotation.Nullable;
 

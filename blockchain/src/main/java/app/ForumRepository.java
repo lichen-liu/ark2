@@ -8,10 +8,6 @@ import org.hyperledger.fabric.contract.annotation.Info;
 import org.hyperledger.fabric.contract.annotation.Transaction;
 import org.hyperledger.fabric.shim.ChaincodeException;
 
-import app.datatype.Like;
-import app.datatype.PointTransaction;
-import app.datatype.Post;
-
 @Contract(name = "ForumAgreement", info = @Info(title = "ForumAgreement", description = "Forum chaincode", version = "0.1.0-SNAPSHOT"))
 
 @Default

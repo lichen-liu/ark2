@@ -18,9 +18,6 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 
-import app.datatype.Like;
-import app.datatype.PointTransaction;
-import app.datatype.Post;
 import app.policy.LikeRewarding;
 import app.util.ChaincodeStubTools;
 import app.util.ChaincodeStubTools.Key;

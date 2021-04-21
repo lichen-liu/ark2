@@ -1,4 +1,4 @@
-package app.datatype;
+package app;
 
 import com.owlike.genson.annotation.JsonIgnore;
 import com.owlike.genson.annotation.JsonProperty;
