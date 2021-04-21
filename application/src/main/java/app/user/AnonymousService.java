@@ -57,6 +57,15 @@ public interface AnonymousService extends Repository {
         return null;
     }
 
+    public default String[] computePointTransactionKeysByUserId(final String userId) {
+        try {
+            return getPointTransactionRepository().computePointTransactionKeysByUserId(userId);
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public default String[] fetchLikeKeysByPostKey(final String postKey) {
         try {
             return getLikeRepository().selectObjectKeysByCustomKey(postKey);

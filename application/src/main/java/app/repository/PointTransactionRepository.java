@@ -44,6 +44,11 @@ public class PointTransactionRepository extends ReadableRepository<PointTransact
         return new String(this.contract.evaluateTransaction("computePointAmountByUserId", userId));
     }
 
+    public String[] computePointTransactionKeysByUserId(final String userId) throws Exception {
+        return deserializer.toStringArray(
+                new String(this.contract.evaluateTransaction("computeAllPointTransactionKeysByUserId", userId)));
+    }
+
     @Override
     protected String getAllKeysQuery() {
         return "getAllPointTransactionKeys";
