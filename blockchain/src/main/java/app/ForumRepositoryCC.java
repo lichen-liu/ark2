@@ -70,11 +70,11 @@ public class ForumRepositoryCC {
     }
 
     public String publishNewLike(final Context ctx, final String timestamp, final String postKey,
-            final String likerPayerEntryString, final String likeSignature, final String likePointTransactionSignature)
+            final String likePayerEntryString, final String likeSignature, final String likePointTransactionSignature)
             throws Exception {
         final ChaincodeStub stub = ctx.getStub();
 
-        final var payerEntry = genson.deserialize(likerPayerEntryString, PointTransaction.Entry.class);
+        final var payerEntry = genson.deserialize(likePayerEntryString, PointTransaction.Entry.class);
         final Post post = this.getByKey(ctx, postKey, Post.class);
         final KeyValue[] postLikesKeyValue = this.getAllLikesByPostKey(ctx, postKey);
 
@@ -100,7 +100,7 @@ public class ForumRepositoryCC {
                 this.determineRelativeOrderForLike(ctx, postKey));
         final Key likeKey = ChaincodeStubTools.generateKey(stub, like);
 
-        final String pointTransactionKey = this.publishNewPointTransaction(ctx, timestamp, likerPayerEntryString,
+        final String pointTransactionKey = this.publishNewPointTransaction(ctx, timestamp, likePayerEntryString,
                 payerEntry.getUserId(), likePointTransactionSignature, likeKey.getBase64UrlKeyString(),
                 genson.serialize(payeeEntries.toArray(PointTransaction.Entry[]::new)));
         like.setPointTransactionKey(pointTransactionKey);
@@ -113,7 +113,7 @@ public class ForumRepositoryCC {
     // public String publishNewDislike(final Context ctx, final String timestamp,
     // final String postKey,
     // final String dislikerPayerEntryString, final String dislikeSignature,
-    // final String dislikerPointTransactionSignature, final String
+    // final String dislikePointTransactionSignature, final String
     // penaltyTransactionSignature) {
     // final ChaincodeStub stub = ctx.getStub();
 
@@ -154,7 +154,7 @@ public class ForumRepositoryCC {
 
     // final String pointTransactionKey = this.publishNewPointTransaction(ctx,
     // timestamp, dislikerPayerEntryString,
-    // dislikerPayerEntry.getUserId(), dislikerPointTransactionSignature,
+    // dislikerPayerEntry.getUserId(), dislikePointTransactionSignature,
     // dislikeKey.getBase64UrlKeyString(),
     // genson.serialize(payeeEntries.toArray(PointTransaction.Entry[]::new)));
     // like.setPointTransactionKey(pointTransactionKey);

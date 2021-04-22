@@ -95,7 +95,7 @@ public final class ForumRepository implements ContractInterface {
      *                                      </pre>
      * 
      * @param postKey
-     * @param likerPayerEntryString
+     * @param likePayerEntryString
      * 
      *                                      <pre>
      *                                      "{\"pointAmount\":150,\"userId\":\"ray\"}"
@@ -109,11 +109,10 @@ public final class ForumRepository implements ContractInterface {
      */
     @Transaction(intent = Transaction.TYPE.SUBMIT)
     public String publishNewLike(final Context ctx, final String timestamp, final String postKey,
-            final String likerPayerEntryString, final String likeSignature,
-            final String likePointTransactionSignature) {
+            final String likePayerEntryString, final String likeSignature, final String likePointTransactionSignature) {
 
         try {
-            return this.cc.publishNewLike(ctx, timestamp, postKey, likerPayerEntryString, likeSignature,
+            return this.cc.publishNewLike(ctx, timestamp, postKey, likePayerEntryString, likeSignature,
                     likePointTransactionSignature);
         } catch (final Exception e) {
             e.printStackTrace();
