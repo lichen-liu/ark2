@@ -206,6 +206,39 @@ public final class ForumRepository implements ContractInterface {
      * Sorted by relativeOrder, most recent first
      * 
      * @param ctx
+     * @param postKey
+     * @return
+     */
+    @Transaction(intent = Transaction.TYPE.EVALUATE)
+    public String[] getAllDislikeKeysByPostKey(final Context ctx, final String postKey) {
+        try {
+            return this.cc.getAllDislikeKeysByPostKey(ctx, postKey);
+        } catch (final Exception e) {
+            e.printStackTrace();
+            throw new ChaincodeException(e);
+        }
+    }
+
+    /**
+     * 
+     * @param ctx
+     * @param dislikeKey
+     * @return
+     */
+    @Transaction(intent = Transaction.TYPE.EVALUATE)
+    public Dislike getDislikeByKey(final Context ctx, final String dislikeKey) {
+        try {
+            return this.cc.getDislikeByKey(ctx, dislikeKey);
+        } catch (final IllegalArgumentException e) {
+            e.printStackTrace();
+            throw new ChaincodeException(e);
+        }
+    }
+
+    /**
+     * Sorted by relativeOrder, most recent first
+     * 
+     * @param ctx
      * @return
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)

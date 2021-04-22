@@ -204,28 +204,22 @@ public class ForumRepositoryCC {
         return genson.deserialize(likeString, Like.class);
     }
 
-    // public String[] getAllDislikeKeysByPostKey(final Context ctx, final String
-    // postKey) throws Exception {
-    // final List<String> likeKeys = Arrays.stream(this.getAllLikesByPostKey(ctx,
-    // postKey))
-    // .map(keyValue ->
-    // Key.createFromCCKeyString(keyValue.getKey()).getBase64UrlKeyString())
-    // .collect(Collectors.toList());
-    // return likeKeys.toArray(String[]::new);
-    // }
+    public String[] getAllDislikeKeysByPostKey(final Context ctx, final String postKey) throws Exception {
+        final List<String> dislikeKeys = Arrays.stream(this.getAllDislikesByPostKey(ctx, postKey))
+                .map(keyValue -> Key.createFromCCKeyString(keyValue.getKey()).getBase64UrlKeyString())
+                .collect(Collectors.toList());
+        return dislikeKeys.toArray(String[]::new);
+    }
 
-    // public Like getLikeByKey(final Context ctx, final String likeKey) throws
-    // IllegalArgumentException {
-    // final ChaincodeStub stub = ctx.getStub();
-    // final Key key = Key.createFromBase64UrlKeyString(likeKey);
-    // if (!Like.getObjectTypeName().equals(key.getObjectTypeString())) {
-    // throw new ChaincodeException("getLikeByKey(): key is not a LikeKey",
-    // key.getObjectTypeString());
-    // }
-    // final String likeString = ChaincodeStubTools.tryGetStringStateByKey(stub,
-    // key);
-    // return genson.deserialize(likeString, Like.class);
-    // }
+    public Dislike getDislikeByKey(final Context ctx, final String dislikeKey) throws IllegalArgumentException {
+        final ChaincodeStub stub = ctx.getStub();
+        final Key key = Key.createFromBase64UrlKeyString(dislikeKey);
+        if (!Dislike.getObjectTypeName().equals(key.getObjectTypeString())) {
+            throw new ChaincodeException("getDislikeByKey(): key is not a dislikeKey", key.getObjectTypeString());
+        }
+        final String dislikeString = ChaincodeStubTools.tryGetStringStateByKey(stub, key);
+        return genson.deserialize(dislikeString, Dislike.class);
+    }
 
     public String[] getAllPointTransactionKeys(final Context ctx) throws Exception {
         final List<String> pointTransactionKeys = Arrays.stream(this.getAllPointTransactions(ctx, null))
