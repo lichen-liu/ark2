@@ -9,6 +9,7 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -703,14 +704,6 @@ public class ForumJFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void viewWorldPointBalanceRefreshJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewWorldPointBalanceRefreshJButtonActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_viewWorldPointBalanceRefreshJButtonActionPerformed
-
-    private void viewWorldPointBalanceModeJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewWorldPointBalanceModeJComboBoxActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_viewWorldPointBalanceModeJComboBoxActionPerformed
-
     private void generateKeyPairJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_generateKeyPairJButtonActionPerformed
         if (!this.userPublicKeyJTextField.getText().isEmpty() || !this.userPrivateKeyJTextField.getText().isEmpty()) {
             final int choice = JOptionPane.showConfirmDialog(null,
@@ -925,12 +918,16 @@ public class ForumJFrame extends javax.swing.JFrame {
             orderedPointBalanceChangesHistory.add(pointBalanceChanges);
         }
 
-        for (int index = 0; index < pointTransactionKeys.length; index++) {
-            System.out.println("PointTransactionKey: " + pointTransactionKeys[index]);
-            System.out.println("Timestamp: " + orderedPointTransaction.get(index).timestamp);
-            System.out.println("Balance: " + orderedPointBalanceHistory.get(index));
-            System.out.println("Changes: " + orderedPointBalanceChangesHistory.get(index));
-            System.out.println(" ");
+        final boolean debug = false;
+        if (debug) {
+            System.out.println("\nviewPointBalanceRefreshJButtonActionPerformed");
+            for (int index = 0; index < pointTransactionKeys.length; index++) {
+                System.out.println("PointTransactionKey: " + pointTransactionKeys[index]);
+                System.out.println("Timestamp: " + orderedPointTransaction.get(index).timestamp);
+                System.out.println("Balance: " + orderedPointBalanceHistory.get(index));
+                System.out.println("Changes: " + orderedPointBalanceChangesHistory.get(index));
+                System.out.println(" ");
+            }
         }
 
         this.viewPointBalanceChartPanel.setDataModel(
@@ -955,6 +952,70 @@ public class ForumJFrame extends javax.swing.JFrame {
             throw new UnsupportedOperationException();
         }
     }// GEN-LAST:event_viewPointBalanceModeJComboBoxActionPerformed
+
+    private void viewWorldPointBalanceRefreshJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewWorldPointBalanceRefreshJButtonActionPerformed
+        final var userApp = ServiceProvider.createAnonymousService(this.contract);
+
+        final String[] pointTransactionKeys = userApp.fetchPointTransactionKeys();
+        Collections.reverse(Arrays.asList(pointTransactionKeys));
+
+        final List<PointTransaction> orderedPointTransaction = new ArrayList<PointTransaction>();
+        final List<Double> orderedPointBalanceHistory = new ArrayList<Double>();
+        final List<Double> orderedPointBalanceChangesHistory = new ArrayList<Double>();
+
+        double pointBalance = 0.0;
+        for (final String pointTransactionKey : pointTransactionKeys) {
+            final PointTransaction pointTransaction = userApp
+                    .fetchPointTransactionByPointTransactionKey(pointTransactionKey);
+            double pointBalanceChanges = 0.0;
+
+            final var payerEntry = pointTransaction.payerEntry;
+            pointBalanceChanges -= payerEntry.pointAmount;
+            for (final var payeeEntry : pointTransaction.payeeEntries) {
+                pointBalanceChanges += payeeEntry.pointAmount;
+            }
+
+            pointBalance += pointBalanceChanges;
+            orderedPointTransaction.add(pointTransaction);
+            orderedPointBalanceHistory.add(pointBalance);
+            orderedPointBalanceChangesHistory.add(pointBalanceChanges);
+        }
+
+        final boolean debug = false;
+        if (debug) {
+            System.out.println("\nviewWorldPointBalanceRefreshJButtonActionPerformed");
+            for (int index = 0; index < pointTransactionKeys.length; index++) {
+                System.out.println("PointTransactionKey: " + pointTransactionKeys[index]);
+                System.out.println("Timestamp: " + orderedPointTransaction.get(index).timestamp);
+                System.out.println("Balance: " + orderedPointBalanceHistory.get(index));
+                System.out.println("Changes: " + orderedPointBalanceChangesHistory.get(index));
+                System.out.println(" ");
+            }
+        }
+
+        this.viewWorldPointBalanceChartPanel.setDataModel(
+                orderedPointBalanceHistory.stream().mapToDouble(Double::doubleValue).toArray(),
+                orderedPointBalanceChangesHistory.stream().mapToDouble(Double::doubleValue).toArray(), null);
+        // orderedPointTransaction.stream()
+        // .map((transaction) -> ZonedDateTime.parse(transaction.timestamp))
+        // .toArray(ZonedDateTime[]::new)
+
+        this.viewWorldPointBalancePointBalanceJTextField.setText(String.valueOf(pointBalance));
+        this.viewWorldPointBalanceModeJComboBox
+                .setSelectedIndex(this.viewWorldPointBalanceModeJComboBox.getSelectedIndex());
+    }// GEN-LAST:event_viewWorldPointBalanceRefreshJButtonActionPerformed
+
+    private void viewWorldPointBalanceModeJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewWorldPointBalanceModeJComboBoxActionPerformed
+        final String viewMode = (String) this.viewWorldPointBalanceModeJComboBox.getSelectedItem();
+
+        if ("Point Balance History".equals(viewMode)) {
+            this.viewWorldPointBalanceChartPanel.displayPointBalanceHistory();
+        } else if ("Point Balance Changes History".equals(viewMode)) {
+            this.viewWorldPointBalanceChartPanel.displayPointBalanceChangesHistory();
+        } else {
+            throw new UnsupportedOperationException();
+        }
+    }// GEN-LAST:event_viewWorldPointBalanceModeJComboBoxActionPerformed
 
     private void viewPointTransactionKeysQueryJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPointTransactionKeysQueryJComboBoxActionPerformed
         final String selectedQueryMethod = (String) this.viewPointTransactionKeysQueryJComboBox.getSelectedItem();
@@ -1197,6 +1258,8 @@ public class ForumJFrame extends javax.swing.JFrame {
                     .setSelectedIndex(this.viewPointTransactionKeysQueryJComboBox.getSelectedIndex());
         } else if (selected_pane == this.viewPointBalanceJPanel) {
             this.viewPointBalanceRefreshJButton.doClick();
+        } else if (selected_pane == this.viewWorldPointBalanceJPanel) {
+            this.viewWorldPointBalanceRefreshJButton.doClick();
         } else {
             throw new UnsupportedOperationException();
         }
