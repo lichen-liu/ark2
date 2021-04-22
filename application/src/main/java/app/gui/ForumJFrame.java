@@ -54,6 +54,7 @@ public class ForumJFrame extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -241,6 +242,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         });
 
         viewPostStatusJTextField.setEditable(false);
+        ((DefaultCaret) viewPostStatusJTextField.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 
         viewPostPostKeyJTextField.setEditable(false);
         viewPostPostKeyJTextField.setToolTipText("Post Key");
@@ -389,6 +391,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewLikeJScrollPane.setViewportView(viewLikeJTextArea);
 
         viewLikeStatusJTextField.setEditable(false);
+        ((DefaultCaret) viewLikeStatusJTextField.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 
         viewLikeLikeKeyJTextField.setEditable(false);
         viewLikeLikeKeyJTextField.setToolTipText("Like Key");
@@ -485,6 +488,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPointTransactionJScrollPane.setViewportView(viewPointTransactionJTextArea);
 
         viewPointTransactionStatusJTextField.setEditable(false);
+        ((DefaultCaret) viewPointTransactionStatusJTextField.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 
         viewPointTransactionPointTransactionKeyJTextField.setEditable(false);
         viewPointTransactionPointTransactionKeyJTextField.setToolTipText("Point Transaction Key");
