@@ -359,6 +359,27 @@ public class ForumRepositoryCC {
      * Sorted by relativeOrder, most recent first
      * 
      * @param ctx
+     * @param postKey
+     * @return KeyValue[], key CCKeyString
+     * @throws Exception
+     */
+    private KeyValue[] getAllDislikesByPostKey(final Context ctx, final String postKey) throws Exception {
+        final ChaincodeStub stub = ctx.getStub();
+        final var keyValueIterator = stub.getStateByPartialCompositeKey(Dislike.getObjectTypeName(), postKey);
+        final List<KeyValue> dislikes = StreamSupport.stream(keyValueIterator.spliterator(), false)
+                .sorted((leftKeyValue, rightKeyValue) -> {
+                    final var leftDislike = genson.deserialize(leftKeyValue.getStringValue(), Dislike.class);
+                    final var rightDislike = genson.deserialize(rightKeyValue.getStringValue(), Dislike.class);
+                    return rightDislike.compareToByRelativeOrder(leftDislike);
+                }).collect(Collectors.toList());
+        keyValueIterator.close();
+        return dislikes.toArray(KeyValue[]::new);
+    }
+
+    /**
+     * Sorted by relativeOrder, most recent first
+     * 
+     * @param ctx
      * @param payerUserId
      * @return KeyValue[], key CCKeyString
      * @throws Exception
