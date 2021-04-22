@@ -4,7 +4,6 @@ import org.apache.commons.math3.distribution.BetaDistribution;
 
 public class LikeRewarding {
     private final long numberLikes;
-    private final long totalNumberLikes;
     private final double basePointAmount;
 
     private final BetaDistribution likerRewardingDistribution = new BetaDistribution(2, 2);
@@ -16,30 +15,37 @@ public class LikeRewarding {
         return numberLikes;
     }
 
-    public long getGlobalNumberLikes() {
-        return totalNumberLikes;
-    }
-
     public double getBasePointAmount() {
         return basePointAmount;
     }
 
-    public LikeRewarding(final long existingNumberLikes, final long existingTotalNumberLikes,
-            final double basePointAmount) {
-        this.numberLikes = existingNumberLikes + 1;
-        this.totalNumberLikes = existingTotalNumberLikes + 1;
+    public LikeRewarding(final long existingNumberLikes, final double basePointAmount) {
+        this.numberLikes = existingNumberLikes;
         this.basePointAmount = basePointAmount;
     }
 
     public double determineAuthorRewarding() {
-        final double ratio = (splitToAuthorRatio + inflationRate * Math.log(this.totalNumberLikes));
-        return this.basePointAmount * ratio;
+        double economyGrowthRatio = 0.0;
+        if (this.numberLikes > 0) {
+            economyGrowthRatio = inflationRate * Math.log(this.numberLikes);
+        }
+        return this.basePointAmount * (splitToAuthorRatio + economyGrowthRatio);
     }
 
+    /**
+     * 
+     * @param likerRank only for existing likers
+     * @return
+     */
     public boolean isLikerRewarded(final long likerRank) {
         return likerRank * 2 < this.numberLikes;
     }
 
+    /**
+     * 
+     * @param likerRank only for existing likers
+     * @return
+     */
     public double determineLikerRewarding(long likerRank) {
         likerRank = Math.min(likerRank, this.numberLikes - 1);
         if (this.isLikerRewarded(likerRank)) {

@@ -77,11 +77,7 @@ public class ForumRepositoryCC {
         final Post post = this.getPostByKey(ctx, postKey);
         final KeyValue[] postLikesKeyValue = this.getAllLikesByPostKey(ctx, postKey);
 
-        final long existingNumberLikes = postLikesKeyValue.length;
-        final long existingTotalNumberLikes = ChaincodeStubTools.getNumberStatesByPartialCompositeKey(stub,
-                new CompositeKey(Like.getObjectTypeName()));
-        final LikeRewarding rewarding = new LikeRewarding(existingNumberLikes, existingTotalNumberLikes,
-                payerEntry.getPointAmount());
+        final LikeRewarding rewarding = new LikeRewarding(postLikesKeyValue.length, payerEntry.getPointAmount());
 
         final List<PointTransaction.Entry> payeeEntries = new ArrayList<PointTransaction.Entry>();
         payeeEntries.add(new PointTransaction.Entry(post.getUserId(), rewarding.determineAuthorRewarding()));
