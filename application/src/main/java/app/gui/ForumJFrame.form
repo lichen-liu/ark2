@@ -359,6 +359,9 @@
                     <Property name="editable" type="boolean" value="false"/>
                     <Property name="toolTipText" type="java.lang.String" value="Post Key"/>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="((DefaultCaret) viewPostPostKeyJTextField.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);"/>
+                  </AuxValues>
                 </Component>
               </SubComponents>
             </Container>
@@ -613,6 +616,9 @@
                     <Property name="editable" type="boolean" value="false"/>
                     <Property name="toolTipText" type="java.lang.String" value="Like Key"/>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="((DefaultCaret) viewLikeLikeKeyJTextField.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);"/>
+                  </AuxValues>
                 </Component>
               </SubComponents>
             </Container>
@@ -790,6 +796,9 @@
                     <Property name="editable" type="boolean" value="false"/>
                     <Property name="toolTipText" type="java.lang.String" value="Point Transaction Key"/>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="((DefaultCaret) viewPointTransactionPointTransactionKeyJTextField.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);"/>
+                  </AuxValues>
                 </Component>
               </SubComponents>
             </Container>
