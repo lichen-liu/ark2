@@ -90,30 +90,31 @@ public final class ForumRepository implements ContractInterface {
      * @param ctx
      * @param timestamp
      * 
-     *                                  <pre>
-     *                                  ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT); // "2015-04-14T11:07:36.639Z"
-     *                                  </pre>
+     *                                       <pre>
+     *                                       ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT); // "2015-04-14T11:07:36.639Z"
+     *                                       </pre>
      * 
      * @param postKey
      * @param likerPayerEntryString
      * 
-     *                                  <pre>
-     *                                  "{\"pointAmount\":150,\"userId\":\"ray\"}"
-     *                                  </pre>
+     *                                       <pre>
+     *                                       "{\"pointAmount\":150,\"userId\":\"ray\"}"
+     *                                       </pre>
      * 
      * @param likeSignature
-     * @param pointTransactionSignature
+     * @param likerPointTransactionSignature
      * @return likeKey, call getLikeByKey to verify whether the Like was
      *         successfully published. Also call getPointTransactionByKey to check
      *         the associating PointTransaction
      */
     @Transaction(intent = Transaction.TYPE.SUBMIT)
     public String publishNewLike(final Context ctx, final String timestamp, final String postKey,
-            final String likerPayerEntryString, final String likeSignature, final String pointTransactionSignature) {
+            final String likerPayerEntryString, final String likeSignature,
+            final String likerPointTransactionSignature) {
 
         try {
             return this.cc.publishNewLike(ctx, timestamp, postKey, likerPayerEntryString, likeSignature,
-                    pointTransactionSignature);
+                    likerPointTransactionSignature);
         } catch (final Exception e) {
             e.printStackTrace();
             throw new ChaincodeException(e);

@@ -70,7 +70,7 @@ public class ForumRepositoryCC {
     }
 
     public String publishNewLike(final Context ctx, final String timestamp, final String postKey,
-            final String likerPayerEntryString, final String likeSignature, final String pointTransactionSignature)
+            final String likerPayerEntryString, final String likeSignature, final String likerPointTransactionSignature)
             throws Exception {
         final ChaincodeStub stub = ctx.getStub();
 
@@ -101,7 +101,7 @@ public class ForumRepositoryCC {
         final Key likeKey = ChaincodeStubTools.generateKey(stub, like);
 
         final String pointTransactionKey = this.publishNewPointTransaction(ctx, timestamp, likerPayerEntryString,
-                payerEntry.getUserId(), pointTransactionSignature, likeKey.getBase64UrlKeyString(),
+                payerEntry.getUserId(), likerPointTransactionSignature, likeKey.getBase64UrlKeyString(),
                 genson.serialize(payeeEntries.toArray(PointTransaction.Entry[]::new)));
         like.setPointTransactionKey(pointTransactionKey);
 
@@ -112,19 +112,19 @@ public class ForumRepositoryCC {
 
     // public String publishNewDislike(final Context ctx, final String timestamp,
     // final String postKey,
-    // final String payerEntryString, final String dislikeSignature, final String
-    // pointTransactionSignature,
+    // final String dislikerPayerEntryString, final String dislikeSignature, final
+    // String pointTransactionSignature,
     // final String penaltyTransactionSignature) {
     // final ChaincodeStub stub = ctx.getStub();
 
-    // final var payerEntry = genson.deserialize(payerEntryString,
+    // final var dislikerPayerEntry = genson.deserialize(dislikerPayerEntryString,
     // PointTransaction.Entry.class);
-    // final Post post = this.getPostByKey(ctx, postKey);
-    // // final KeyValue[] postLikesKeyValue = this.getAllLikesByPostKey(ctx,
+    // final Post post = this.getByKey(ctx, postKey, Post.class);
+    // final KeyValue[] postDislikesKeyValue = this.getAllDislikesByPostKey(ctx,
     // postKey);
 
     // // final LikeRewarding rewarding = new
-    // LikeRewarding(postLikesKeyValue.length,
+    // // LikeRewarding(postLikesKeyValue.length,
     // // payerEntry.getPointAmount());
 
     // // final List<PointTransaction.Entry> payeeEntries = new
@@ -136,7 +136,7 @@ public class ForumRepositoryCC {
     // // if (!rewarding.isLikerRewarded(likerRank)) {
     // // break;
     // // }
-    // // final Like currentLike =
+    // // final Dislike currentDisLike =
     // // genson.deserialize(postLikesKeyValue[idx].getStringValue(), Like.class);
     // // payeeEntries.add(
     // // new PointTransaction.Entry(currentLike.getUserId(),
@@ -147,14 +147,14 @@ public class ForumRepositoryCC {
     // // System.out.println("payer: " + genson.serialize(payerEntry));
     // // System.out.println("payees: " + genson.serialize(payeeEntries));
 
-    // final var dislike = new Dislike(timestamp, postKey, payerEntry.getUserId(),
-    // dislikeSignature, null, null,
+    // final var dislike = new Dislike(timestamp, postKey,
+    // dislikerPayerEntry.getUserId(), dislikeSignature, null, null,
     // this.determineRelativeOrderForDislike(ctx, postKey));
     // final Key dislikeKey = ChaincodeStubTools.generateKey(stub, dislike);
 
     // final String pointTransactionKey = this.publishNewPointTransaction(ctx,
-    // timestamp, payerEntryString,
-    // payerEntry.getUserId(), pointTransactionSignature,
+    // timestamp, dislikerPayerEntryString,
+    // dislikerPayerEntry.getUserId(), pointTransactionSignature,
     // dislikeKey.getBase64UrlKeyString(),
     // genson.serialize(payeeEntries.toArray(PointTransaction.Entry[]::new)));
     // like.setPointTransactionKey(pointTransactionKey);
