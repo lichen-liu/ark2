@@ -41,6 +41,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         this.contract = contract;
         this.frameTitleString = frameTitleString;
         this.viewPointBalanceChartPanel = new PointHistoryChartPanel();
+        this.viewWorldPointBalanceChartPanel = new PointHistoryChartPanel();
 
         initComponents();
     }
@@ -107,6 +108,11 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPointBalanceChartJPanel = this.viewPointBalanceChartPanel;
         viewPointBalanceModeJComboBox = new javax.swing.JComboBox<>();
         viewPointBalancePointBalanceJTextField = new javax.swing.JTextField();
+        viewWorldPointBalanceJPanel = new javax.swing.JPanel();
+        viewWorldPointBalanceRefreshJButton = new javax.swing.JButton();
+        viewWorldPointBalanceChartJPanel = this.viewWorldPointBalanceChartPanel;
+        viewWorldPointBalanceModeJComboBox = new javax.swing.JComboBox<>();
+        viewWorldPointBalancePointBalanceJTextField = new javax.swing.JTextField();
         userSearchJSeparator = new javax.swing.JSeparator();
         statusJProgressBar = new javax.swing.JProgressBar();
 
@@ -565,6 +571,68 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         contentJTabbedPane.addTab("Point Balance", viewPointBalanceJPanel);
 
+        viewWorldPointBalanceRefreshJButton.setText("Refresh");
+        viewWorldPointBalanceRefreshJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
+                viewWorldPointBalanceRefreshJButtonActionPerformed(evt);
+            }
+        });
+
+        viewWorldPointBalanceChartJPanel.setPreferredSize(new java.awt.Dimension(20, 539));
+
+        final javax.swing.GroupLayout viewWorldPointBalanceChartJPanelLayout = new javax.swing.GroupLayout(
+                viewWorldPointBalanceChartJPanel);
+        viewWorldPointBalanceChartJPanel.setLayout(viewWorldPointBalanceChartJPanelLayout);
+        viewWorldPointBalanceChartJPanelLayout.setHorizontalGroup(viewWorldPointBalanceChartJPanelLayout
+                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 0, Short.MAX_VALUE));
+        viewWorldPointBalanceChartJPanelLayout.setVerticalGroup(viewWorldPointBalanceChartJPanelLayout
+                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 516, Short.MAX_VALUE));
+
+        viewWorldPointBalanceModeJComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(
+                new String[] { "Point Balance History", "Point Balance Changes History" }));
+        viewWorldPointBalanceModeJComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
+                viewWorldPointBalanceModeJComboBoxActionPerformed(evt);
+            }
+        });
+
+        viewWorldPointBalancePointBalanceJTextField.setEditable(false);
+        viewWorldPointBalancePointBalanceJTextField.setToolTipText("Point Balance");
+
+        final javax.swing.GroupLayout viewWorldPointBalanceJPanelLayout = new javax.swing.GroupLayout(
+                viewWorldPointBalanceJPanel);
+        viewWorldPointBalanceJPanel.setLayout(viewWorldPointBalanceJPanelLayout);
+        viewWorldPointBalanceJPanelLayout.setHorizontalGroup(viewWorldPointBalanceJPanelLayout
+                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(viewWorldPointBalanceJPanelLayout.createSequentialGroup()
+                        .addComponent(viewWorldPointBalanceModeJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 300,
+                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 694, Short.MAX_VALUE)
+                        .addComponent(viewWorldPointBalancePointBalanceJTextField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(viewWorldPointBalanceRefreshJButton).addContainerGap())
+                .addComponent(viewWorldPointBalanceChartJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1287,
+                        Short.MAX_VALUE));
+        viewWorldPointBalanceJPanelLayout.setVerticalGroup(viewWorldPointBalanceJPanelLayout
+                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(viewWorldPointBalanceJPanelLayout.createSequentialGroup()
+                        .addGroup(viewWorldPointBalanceJPanelLayout
+                                .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(viewWorldPointBalanceRefreshJButton)
+                                .addComponent(viewWorldPointBalanceModeJComboBox,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(viewWorldPointBalancePointBalanceJTextField,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(viewWorldPointBalanceChartJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 516,
+                                Short.MAX_VALUE)
+                        .addContainerGap()));
+
+        contentJTabbedPane.addTab("World Point Balance", viewWorldPointBalanceJPanel);
+
         final javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -634,6 +702,14 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void viewWorldPointBalanceRefreshJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewWorldPointBalanceRefreshJButtonActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_viewWorldPointBalanceRefreshJButtonActionPerformed
+
+    private void viewWorldPointBalanceModeJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewWorldPointBalanceModeJComboBoxActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_viewWorldPointBalanceModeJComboBoxActionPerformed
 
     private void generateKeyPairJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_generateKeyPairJButtonActionPerformed
         if (!this.userPublicKeyJTextField.getText().isEmpty() || !this.userPrivateKeyJTextField.getText().isEmpty()) {
@@ -1226,9 +1302,15 @@ public class ForumJFrame extends javax.swing.JFrame {
     private javax.swing.JTextField viewPostPostKeyJTextField;
     private javax.swing.JPanel viewPostRightJPanel;
     private javax.swing.JTextField viewPostStatusJTextField;
+    private javax.swing.JPanel viewWorldPointBalanceChartJPanel;
+    private javax.swing.JPanel viewWorldPointBalanceJPanel;
+    private javax.swing.JComboBox<String> viewWorldPointBalanceModeJComboBox;
+    private javax.swing.JTextField viewWorldPointBalancePointBalanceJTextField;
+    private javax.swing.JButton viewWorldPointBalanceRefreshJButton;
     // End of variables declaration//GEN-END:variables
 
     private final Contract contract;
     private final String frameTitleString;
     private final PointHistoryChartPanel viewPointBalanceChartPanel;
+    private final PointHistoryChartPanel viewWorldPointBalanceChartPanel;
 }
