@@ -378,6 +378,15 @@ public class ForumRepositoryCC {
         return Math.max(keys.length, recentLike.getRelativeOrder() + 1);
     }
 
+    private long determineRelativeOrderForDislike(final Context ctx, final String postKey) throws Exception {
+        final String[] keys = this.getAllDislikeKeysByPostKey(ctx, postKey);
+        if (keys.length == 0) {
+            return 0L;
+        }
+        final Dislike recentDislike = this.getByKey(ctx, keys[0], Dislike.class);
+        return Math.max(keys.length, recentDislike.getRelativeOrder() + 1);
+    }
+
     private long determineRelativeOrderForPointTransaction(final Context ctx) throws Exception {
         final String[] keys = this.getAllPointTransactionKeys(ctx);
         if (keys.length == 0) {
