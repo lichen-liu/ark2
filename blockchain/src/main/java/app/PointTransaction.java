@@ -164,6 +164,11 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
                 salt);
     }
 
+    @Override
+    public boolean isMatchingObjectType(final String objectType) {
+        return getObjectTypeName().equals(objectType);
+    }
+
     public static String getObjectTypeName() {
         return PointTransaction.class.getSimpleName();
     }

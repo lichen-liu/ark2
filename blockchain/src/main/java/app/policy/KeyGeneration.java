@@ -19,6 +19,8 @@ public interface KeyGeneration {
      */
     public abstract CompositeKey generateKey(final String salt);
 
+    public abstract boolean isMatchingObjectType(final String objectType);
+
     public default Key generateKey(final Predicate<Key> isKeyInvalid) {
         Key key = null;
         int attempt = 0;

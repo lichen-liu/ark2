@@ -18,6 +18,7 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 
+import app.policy.KeyGeneration;
 import app.policy.LikeRewarding;
 import app.util.ChaincodeStubTools;
 import app.util.ChaincodeStubTools.Key;
@@ -74,7 +75,7 @@ public class ForumRepositoryCC {
         final ChaincodeStub stub = ctx.getStub();
 
         final var payerEntry = genson.deserialize(likerPayerEntryString, PointTransaction.Entry.class);
-        final Post post = this.getPostByKey(ctx, postKey);
+        final Post post = this.getByKey(ctx, postKey, Post.class);
         final KeyValue[] postLikesKeyValue = this.getAllLikesByPostKey(ctx, postKey);
 
         final LikeRewarding rewarding = new LikeRewarding(postLikesKeyValue.length, payerEntry.getPointAmount());
@@ -177,16 +178,6 @@ public class ForumRepositoryCC {
         return postKeys.toArray(String[]::new);
     }
 
-    public Post getPostByKey(final Context ctx, final String postKey) throws IllegalArgumentException {
-        final ChaincodeStub stub = ctx.getStub();
-        final Key key = Key.createFromBase64UrlKeyString(postKey);
-        if (!Post.getObjectTypeName().equals(key.getObjectTypeString())) {
-            throw new ChaincodeException("getPostByKey(): key is not a PostKey", key.getObjectTypeString());
-        }
-        final String postString = ChaincodeStubTools.tryGetStringStateByKey(stub, key);
-        return genson.deserialize(postString, Post.class);
-    }
-
     public String[] getAllLikeKeysByPostKey(final Context ctx, final String postKey) throws Exception {
         final List<String> likeKeys = Arrays.stream(this.getAllLikesByPostKey(ctx, postKey))
                 .map(keyValue -> Key.createFromCCKeyString(keyValue.getKey()).getBase64UrlKeyString())
@@ -194,31 +185,11 @@ public class ForumRepositoryCC {
         return likeKeys.toArray(String[]::new);
     }
 
-    public Like getLikeByKey(final Context ctx, final String likeKey) throws IllegalArgumentException {
-        final ChaincodeStub stub = ctx.getStub();
-        final Key key = Key.createFromBase64UrlKeyString(likeKey);
-        if (!Like.getObjectTypeName().equals(key.getObjectTypeString())) {
-            throw new ChaincodeException("getLikeByKey(): key is not a LikeKey", key.getObjectTypeString());
-        }
-        final String likeString = ChaincodeStubTools.tryGetStringStateByKey(stub, key);
-        return genson.deserialize(likeString, Like.class);
-    }
-
     public String[] getAllDislikeKeysByPostKey(final Context ctx, final String postKey) throws Exception {
         final List<String> dislikeKeys = Arrays.stream(this.getAllDislikesByPostKey(ctx, postKey))
                 .map(keyValue -> Key.createFromCCKeyString(keyValue.getKey()).getBase64UrlKeyString())
                 .collect(Collectors.toList());
         return dislikeKeys.toArray(String[]::new);
-    }
-
-    public Dislike getDislikeByKey(final Context ctx, final String dislikeKey) throws IllegalArgumentException {
-        final ChaincodeStub stub = ctx.getStub();
-        final Key key = Key.createFromBase64UrlKeyString(dislikeKey);
-        if (!Dislike.getObjectTypeName().equals(key.getObjectTypeString())) {
-            throw new ChaincodeException("getDislikeByKey(): key is not a dislikeKey", key.getObjectTypeString());
-        }
-        final String dislikeString = ChaincodeStubTools.tryGetStringStateByKey(stub, key);
-        return genson.deserialize(dislikeString, Dislike.class);
     }
 
     public String[] getAllPointTransactionKeys(final Context ctx) throws Exception {
@@ -245,7 +216,7 @@ public class ForumRepositoryCC {
             final var tracking = nextTracking;
             nextTracking = null;
             for (final String earningKey : tracking.getRecentEarningPointTransactionKeys()) {
-                final var earningPointTransaction = this.getPointTransactionByKey(ctx, earningKey);
+                final var earningPointTransaction = this.getByKey(ctx, earningKey, PointTransaction.class);
                 if (Arrays.stream(earningPointTransaction.getPayeeEntries()).anyMatch(
                         (earningPointTransactionPayee) -> userId.equals(earningPointTransactionPayee.getUserId()))) {
                     relatedPointTransactions.put(earningKey, earningPointTransaction);
@@ -253,7 +224,7 @@ public class ForumRepositoryCC {
             }
             final String spendingKey = tracking.getRecentSpendingPointTransactionKey();
             if (spendingKey != null) {
-                final var spendingPointTransaction = this.getPointTransactionByKey(ctx, spendingKey);
+                final var spendingPointTransaction = this.getByKey(ctx, spendingKey, PointTransaction.class);
                 final var spendingPointTransactionPayer = spendingPointTransaction.getPayerEntry();
                 if (userId.equals(spendingPointTransactionPayer.getUserId())) {
                     relatedPointTransactions.put(spendingKey, spendingPointTransaction);
@@ -270,18 +241,6 @@ public class ForumRepositoryCC {
         return keys.toArray(String[]::new);
     }
 
-    public PointTransaction getPointTransactionByKey(final Context ctx, final String pointTransactionKey)
-            throws IllegalArgumentException {
-        final ChaincodeStub stub = ctx.getStub();
-        final Key key = Key.createFromBase64UrlKeyString(pointTransactionKey);
-        if (!PointTransaction.getObjectTypeName().equals(key.getObjectTypeString())) {
-            throw new ChaincodeException("getPointTransactionByKey(): key is not a PointTransactionKey",
-                    key.getObjectTypeString());
-        }
-        final String pointTransactionString = ChaincodeStubTools.tryGetStringStateByKey(stub, key);
-        return genson.deserialize(pointTransactionString, PointTransaction.class);
-    }
-
     public double computePointBalanceByUserId(final Context ctx, final String userId) throws Exception {
         double totalEarningPointAmount = 0;
         double totalSpendingPointAmount = 0;
@@ -289,7 +248,7 @@ public class ForumRepositoryCC {
         final String[] pointTransactionKeys = this.computeAllPointTransactionKeysByUserId(ctx, userId);
 
         for (final String pointTransactionKey : pointTransactionKeys) {
-            final PointTransaction pointTransaction = this.getPointTransactionByKey(ctx, pointTransactionKey);
+            final PointTransaction pointTransaction = this.getByKey(ctx, pointTransactionKey, PointTransaction.class);
 
             final var payerEntry = pointTransaction.getPayerEntry();
             if (userId.equals(payerEntry.getUserId())) {
@@ -303,6 +262,20 @@ public class ForumRepositoryCC {
         }
 
         return totalEarningPointAmount - totalSpendingPointAmount;
+    }
+
+    public <T extends KeyGeneration> T getByKey(final Context ctx, final String keyString, final Class<T> contentClass)
+            throws IllegalArgumentException {
+        final ChaincodeStub stub = ctx.getStub();
+        final Key key = Key.createFromBase64UrlKeyString(keyString);
+
+        final String contentString = ChaincodeStubTools.tryGetStringStateByKey(stub, key);
+        final T content = genson.deserialize(contentString, contentClass);
+        if (!content.isMatchingObjectType(key.getObjectTypeString())) {
+            throw new ChaincodeException(String.format("getByKey<%s>(): but key is of type %s",
+                    contentClass.getSimpleName(), key.getObjectTypeString()));
+        }
+        return content;
     }
 
     /**
@@ -401,7 +374,7 @@ public class ForumRepositoryCC {
         if (keys.length == 0) {
             return 0L;
         }
-        final Like recentLike = this.getLikeByKey(ctx, keys[0]);
+        final Like recentLike = this.getByKey(ctx, keys[0], Like.class);
         return Math.max(keys.length, recentLike.getRelativeOrder() + 1);
     }
 
@@ -410,7 +383,7 @@ public class ForumRepositoryCC {
         if (keys.length == 0) {
             return 0L;
         }
-        final PointTransaction recentPointTransaction = this.getPointTransactionByKey(ctx, keys[0]);
+        final PointTransaction recentPointTransaction = this.getByKey(ctx, keys[0], PointTransaction.class);
         return Math.max(keys.length, recentPointTransaction.getRelativeOrder() + 1);
     }
 

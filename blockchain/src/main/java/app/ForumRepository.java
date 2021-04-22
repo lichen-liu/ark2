@@ -162,7 +162,7 @@ public final class ForumRepository implements ContractInterface {
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public Post getPostByKey(final Context ctx, final String postKey) {
         try {
-            return this.cc.getPostByKey(ctx, postKey);
+            return this.cc.getByKey(ctx, postKey, Post.class);
         } catch (final IllegalArgumentException e) {
             e.printStackTrace();
             throw new ChaincodeException(e);
@@ -195,7 +195,7 @@ public final class ForumRepository implements ContractInterface {
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public Like getLikeByKey(final Context ctx, final String likeKey) {
         try {
-            return this.cc.getLikeByKey(ctx, likeKey);
+            return this.cc.getByKey(ctx, likeKey, Like.class);
         } catch (final IllegalArgumentException e) {
             e.printStackTrace();
             throw new ChaincodeException(e);
@@ -228,7 +228,7 @@ public final class ForumRepository implements ContractInterface {
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public Dislike getDislikeByKey(final Context ctx, final String dislikeKey) {
         try {
-            return this.cc.getDislikeByKey(ctx, dislikeKey);
+            return this.cc.getByKey(ctx, dislikeKey, Dislike.class);
         } catch (final IllegalArgumentException e) {
             e.printStackTrace();
             throw new ChaincodeException(e);
@@ -294,7 +294,7 @@ public final class ForumRepository implements ContractInterface {
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public PointTransaction getPointTransactionByKey(final Context ctx, final String pointTransactionKey) {
         try {
-            return this.cc.getPointTransactionByKey(ctx, pointTransactionKey);
+            return this.cc.getByKey(ctx, pointTransactionKey, PointTransaction.class);
         } catch (final IllegalArgumentException e) {
             e.printStackTrace();
             throw new ChaincodeException(e);

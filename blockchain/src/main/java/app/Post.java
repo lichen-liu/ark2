@@ -61,6 +61,11 @@ public final class Post implements KeyGeneration, ComparableByTimestamp, Signatu
         return new CompositeKey(getObjectTypeName(), userId, signature, salt);
     }
 
+    @Override
+    public boolean isMatchingObjectType(final String objectType) {
+        return getObjectTypeName().equals(objectType);
+    }
+
     public static String getObjectTypeName() {
         return Post.class.getSimpleName();
     }

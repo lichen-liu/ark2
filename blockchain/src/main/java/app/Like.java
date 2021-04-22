@@ -85,6 +85,11 @@ public final class Like implements KeyGeneration, ComparableByTimestamp, Compara
         return new CompositeKey(getObjectTypeName(), postKey, String.valueOf(relativeOrder), salt);
     }
 
+    @Override
+    public boolean isMatchingObjectType(final String objectType) {
+        return getObjectTypeName().equals(objectType);
+    }
+
     public static String getObjectTypeName() {
         return Like.class.getSimpleName();
     }
