@@ -69,11 +69,11 @@ public class ForumRepositoryCC {
     }
 
     public String publishNewLike(final Context ctx, final String timestamp, final String postKey,
-            final String payerEntryString, final String likeSignature, final String pointTransactionSignature)
+            final String likerPayerEntryString, final String likeSignature, final String pointTransactionSignature)
             throws Exception {
         final ChaincodeStub stub = ctx.getStub();
 
-        final var payerEntry = genson.deserialize(payerEntryString, PointTransaction.Entry.class);
+        final var payerEntry = genson.deserialize(likerPayerEntryString, PointTransaction.Entry.class);
         final Post post = this.getPostByKey(ctx, postKey);
         final KeyValue[] postLikesKeyValue = this.getAllLikesByPostKey(ctx, postKey);
 
@@ -99,7 +99,7 @@ public class ForumRepositoryCC {
                 this.determineRelativeOrderForLike(ctx, postKey));
         final Key likeKey = ChaincodeStubTools.generateKey(stub, like);
 
-        final String pointTransactionKey = this.publishNewPointTransaction(ctx, timestamp, payerEntryString,
+        final String pointTransactionKey = this.publishNewPointTransaction(ctx, timestamp, likerPayerEntryString,
                 payerEntry.getUserId(), pointTransactionSignature, likeKey.getBase64UrlKeyString(),
                 genson.serialize(payeeEntries.toArray(PointTransaction.Entry[]::new)));
         like.setPointTransactionKey(pointTransactionKey);
@@ -108,6 +108,60 @@ public class ForumRepositoryCC {
 
         return likeKey.getBase64UrlKeyString();
     }
+
+    // public String publishNewDislike(final Context ctx, final String timestamp,
+    // final String postKey,
+    // final String payerEntryString, final String dislikeSignature, final String
+    // pointTransactionSignature,
+    // final String penaltyTransactionSignature) {
+    // final ChaincodeStub stub = ctx.getStub();
+
+    // final var payerEntry = genson.deserialize(payerEntryString,
+    // PointTransaction.Entry.class);
+    // final Post post = this.getPostByKey(ctx, postKey);
+    // // final KeyValue[] postLikesKeyValue = this.getAllLikesByPostKey(ctx,
+    // postKey);
+
+    // // final LikeRewarding rewarding = new
+    // LikeRewarding(postLikesKeyValue.length,
+    // // payerEntry.getPointAmount());
+
+    // // final List<PointTransaction.Entry> payeeEntries = new
+    // // ArrayList<PointTransaction.Entry>();
+    // // payeeEntries.add(new PointTransaction.Entry(post.getUserId(),
+    // // rewarding.determineAuthorRewarding()));
+    // // for (int idx = postLikesKeyValue.length - 1; idx >= 0; idx--) {
+    // // final long likerRank = postLikesKeyValue.length - 1 - idx;
+    // // if (!rewarding.isLikerRewarded(likerRank)) {
+    // // break;
+    // // }
+    // // final Like currentLike =
+    // // genson.deserialize(postLikesKeyValue[idx].getStringValue(), Like.class);
+    // // payeeEntries.add(
+    // // new PointTransaction.Entry(currentLike.getUserId(),
+    // // rewarding.determineLikerRewarding(likerRank)));
+    // // }
+
+    // // System.out.println("publishNewLike");
+    // // System.out.println("payer: " + genson.serialize(payerEntry));
+    // // System.out.println("payees: " + genson.serialize(payeeEntries));
+
+    // final var dislike = new Dislike(timestamp, postKey, payerEntry.getUserId(),
+    // dislikeSignature, null, null,
+    // this.determineRelativeOrderForDislike(ctx, postKey));
+    // final Key dislikeKey = ChaincodeStubTools.generateKey(stub, dislike);
+
+    // final String pointTransactionKey = this.publishNewPointTransaction(ctx,
+    // timestamp, payerEntryString,
+    // payerEntry.getUserId(), pointTransactionSignature,
+    // dislikeKey.getBase64UrlKeyString(),
+    // genson.serialize(payeeEntries.toArray(PointTransaction.Entry[]::new)));
+    // like.setPointTransactionKey(pointTransactionKey);
+
+    // ChaincodeStubTools.putStringState(stub, likeKey, genson.serialize(like));
+
+    // return likeKey.getBase64UrlKeyString();
+    // }
 
     public String[] getAllPostKeys(final Context ctx) throws Exception {
         final List<String> postKeys = Arrays.stream(this.getAllPosts(ctx, null))
@@ -149,6 +203,29 @@ public class ForumRepositoryCC {
         final String likeString = ChaincodeStubTools.tryGetStringStateByKey(stub, key);
         return genson.deserialize(likeString, Like.class);
     }
+
+    // public String[] getAllDislikeKeysByPostKey(final Context ctx, final String
+    // postKey) throws Exception {
+    // final List<String> likeKeys = Arrays.stream(this.getAllLikesByPostKey(ctx,
+    // postKey))
+    // .map(keyValue ->
+    // Key.createFromCCKeyString(keyValue.getKey()).getBase64UrlKeyString())
+    // .collect(Collectors.toList());
+    // return likeKeys.toArray(String[]::new);
+    // }
+
+    // public Like getLikeByKey(final Context ctx, final String likeKey) throws
+    // IllegalArgumentException {
+    // final ChaincodeStub stub = ctx.getStub();
+    // final Key key = Key.createFromBase64UrlKeyString(likeKey);
+    // if (!Like.getObjectTypeName().equals(key.getObjectTypeString())) {
+    // throw new ChaincodeException("getLikeByKey(): key is not a LikeKey",
+    // key.getObjectTypeString());
+    // }
+    // final String likeString = ChaincodeStubTools.tryGetStringStateByKey(stub,
+    // key);
+    // return genson.deserialize(likeString, Like.class);
+    // }
 
     public String[] getAllPointTransactionKeys(final Context ctx) throws Exception {
         final List<String> pointTransactionKeys = Arrays.stream(this.getAllPointTransactions(ctx, null))
