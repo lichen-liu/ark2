@@ -683,7 +683,7 @@
                       <StringArray count="4">
                         <StringItem index="0" value="All"/>
                         <StringItem index="1" value="Get By Point Transaction Key"/>
-                        <StringItem index="2" value="Query By Payer"/>
+                        <StringItem index="2" value="Query By Issuer"/>
                         <StringItem index="3" value="Query By Related User"/>
                       </StringArray>
                     </Property>

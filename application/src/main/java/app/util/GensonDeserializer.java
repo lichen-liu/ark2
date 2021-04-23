@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import app.repository.data.Transaction.Entry;
+import app.repository.data.PointTransaction;
 
 public class GensonDeserializer implements Deserializer {
     private final ObjectMapper om;
@@ -24,7 +24,7 @@ public class GensonDeserializer implements Deserializer {
     }
 
     @Override
-    public String transactionEntryToJson(final Iterable<Entry> participants) throws JsonProcessingException {
+    public String transactionEntriesToJson(final Iterable<PointTransaction.Entry> participants) throws JsonProcessingException {
         final var list = new ArrayList<Map<String, String>>();
         participants.forEach(p -> {
             try {
@@ -37,12 +37,12 @@ public class GensonDeserializer implements Deserializer {
     }
 
     @Override
-    public String transactionEntriesToJson(final Entry participant)
+    public String transactionEntryToJson(final PointTransaction.Entry participant)
             throws IOException, JsonParseException, JsonMappingException {
         return om.writeValueAsString(participantMap(participant));
     }
 
-    private Map<String, String> participantMap(final Entry participant) {
+    private Map<String, String> participantMap(final PointTransaction.Entry participant) {
         return Map.of("userId", participant.userId, "pointAmount", Double.toString(participant.pointAmount));
     }
 }

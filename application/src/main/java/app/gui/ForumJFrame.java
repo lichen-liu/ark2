@@ -425,7 +425,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewPointTransactionLeftJPanel.setPreferredSize(new java.awt.Dimension(400, 500));
 
         viewPointTransactionKeysQueryJComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(
-                new String[] { "All", "Get By Point Transaction Key", "Query By Payer", "Query By Related User" }));
+                new String[] { "All", "Get By Point Transaction Key", "Query By Issuer", "Query By Related User" }));
         viewPointTransactionKeysQueryJComboBox.setSelectedIndex(-1);
         viewPointTransactionKeysQueryJComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(final java.awt.event.ActionEvent evt) {
@@ -911,9 +911,10 @@ public class ForumJFrame extends javax.swing.JFrame {
                     .fetchPointTransactionByPointTransactionKey(pointTransactionKey);
             double pointBalanceChanges = 0.0;
 
-            final var payerEntry = pointTransaction.payerEntry;
-            if (userId.equals(payerEntry.userId)) {
-                pointBalanceChanges -= payerEntry.pointAmount;
+            for (final var payerEntry : pointTransaction.payerEntries) {
+                if (userId.equals(payerEntry.userId)) {
+                    pointBalanceChanges -= payerEntry.pointAmount;
+                }
             }
             for (final var payeeEntry : pointTransaction.payeeEntries) {
                 if (userId.equals(payeeEntry.userId)) {
@@ -978,8 +979,9 @@ public class ForumJFrame extends javax.swing.JFrame {
                     .fetchPointTransactionByPointTransactionKey(pointTransactionKey);
             double pointBalanceChanges = 0.0;
 
-            final var payerEntry = pointTransaction.payerEntry;
-            pointBalanceChanges -= payerEntry.pointAmount;
+            for (final var payerEntry : pointTransaction.payerEntries) {
+                pointBalanceChanges -= payerEntry.pointAmount;
+            }
             for (final var payeeEntry : pointTransaction.payeeEntries) {
                 pointBalanceChanges += payeeEntry.pointAmount;
             }
@@ -1037,9 +1039,9 @@ public class ForumJFrame extends javax.swing.JFrame {
             if (pointTransactionKeys != null) {
                 this.viewPointTransactionKeysJList.setListData(pointTransactionKeys);
             }
-        } else if ("Query By Payer".equals(selectedQueryMethod)) {
+        } else if ("Query By Issuer".equals(selectedQueryMethod)) {
             final var userApp = ServiceProvider.createAnonymousService(this.contract);
-            final String[] pointTransactionKeys = userApp.fetchPointTransactionKeysByPayerUserId(searchString);
+            final String[] pointTransactionKeys = userApp.fetchPointTransactionKeysByIssuerUserId(searchString);
             if (pointTransactionKeys != null) {
                 this.viewPointTransactionKeysJList.setListData(pointTransactionKeys);
             }
@@ -1159,11 +1161,12 @@ public class ForumJFrame extends javax.swing.JFrame {
         if (pointTransaction != null) {
             String pointTransactionTextArea = "Timestamp:\n" + pointTransaction.timestamp + "\n\n";
             pointTransactionTextArea += "IssuerUserId:\n" + pointTransaction.issuerUserId + "\n\n";
-            pointTransactionTextArea += "PayerEntry:\n" + pointTransaction.payerEntry.toString() + "\n\n";
+            pointTransactionTextArea += "PayerEntries:\n" + Arrays.toString(pointTransaction.payerEntries) + "\n\n";
             pointTransactionTextArea += "PayeeEntries:\n" + Arrays.toString(pointTransaction.payeeEntries) + "\n\n";
             pointTransactionTextArea += "Reference:\n" + pointTransaction.reference + "\n\n";
             pointTransactionTextArea += "RelativeOrder:\n" + pointTransaction.relativeOrder + "\n\n";
-            pointTransactionTextArea += "Tracking:\n" + pointTransaction.payerPointTransactionTracking + "\n\n";
+            pointTransactionTextArea += "Tracking:\n" + Arrays.toString(pointTransaction.payersPointTransactionTracking)
+                    + "\n\n";
 
             this.viewPointTransactionPointTransactionKeyJTextField.setText(selectedPointTransactionKey);
             this.viewPointTransactionJTextArea.setText(pointTransactionTextArea);

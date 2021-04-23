@@ -12,8 +12,8 @@ import org.hyperledger.fabric.gateway.Wallet;
 
 import app.backend.ContractFactory;
 import app.backend.WalletFactory;
-import app.repository.data.Transaction;
-import app.repository.data.Transaction.Entry;
+import app.repository.data.Payment;
+import app.repository.data.PointTransaction;
 import app.tests.util.Logger;
 import app.tests.util.TestClient;
 import app.tests.util.TestRunner;
@@ -60,26 +60,27 @@ public class TransactionTests {
         final var client2Id = ByteUtils.toAsciiString(client2.getPublicKey().getEncoded());
         final var client3Id = ByteUtils.toAsciiString(client3.getPublicKey().getEncoded());
 
-        final Transaction transaction = new Transaction();
+        final Payment transaction = new Payment();
         transaction.reference = "reference";
-        transaction.payer = new Entry(client1Id, (double) 20);
-        transaction.payees = Arrays.asList(new Entry(client2Id, (double) 10), new Entry(client3Id, (double) 10));
+        transaction.payer = new PointTransaction.Entry(client1Id, (double) 20);
+        transaction.payees = Arrays.asList(new PointTransaction.Entry(client2Id, (double) 10),
+                new PointTransaction.Entry(client3Id, (double) 10));
         runner.insertNewTest((TestVoid) () -> {
             return client2.publishNewTransaction(transaction);
         }, 1);
 
-        final Transaction transaction2 = new Transaction();
+        final Payment transaction2 = new Payment();
         transaction2.reference = "reference";
-        transaction2.payer = new Entry(client2Id, (double) 10);
-        transaction2.payees = Arrays.asList(new Entry(client1Id, (double) 10));
+        transaction2.payer = new PointTransaction.Entry(client2Id, (double) 10);
+        transaction2.payees = Arrays.asList(new PointTransaction.Entry(client1Id, (double) 10));
         runner.insertNewTest((TestVoid) () -> {
             return client2.publishNewTransaction(transaction2);
         }, 1);
 
-        final Transaction transaction3 = new Transaction();
+        final Payment transaction3 = new Payment();
         transaction3.reference = "reference";
-        transaction3.payer = new Entry(client3Id, (double) 30);
-        transaction3.payees = Arrays.asList(new Entry(client1Id, (double) 30));
+        transaction3.payer = new PointTransaction.Entry(client3Id, (double) 30);
+        transaction3.payees = Arrays.asList(new PointTransaction.Entry(client1Id, (double) 30));
         runner.insertNewTest((TestVoid) () -> {
             return client2.publishNewTransaction(transaction3);
         }, 1);
@@ -125,18 +126,18 @@ public class TransactionTests {
         final var runner1Tests = new ArrayList<TestVoid>();
         final var runner2Tests = new ArrayList<TestVoid>();
 
-        final Transaction transaction = new Transaction();
+        final Payment transaction = new Payment();
         transaction.reference = "reference";
-        transaction.payer = new Entry(client1Id, (double) 100);
-        transaction.payees = Arrays.asList(new Entry(client2Id, (double) 100));
+        transaction.payer = new PointTransaction.Entry(client1Id, (double) 100);
+        transaction.payees = Arrays.asList(new PointTransaction.Entry(client2Id, (double) 100));
         runner1Tests.add((TestVoid) () -> {
             return client1.publishNewTransaction(transaction);
         });
 
-        final Transaction transaction2 = new Transaction();
+        final Payment transaction2 = new Payment();
         transaction2.reference = "reference";
-        transaction2.payer = new Entry(client1Id, (double) 200);
-        transaction2.payees = Arrays.asList(new Entry(client2Id, (double) 200));
+        transaction2.payer = new PointTransaction.Entry(client1Id, (double) 200);
+        transaction2.payees = Arrays.asList(new PointTransaction.Entry(client2Id, (double) 200));
         runner1Tests.add((TestVoid) () -> {
             return client1.publishNewTransaction(transaction2);
         });
@@ -145,19 +146,19 @@ public class TransactionTests {
             runner1.insertNewTest(test, 1);
         }
 
-        final Transaction transaction3 = new Transaction();
+        final Payment transaction3 = new Payment();
         transaction3.reference = "reference";
-        transaction3.payer = new Entry(client2Id, (double) 5);
-        transaction3.payees = Arrays.asList(new Entry(client1Id, (double) 5));
+        transaction3.payer = new PointTransaction.Entry(client2Id, (double) 5);
+        transaction3.payees = Arrays.asList(new PointTransaction.Entry(client1Id, (double) 5));
 
         runner2Tests.add((TestVoid) () -> {
             return client2.publishNewTransaction(transaction3);
         });
 
-        final Transaction transaction4 = new Transaction();
+        final Payment transaction4 = new Payment();
         transaction4.reference = "reference";
-        transaction4.payer = new Entry(client2Id, (double) 10);
-        transaction4.payees = Arrays.asList(new Entry(client1Id, (double) 10));
+        transaction4.payer = new PointTransaction.Entry(client2Id, (double) 10);
+        transaction4.payees = Arrays.asList(new PointTransaction.Entry(client1Id, (double) 10));
         runner2Tests.add((TestVoid) () -> {
             return client2.publishNewTransaction(transaction4);
         });
@@ -217,10 +218,10 @@ public class TransactionTests {
         final var runner1Tests = new ArrayList<TestVoid>();
         final var runner2Tests = new ArrayList<TestVoid>();
 
-        final Transaction transaction = new Transaction();
+        final Payment transaction = new Payment();
         transaction.reference = "reference";
-        transaction.payer = new Entry(client1Id, (double) 100);
-        transaction.payees = Arrays.asList(new Entry(client2Id, (double) 100));
+        transaction.payer = new PointTransaction.Entry(client1Id, (double) 100);
+        transaction.payees = Arrays.asList(new PointTransaction.Entry(client2Id, (double) 100));
         runner1Tests.add((TestVoid) () -> {
             return client1.publishNewTransaction(transaction);
         });
@@ -229,10 +230,10 @@ public class TransactionTests {
             runner1.insertNewTest(test, 5);
         }
 
-        final Transaction transaction2 = new Transaction();
+        final Payment transaction2 = new Payment();
         transaction2.reference = "reference";
-        transaction2.payer = new Entry(client3Id, (double) 5);
-        transaction2.payees = Arrays.asList(new Entry(client4Id, (double) 5));
+        transaction2.payer = new PointTransaction.Entry(client3Id, (double) 5);
+        transaction2.payees = Arrays.asList(new PointTransaction.Entry(client4Id, (double) 5));
         runner2Tests.add((TestVoid) () -> {
             return client3.publishNewTransaction(transaction2);
         });

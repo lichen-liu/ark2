@@ -48,19 +48,20 @@ public class ForumRepositoryCC {
         return postKey.getBase64UrlKeyString();
     }
 
-    public String publishNewPointTransaction(final Context ctx, final String timestamp, final String payerEntryString,
-            final String issuerUserId, final String signature, final String reference, final String payeeEntriesString)
-            throws Exception {
+    public String publishNewPointTransaction(final Context ctx, final String timestamp, final String issuerUserId,
+            final String payerEntriesString, final String signature, final String reference,
+            final String payeeEntriesString) throws Exception {
 
         final ChaincodeStub stub = ctx.getStub();
-        final var payerEntry = genson.deserialize(payerEntryString, PointTransaction.Entry.class);
+        final var payerEntries = genson.deserialize(payerEntriesString, PointTransaction.Entry[].class);
         final var payeeEntries = genson.deserialize(payeeEntriesString, PointTransaction.Entry[].class);
 
-        final PointTransaction.Tracking payerPointTransactionTracking = this
-                .determinePointTransactionTrackingForUserId(ctx, payerEntry.getUserId());
+        final PointTransaction.Tracking[] payersPointTransactionTracking = this
+                .determinePointTransactionTrackingForPayerUserIds(ctx, Arrays.asList(payerEntries).stream()
+                        .map(payerEntry -> payerEntry.getUserId()).toArray(String[]::new));
 
-        final var pointTransaction = new PointTransaction(timestamp, payerEntry, issuerUserId, signature, reference,
-                payeeEntries, this.determineRelativeOrderForPointTransaction(ctx), payerPointTransactionTracking);
+        final var pointTransaction = new PointTransaction(timestamp, issuerUserId, payerEntries, signature, reference,
+                payeeEntries, this.determineRelativeOrderForPointTransaction(ctx), payersPointTransactionTracking);
 
         final Key pointTransactionKey = ChaincodeStubTools.generateKey(stub, pointTransaction);
 
@@ -100,9 +101,9 @@ public class ForumRepositoryCC {
                 this.determineRelativeOrderForLike(ctx, postKey));
         final Key likeKey = ChaincodeStubTools.generateKey(stub, like);
 
-        final String pointTransactionKey = this.publishNewPointTransaction(ctx, timestamp, likePayerEntryString,
-                payerEntry.getUserId(), likePointTransactionSignature, likeKey.getBase64UrlKeyString(),
-                genson.serialize(payeeEntries.toArray(PointTransaction.Entry[]::new)));
+        final String pointTransactionKey = this.publishNewPointTransaction(ctx, timestamp, payerEntry.getUserId(),
+                genson.serialize(new PointTransaction.Entry[] { payerEntry }), likePointTransactionSignature,
+                likeKey.getBase64UrlKeyString(), genson.serialize(payeeEntries.toArray(PointTransaction.Entry[]::new)));
         like.setPointTransactionKey(pointTransactionKey);
 
         ChaincodeStubTools.putStringState(stub, likeKey, genson.serialize(like));
@@ -203,9 +204,9 @@ public class ForumRepositoryCC {
         return pointTransactionKeys.toArray(String[]::new);
     }
 
-    public String[] getAllPointTransactionKeysByPayerUserId(final Context ctx, final String payerUserId)
+    public String[] getAllPointTransactionKeysByIssuerUserId(final Context ctx, final String issuerUserId)
             throws Exception {
-        final List<String> pointTransactionKeys = Arrays.stream(this.getAllPointTransactions(ctx, payerUserId))
+        final List<String> pointTransactionKeys = Arrays.stream(this.getAllPointTransactions(ctx, issuerUserId))
                 .map(keyValue -> Key.createFromCCKeyString(keyValue.getKey()).getBase64UrlKeyString())
                 .collect(Collectors.toList());
         return pointTransactionKeys.toArray(String[]::new);
@@ -214,35 +215,40 @@ public class ForumRepositoryCC {
     public String[] computeAllPointTransactionKeysByUserId(final Context ctx, final String userId) throws Exception {
         final Map<String, PointTransaction> relatedPointTransactions = new HashMap<String, PointTransaction>();
 
-        PointTransaction.Tracking nextTracking = this.determinePointTransactionTrackingForUserId(ctx, userId);
+        PointTransaction.Tracking nextTracking = this.determinePointTransactionTrackingForPayerUserIds(ctx,
+                new String[] { userId })[0];
 
         while (nextTracking != null) {
-            final var tracking = nextTracking;
+            final PointTransaction.Tracking tracking = nextTracking;
             nextTracking = null;
+
             for (final String earningKey : tracking.getRecentEarningPointTransactionKeys()) {
                 final var earningPointTransaction = this.getByKey(ctx, earningKey, PointTransaction.class);
                 if (Arrays.stream(earningPointTransaction.getPayeeEntries()).anyMatch(
-                        (earningPointTransactionPayee) -> userId.equals(earningPointTransactionPayee.getUserId()))) {
+                        earningPointTransactionPayee -> userId.equals(earningPointTransactionPayee.getUserId()))) {
                     relatedPointTransactions.put(earningKey, earningPointTransaction);
                 }
             }
             final String spendingKey = tracking.getRecentSpendingPointTransactionKey();
             if (spendingKey != null) {
                 final var spendingPointTransaction = this.getByKey(ctx, spendingKey, PointTransaction.class);
-                final var spendingPointTransactionPayer = spendingPointTransaction.getPayerEntry();
-                if (userId.equals(spendingPointTransactionPayer.getUserId())) {
-                    relatedPointTransactions.put(spendingKey, spendingPointTransaction);
-                    nextTracking = spendingPointTransaction.getPayerPointTransactionTracking();
+                final var spendingPointTransactionPayers = spendingPointTransaction.getPayerEntries();
+                for (int payerIndex = 0; payerIndex < spendingPointTransactionPayers.length; payerIndex++) {
+                    final var spendingPointTransactionPayer = spendingPointTransactionPayers[payerIndex];
+                    if (userId.equals(spendingPointTransactionPayer.getUserId())) {
+                        relatedPointTransactions.put(spendingKey, spendingPointTransaction);
+                        nextTracking = spendingPointTransaction.getPayersPointTransactionTracking()[payerIndex];
+                        break;
+                    }
                 }
             }
         }
 
-        final List<String> keys = relatedPointTransactions.entrySet().stream().sorted((leftEntry, rightEntry) -> {
+        return relatedPointTransactions.entrySet().stream().sorted((leftEntry, rightEntry) -> {
             final var leftPointTransaction = leftEntry.getValue();
             final var rightPointTransaction = rightEntry.getValue();
             return leftPointTransaction.compareToByRelativeOrder(rightPointTransaction);
-        }).map(entry -> entry.getKey()).collect(Collectors.toList());
-        return keys.toArray(String[]::new);
+        }).map(entry -> entry.getKey()).toArray(String[]::new);
     }
 
     public double computePointBalanceByUserId(final Context ctx, final String userId) throws Exception {
@@ -254,9 +260,10 @@ public class ForumRepositoryCC {
         for (final String pointTransactionKey : pointTransactionKeys) {
             final PointTransaction pointTransaction = this.getByKey(ctx, pointTransactionKey, PointTransaction.class);
 
-            final var payerEntry = pointTransaction.getPayerEntry();
-            if (userId.equals(payerEntry.getUserId())) {
-                totalSpendingPointAmount += payerEntry.getPointAmount();
+            for (final var payerEntry : pointTransaction.getPayerEntries()) {
+                if (userId.equals(payerEntry.getUserId())) {
+                    totalSpendingPointAmount += payerEntry.getPointAmount();
+                }
             }
             for (final var payeeEntry : pointTransaction.getPayeeEntries()) {
                 if (userId.equals(payeeEntry.getUserId())) {
@@ -406,31 +413,40 @@ public class ForumRepositoryCC {
      * 
      * @param ctx
      * @param userId
-     * @return
+     * @return PointTransaction.Tracking[] same order as String[] payersUserId
      * @throws Exception
      */
-    private PointTransaction.Tracking determinePointTransactionTrackingForUserId(final Context ctx, final String userId)
-            throws Exception {
-        final String[] spendingKeys = this.getAllPointTransactionKeysByPayerUserId(ctx, userId);
-        final String recentSpendingPointTransactionKey = spendingKeys.length > 0 ? spendingKeys[0] : null;
-
-        final List<String> recentEarningPointTransactionKeys = new ArrayList<String>();
+    private PointTransaction.Tracking[] determinePointTransactionTrackingForPayerUserIds(final Context ctx,
+            final String[] payersUserId) throws Exception {
         final KeyValue[] allPointTransactions = this.getAllPointTransactions(ctx, null);
-        for (final KeyValue pointTransactionKV : allPointTransactions) {
-            if (Key.createFromCCKeyString(pointTransactionKV.getKey()).getBase64UrlKeyString()
-                    .equals(recentSpendingPointTransactionKey)) {
-                break;
+        final List<PointTransaction.Tracking> payersTracking = new ArrayList<PointTransaction.Tracking>();
+
+        for (final String payerUserId : payersUserId) {
+            String recentSpendingPointTransactionKey = null;
+            final List<String> recentEarningPointTransactionKeys = new ArrayList<String>();
+
+            for (final KeyValue pointTransactionKV : allPointTransactions) {
+                final var pointTransaction = genson.deserialize(pointTransactionKV.getStringValue(),
+                        PointTransaction.class);
+                final var pointTransactionKeyString = Key.createFromCCKeyString(pointTransactionKV.getKey())
+                        .getBase64UrlKeyString();
+
+                if (Arrays.stream(pointTransaction.getPayerEntries())
+                        .anyMatch(payer -> payer.getUserId().equals(payerUserId))) {
+                    recentSpendingPointTransactionKey = pointTransactionKeyString;
+                    break;
+                }
+                if (Arrays.stream(pointTransaction.getPayeeEntries())
+                        .anyMatch(payee -> payee.getUserId().equals(payerUserId))) {
+                    recentEarningPointTransactionKeys.add(pointTransactionKeyString);
+                }
             }
-            final var pointTransaction = genson.deserialize(pointTransactionKV.getStringValue(),
-                    PointTransaction.class);
-            if (Arrays.stream(pointTransaction.getPayeeEntries()).anyMatch(payee -> payee.getUserId().equals(userId))) {
-                recentEarningPointTransactionKeys
-                        .add(Key.createFromCCKeyString(pointTransactionKV.getKey()).getBase64UrlKeyString());
-            }
+
+            payersTracking.add(new PointTransaction.Tracking(recentSpendingPointTransactionKey,
+                    recentEarningPointTransactionKeys.toArray(String[]::new)));
         }
 
-        return new PointTransaction.Tracking(recentSpendingPointTransactionKey,
-                recentEarningPointTransactionKeys.toArray(String[]::new));
+        return payersTracking.toArray(PointTransaction.Tracking[]::new);
     }
 
     public ForumRepositoryCC() {

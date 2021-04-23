@@ -1,6 +1,6 @@
 package app.user;
 
-import app.repository.data.Transaction;
+import app.repository.data.Payment;
 
 public interface NamedWriteableService extends Repository, Signable {
     public default String publishNewPost(final String content) {
@@ -12,7 +12,7 @@ public interface NamedWriteableService extends Repository, Signable {
         return null;
     }
 
-    public default String publishNewTransaction(final Transaction transaction) {
+    public default String publishNewTransaction(final Payment transaction) {
         try {
             return getPointTransactionRepository().insertNewTransaction(transaction.reference, transaction,
                     getPublicKey(), getPrivateKey());

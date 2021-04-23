@@ -1,5 +1,7 @@
 package app;
 
+import java.util.Arrays;
+
 import org.hyperledger.fabric.contract.Context;
 import org.hyperledger.fabric.contract.ContractInterface;
 import org.hyperledger.fabric.contract.annotation.Contract;
@@ -40,8 +42,7 @@ public final class ForumRepository implements ContractInterface {
         try {
             return this.cc.publishNewPost(ctx, timestamp, content, userId, signature);
         } catch (final Exception e) {
-            e.printStackTrace();
-            throw new ChaincodeException(e);
+            throw new ChaincodeException(toString(e));
         }
     }
 
@@ -54,13 +55,13 @@ public final class ForumRepository implements ContractInterface {
      *                           ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT); // "2015-04-14T11:07:36.639Z"
      *                           </pre>
      * 
-     * @param payerEntryString   Json String in the format of:
+     * @param issuerUserId
+     * @param payerEntriesString Json String in the format of:
      * 
      *                           <pre>
-     *                           "{\"pointAmount\":150,\"userId\":\"ray\"}"
+     *                           "[{\"pointAmount\":150,\"userId\":\"ray\"}]"
      *                           </pre>
      * 
-     * @param issuerUserId
      * @param reference
      * @param signature
      * @param payeeEntriesString Json String in the format of:
@@ -73,15 +74,14 @@ public final class ForumRepository implements ContractInterface {
      *         the PointTransaction was successfully published
      */
     @Transaction(intent = Transaction.TYPE.SUBMIT)
-    public String publishNewPointTransaction(final Context ctx, final String timestamp, final String payerEntryString,
-            final String issuerUserId, final String signature, final String reference,
+    public String publishNewPointTransaction(final Context ctx, final String timestamp, final String issuerUserId,
+            final String payerEntriesString, final String signature, final String reference,
             final String payeeEntriesString) {
         try {
-            return this.cc.publishNewPointTransaction(ctx, timestamp, payerEntryString, issuerUserId, signature,
+            return this.cc.publishNewPointTransaction(ctx, timestamp, issuerUserId, payerEntriesString, signature,
                     reference, payeeEntriesString);
         } catch (final Exception e) {
-            e.printStackTrace();
-            throw new ChaincodeException(e);
+            throw new ChaincodeException(toString(e));
         }
     }
 
@@ -110,13 +110,11 @@ public final class ForumRepository implements ContractInterface {
     @Transaction(intent = Transaction.TYPE.SUBMIT)
     public String publishNewLike(final Context ctx, final String timestamp, final String postKey,
             final String likePayerEntryString, final String likeSignature, final String likePointTransactionSignature) {
-
         try {
             return this.cc.publishNewLike(ctx, timestamp, postKey, likePayerEntryString, likeSignature,
                     likePointTransactionSignature);
         } catch (final Exception e) {
-            e.printStackTrace();
-            throw new ChaincodeException(e);
+            throw new ChaincodeException(toString(e));
         }
     }
 
@@ -131,8 +129,7 @@ public final class ForumRepository implements ContractInterface {
         try {
             return this.cc.getAllPostKeys(ctx);
         } catch (final Exception e) {
-            e.printStackTrace();
-            throw new ChaincodeException(e);
+            throw new ChaincodeException(toString(e));
         }
     }
 
@@ -148,8 +145,7 @@ public final class ForumRepository implements ContractInterface {
         try {
             return this.cc.getAllPostKeysByUserId(ctx, userId);
         } catch (final Exception e) {
-            e.printStackTrace();
-            throw new ChaincodeException(e);
+            throw new ChaincodeException(toString(e));
         }
     }
 
@@ -164,8 +160,7 @@ public final class ForumRepository implements ContractInterface {
         try {
             return this.cc.getByKey(ctx, postKey, Post.class);
         } catch (final IllegalArgumentException e) {
-            e.printStackTrace();
-            throw new ChaincodeException(e);
+            throw new ChaincodeException(toString(e));
         }
     }
 
@@ -181,8 +176,7 @@ public final class ForumRepository implements ContractInterface {
         try {
             return this.cc.getAllLikeKeysByPostKey(ctx, postKey);
         } catch (final Exception e) {
-            e.printStackTrace();
-            throw new ChaincodeException(e);
+            throw new ChaincodeException(toString(e));
         }
     }
 
@@ -197,8 +191,7 @@ public final class ForumRepository implements ContractInterface {
         try {
             return this.cc.getByKey(ctx, likeKey, Like.class);
         } catch (final IllegalArgumentException e) {
-            e.printStackTrace();
-            throw new ChaincodeException(e);
+            throw new ChaincodeException(toString(e));
         }
     }
 
@@ -214,8 +207,7 @@ public final class ForumRepository implements ContractInterface {
         try {
             return this.cc.getAllDislikeKeysByPostKey(ctx, postKey);
         } catch (final Exception e) {
-            e.printStackTrace();
-            throw new ChaincodeException(e);
+            throw new ChaincodeException(toString(e));
         }
     }
 
@@ -230,8 +222,7 @@ public final class ForumRepository implements ContractInterface {
         try {
             return this.cc.getByKey(ctx, dislikeKey, Dislike.class);
         } catch (final IllegalArgumentException e) {
-            e.printStackTrace();
-            throw new ChaincodeException(e);
+            throw new ChaincodeException(toString(e));
         }
     }
 
@@ -246,8 +237,7 @@ public final class ForumRepository implements ContractInterface {
         try {
             return this.cc.getAllPointTransactionKeys(ctx);
         } catch (final Exception e) {
-            e.printStackTrace();
-            throw new ChaincodeException(e);
+            throw new ChaincodeException(toString(e));
         }
     }
 
@@ -255,16 +245,15 @@ public final class ForumRepository implements ContractInterface {
      * Sorted by relativeOrder, most recent first
      * 
      * @param ctx
-     * @param payerUserId
+     * @param issuerUserId
      * @return
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public String[] getAllPointTransactionKeysByPayerUserId(final Context ctx, final String payerUserId) {
+    public String[] getAllPointTransactionKeysByIssuerUserId(final Context ctx, final String issuerUserId) {
         try {
-            return this.cc.getAllPointTransactionKeysByPayerUserId(ctx, payerUserId);
+            return this.cc.getAllPointTransactionKeysByIssuerUserId(ctx, issuerUserId);
         } catch (final Exception e) {
-            e.printStackTrace();
-            throw new ChaincodeException(e);
+            throw new ChaincodeException(toString(e));
         }
     }
 
@@ -280,8 +269,7 @@ public final class ForumRepository implements ContractInterface {
         try {
             return this.cc.computeAllPointTransactionKeysByUserId(ctx, userId);
         } catch (final Exception e) {
-            e.printStackTrace();
-            throw new ChaincodeException(e);
+            throw new ChaincodeException(toString(e));
         }
     }
 
@@ -296,8 +284,7 @@ public final class ForumRepository implements ContractInterface {
         try {
             return this.cc.getByKey(ctx, pointTransactionKey, PointTransaction.class);
         } catch (final IllegalArgumentException e) {
-            e.printStackTrace();
-            throw new ChaincodeException(e);
+            throw new ChaincodeException(toString(e));
         }
     }
 
@@ -312,9 +299,13 @@ public final class ForumRepository implements ContractInterface {
         try {
             return this.cc.computePointBalanceByUserId(ctx, userId);
         } catch (final Exception e) {
-            e.printStackTrace();
-            throw new ChaincodeException(e);
+            throw new ChaincodeException(toString(e));
         }
+    }
+
+    private static String toString(final Exception e) {
+        return e.toString() + "\n" + String.join("\n  > ",
+                Arrays.stream(e.getStackTrace()).map(st -> st.toString()).toArray(String[]::new) + "\n");
     }
 
     public ForumRepository() {

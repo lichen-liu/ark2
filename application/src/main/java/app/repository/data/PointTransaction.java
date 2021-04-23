@@ -1,13 +1,10 @@
 package app.repository.data;
 
-import app.repository.data.Transaction.Entry;
 import lombok.ToString;
 
 @ToString(includeFieldNames = true)
 public class PointTransaction {
     public String timestamp;
-
-    public Entry payerEntry;
 
     /**
      * The issuerUserId for this PointTransaction. Also the verficationKey of the
@@ -15,8 +12,10 @@ public class PointTransaction {
      */
     public String issuerUserId;
 
+    public PointTransaction.Entry[] payerEntries;
+
     /**
-     * sign(privateKey, hash(timestamp, payerEntry, issuerUserId))
+     * sign(privateKey, hash(timestamp, issuerUserId, payerEntries))
      */
     public String signature;
 
@@ -28,11 +27,11 @@ public class PointTransaction {
     /**
      * Sequenced
      */
-    public Entry[] payeeEntries;
+    public PointTransaction.Entry[] payeeEntries;
 
     public long relativeOrder;
 
-    public Tracking payerPointTransactionTracking;
+    public Tracking[] payersPointTransactionTracking;
 
     @ToString(includeFieldNames = true)
     public static class Tracking {
@@ -49,6 +48,20 @@ public class PointTransaction {
          * recentSpendingPointTransactionKey.
          */
         public String[] recentEarningPointTransactionKeys;
+    }
+
+    @ToString(includeFieldNames = true)
+    public static class Entry {
+        public Entry() {
+        }
+
+        public Entry(final String userId, final Double pointAmount) {
+            this.userId = userId;
+            this.pointAmount = pointAmount;
+        }
+
+        public String userId;
+        public Double pointAmount;
     }
 
 }

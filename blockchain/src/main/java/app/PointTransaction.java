@@ -17,9 +17,6 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
     @Property
     private final String timestamp;
 
-    @Property
-    private final Entry payerEntry;
-
     /**
      * The issuerUserId for this PointTransaction. Also the verficationKey of the
      * signature.
@@ -27,8 +24,11 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
     @Property
     private final String issuerUserId;
 
+    @Property
+    private final Entry[] payerEntries;
+
     /**
-     * sign(privateKey, hash(timestamp, payerEntry, issuerUserId))
+     * sign(privateKey, hash(timestamp, issuerUserId, *payerEntries))
      */
     @Property
     private final String signature;
@@ -49,7 +49,7 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
     private final long relativeOrder;
 
     @Property
-    private final Tracking payerPointTransactionTracking;
+    private final Tracking[] payersPointTransactionTracking;
 
     @DataType
     public static class Entry {
@@ -113,12 +113,12 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
         return timestamp;
     }
 
-    public Entry getPayerEntry() {
-        return payerEntry;
-    }
-
     public String getIssuerUserId() {
         return issuerUserId;
+    }
+
+    public Entry[] getPayerEntries() {
+        return payerEntries;
     }
 
     public String getSignature() {
@@ -138,30 +138,29 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
         return relativeOrder;
     }
 
-    public Tracking getPayerPointTransactionTracking() {
-        return payerPointTransactionTracking;
+    public Tracking[] getPayersPointTransactionTracking() {
+        return payersPointTransactionTracking;
     }
 
     public PointTransaction(@JsonProperty("timestamp") final String timestamp,
-            @JsonProperty("payerEntry") final Entry payerEntry, @JsonProperty("issuerUserId") final String issuerUserId,
-            @JsonProperty("signature") final String signature, @JsonProperty("reference") final String reference,
-            @JsonProperty("payeeEntries") final Entry[] payeeEntries,
+            @JsonProperty("issuerUserId") final String issuerUserId,
+            @JsonProperty("payerEntries") final Entry[] payerEntries, @JsonProperty("signature") final String signature,
+            @JsonProperty("reference") final String reference, @JsonProperty("payeeEntries") final Entry[] payeeEntries,
             @JsonProperty("relativeOrder") final long relativeOrder,
-            @JsonProperty("payerPointTransactionTracking") final Tracking payerPointTransactionTracking) {
+            @JsonProperty("payersPointTransactionTracking") final Tracking[] payersPointTransactionTracking) {
         this.timestamp = timestamp;
-        this.payerEntry = payerEntry;
         this.issuerUserId = issuerUserId;
+        this.payerEntries = payerEntries;
         this.signature = signature;
         this.reference = reference;
         this.payeeEntries = payeeEntries;
         this.relativeOrder = relativeOrder;
-        this.payerPointTransactionTracking = payerPointTransactionTracking;
+        this.payersPointTransactionTracking = payersPointTransactionTracking;
     }
 
     @Override
     public CompositeKey generateKey(final String salt) {
-        return new CompositeKey(getObjectTypeName(), this.getPayerEntry().getUserId(), String.valueOf(relativeOrder),
-                salt);
+        return new CompositeKey(getObjectTypeName(), this.issuerUserId, String.valueOf(relativeOrder), salt);
     }
 
     @Override

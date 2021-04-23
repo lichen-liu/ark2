@@ -26,9 +26,7 @@ public class LikeRewarding {
 
     public double determineAuthorRewarding() {
         double economyGrowthRatio = 0.0;
-        if (this.numberLikes > 0) {
-            economyGrowthRatio = inflationRate * Math.log(this.numberLikes);
-        }
+        economyGrowthRatio = inflationRate * Math.log(this.numberLikes + 1);
         return this.basePointAmount * (splitToAuthorRatio + economyGrowthRatio);
     }
 

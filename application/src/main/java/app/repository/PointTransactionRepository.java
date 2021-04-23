@@ -5,12 +5,13 @@ import java.security.PublicKey;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
 
+import app.repository.data.Payment;
 import app.repository.data.PointTransaction;
-import app.repository.data.Transaction;
 import app.util.ByteUtils;
 import app.util.Cryptography;
 import app.util.GensonDeserializer;
@@ -23,20 +24,20 @@ public class PointTransactionRepository extends ReadableRepository<PointTransact
         this.contract = contract;
     }
 
-    public String insertNewTransaction(final String reference, final Transaction transaction, final PublicKey publicKey,
+    public String insertNewTransaction(final String reference, final Payment payment, final PublicKey publicKey,
             final PrivateKey privateKey) throws Exception {
 
         final String timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
 
-        final String payer = this.deserializer.transactionEntriesToJson(transaction.payer);
-        final String payees = this.deserializer.transactionEntryToJson(transaction.payees);
+        final String payers = this.deserializer.transactionEntriesToJson(List.of(payment.payer));
+        final String payees = this.deserializer.transactionEntriesToJson(payment.payees);
         final String publicKeyString = ByteUtils.toAsciiString(publicKey.getEncoded());
 
-        final byte[] hash = Hash.generatePointTransactionHash(timestamp, transaction.payer.userId,
-                transaction.payer.pointAmount.toString(), publicKeyString);
+        final byte[] hash = Hash.generatePointTransactionHash(timestamp, publicKeyString,
+                new PointTransaction.Entry[] { payment.payer });
         final byte[] signature = Cryptography.sign(privateKey, hash);
 
-        return new String(contract.submitTransaction("publishNewPointTransaction", timestamp, payer, publicKeyString,
+        return new String(contract.submitTransaction("publishNewPointTransaction", timestamp, publicKeyString, payers,
                 ByteUtils.toAsciiString(signature), reference, payees));
     }
 
@@ -56,7 +57,7 @@ public class PointTransactionRepository extends ReadableRepository<PointTransact
 
     @Override
     protected String getKeysByCustomKeysQuery() {
-        return "getAllPointTransactionKeysByPayerUserId";
+        return "getAllPointTransactionKeysByIssuerUserId";
     }
 
     @Override

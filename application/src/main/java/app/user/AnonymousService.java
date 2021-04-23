@@ -48,7 +48,7 @@ public interface AnonymousService extends Repository {
         return null;
     }
 
-    public default String[] fetchPointTransactionKeysByPayerUserId(final String userId) {
+    public default String[] fetchPointTransactionKeysByIssuerUserId(final String userId) {
         try {
             return getPointTransactionRepository().selectObjectKeysByCustomKey(userId);
         } catch (final Exception e) {
@@ -142,8 +142,7 @@ public interface AnonymousService extends Repository {
     public static boolean verifyPointTransactionSignature(final PointTransaction pointTransaction) {
         try {
             final byte[] hashedContentBytes = Hash.generatePointTransactionHash(pointTransaction.timestamp,
-                    pointTransaction.payerEntry.userId, String.valueOf(pointTransaction.payerEntry.pointAmount),
-                    pointTransaction.issuerUserId);
+                    pointTransaction.issuerUserId, pointTransaction.payerEntries);
             final PublicKey publicKey = Cryptography
                     .parsePublicKey(ByteUtils.fromAsciiString(pointTransaction.issuerUserId));
             return Cryptography.verify(publicKey, hashedContentBytes,

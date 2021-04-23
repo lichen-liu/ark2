@@ -18,7 +18,7 @@ import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
 
 import app.repository.data.Like;
-import app.repository.data.Transaction;
+import app.repository.data.PointTransaction;
 import app.util.ByteUtils;
 import app.util.Cryptography;
 import app.util.GensonDeserializer;
@@ -42,13 +42,14 @@ public class LikeRepository extends ReadableRepository<Like> {
         final byte[] likeHash = Hash.generateLikeHash(timestamp, postKey, publicKeyString);
         final byte[] likeSignature = Cryptography.sign(privateKey, likeHash);
 
+        final var payerEntry = new PointTransaction.Entry(publicKeyString, pointAmount);
         final byte[] pointTransactionHash = Hash.generatePointTransactionHash(timestamp, publicKeyString,
-                String.valueOf(pointAmount), publicKeyString);
+                new PointTransaction.Entry[] { payerEntry });
         final byte[] pointTransactionSignature = Cryptography.sign(privateKey, pointTransactionHash);
 
         return new String(contract.submitTransaction("publishNewLike", timestamp, postKey,
-                this.deserializer.transactionEntriesToJson(new Transaction.Entry(publicKeyString, pointAmount)),
-                ByteUtils.toAsciiString(likeSignature), ByteUtils.toAsciiString(pointTransactionSignature)));
+                this.deserializer.transactionEntryToJson(payerEntry), ByteUtils.toAsciiString(likeSignature),
+                ByteUtils.toAsciiString(pointTransactionSignature)));
     }
 
     @Override
