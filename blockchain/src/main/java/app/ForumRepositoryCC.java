@@ -71,11 +71,11 @@ public class ForumRepositoryCC {
     }
 
     public String publishNewLike(final Context ctx, final String timestamp, final String postKey,
-            final String likePayerEntryString, final String likeSignature, final String likePointTransactionSignature)
-            throws Exception {
+            final String likeUserId, final String likePointAmount, final String likeSignature,
+            final String likePointTransactionSignature) throws Exception {
         final ChaincodeStub stub = ctx.getStub();
 
-        final var payerEntry = genson.deserialize(likePayerEntryString, PointTransaction.Entry.class);
+        final var payerEntry = new PointTransaction.Entry(likeUserId, Double.parseDouble(likePointAmount));
         final Post post = this.getByKey(ctx, postKey, Post.class);
         final KeyValue[] postLikesKeyValue = this.getAllLikesByPostKey(ctx, postKey);
 

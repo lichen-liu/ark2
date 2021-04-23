@@ -47,8 +47,8 @@ public class LikeRepository extends ReadableRepository<Like> {
                 new PointTransaction.Entry[] { payerEntry });
         final byte[] pointTransactionSignature = Cryptography.sign(privateKey, pointTransactionHash);
 
-        return new String(contract.submitTransaction("publishNewLike", timestamp, postKey,
-                this.deserializer.transactionEntryToJson(payerEntry), ByteUtils.toAsciiString(likeSignature),
+        return new String(contract.submitTransaction("publishNewLike", timestamp, postKey, payerEntry.userId,
+                payerEntry.pointAmount.toString(), ByteUtils.toAsciiString(likeSignature),
                 ByteUtils.toAsciiString(pointTransactionSignature)));
     }
 
