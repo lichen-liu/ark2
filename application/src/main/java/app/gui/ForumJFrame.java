@@ -273,13 +273,11 @@ public class ForumJFrame extends javax.swing.JFrame {
                 .addComponent(viewPostJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE,
                         javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(viewPostStatusJTextField).addComponent(viewPostPostKeyJTextField)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
-                        viewPostRightJPanelLayout.createSequentialGroup().addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(viewPostLikeJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 525,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(viewPostDislikeJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 525,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)));
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewPostRightJPanelLayout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(viewPostLikeJButton, javax.swing.GroupLayout.DEFAULT_SIZE, 525, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).addComponent(
+                                viewPostDislikeJButton, javax.swing.GroupLayout.DEFAULT_SIZE, 525, Short.MAX_VALUE)));
         viewPostRightJPanelLayout.setVerticalGroup(
                 viewPostRightJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
                         javax.swing.GroupLayout.Alignment.TRAILING,
