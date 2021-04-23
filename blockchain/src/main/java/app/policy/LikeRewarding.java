@@ -4,7 +4,7 @@ import org.apache.commons.math3.distribution.BetaDistribution;
 
 public class LikeRewarding {
     private final long numberLikes;
-    private final double basePointAmount;
+    private final double likerPointAmount;
 
     private final BetaDistribution likerRewardingDistribution = new BetaDistribution(2, 2);
 
@@ -15,19 +15,19 @@ public class LikeRewarding {
         return numberLikes;
     }
 
-    public double getBasePointAmount() {
-        return basePointAmount;
+    public double getLikerPointAmount() {
+        return likerPointAmount;
     }
 
-    public LikeRewarding(final long existingNumberLikes, final double basePointAmount) {
+    public LikeRewarding(final long existingNumberLikes, final double likerPointAmount) {
         this.numberLikes = existingNumberLikes;
-        this.basePointAmount = basePointAmount;
+        this.likerPointAmount = likerPointAmount;
     }
 
     public double determineAuthorRewarding() {
         double economyGrowthRatio = 0.0;
         economyGrowthRatio = inflationRate * Math.log(this.numberLikes + 1);
-        return this.basePointAmount * (splitToAuthorRatio + economyGrowthRatio);
+        return this.likerPointAmount * (splitToAuthorRatio + economyGrowthRatio);
     }
 
     /**
@@ -50,7 +50,7 @@ public class LikeRewarding {
             final double ratio = this.likerRewardingDistribution.probability(
                     0.5 + (((double) likerRank) / (double) this.numberLikes),
                     0.5 + (((double) likerRank + 1) / (double) this.numberLikes));
-            return this.basePointAmount * ratio;
+            return this.likerPointAmount * ratio;
         } else {
             return 0;
         }
