@@ -18,6 +18,7 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 
+import app.policy.DislikeRewarding;
 import app.policy.KeyGeneration;
 import app.policy.LikeRewarding;
 import app.util.ChaincodeStubTools;
@@ -112,42 +113,33 @@ public class ForumRepositoryCC {
     }
 
     public String publishNewDislike(final Context ctx, final String timestamp, final String postKey,
-            final String dislikePayerEntryString, final String dislikeSignature,
+            final String dislikeUserId, final String dislikePointAmount, final String dislikeSignature,
             final String dislikePointTransactionSignature) throws Exception {
         final ChaincodeStub stub = ctx.getStub();
 
         final Post post = this.getByKey(ctx, postKey, Post.class);
-        final var dislikePayerEntry = genson.deserialize(dislikePayerEntryString, PointTransaction.Entry.class);
-        final var dislikePenaltyPayerEntry = new PointTransaction.Entry(post.getUserId(),
+        final var dislikePayerEntry = new PointTransaction.Entry(dislikeUserId, Double.parseDouble(dislikePointAmount));
+        final var authorPenaltyPayerEntry = new PointTransaction.Entry(post.getUserId(),
                 dislikePayerEntry.getPointAmount());
 
-        // final KeyValue[] postDislikesKeyValue = this.getAllDislikesByPostKey(ctx,
-        // postKey);
+        final KeyValue[] postDislikesKeyValue = this.getAllDislikesByPostKey(ctx, postKey);
 
-        // final LikeRewarding rewarding = new
-        // LikeRewarding(postLikesKeyValue.length,
-        // payerEntry.getPointAmount());
+        final DislikeRewarding rewarding = new DislikeRewarding(postDislikesKeyValue.length,
+                dislikePayerEntry.getPointAmount(), authorPenaltyPayerEntry.getPointAmount());
 
-        // final List<PointTransaction.Entry> payeeEntries = new
-        // ArrayList<PointTransaction.Entry>();
-        // payeeEntries.add(new PointTransaction.Entry(post.getUserId(),
-        // rewarding.determineAuthorRewarding()));
-        // for (int idx = postLikesKeyValue.length - 1; idx >= 0; idx--) {
-        // final long likerRank = postLikesKeyValue.length - 1 - idx;
-        // if (!rewarding.isLikerRewarded(likerRank)) {
-        // break;
-        // }
-        // final Dislike currentDisLike =
-        // genson.deserialize(postLikesKeyValue[idx].getStringValue(), Like.class);
-        // payeeEntries.add(
-        // new PointTransaction.Entry(currentLike.getUserId(),
-        // rewarding.determineLikerRewarding(likerRank)));
-        // }
-
-        // System.out.println("publishNewLike");
-        // System.out.println("payer: " + genson.serialize(payerEntry));
-        // System.out.println("payees: " + genson.serialize(payeeEntries));
-        final List<PointTransaction.Entry> dislikePayeeEntries = null;
+        final List<PointTransaction.Entry> dislikePayeeEntries = new ArrayList<PointTransaction.Entry>();
+        dislikePayeeEntries.add(new PointTransaction.Entry(authorPenaltyPayerEntry.getUserId(),
+                authorPenaltyPayerEntry.getPointAmount() - rewarding.determineAuthorPenalty()));
+        for (int idx = postDislikesKeyValue.length - 1; idx >= 0; idx--) {
+            final long dislikerRank = postDislikesKeyValue.length - 1 - idx;
+            if (!rewarding.isDislikerRewarded(dislikerRank)) {
+                break;
+            }
+            final Dislike currentDisLike = genson.deserialize(postDislikesKeyValue[idx].getStringValue(),
+                    Dislike.class);
+            dislikePayeeEntries.add(new PointTransaction.Entry(currentDisLike.getUserId(),
+                    rewarding.determineDislikerRewarding(dislikerRank)));
+        }
 
         final var dislike = new Dislike(timestamp, postKey, dislikePayerEntry.getUserId(), dislikeSignature, null,
                 this.determineRelativeOrderForDislike(ctx, postKey));
@@ -155,7 +147,7 @@ public class ForumRepositoryCC {
 
         final String dislikePointTransactionKey = this.publishNewPointTransaction(ctx, timestamp,
                 dislikePayerEntry.getUserId(),
-                genson.serialize(new PointTransaction.Entry[] { dislikePayerEntry, dislikePenaltyPayerEntry }),
+                genson.serialize(new PointTransaction.Entry[] { dislikePayerEntry, authorPenaltyPayerEntry }),
                 dislikePointTransactionSignature, dislikeKey.getBase64UrlKeyString(),
                 genson.serialize(dislikePayeeEntries.toArray(PointTransaction.Entry[]::new)));
 

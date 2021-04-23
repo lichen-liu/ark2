@@ -10,7 +10,7 @@ import org.hyperledger.fabric.contract.annotation.Info;
 import org.hyperledger.fabric.contract.annotation.Transaction;
 import org.hyperledger.fabric.shim.ChaincodeException;
 
-@Contract(name = "ForumAgreement", info = @Info(title = "ForumAgreement", description = "Forum chaincode", version = "0.1.0-SNAPSHOT"))
+@Contract(name = "ForumAgreement", info = @Info(title = "ForumAgreement", description = "Forum chaincode", version = "1.0.0-Beta"))
 
 @Default
 public final class ForumRepository implements ContractInterface {
@@ -110,6 +110,36 @@ public final class ForumRepository implements ContractInterface {
         try {
             return this.cc.publishNewLike(ctx, timestamp, postKey, likeUserId, likePointAmount, likeSignature,
                     likePointTransactionSignature);
+        } catch (final Exception e) {
+            throw new ChaincodeException(toString(e));
+        }
+    }
+
+    /**
+     * 
+     * @param ctx
+     * @param timestamp
+     * 
+     *                                         <pre>
+     *                                         ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT); // "2015-04-14T11:07:36.639Z"
+     *                                         </pre>
+     * 
+     * @param postKey
+     * @param dislikeUserId
+     * @param dislikePointAmount
+     * @param dislikeSignature
+     * @param dislikePointTransactionSignature
+     * @return dislikeKey, call getDislikeByKey to verify whether the Dislike was
+     *         successfully published. Also call getPointTransactionByKey to check
+     *         the associating PointTransaction
+     */
+    @Transaction(intent = Transaction.TYPE.SUBMIT)
+    public String publishNewDislike(final Context ctx, final String timestamp, final String postKey,
+            final String dislikeUserId, final String dislikePointAmount, final String dislikeSignature,
+            final String dislikePointTransactionSignature) {
+        try {
+            return this.cc.publishNewDislike(ctx, timestamp, postKey, dislikeUserId, dislikePointAmount,
+                    dislikeSignature, dislikePointTransactionSignature);
         } catch (final Exception e) {
             throw new ChaincodeException(toString(e));
         }

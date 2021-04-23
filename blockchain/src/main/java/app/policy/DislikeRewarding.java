@@ -51,7 +51,7 @@ public class DislikeRewarding {
      * @param dislikerRank only for existing dislikers
      * @return
      */
-    public double determineLikerRewarding(long dislikerRank) {
+    public double determineDislikerRewarding(long dislikerRank) {
         dislikerRank = Math.min(dislikerRank, this.numberDislikes - 1);
         if (this.isDislikerRewarded(dislikerRank)) {
             double economyDeclineRatio = inflationRate * Math.log(this.numberDislikes + 1 + inflationRate);
