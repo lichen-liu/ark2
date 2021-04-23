@@ -289,16 +289,24 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="viewPostJScrollPane" pref="1061" max="32767" attributes="0"/>
-                      <Component id="viewPostLikeJButton" alignment="0" max="32767" attributes="0"/>
+                      <Component id="viewPostJScrollPane" max="32767" attributes="0"/>
                       <Component id="viewPostStatusJTextField" alignment="0" max="32767" attributes="0"/>
                       <Component id="viewPostPostKeyJTextField" alignment="0" max="32767" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Component id="viewPostLikeJButton" min="-2" pref="525" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="viewPostDislikeJButton" min="-2" pref="525" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="viewPostLikeJButton" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="viewPostLikeJButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="viewPostDislikeJButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="viewPostPostKeyJTextField" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -342,9 +350,6 @@
                     <Property name="text" type="java.lang.String" value="LIKE"/>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
-                  <AccessibilityProperties>
-                    <Property name="AccessibleContext.accessibleName" type="java.lang.String" value=""/>
-                  </AccessibilityProperties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewPostLikeJButtonActionPerformed"/>
                   </Events>
@@ -365,6 +370,15 @@
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="((DefaultCaret) viewPostPostKeyJTextField.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);"/>
                   </AuxValues>
+                </Component>
+                <Component class="javax.swing.JButton" name="viewPostDislikeJButton">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="DISLIKE"/>
+                    <Property name="enabled" type="boolean" value="false"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewPostDislikeJButtonActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
