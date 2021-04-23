@@ -36,9 +36,6 @@ public final class Dislike implements KeyGeneration, ComparableByTimestamp, Comp
     private @Nullable String pointTransactionKey;
 
     @Property
-    private @Nullable String penaltyPointTransactionKey;
-
-    @Property
     private final long relativeOrder;
 
     @Override
@@ -66,14 +63,6 @@ public final class Dislike implements KeyGeneration, ComparableByTimestamp, Comp
         return pointTransactionKey;
     }
 
-    public void setPenaltyPointTransactionKey(final String penaltyPointTransactionKey) {
-        this.penaltyPointTransactionKey = penaltyPointTransactionKey;
-    }
-
-    public String getPenaltyPointTransactionKey() {
-        return penaltyPointTransactionKey;
-    }
-
     @Override
     public long getRelativeOrder() {
         return relativeOrder;
@@ -82,14 +71,12 @@ public final class Dislike implements KeyGeneration, ComparableByTimestamp, Comp
     public Dislike(@JsonProperty("timestamp") final String timestamp, @JsonProperty("postKey") final String postKey,
             @JsonProperty("userId") final String userId, @JsonProperty("signature") final String signature,
             @JsonProperty("pointTransactionKey") @Nullable final String pointTransactionKey,
-            @JsonProperty("penaltyPointTransactionKey") @Nullable final String penaltyPointTransactionKey,
             @JsonProperty("relativeOrder") final long relativeOrder) {
         this.timestamp = timestamp;
         this.postKey = postKey;
         this.userId = userId;
         this.signature = signature;
         this.pointTransactionKey = pointTransactionKey;
-        this.penaltyPointTransactionKey = penaltyPointTransactionKey;
         this.relativeOrder = relativeOrder;
     }
 
