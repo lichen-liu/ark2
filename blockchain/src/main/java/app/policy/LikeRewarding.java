@@ -9,7 +9,7 @@ public class LikeRewarding {
     private final BetaDistribution likerRewardingDistribution = new BetaDistribution(2, 2);
 
     public static final double splitToAuthorRatio = 0.5;
-    public static final double inflationRate = 0.02;
+    public static final double inflationRate = 0.01;
 
     public long getNumberLikes() {
         return numberLikes;
