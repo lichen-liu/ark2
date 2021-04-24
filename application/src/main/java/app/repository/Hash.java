@@ -12,6 +12,11 @@ public class Hash {
         return ByteUtils.getSHA(String.join("", timestamp, postKey, publicKeyString));
     }
 
+    public static byte[] generateDislikeHash(final String timestamp, final String postKey, final String publicKeyString)
+            throws NoSuchAlgorithmException {
+        return ByteUtils.getSHA(String.join("", timestamp, postKey, publicKeyString));
+    }
+
     public static byte[] generatePostHash(final String timestamp, final String content, final String publicKeyString)
             throws NoSuchAlgorithmException {
         return ByteUtils.getSHA(String.join("", timestamp, content, publicKeyString));

@@ -1,20 +1,17 @@
 package app.repository;
 
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SignatureException;
-import java.util.concurrent.TimeoutException;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.hyperledger.fabric.gateway.Contract;
-import org.hyperledger.fabric.gateway.ContractException;
 
 import app.repository.data.Dislike;
+import app.repository.data.PointTransaction;
+import app.util.ByteUtils;
+import app.util.Cryptography;
 import app.util.GensonDeserializer;
 
 public class DislikeRepository extends ReadableRepository<Dislike> {
@@ -26,31 +23,28 @@ public class DislikeRepository extends ReadableRepository<Dislike> {
     }
 
     public String insertNewDislike(final String postKey, final double pointAmount, final PublicKey publicKey,
-            final PrivateKey privateKey)
-            throws InvalidKeyException, NoSuchAlgorithmException, SignatureException, ContractException,
-            TimeoutException, InterruptedException, JsonParseException, JsonMappingException, IOException {
-        return null;
-        // final String timestamp =
-        // ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
-        // final String publicKeyString =
-        // ByteUtils.toAsciiString(publicKey.getEncoded());
+            final PrivateKey privateKey) throws Exception {
+        final String timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
+        final String publicKeyString = ByteUtils.toAsciiString(publicKey.getEncoded());
 
-        // final byte[] likeHash = Hash.generateLikeHash(timestamp, postKey,
-        // publicKeyString);
-        // final byte[] likeSignature = Cryptography.sign(privateKey, likeHash);
+        final byte[] dislikeHash = Hash.generateDislikeHash(timestamp, postKey, publicKeyString);
+        final byte[] dislikeSignature = Cryptography.sign(privateKey, dislikeHash);
 
-        // final var payerEntry = new PointTransaction.Entry(publicKeyString,
-        // pointAmount);
-        // final byte[] pointTransactionHash =
-        // Hash.generatePointTransactionHash(timestamp, publicKeyString,
-        // new PointTransaction.Entry[] { payerEntry });
-        // final byte[] pointTransactionSignature = Cryptography.sign(privateKey,
-        // pointTransactionHash);
+        final var dislikerPayerEntry = new PointTransaction.Entry(publicKeyString, pointAmount);
+        final String authorUserId = new PostRepository(this.contract).selectObjectsByCustomKeys(postKey).get(0).userId;
+        final var authorPayerEntry = new PointTransaction.Entry(authorUserId, pointAmount);
+        final byte[] pointTransactionHash = Hash.generatePointTransactionHash(timestamp, publicKeyString,
+                new PointTransaction.Entry[] { dislikerPayerEntry, authorPayerEntry });
+        final byte[] pointTransactionSignature = Cryptography.sign(privateKey, pointTransactionHash);
 
-        // return new String(contract.submitTransaction("publishNewLike", timestamp,
-        // postKey, payerEntry.userId,
-        // payerEntry.pointAmount.toString(), ByteUtils.toAsciiString(likeSignature),
-        // ByteUtils.toAsciiString(pointTransactionSignature)));
+        return new String(contract.submitTransaction("publishNewDislike", timestamp, postKey, dislikerPayerEntry.userId,
+                dislikerPayerEntry.pointAmount.toString(), ByteUtils.toAsciiString(dislikeSignature),
+                ByteUtils.toAsciiString(pointTransactionSignature)));
+    }
+
+    @Override
+    public String toString() {
+        return "DislikeRepository []";
     }
 
     @Override
