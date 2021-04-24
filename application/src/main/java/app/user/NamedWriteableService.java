@@ -35,4 +35,18 @@ public interface NamedWriteableService extends Repository, Signable {
         }
         return null;
     }
+
+    public static double getPointCostForPublishingDislike() {
+        return 1.0;
+    }
+
+    public default String publishNewDislike(final String postKey) {
+        try {
+            return new String(getDislikeRepository().insertNewDislike(postKey, getPointCostForPublishingDislike(),
+                    getPublicKey(), getPrivateKey()));
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
