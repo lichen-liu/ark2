@@ -61,7 +61,6 @@ public class ForumJFrame extends javax.swing.JFrame {
         pointBalanceJTextField = new javax.swing.JTextField();
         refreshPointBalanceJButton = new javax.swing.JButton();
         pointBalanceJLabel = new javax.swing.JLabel();
-        MessageJTextField = new javax.swing.JTextField();
         searchJTextField = new javax.swing.JTextField();
         contentJTabbedPane = new javax.swing.JTabbedPane();
         viewPostJSplitPane = new javax.swing.JSplitPane();
@@ -163,10 +162,6 @@ public class ForumJFrame extends javax.swing.JFrame {
         pointBalanceJLabel.setText("Point Balance");
         pointBalanceJLabel.setToolTipText("");
         pointBalanceJLabel.setName(""); // NOI18N
-
-        MessageJTextField.setEditable(false);
-        MessageJTextField.setText("Status");
-        MessageJTextField.setToolTipText("Message");
 
         searchJTextField.setToolTipText("Search Bar");
         searchJTextField.addActionListener(new java.awt.event.ActionListener() {
@@ -768,10 +763,12 @@ public class ForumJFrame extends javax.swing.JFrame {
                         .addComponent(contentJTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE,
                                 javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                .addGroup(layout.createSequentialGroup().addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(searchJTextField)
-                                .addGroup(layout.createSequentialGroup()
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup().addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(statusJProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(searchJTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                         .addComponent(userPublicKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -787,12 +784,7 @@ public class ForumJFrame extends javax.swing.JFrame {
                                         .addComponent(pointBalanceJTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(refreshPointBalanceJButton))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(statusJProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 136,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(MessageJTextField)))
+                                        .addComponent(refreshPointBalanceJButton)))
                         .addContainerGap()));
         layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout
                 .createSequentialGroup().addContainerGap()
@@ -818,12 +810,9 @@ public class ForumJFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(contentJTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE,
                         javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(MessageJTextField).addComponent(statusJProgressBar,
-                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(statusJProgressBar,
+                        javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(14, Short.MAX_VALUE)));
 
         contentJTabbedPane.getAccessibleContext().setAccessibleName("");
 
@@ -1584,7 +1573,6 @@ public class ForumJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField MessageJTextField;
     private javax.swing.JTabbedPane contentJTabbedPane;
     private javax.swing.JButton generateKeyPairJButton;
     private javax.swing.JLabel pointBalanceJLabel;
@@ -1600,6 +1588,7 @@ public class ForumJFrame extends javax.swing.JFrame {
     private javax.swing.JTextField userPrivateKeyJTextField;
     private javax.swing.JTextField userPublicKeyJTextField;
     private javax.swing.JSeparator userSearchJSeparator;
+    private javax.swing.JTextField viewDislikeDislikeKeyJTextField;
     private javax.swing.JScrollPane viewDislikeJScrollPane;
     private javax.swing.JSplitPane viewDislikeJSplitPane;
     private javax.swing.JTextArea viewDislikeJTextArea;
@@ -1608,7 +1597,6 @@ public class ForumJFrame extends javax.swing.JFrame {
     private javax.swing.JTextField viewDislikeKeysQueryCountsJTextField;
     private javax.swing.JComboBox<String> viewDislikeKeysQueryJComboBox;
     private javax.swing.JPanel viewDislikeLeftJPanel;
-    private javax.swing.JTextField viewDislikeDislikeKeyJTextField;
     private javax.swing.JPanel viewDislikeRightJPanel;
     private javax.swing.JTextField viewDislikeStatusJTextField;
     private javax.swing.JScrollPane viewLikeJScrollPane;
