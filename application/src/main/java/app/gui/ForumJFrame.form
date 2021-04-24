@@ -760,13 +760,13 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="viewDislikeJScrollPane" alignment="0" pref="1061" max="32767" attributes="0"/>
                       <Component id="viewDislikeStatusJTextField" alignment="0" max="32767" attributes="0"/>
-                      <Component id="viewDislikeLikeKeyJTextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="viewDislikeDislikeKeyJTextField" alignment="0" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="viewDislikeLikeKeyJTextField" min="-2" max="-2" attributes="0"/>
+                          <Component id="viewDislikeDislikeKeyJTextField" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                           <Component id="viewDislikeJScrollPane" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
@@ -811,7 +811,7 @@
                     <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="((DefaultCaret) viewLikeStatusJTextField.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);"/>
                   </AuxValues>
                 </Component>
-                <Component class="javax.swing.JTextField" name="viewDislikeLikeKeyJTextField">
+                <Component class="javax.swing.JTextField" name="viewDislikeDislikeKeyJTextField">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
                     <Property name="toolTipText" type="java.lang.String" value="Like Key"/>

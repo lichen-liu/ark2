@@ -20,6 +20,7 @@ import javax.swing.text.DefaultCaret;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.repository.data.Dislike;
 import app.repository.data.Like;
 import app.repository.data.PointTransaction;
 import app.repository.data.Post;
@@ -104,7 +105,7 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewDislikeJScrollPane = new javax.swing.JScrollPane();
         viewDislikeJTextArea = new javax.swing.JTextArea();
         viewDislikeStatusJTextField = new javax.swing.JTextField();
-        viewDislikeLikeKeyJTextField = new javax.swing.JTextField();
+        viewDislikeDislikeKeyJTextField = new javax.swing.JTextField();
         viewPointTransactionJSplitPane = new javax.swing.JSplitPane();
         viewPointTransactionLeftJPanel = new javax.swing.JPanel();
         viewPointTransactionKeysQueryJComboBox = new javax.swing.JComboBox<>();
@@ -511,8 +512,8 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewDislikeStatusJTextField.setEditable(false);
         ((DefaultCaret) viewLikeStatusJTextField.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 
-        viewDislikeLikeKeyJTextField.setEditable(false);
-        viewDislikeLikeKeyJTextField.setToolTipText("Like Key");
+        viewDislikeDislikeKeyJTextField.setEditable(false);
+        viewDislikeDislikeKeyJTextField.setToolTipText("Like Key");
         ((DefaultCaret) viewLikeLikeKeyJTextField.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 
         final javax.swing.GroupLayout viewDislikeRightJPanelLayout = new javax.swing.GroupLayout(
@@ -521,11 +522,11 @@ public class ForumJFrame extends javax.swing.JFrame {
         viewDislikeRightJPanelLayout.setHorizontalGroup(viewDislikeRightJPanelLayout
                 .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(viewDislikeJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1061, Short.MAX_VALUE)
-                .addComponent(viewDislikeStatusJTextField).addComponent(viewDislikeLikeKeyJTextField));
+                .addComponent(viewDislikeStatusJTextField).addComponent(viewDislikeDislikeKeyJTextField));
         viewDislikeRightJPanelLayout.setVerticalGroup(
                 viewDislikeRightJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(viewDislikeRightJPanelLayout.createSequentialGroup()
-                                .addComponent(viewDislikeLikeKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                .addComponent(viewDislikeDislikeKeyJTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
                                         javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(8, 8, 8)
                                 .addComponent(viewDislikeJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE,
@@ -1236,7 +1237,24 @@ public class ForumJFrame extends javax.swing.JFrame {
     }// GEN-LAST:event_viewLikeKeysQueryJComboBoxActionPerformed
 
     private void viewDislikeKeysQueryJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewDislikeKeysQueryJComboBoxActionPerformed
-        // TODO add your handling code here:
+        final String selectedQueryMethod = (String) this.viewDislikeKeysQueryJComboBox.getSelectedItem();
+        final String searchString = this.searchJTextField.getText();
+        this.viewDislikeKeysJList.setListData(new String[0]);
+
+        if ("Query By Post Key".equals(selectedQueryMethod)) {
+            final var userApp = ServiceProvider.createAnonymousService(this.contract);
+            final String[] dislikeKeys = userApp.fetchDislikeKeysByPostKey(searchString);
+            if (dislikeKeys != null) {
+                this.viewDislikeKeysJList.setListData(dislikeKeys);
+            }
+        } else if ("Get By Dislike Key".equals(selectedQueryMethod)) {
+            final var userApp = ServiceProvider.createAnonymousService(this.contract);
+            if (userApp.fetchDislikeByDislikeKey(searchString) != null) {
+                this.viewDislikeKeysJList.setListData(new String[] { searchString });
+            }
+        } else {
+            throw new UnsupportedOperationException();
+        }
     }// GEN-LAST:event_viewDislikeKeysQueryJComboBoxActionPerformed
 
     private void viewPostKeysQueryJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPostKeysQueryJComboBoxActionPerformed
@@ -1392,6 +1410,30 @@ public class ForumJFrame extends javax.swing.JFrame {
         if (this.viewDislikeKeysJList.getSelectedIndex() == -1) {
             return;
         }
+
+        final String selectedDislikeKey = this.viewDislikeKeysJList.getSelectedValue();
+        final var userApp = ServiceProvider.createAnonymousService(this.contract);
+        final Dislike dislike = userApp.fetchDislikeByDislikeKey(selectedDislikeKey);
+        if (dislike != null) {
+            String dislikeTextArea = "Timestamp:\n" + dislike.timestamp + "\n\n";
+            dislikeTextArea += "PostKey:\n" + dislike.postKey + "\n\n";
+            dislikeTextArea += "PointTransactionKey:\n" + dislike.pointTransactionKey + "\n\n";
+            dislikeTextArea += "Disliker:\n" + dislike.userId + "\n\n";
+            dislikeTextArea += "RelativeOrder:\n" + dislike.relativeOrder + "\n\n";
+
+            this.viewDislikeDislikeKeyJTextField.setText(selectedDislikeKey);
+            this.viewDislikeJTextArea.setText(dislikeTextArea);
+
+            final var verify = userApp.verifyDislike(selectedDislikeKey);
+            this.viewDislikeStatusJTextField.setText(verify.getItemsString());
+            this.viewDislikeStatusJTextField.setBackground(
+                    verify.isValid() ? new java.awt.Color(200, 255, 200) : new java.awt.Color(255, 200, 200));
+        } else {
+            this.viewDislikeDislikeKeyJTextField.setText(new String());
+            this.viewDislikeJTextArea.setText(new String());
+            this.viewDislikeStatusJTextField.setBackground(java.awt.Color.WHITE);
+            this.viewDislikeStatusJTextField.setText(new String());
+        }
     }// GEN-LAST:event_viewDislikeKeysJListValueChanged
 
     private void viewPostKeysJListValueChanged(final javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_viewPostKeysJListValueChanged
@@ -1528,7 +1570,7 @@ public class ForumJFrame extends javax.swing.JFrame {
     private javax.swing.JTextField viewDislikeKeysQueryCountsJTextField;
     private javax.swing.JComboBox<String> viewDislikeKeysQueryJComboBox;
     private javax.swing.JPanel viewDislikeLeftJPanel;
-    private javax.swing.JTextField viewDislikeLikeKeyJTextField;
+    private javax.swing.JTextField viewDislikeDislikeKeyJTextField;
     private javax.swing.JPanel viewDislikeRightJPanel;
     private javax.swing.JTextField viewDislikeStatusJTextField;
     private javax.swing.JScrollPane viewLikeJScrollPane;
