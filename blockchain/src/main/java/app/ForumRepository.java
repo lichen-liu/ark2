@@ -32,7 +32,7 @@ public final class ForumRepository implements ContractInterface {
      * 
      * @param content
      * @param userId
-     * @param signature
+     * @param signature sign(privateKey, hash(timestamp, content, userId))
      * @return postKey, call getPostByKey to verify whether the Post was
      *         successfully published
      */
@@ -63,7 +63,8 @@ public final class ForumRepository implements ContractInterface {
      *                           </pre>
      * 
      * @param reference
-     * @param signature
+     * @param signature          sign(privateKey, hash(timestamp, issuerUserId,
+     *                           *payerEntries))
      * @param payeeEntriesString Json String in the format of:
      * 
      *                           <pre>
@@ -97,8 +98,11 @@ public final class ForumRepository implements ContractInterface {
      * @param postKey
      * @param likeUserId
      * @param likePointAmount
-     * @param likeSignature
-     * @param likePointTransactionSignature
+     * @param likeSignature                 sign(privateKey, hash(timestamp,
+     *                                      postKey, likeUserId))
+     * @param likePointTransactionSignature sign(privateKey, hash(timestamp,
+     *                                      likeUserId, likeUserId,
+     *                                      likePointAmount))
      * @return likeKey, call getLikeByKey to verify whether the Like was
      *         successfully published. Also call getPointTransactionByKey to check
      *         the associating PointTransaction
@@ -127,8 +131,12 @@ public final class ForumRepository implements ContractInterface {
      * @param postKey
      * @param dislikeUserId
      * @param dislikePointAmount
-     * @param dislikeSignature
-     * @param dislikePointTransactionSignature
+     * @param dislikeSignature                 sign(privateKey, hash(timestamp,
+     *                                         postKey, dislikeUserId))
+     * @param dislikePointTransactionSignature sign(privateKey, hash(timestamp,
+     *                                         dislikeUserId, dislikeUserId,
+     *                                         dislikePointAmount, authorUserId,
+     *                                         dislikePointAmount))
      * @return dislikeKey, call getDislikeByKey to verify whether the Dislike was
      *         successfully published. Also call getPointTransactionByKey to check
      *         the associating PointTransaction
