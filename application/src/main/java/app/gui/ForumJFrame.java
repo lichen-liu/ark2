@@ -129,6 +129,7 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(this.frameTitleString);
+        setLocationByPlatform(true);
         setPreferredSize(new java.awt.Dimension(1280, 750));
         setResizable(false);
 
