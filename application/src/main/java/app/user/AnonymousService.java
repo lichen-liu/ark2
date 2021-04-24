@@ -310,6 +310,79 @@ public interface AnonymousService extends Repository {
         };
     }
 
+    public default VerificationResult verifyDislike(final String dislikeKey) {
+        final Dislike dislike = fetchDislikeByDislikeKey(dislikeKey);
+        if (dislike == null) {
+            return VerificationResult.invalid("Dislike");
+        }
+
+        final boolean isSignatureValid = verifyDislikeSignature(dislike);
+        final String signatureItem = isSignatureValid ? "Dislike Signature Ok!" : "Dislike Signature Failed!";
+
+        final Function<Post, ? extends VerificationResult> postVerifier = post -> {
+            final Function<PointTransaction, ? extends VerificationResult> pointTransactionVerifier = pointTransaction -> {
+                final boolean isCrossReferenced = dislikeKey.equals(pointTransaction.reference);
+                final String crossReferenceString = isCrossReferenced ? "Dislike-Point Transaction Reference Ok!"
+                        : "Dislike-Point Transaction Reference Failed!";
+
+                final boolean isPayerVerified = pointTransaction.payerEntries.length == 2
+                        && Arrays.stream(pointTransaction.payerEntries)
+                                .anyMatch(payer -> dislike.userId.equals(payer.userId))
+                        && Arrays.stream(pointTransaction.payerEntries)
+                                .anyMatch(payer -> post.userId.equals(payer.userId))
+                        && pointTransaction.payerEntries[0].pointAmount == pointTransaction.payerEntries[1].pointAmount;
+                final String payerVerifiedString = isPayerVerified ? "Dislike-Point Transaction Payer Ok!"
+                        : "Dislike-Point Transaction Payer failed!";
+
+                final boolean isPayeeVerified = pointTransaction.payeeEntries.length > 0 && Arrays
+                        .stream(pointTransaction.payeeEntries).anyMatch(payee -> post.userId.equals(payee.userId));
+                final String payeeVerifiedString = isPayeeVerified ? "Dislike-Point Transaction Payee Ok!"
+                        : "Dislike-Point Transaction Payee failed!";
+
+                return new VerificationResult() {
+                    @Override
+                    public boolean isValid() {
+                        return isCrossReferenced && isPayerVerified && isPayeeVerified;
+                    }
+
+                    @Override
+                    public List<String> getItems() {
+                        return List.of(crossReferenceString, payerVerifiedString, payeeVerifiedString);
+                    }
+                };
+            };
+            final var pointTransactionValidity = verifyPointTransaction(dislike.pointTransactionKey,
+                    pointTransactionVerifier);
+            return new VerificationResult() {
+                @Override
+                public boolean isValid() {
+                    return pointTransactionValidity.isValid();
+                }
+
+                @Override
+                public List<String> getItems() {
+                    return pointTransactionValidity.getItems();
+                }
+
+            };
+        };
+        final var postValidity = verifyPost(dislike.postKey, postVerifier);
+
+        return new VerificationResult() {
+            @Override
+            public boolean isValid() {
+                return isSignatureValid && postValidity.isValid();
+            }
+
+            @Override
+            public List<String> getItems() {
+                final List<String> items = new ArrayList<String>(List.of(signatureItem));
+                items.addAll(postValidity.getItems());
+                return items;
+            }
+        };
+    }
+
     public default VerificationResult verifyPointTransaction(final String pointTransactionKey,
             @Nullable final Function<? super PointTransaction, ? extends VerificationResult> verifier) {
 
