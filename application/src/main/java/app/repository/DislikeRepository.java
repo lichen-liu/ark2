@@ -31,7 +31,7 @@ public class DislikeRepository extends ReadableRepository<Dislike> {
         final byte[] dislikeSignature = Cryptography.sign(privateKey, dislikeHash);
 
         final var dislikerPayerEntry = new PointTransaction.Entry(publicKeyString, pointAmount);
-        final String authorUserId = new PostRepository(this.contract).selectObjectsByCustomKeys(postKey).get(0).userId;
+        final String authorUserId = new PostRepository(this.contract).selectObjectsByKeys(postKey).get(0).userId;
         final var authorPayerEntry = new PointTransaction.Entry(authorUserId, pointAmount);
         final byte[] pointTransactionHash = Hash.generatePointTransactionHash(timestamp, publicKeyString,
                 new PointTransaction.Entry[] { dislikerPayerEntry, authorPayerEntry });

@@ -926,7 +926,6 @@ public class ForumJFrame extends javax.swing.JFrame {
                 ForumJFrame.this.setBusy(false);
                 if (result != null && result) {
                     JOptionPane.showMessageDialog(null, "The like was published successfully!");
-                    ForumJFrame.this.postEditorJTextArea.setText(new String());
                 } else {
                     JOptionPane.showMessageDialog(null, "The like failed to be published!");
                 }
@@ -963,12 +962,47 @@ public class ForumJFrame extends javax.swing.JFrame {
         }
 
         final int choice = JOptionPane.showConfirmDialog(null,
-                "Do you want to consume " + NamedWriteableService.getPointCostForPublishingLike()
+                "Do you want to consume " + NamedWriteableService.getPointCostForPublishingDislike()
                         + " Point to like the post using the provided Public/Private Key Pair?",
                 "Confirm", JOptionPane.OK_CANCEL_OPTION);
         if (choice == JOptionPane.CANCEL_OPTION) {
             return;
         }
+
+        this.setBusy(true);
+
+        final PublicKey publicKey = publicKeyCandidate;
+        final PrivateKey privateKey = privateKeyCandidate;
+        final String postKey = this.viewPostPostKeyJTextField.getText();
+        final SwingWorker<Boolean, Void> task = new SwingWorker<Boolean, Void>() {
+            @Override
+            public Boolean doInBackground() {
+                final var appUser = ServiceProvider.createNamedService(ForumJFrame.this.contract, publicKey,
+                        privateKey);
+                appUser.publishNewDislike(postKey);
+                setProgress(100);
+                return true;
+            }
+        };
+
+        task.addPropertyChangeListener((final PropertyChangeEvent evt1) -> {
+            if ("progress".equals(evt1.getPropertyName()) && (Integer) evt1.getNewValue() == 100) {
+                Boolean result = false;
+                try {
+                    result = task.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+                ForumJFrame.this.setBusy(false);
+                if (result != null && result) {
+                    JOptionPane.showMessageDialog(null, "The dislike was published successfully!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "The dislike failed to be published!");
+                }
+            }
+        });
+
+        task.execute();
     }// GEN-LAST:event_viewPostDislikeJButtonActionPerformed
 
     private void publishPostSubmitJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_publishPostSubmitJButtonActionPerformed

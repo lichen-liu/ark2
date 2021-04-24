@@ -1,5 +1,6 @@
 package app.user;
 
+import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
@@ -330,7 +331,8 @@ public interface AnonymousService extends Repository {
                                 .anyMatch(payer -> dislike.userId.equals(payer.userId))
                         && Arrays.stream(pointTransaction.payerEntries)
                                 .anyMatch(payer -> post.userId.equals(payer.userId))
-                        && pointTransaction.payerEntries[0].pointAmount == pointTransaction.payerEntries[1].pointAmount;
+                        && BigDecimal.valueOf(pointTransaction.payerEntries[0].pointAmount)
+                                .equals(BigDecimal.valueOf(pointTransaction.payerEntries[1].pointAmount));
                 final String payerVerifiedString = isPayerVerified ? "Dislike-Point Transaction Payer Ok!"
                         : "Dislike-Point Transaction Payer failed!";
 
