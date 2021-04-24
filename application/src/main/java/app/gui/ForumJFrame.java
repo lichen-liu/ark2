@@ -1043,59 +1043,75 @@ public class ForumJFrame extends javax.swing.JFrame {
     }// GEN-LAST:event_publishPostResetJButtonActionPerformed
 
     private void viewPointBalanceRefreshJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPointBalanceRefreshJButtonActionPerformed
-        final String userId = this.searchJTextField.getText();
-        final var userApp = ServiceProvider.createAnonymousService(this.contract);
+        this.setBusy(true);
+        new SwingWorker<Void, Void>() {
+            @Override
+            public Void doInBackground() {
+                final String userId = ForumJFrame.this.searchJTextField.getText();
+                final var userApp = ServiceProvider.createAnonymousService(ForumJFrame.this.contract);
 
-        final String[] pointTransactionKeys = userApp.computePointTransactionKeysByUserId(userId);
+                final String[] pointTransactionKeys = userApp.computePointTransactionKeysByUserId(userId);
 
-        final List<PointTransaction> orderedPointTransaction = new ArrayList<PointTransaction>();
-        final List<Double> orderedPointBalanceHistory = new ArrayList<Double>();
-        final List<Double> orderedPointBalanceChangesHistory = new ArrayList<Double>();
+                final List<PointTransaction> orderedPointTransaction = new ArrayList<PointTransaction>();
+                final List<Double> orderedPointBalanceHistory = new ArrayList<Double>();
+                final List<Double> orderedPointBalanceChangesHistory = new ArrayList<Double>();
 
-        double pointBalance = 0.0;
-        for (final String pointTransactionKey : pointTransactionKeys) {
-            final PointTransaction pointTransaction = userApp
-                    .fetchPointTransactionByPointTransactionKey(pointTransactionKey);
-            double pointBalanceChanges = 0.0;
+                double pointBalance = 0.0;
+                final int totalProgress = pointTransactionKeys.length;
+                int currentProgress = 0;
+                for (final String pointTransactionKey : pointTransactionKeys) {
+                    final PointTransaction pointTransaction = userApp
+                            .fetchPointTransactionByPointTransactionKey(pointTransactionKey);
+                    double pointBalanceChanges = 0.0;
 
-            for (final var payerEntry : pointTransaction.payerEntries) {
-                if (userId.equals(payerEntry.userId)) {
-                    pointBalanceChanges -= payerEntry.pointAmount;
+                    for (final var payerEntry : pointTransaction.payerEntries) {
+                        if (userId.equals(payerEntry.userId)) {
+                            pointBalanceChanges -= payerEntry.pointAmount;
+                        }
+                    }
+                    for (final var payeeEntry : pointTransaction.payeeEntries) {
+                        if (userId.equals(payeeEntry.userId)) {
+                            pointBalanceChanges += payeeEntry.pointAmount;
+                        }
+                    }
+
+                    pointBalance += pointBalanceChanges;
+                    orderedPointTransaction.add(pointTransaction);
+                    orderedPointBalanceHistory.add(pointBalance);
+                    orderedPointBalanceChangesHistory.add(pointBalanceChanges);
+
+                    ForumJFrame.this.setBusy(currentProgress * 100 / totalProgress);
+                    currentProgress++;
                 }
-            }
-            for (final var payeeEntry : pointTransaction.payeeEntries) {
-                if (userId.equals(payeeEntry.userId)) {
-                    pointBalanceChanges += payeeEntry.pointAmount;
+
+                final boolean debug = false;
+                if (debug) {
+                    System.out.println("\nviewPointBalanceRefreshJButtonActionPerformed");
+                    for (int index = 0; index < pointTransactionKeys.length; index++) {
+                        System.out.println("PointTransactionKey: " + pointTransactionKeys[index]);
+                        System.out.println("Timestamp: " + orderedPointTransaction.get(index).timestamp);
+                        System.out.println("Balance: " + orderedPointBalanceHistory.get(index));
+                        System.out.println("Changes: " + orderedPointBalanceChangesHistory.get(index));
+                        System.out.println(" ");
+                    }
                 }
+
+                ForumJFrame.this.viewPointBalanceChartPanel.setDataModel(
+                        orderedPointBalanceHistory.stream().mapToDouble(Double::doubleValue).toArray(),
+                        orderedPointBalanceChangesHistory.stream().mapToDouble(Double::doubleValue).toArray(), null);
+                // orderedPointTransaction.stream()
+                // .map((transaction) -> ZonedDateTime.parse(transaction.timestamp))
+                // .toArray(ZonedDateTime[]::new)
+
+                ForumJFrame.this.setBusy(100);
+
+                ForumJFrame.this.viewPointBalancePointBalanceJTextField.setText(String.valueOf(pointBalance));
+                ForumJFrame.this.viewPointBalanceModeJComboBox
+                        .setSelectedIndex(ForumJFrame.this.viewPointBalanceModeJComboBox.getSelectedIndex());
+
+                return null;
             }
-
-            pointBalance += pointBalanceChanges;
-            orderedPointTransaction.add(pointTransaction);
-            orderedPointBalanceHistory.add(pointBalance);
-            orderedPointBalanceChangesHistory.add(pointBalanceChanges);
-        }
-
-        final boolean debug = false;
-        if (debug) {
-            System.out.println("\nviewPointBalanceRefreshJButtonActionPerformed");
-            for (int index = 0; index < pointTransactionKeys.length; index++) {
-                System.out.println("PointTransactionKey: " + pointTransactionKeys[index]);
-                System.out.println("Timestamp: " + orderedPointTransaction.get(index).timestamp);
-                System.out.println("Balance: " + orderedPointBalanceHistory.get(index));
-                System.out.println("Changes: " + orderedPointBalanceChangesHistory.get(index));
-                System.out.println(" ");
-            }
-        }
-
-        this.viewPointBalanceChartPanel.setDataModel(
-                orderedPointBalanceHistory.stream().mapToDouble(Double::doubleValue).toArray(),
-                orderedPointBalanceChangesHistory.stream().mapToDouble(Double::doubleValue).toArray(), null);
-        // orderedPointTransaction.stream()
-        // .map((transaction) -> ZonedDateTime.parse(transaction.timestamp))
-        // .toArray(ZonedDateTime[]::new)
-
-        this.viewPointBalancePointBalanceJTextField.setText(String.valueOf(pointBalance));
-        this.viewPointBalanceModeJComboBox.setSelectedIndex(this.viewPointBalanceModeJComboBox.getSelectedIndex());
+        }.execute();
     }// GEN-LAST:event_viewPointBalanceRefreshJButtonActionPerformed
 
     private void viewPointBalanceModeJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPointBalanceModeJComboBoxActionPerformed
@@ -1111,56 +1127,71 @@ public class ForumJFrame extends javax.swing.JFrame {
     }// GEN-LAST:event_viewPointBalanceModeJComboBoxActionPerformed
 
     private void viewWorldPointBalanceRefreshJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewWorldPointBalanceRefreshJButtonActionPerformed
-        final var userApp = ServiceProvider.createAnonymousService(this.contract);
+        this.setBusy(true);
+        new SwingWorker<Void, Void>() {
+            @Override
+            public Void doInBackground() {
+                final var userApp = ServiceProvider.createAnonymousService(ForumJFrame.this.contract);
 
-        final String[] pointTransactionKeys = userApp.fetchPointTransactionKeys();
-        Collections.reverse(Arrays.asList(pointTransactionKeys));
+                final String[] pointTransactionKeys = userApp.fetchPointTransactionKeys();
+                Collections.reverse(Arrays.asList(pointTransactionKeys));
 
-        final List<PointTransaction> orderedPointTransaction = new ArrayList<PointTransaction>();
-        final List<Double> orderedPointBalanceHistory = new ArrayList<Double>();
-        final List<Double> orderedPointBalanceChangesHistory = new ArrayList<Double>();
+                final List<PointTransaction> orderedPointTransaction = new ArrayList<PointTransaction>();
+                final List<Double> orderedPointBalanceHistory = new ArrayList<Double>();
+                final List<Double> orderedPointBalanceChangesHistory = new ArrayList<Double>();
 
-        double pointBalance = 0.0;
-        for (final String pointTransactionKey : pointTransactionKeys) {
-            final PointTransaction pointTransaction = userApp
-                    .fetchPointTransactionByPointTransactionKey(pointTransactionKey);
-            double pointBalanceChanges = 0.0;
+                double pointBalance = 0.0;
+                final int totalProgress = pointTransactionKeys.length;
+                int currentProgress = 0;
+                for (final String pointTransactionKey : pointTransactionKeys) {
+                    final PointTransaction pointTransaction = userApp
+                            .fetchPointTransactionByPointTransactionKey(pointTransactionKey);
+                    double pointBalanceChanges = 0.0;
 
-            for (final var payerEntry : pointTransaction.payerEntries) {
-                pointBalanceChanges -= payerEntry.pointAmount;
+                    for (final var payerEntry : pointTransaction.payerEntries) {
+                        pointBalanceChanges -= payerEntry.pointAmount;
+                    }
+                    for (final var payeeEntry : pointTransaction.payeeEntries) {
+                        pointBalanceChanges += payeeEntry.pointAmount;
+                    }
+
+                    pointBalance += pointBalanceChanges;
+                    orderedPointTransaction.add(pointTransaction);
+                    orderedPointBalanceHistory.add(pointBalance);
+                    orderedPointBalanceChangesHistory.add(pointBalanceChanges);
+
+                    ForumJFrame.this.setBusy(currentProgress * 100 / totalProgress);
+                    currentProgress++;
+                }
+
+                final boolean debug = false;
+                if (debug) {
+                    System.out.println("\nviewWorldPointBalanceRefreshJButtonActionPerformed");
+                    for (int index = 0; index < pointTransactionKeys.length; index++) {
+                        System.out.println("PointTransactionKey: " + pointTransactionKeys[index]);
+                        System.out.println("Timestamp: " + orderedPointTransaction.get(index).timestamp);
+                        System.out.println("Balance: " + orderedPointBalanceHistory.get(index));
+                        System.out.println("Changes: " + orderedPointBalanceChangesHistory.get(index));
+                        System.out.println(" ");
+                    }
+                }
+
+                ForumJFrame.this.viewWorldPointBalanceChartPanel.setDataModel(
+                        orderedPointBalanceHistory.stream().mapToDouble(Double::doubleValue).toArray(),
+                        orderedPointBalanceChangesHistory.stream().mapToDouble(Double::doubleValue).toArray(), null);
+                // orderedPointTransaction.stream()
+                // .map((transaction) -> ZonedDateTime.parse(transaction.timestamp))
+                // .toArray(ZonedDateTime[]::new)
+
+                ForumJFrame.this.setBusy(100);
+
+                ForumJFrame.this.viewWorldPointBalancePointBalanceJTextField.setText(String.valueOf(pointBalance));
+                ForumJFrame.this.viewWorldPointBalanceModeJComboBox
+                        .setSelectedIndex(ForumJFrame.this.viewWorldPointBalanceModeJComboBox.getSelectedIndex());
+
+                return null;
             }
-            for (final var payeeEntry : pointTransaction.payeeEntries) {
-                pointBalanceChanges += payeeEntry.pointAmount;
-            }
-
-            pointBalance += pointBalanceChanges;
-            orderedPointTransaction.add(pointTransaction);
-            orderedPointBalanceHistory.add(pointBalance);
-            orderedPointBalanceChangesHistory.add(pointBalanceChanges);
-        }
-
-        final boolean debug = false;
-        if (debug) {
-            System.out.println("\nviewWorldPointBalanceRefreshJButtonActionPerformed");
-            for (int index = 0; index < pointTransactionKeys.length; index++) {
-                System.out.println("PointTransactionKey: " + pointTransactionKeys[index]);
-                System.out.println("Timestamp: " + orderedPointTransaction.get(index).timestamp);
-                System.out.println("Balance: " + orderedPointBalanceHistory.get(index));
-                System.out.println("Changes: " + orderedPointBalanceChangesHistory.get(index));
-                System.out.println(" ");
-            }
-        }
-
-        this.viewWorldPointBalanceChartPanel.setDataModel(
-                orderedPointBalanceHistory.stream().mapToDouble(Double::doubleValue).toArray(),
-                orderedPointBalanceChangesHistory.stream().mapToDouble(Double::doubleValue).toArray(), null);
-        // orderedPointTransaction.stream()
-        // .map((transaction) -> ZonedDateTime.parse(transaction.timestamp))
-        // .toArray(ZonedDateTime[]::new)
-
-        this.viewWorldPointBalancePointBalanceJTextField.setText(String.valueOf(pointBalance));
-        this.viewWorldPointBalanceModeJComboBox
-                .setSelectedIndex(this.viewWorldPointBalanceModeJComboBox.getSelectedIndex());
+        }.execute();
     }// GEN-LAST:event_viewWorldPointBalanceRefreshJButtonActionPerformed
 
     private void viewWorldPointBalanceModeJComboBoxActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewWorldPointBalanceModeJComboBoxActionPerformed
@@ -1471,6 +1502,20 @@ public class ForumJFrame extends javax.swing.JFrame {
         } else {
             this.statusJProgressBar.setIndeterminate(false);
             this.setEnabled(true);
+        }
+    }
+
+    private void setBusy(final int busyProgress) {
+        final int adjusted = Math.max(this.statusJProgressBar.getMinimum(),
+                Math.min(this.statusJProgressBar.getMaximum(), busyProgress));
+        this.statusJProgressBar.setIndeterminate(false);
+
+        if (adjusted == this.statusJProgressBar.getMaximum()) {
+            this.statusJProgressBar.setValue(this.statusJProgressBar.getMinimum());
+            this.setEnabled(true);
+        } else {
+            this.setEnabled(false);
+            this.statusJProgressBar.setValue(adjusted);
         }
     }
 
