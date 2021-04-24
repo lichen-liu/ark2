@@ -1,6 +1,5 @@
 package app.gui;
 
-import java.beans.PropertyChangeEvent;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
@@ -904,35 +902,22 @@ public class ForumJFrame extends javax.swing.JFrame {
         final PublicKey publicKey = publicKeyCandidate;
         final PrivateKey privateKey = privateKeyCandidate;
         final String postKey = this.viewPostPostKeyJTextField.getText();
-        final SwingWorker<Boolean, Void> task = new SwingWorker<Boolean, Void>() {
+        new SwingWorker<Void, Void>() {
             @Override
-            public Boolean doInBackground() {
+            public Void doInBackground() {
                 final var appUser = ServiceProvider.createNamedService(ForumJFrame.this.contract, publicKey,
                         privateKey);
-                appUser.publishNewLike(postKey);
-                setProgress(100);
-                return true;
-            }
-        };
+                final String result = appUser.publishNewLike(postKey);
 
-        task.addPropertyChangeListener((final PropertyChangeEvent evt1) -> {
-            if ("progress".equals(evt1.getPropertyName()) && (Integer) evt1.getNewValue() == 100) {
-                Boolean result = false;
-                try {
-                    result = task.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
                 ForumJFrame.this.setBusy(false);
-                if (result != null && result) {
+                if (result != null) {
                     JOptionPane.showMessageDialog(null, "The like was published successfully!");
                 } else {
                     JOptionPane.showMessageDialog(null, "The like failed to be published!");
                 }
+                return null;
             }
-        });
-
-        task.execute();
+        }.execute();
     }// GEN-LAST:event_viewPostLikeJButtonActionPerformed
 
     private void viewPostDislikeJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewPostDislikeJButtonActionPerformed
@@ -974,35 +959,22 @@ public class ForumJFrame extends javax.swing.JFrame {
         final PublicKey publicKey = publicKeyCandidate;
         final PrivateKey privateKey = privateKeyCandidate;
         final String postKey = this.viewPostPostKeyJTextField.getText();
-        final SwingWorker<Boolean, Void> task = new SwingWorker<Boolean, Void>() {
+        new SwingWorker<Void, Void>() {
             @Override
-            public Boolean doInBackground() {
+            public Void doInBackground() {
                 final var appUser = ServiceProvider.createNamedService(ForumJFrame.this.contract, publicKey,
                         privateKey);
-                appUser.publishNewDislike(postKey);
-                setProgress(100);
-                return true;
-            }
-        };
+                final String result = appUser.publishNewDislike(postKey);
 
-        task.addPropertyChangeListener((final PropertyChangeEvent evt1) -> {
-            if ("progress".equals(evt1.getPropertyName()) && (Integer) evt1.getNewValue() == 100) {
-                Boolean result = false;
-                try {
-                    result = task.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
                 ForumJFrame.this.setBusy(false);
-                if (result != null && result) {
+                if (result != null) {
                     JOptionPane.showMessageDialog(null, "The dislike was published successfully!");
                 } else {
                     JOptionPane.showMessageDialog(null, "The dislike failed to be published!");
                 }
+                return null;
             }
-        });
-
-        task.execute();
+        }.execute();
     }// GEN-LAST:event_viewPostDislikeJButtonActionPerformed
 
     private void publishPostSubmitJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_publishPostSubmitJButtonActionPerformed
@@ -1042,36 +1014,23 @@ public class ForumJFrame extends javax.swing.JFrame {
 
         final PublicKey publicKey = publicKeyCandidate;
         final PrivateKey privateKey = privateKeyCandidate;
-        final SwingWorker<Boolean, Void> task = new SwingWorker<Boolean, Void>() {
+        new SwingWorker<Void, Void>() {
             @Override
-            public Boolean doInBackground() {
+            public Void doInBackground() {
                 final var appUser = ServiceProvider.createNamedService(ForumJFrame.this.contract, publicKey,
                         privateKey);
-                appUser.publishNewPost(ForumJFrame.this.postEditorJTextArea.getText());
-                setProgress(100);
-                return true;
-            }
-        };
+                final String result = appUser.publishNewPost(ForumJFrame.this.postEditorJTextArea.getText());
 
-        task.addPropertyChangeListener((final PropertyChangeEvent evt1) -> {
-            if ("progress".equals(evt1.getPropertyName()) && (Integer) evt1.getNewValue() == 100) {
-                Boolean result = false;
-                try {
-                    result = task.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
                 ForumJFrame.this.setBusy(false);
-                if (result != null && result) {
+                if (result != null) {
                     JOptionPane.showMessageDialog(null, "The post was published successfully!");
                     ForumJFrame.this.postEditorJTextArea.setText(new String());
                 } else {
                     JOptionPane.showMessageDialog(null, "The post failed to be published!");
                 }
+                return null;
             }
-        });
-
-        task.execute();
+        }.execute();
     }// GEN-LAST:event_publishPostSubmitJButtonActionPerformed
 
     private void publishPostResetJButtonActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_publishPostResetJButtonActionPerformed
