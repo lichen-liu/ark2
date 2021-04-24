@@ -1415,7 +1415,7 @@ public class ForumJFrame extends javax.swing.JFrame {
             this.viewPostLikeJButton.setEnabled(true);
             this.viewPostDislikeJButton.setEnabled(true);
 
-            final var verify = userApp.verifyPost(selectedPostKey);
+            final var verify = userApp.verifyPost(selectedPostKey, null);
             this.viewPostStatusJTextField.setText(verify.getItemsString());
             this.viewPostStatusJTextField.setBackground(
                     verify.isValid() ? new java.awt.Color(200, 255, 200) : new java.awt.Color(255, 200, 200));

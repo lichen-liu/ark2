@@ -6,6 +6,7 @@ import java.security.PublicKey;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -14,6 +15,7 @@ import javax.annotation.Nullable;
 import org.hyperledger.fabric.gateway.ContractException;
 
 import app.repository.Hash;
+import app.repository.data.Dislike;
 import app.repository.data.Like;
 import app.repository.data.PointTransaction;
 import app.repository.data.Post;
@@ -75,6 +77,15 @@ public interface AnonymousService extends Repository {
         return null;
     }
 
+    public default String[] fetchDislikeKeysByPostKey(final String postKey) {
+        try {
+            return getDislikeRepository().selectObjectKeysByCustomKey(postKey);
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public default PointTransaction fetchPointTransactionByPointTransactionKey(final String key) {
         try {
             return getPointTransactionRepository().selectObjectsByKeys(key).get(0);
@@ -94,6 +105,14 @@ public interface AnonymousService extends Repository {
     public default Like fetchLikeByLikeKey(final String likeKey) {
         try {
             return getLikeRepository().selectObjectsByKeys(likeKey).get(0);
+        } catch (final Exception e) {
+        }
+        return null;
+    }
+
+    public default Dislike fetchDislikeByDislikeKey(final String dislikeKey) {
+        try {
+            return getDislikeRepository().selectObjectsByKeys(dislikeKey).get(0);
         } catch (final Exception e) {
         }
         return null;
@@ -139,6 +158,18 @@ public interface AnonymousService extends Repository {
         }
     }
 
+    public static boolean verifyDislikeSignature(final Dislike dislike) {
+        try {
+            final byte[] hashedContentBytes = Hash.generateDislikeHash(dislike.timestamp, dislike.postKey,
+                    dislike.userId);
+            final PublicKey publicKey = Cryptography.parsePublicKey(ByteUtils.fromAsciiString(dislike.userId));
+            return Cryptography.verify(publicKey, hashedContentBytes, ByteUtils.fromAsciiString(dislike.signature));
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException | InvalidKeyException
+                | SignatureException e) {
+            return false;
+        }
+    }
+
     public static boolean verifyPointTransactionSignature(final PointTransaction pointTransaction) {
         try {
             final byte[] hashedContentBytes = Hash.generatePointTransactionHash(pointTransaction.timestamp,
@@ -177,7 +208,8 @@ public interface AnonymousService extends Repository {
         }
     }
 
-    public default VerificationResult verifyPost(final String postKey) {
+    public default VerificationResult verifyPost(final String postKey,
+            @Nullable final Function<? super Post, ? extends VerificationResult> verifier) {
         final Post post = fetchPostByPostKey(postKey);
         if (post == null) {
             return VerificationResult.invalid("Post");
@@ -185,15 +217,26 @@ public interface AnonymousService extends Repository {
 
         final boolean isSignatureValid = verifyPostSignature(post);
         final String signatureItem = isSignatureValid ? "Post Signature Ok!" : "Post Signature Failed!";
+
+        final VerificationResult verifierValidity = verifier != null ? verifier.apply(post) : null;
+
         return new VerificationResult() {
             @Override
             public boolean isValid() {
-                return isSignatureValid;
+                if (verifierValidity == null) {
+                    return isSignatureValid;
+                } else {
+                    return isSignatureValid && verifierValidity.isValid();
+                }
             }
 
             @Override
             public List<String> getItems() {
-                return List.of(signatureItem);
+                final List<String> items = new ArrayList<String>(List.of(signatureItem));
+                if (verifierValidity != null) {
+                    items.addAll(verifierValidity.getItems());
+                }
+                return items;
             }
         };
     }
@@ -207,34 +250,61 @@ public interface AnonymousService extends Repository {
         final boolean isSignatureValid = verifyLikeSignature(like);
         final String signatureItem = isSignatureValid ? "Like Signature Ok!" : "Like Signature Failed!";
 
-        final Function<PointTransaction, ? extends VerificationResult> crossReferenceVerifier = (pointTransaction) -> {
-            final boolean isCrossReferenced = likeKey.equals(pointTransaction.reference);
-            final String crossReferenceString = isCrossReferenced ? "Like-Point Transaction Reference Ok!"
-                    : "Like-Point Transaction Reference Failed!";
+        final Function<Post, ? extends VerificationResult> postVerifier = post -> {
+            final Function<PointTransaction, ? extends VerificationResult> pointTransactionVerifier = pointTransaction -> {
+                final boolean isCrossReferenced = likeKey.equals(pointTransaction.reference);
+                final String crossReferenceString = isCrossReferenced ? "Like-Point Transaction Reference Ok!"
+                        : "Like-Point Transaction Reference Failed!";
+
+                final boolean isPayerVerified = pointTransaction.payerEntries.length == 1
+                        && like.userId.equals(pointTransaction.payerEntries[0].userId);
+                final String payerVerifiedString = isPayerVerified ? "Like-Point Transaction Payer Ok!"
+                        : "Like-Point Transaction Payer failed!";
+
+                final boolean isPayeeVerified = pointTransaction.payeeEntries.length > 0 && Arrays
+                        .stream(pointTransaction.payeeEntries).anyMatch(payee -> post.userId.equals(payee.userId));
+                final String payeeVerifiedString = isPayeeVerified ? "Like-Point Transaction Payee Ok!"
+                        : "Like-Point Transaction Payee failed!";
+
+                return new VerificationResult() {
+                    @Override
+                    public boolean isValid() {
+                        return isCrossReferenced && isPayerVerified && isPayeeVerified;
+                    }
+
+                    @Override
+                    public List<String> getItems() {
+                        return List.of(crossReferenceString, payerVerifiedString, payeeVerifiedString);
+                    }
+                };
+            };
+            final var pointTransactionValidity = verifyPointTransaction(like.pointTransactionKey,
+                    pointTransactionVerifier);
             return new VerificationResult() {
                 @Override
                 public boolean isValid() {
-                    return isCrossReferenced;
+                    return pointTransactionValidity.isValid();
                 }
 
                 @Override
                 public List<String> getItems() {
-                    return List.of(crossReferenceString);
+                    return pointTransactionValidity.getItems();
                 }
+
             };
         };
-        final var pointTransactionValidity = verifyPointTransaction(like.pointTransactionKey, crossReferenceVerifier);
+        final var postValidity = verifyPost(like.postKey, postVerifier);
 
         return new VerificationResult() {
             @Override
             public boolean isValid() {
-                return isSignatureValid && pointTransactionValidity.isValid();
+                return isSignatureValid && postValidity.isValid();
             }
 
             @Override
             public List<String> getItems() {
                 final List<String> items = new ArrayList<String>(List.of(signatureItem));
-                items.addAll(pointTransactionValidity.getItems());
+                items.addAll(postValidity.getItems());
                 return items;
             }
         };
