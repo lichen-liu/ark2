@@ -26,8 +26,7 @@ public class PostTests {
     public void benchmark() throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, ContractException {
         try {
             singleThreadTests();
-            multiThreadWithoutDependencyTests();
-            multiThreadWithDependencyTests();
+            twoThreadsPublishingNewPostsTests();
         } catch (final Exception e) {
             e.printStackTrace();
         }
@@ -51,7 +50,7 @@ public class PostTests {
         logger.print(client.fetchPostByPostKey(postKey));
     }
 
-    private void multiThreadWithDependencyTests() throws Exception {
+    private void twoThreadsPublishingNewPostsTests() throws Exception {
 
         final Wallet wallet = WalletFactory.GetWallet("admin");
 
@@ -101,10 +100,5 @@ public class PostTests {
         } catch (final InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    private void multiThreadWithoutDependencyTests()
-            throws IOException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, ContractException {
-
     }
 }

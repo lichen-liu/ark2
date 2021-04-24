@@ -89,9 +89,10 @@ class App {
     private void test() {
         try {
             // new PostTests().benchmark();
-            new LikeTests(this.contract).benchmark();
+            //new LikeTests(this.contract).benchmark();
             // new TransactionTests().benchmark();
             // new TransactionTests().test(this.appClient);
+            new app.tests.Benchmarks.PostCompetitonSimulationBenchmark().Run();
         } catch (final Exception e) {
             e.printStackTrace();
         }

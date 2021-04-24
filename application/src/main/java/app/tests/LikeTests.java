@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.Wallet;
@@ -24,6 +25,11 @@ public class LikeTests {
 
     public void benchmark() throws Exception {
 
+        singleThreadLikingAPostTest(contract);
+        twoThreadLikingTheSamePostTest();
+    }
+
+    private void singleThreadLikingAPostTest(Contract contract) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException {
         final TestRunner runner = new TestRunner("Runner 1");
         final var client = TestClient.createTestClient(contract);
 
@@ -43,7 +49,7 @@ public class LikeTests {
         thread.start();
     }
 
-    private void multiThreadWithoutDependencyTests()
+    private void twoThreadLikingTheSamePostTest()
             throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, IOException {
         final Wallet wallet = WalletFactory.GetWallet("admin");
 
@@ -62,19 +68,16 @@ public class LikeTests {
         final var client1 = TestClient.createTestClient(contract);
         final var client2 = TestClient.createTestClient(contract);
 
-        final var runner1Tests = new ArrayList<TestVoid>();
-        final var runner2Tests = new ArrayList<TestVoid>();
-
         final String postKey = client1.publishNewPost("testPost1");
 
         final TestVoid test = () -> {
             return client1.publishNewLike(postKey);
         };
-        runner1.insertNewTest(test, 5);
+        runner1.insertNewTest(test, 4);
         final TestVoid test2 = () -> {
             return client2.publishNewLike(postKey);
         };
-        runner2.insertNewTest(test2, 5);
+        runner2.insertNewTest(test2, 4);
 
         final Thread thread1 = new Thread(runner1);
         final Thread thread2 = new Thread(runner2);
