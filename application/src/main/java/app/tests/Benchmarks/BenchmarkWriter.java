@@ -1,4 +1,4 @@
-package app.tests.Benchmarks;
+package app.tests.benchmarks;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -58,8 +58,8 @@ public class BenchmarkWriter {
     }
 
     public void saveClient(NamedService client, Integer prob, FileWriter writer) throws IOException {
-        writer.append((String.format("Public Key: %s, Private Key: %s , Prob: %s \n", client.getPublicKeyString(),
-                client.getPrivateKeyString(), prob.toString())));
+        writer.append((String.format("Public Key: %s, Private Key: %s , Prob: %s Money: %s \n", client.getPublicKeyString(),
+                client.getPrivateKeyString(), prob.toString(), client.computeMyPointBalance())));
     }
 
     public FileWriter getWriter(String fileName) throws IOException {
@@ -81,7 +81,7 @@ public class BenchmarkWriter {
 
     public void SetTitle(String title) {
         try {
-            writer.append(String.format("=== Benchmark: %s ===", title));
+            writer.append(String.format("=== Benchmark: %s === \n", title));
         } catch (IOException e) {
             e.printStackTrace();
         }

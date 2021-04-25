@@ -1,40 +1,42 @@
-package app.tests.Benchmarks;
+package app.tests.benchmarks;
 
-public abstract class Benchmark extends BenchmarkState{
+public abstract class Benchmark {
     private BenchmarkWriter writer;
+    private BenchmarkState internalState;
 
-    public Benchmark(){
+    public Benchmark() throws Exception{
         this.writer = new BenchmarkWriter(this.getClass().getSimpleName());
+        this.internalState = getState();
     }
 
     public void TriggerALike(){
-        var postKey = postPool.draw();
-        var liker = likerPool.draw();
+        var postKey = internalState.postPool.draw();
+        var liker = internalState.likerPool.draw();
         liker.publishNewLike(postKey);
     }
 
     public void TriggerADislike(){
-        var postKey = postPool.draw();
-        var liker = likerPool.draw();
+        var postKey = internalState.postPool.draw();
+        var liker = internalState.likerPool.draw();
         liker.publishNewDislike(postKey); 
     }
 
     public void TriggerANewPost(int postProb){
-        var author = authorPool.draw();
+        var author = internalState.authorPool.draw();
         var postKey = author.publishNewPost("-"); 
-        posts.add(postKey);
-        postProbMap.put(postKey, postProb);
+        internalState.posts.add(postKey);
+        internalState.postProbMap.put(postKey, postProb);
     }
 
-    public void Run(){
-        RunTest();
+    public void run(){
+        runTest();
 
         System.out.println("Test finished, writing benchmark states into the disk...");
         try{
             writer.SetTitle(this.getClass().getSimpleName());
-            writer.saveAuthors(authors, authorProbMap);
-            writer.saveLikers(likers, likerProbMap);
-            writer.savePosts(posts, postProbMap);
+            writer.saveAuthors(internalState.authors, internalState.authorProbMap);
+            writer.saveLikers(internalState.likers, internalState.likerProbMap);
+            writer.savePosts(internalState.posts, internalState.postProbMap);
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -42,5 +44,7 @@ public abstract class Benchmark extends BenchmarkState{
         writer.finish(); 
     };
 
-    protected abstract void RunTest();
+    protected abstract BenchmarkState getState() throws Exception;
+
+    protected abstract void runTest();
 }

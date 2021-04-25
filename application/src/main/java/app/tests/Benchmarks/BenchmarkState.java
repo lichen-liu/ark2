@@ -1,4 +1,4 @@
-package app.tests.Benchmarks;
+package app.tests.benchmarks;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -31,7 +31,9 @@ public class BenchmarkState {
     protected ProbabilityPool<NamedService> likerPool;
     protected ProbabilityPool<String> postPool;
 
-    public BenchmarkState() {
+    private Contract contract;
+
+    public BenchmarkState() throws IOException {
         this.authors = new ArrayList<NamedService>();
         this.likers = new ArrayList<NamedService>();
         this.posts = new ArrayList<String>();
@@ -43,6 +45,8 @@ public class BenchmarkState {
         this.authorPool = new ProbabilityPool<NamedService>();
         this.likerPool = new ProbabilityPool<NamedService>();
         this.postPool = new ProbabilityPool<String>();
+
+        this.contract = getContract();
     }
 
     protected Contract getContract() throws IOException {
@@ -58,7 +62,7 @@ public class BenchmarkState {
         return ContractFactory.CreateContract(wallet, contractCreation);
     }
 
-    protected List<NamedService> createClients(Contract contract, int clientNum)
+    protected List<NamedService> createClients(int clientNum)
             throws InvalidAlgorithmParameterException, NoSuchAlgorithmException {
         var clients = new ArrayList<NamedService>();
         int i = 0;

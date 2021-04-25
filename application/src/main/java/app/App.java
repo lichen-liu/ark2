@@ -92,7 +92,7 @@ class App {
             //new LikeTests(this.contract).benchmark();
             // new TransactionTests().benchmark();
             // new TransactionTests().test(this.appClient);
-            new app.tests.Benchmarks.PostCompetitonSimulationBenchmark().Run();
+            new app.tests.benchmarks.PostCompetitonSimulationBenchmark().run();
         } catch (final Exception e) {
             e.printStackTrace();
         }
