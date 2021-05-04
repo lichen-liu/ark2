@@ -41,5 +41,5 @@ public abstract class TestSuite {
         }
     }
 
-    protected abstract <T extends Test> List<T> setUpTests();
+    protected abstract List<? extends Test> setUpTests();
 }

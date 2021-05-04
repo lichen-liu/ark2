@@ -12,7 +12,7 @@ public class TestSchedules {
     public static TestSuite getPerformanceTestSuite() {
         return new TestSuite() {
             @Override
-            protected <T extends Test> List<T> setUpTests() {
+            protected List<? extends Test> setUpTests() {
                 return null;
             }
         };
@@ -21,7 +21,7 @@ public class TestSchedules {
     public static TestSuite getRewardsTestSuite() {
         return new TestSuite() {
             @Override
-            protected <T extends Test> List<T> setUpTests() {
+            protected List<? extends Test> setUpTests() {
                 return null;
             }
         };
@@ -30,7 +30,7 @@ public class TestSchedules {
     public static TestSuite getSimpleTestSuite(final Contract contract) {
         return new TestSuite() {
             @Override
-            protected List<Test> setUpTests() {
+            protected List<? extends Test> setUpTests() {
                 return List.of(new PostTests(), new LikeTests(contract), new TransactionTests());
             }
         };
@@ -39,7 +39,7 @@ public class TestSchedules {
     public static TestSuite getSimulationTestSuite() {
         return new TestSuite() {
             @Override
-            protected <T extends Test> List<T> setUpTests() {
+            protected List<? extends Test> setUpTests() {
                 return null;
             }
         };
