@@ -1,4 +1,4 @@
-package app.tests.benchmarks;
+package app.tests.simulation;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -17,7 +17,7 @@ import app.backend.WalletFactory;
 import app.tests.util.TestClient;
 import app.user.NamedService;
 
-public class BenchmarkState {
+public class SimulationState {
 
     protected List<NamedService> authors;
     protected List<NamedService> likers;
@@ -31,9 +31,9 @@ public class BenchmarkState {
     protected ProbabilityPool<NamedService> likerPool;
     protected ProbabilityPool<String> postPool;
 
-    private Contract contract;
+    private final Contract contract;
 
-    public BenchmarkState() throws IOException {
+    public SimulationState() throws IOException {
         this.authors = new ArrayList<NamedService>();
         this.likers = new ArrayList<NamedService>();
         this.posts = new ArrayList<String>();
@@ -62,9 +62,9 @@ public class BenchmarkState {
         return ContractFactory.CreateContract(wallet, contractCreation);
     }
 
-    protected List<NamedService> createClients(int clientNum)
+    protected List<NamedService> createClients(final int clientNum)
             throws InvalidAlgorithmParameterException, NoSuchAlgorithmException {
-        var clients = new ArrayList<NamedService>();
+        final var clients = new ArrayList<NamedService>();
         int i = 0;
         while (i < clientNum) {
             clients.add(TestClient.createTestClient(contract));
@@ -74,15 +74,15 @@ public class BenchmarkState {
     }
 
     static class ProbabilityPool<T> {
-        private List<Tuple<T, Integer>> probAccum;
-        private Random random = new Random();
+        private final List<Tuple<T, Integer>> probAccum;
+        private final Random random = new Random();
 
         ProbabilityPool() {
             this.probAccum = new ArrayList<Tuple<T, Integer>>();
         }
 
-        public void addItem(T item, Integer prob) {
-            var last = getLast();
+        public void addItem(final T item, final Integer prob) {
+            final var last = getLast();
 
             if (last == null) {
                 probAccum.add(new Tuple<>(item, prob));
@@ -92,11 +92,11 @@ public class BenchmarkState {
         }
 
         public T draw() {
-            var last = getLast();
+            final var last = getLast();
             if (last != null) {
-                var upperBound = last.Item2 + 1;
-                var pick = random.nextInt(upperBound);
-                for (Tuple<T, Integer> step : probAccum) {
+                final var upperBound = last.Item2 + 1;
+                final var pick = random.nextInt(upperBound);
+                for (final Tuple<T, Integer> step : probAccum) {
                     if (step.Item2 < pick)
                         continue;
                     return step.Item1;
@@ -112,7 +112,7 @@ public class BenchmarkState {
         }
 
         static class Tuple<T, M> {
-            public Tuple(T item1, M item2) {
+            public Tuple(final T item1, final M item2) {
                 this.Item1 = item1;
                 this.Item2 = item2;
             }

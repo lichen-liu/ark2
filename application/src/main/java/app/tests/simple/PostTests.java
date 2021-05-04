@@ -1,4 +1,4 @@
-package app.tests;
+package app.tests.simple;
 
 import java.io.IOException;
 import java.nio.file.Paths;

@@ -1,38 +1,39 @@
-package app.tests.benchmarks;
-public class PostCompetitonSimulationBenchmark extends Benchmark {
+package app.tests.simulation;
 
-    public PostCompetitonSimulationBenchmark() throws Exception {
+public class PostCompetitonSimulationTests extends Simulation {
+
+    public PostCompetitonSimulationTests() throws Exception {
         super();
     };
 
     @Override
     protected void runTest() {
-        //Run tests - Just do a lot of likes to the economic system
-        var howManyLikesDoYouWantHuh = 20;
+        // Run tests - Just do a lot of likes to the economic system
+        final var howManyLikesDoYouWantHuh = 20;
         int i = 0;
-        while(i < howManyLikesDoYouWantHuh){
+        while (i < howManyLikesDoYouWantHuh) {
             TriggerALike();
-            ++ i;
+            ++i;
         }
     }
 
-    @Override 
-    protected BenchmarkState getState() throws Exception{
+    @Override
+    protected SimulationState getState() throws Exception {
 
-        var state = new BenchmarkState();
-    
-        //Build forum state
+        final var state = new SimulationState();
+
+        // Build forum state
         state.authors = state.createClients(3);
         state.likers = state.createClients(7);
-      
+
         state.posts.add(state.authors.get(0).publishNewPost("post1"));
         state.posts.add(state.authors.get(1).publishNewPost("post2"));
         state.posts.add(state.authors.get(2).publishNewPost("post3"));
-    
+
         state.postProbMap.put(state.posts.get(0), 2);
         state.postProbMap.put(state.posts.get(1), 3);
         state.postProbMap.put(state.posts.get(2), 5);
-    
+
         state.likerProbMap.put(state.likers.get(0), 1);
         state.likerProbMap.put(state.likers.get(1), 1);
         state.likerProbMap.put(state.likers.get(2), 5);
@@ -40,19 +41,19 @@ public class PostCompetitonSimulationBenchmark extends Benchmark {
         state.likerProbMap.put(state.likers.get(4), 20);
         state.likerProbMap.put(state.likers.get(5), 20);
         state.likerProbMap.put(state.likers.get(6), 48);
-    
-        var it = state.postProbMap.entrySet().iterator();
+
+        final var it = state.postProbMap.entrySet().iterator();
         while (it.hasNext()) {
-            var pair = it.next();
+            final var pair = it.next();
             state.postPool.addItem(pair.getKey(), pair.getValue());
         }
-    
-        var it2 = state.likerProbMap.entrySet().iterator();
+
+        final var it2 = state.likerProbMap.entrySet().iterator();
         while (it2.hasNext()) {
-            var pair = it2.next();
+            final var pair = it2.next();
             state.likerPool.addItem(pair.getKey(), pair.getValue());
         }
-        
+
         return state;
     }
 }

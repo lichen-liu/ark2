@@ -23,7 +23,7 @@ import app.backend.ContractFactory;
 import app.backend.UserRegistrationService;
 import app.backend.WalletFactory;
 import app.gui.ForumJFrame;
-import app.tests.LikeTests;
+import app.tests.Tests;
 
 class App {
 
@@ -87,15 +87,8 @@ class App {
     }
 
     private void test() {
-        try {
-            // new PostTests().benchmark();
-            //new LikeTests(this.contract).benchmark();
-            // new TransactionTests().benchmark();
-            // new TransactionTests().test(this.appClient);
-            new app.tests.benchmarks.PostCompetitonSimulationBenchmark().run();
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
+        // Tests.getSimpleTestSuite(contract).launch();
+        Tests.getSimulationTestSuite().launch();
     }
 
     private void gui() {
