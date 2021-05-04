@@ -1,11 +1,7 @@
 # ark2
 Anonymous Immutable Reward-Motivated Forum on Blockchain
 
-[![Build Status][actions-badge]][actions-url]
-
-
-[actions-badge]: https://github.com/lichen-liu/ark2/workflows/java_gradle_build/badge.svg
-[actions-url]: https://github.com/lichen-liu/ark2/actions?query=workflow%3Ajava_gradle_build
+[![java_gradle_build](https://github.com/lichen-liu/ark2/actions/workflows/gradle.yml/badge.svg)](https://github.com/lichen-liu/ark2/actions/workflows/gradle.yml)
 
 # Requirements
 
