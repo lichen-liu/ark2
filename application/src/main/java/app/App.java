@@ -23,7 +23,7 @@ import app.backend.ContractFactory;
 import app.backend.UserRegistrationService;
 import app.backend.WalletFactory;
 import app.gui.ForumJFrame;
-import app.tests.Tests;
+import app.tests.TestScheduler;
 
 class App {
 
@@ -88,7 +88,7 @@ class App {
 
     private void test() {
         // Tests.getSimpleTestSuite(contract).launch();
-        Tests.getSimulationTestSuite().launch();
+        TestScheduler.getSimulationTestSuite().launch();
     }
 
     private void gui() {

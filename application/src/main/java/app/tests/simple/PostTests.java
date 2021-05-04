@@ -1,35 +1,26 @@
 package app.tests.simple;
 
-import java.io.IOException;
 import java.nio.file.Paths;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
-import org.hyperledger.fabric.gateway.ContractException;
 import org.hyperledger.fabric.gateway.Wallet;
 
 import app.backend.ContractFactory;
 import app.backend.WalletFactory;
-import app.tests.util.Logger;
+import app.tests.Test;
 import app.tests.util.TestClient;
 import app.tests.util.TestRunner;
 import app.tests.util.TestVoid;
 
-public class PostTests {
-    private final Logger logger;
-
+public class PostTests extends Test {
     public PostTests() {
-        this.logger = new Logger();
+        super("PostTests");
     }
 
-    public void benchmark() throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, ContractException {
-        try {
-            singleThreadTests();
-            twoThreadsPublishingNewPostsTests();
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void runTest() throws Exception {
+        singleThreadTests();
+        twoThreadsPublishingNewPostsTests();
     }
 
     private void singleThreadTests() throws Exception {

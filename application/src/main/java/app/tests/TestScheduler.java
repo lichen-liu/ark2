@@ -6,7 +6,7 @@ import app.tests.simple.LikeTests;
 import app.tests.simple.PostTests;
 import app.tests.simple.TransactionTests;
 
-public class Tests {
+public class TestScheduler {
     public static TestSuite getPerformanceTestSuite() {
         return new TestSuite() {
             @Override
@@ -30,9 +30,9 @@ public class Tests {
             @Override
             public void launch() {
                 try {
-                    new PostTests().benchmark();
-                    new LikeTests(contract).benchmark();
-                    new TransactionTests().benchmark();
+                    new PostTests().runTest();
+                    new LikeTests(contract).runTest();
+                    new TransactionTests().runTest();
                 } catch (final Exception e) {
                     e.printStackTrace();
                 }

@@ -1,5 +1,8 @@
 package app.tests.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -8,12 +11,26 @@ import app.repository.data.PointTransaction;
 import app.repository.data.Post;
 
 public class Logger {
-    private int testId;
+    private int lineId = 0;
+    private String name = "";
+    private int subname = 0;
 
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private static Map<String, Integer> loggerName = new HashMap<String, Integer>();
 
     public Logger() {
-        objectMapper = new ObjectMapper();
+    }
+
+    public Logger(final String name, final int subname) {
+        this.name = name;
+        this.subname = subname;
+    }
+
+    public Logger(final String name) {
+        this.name = name;
+        this.subname = loggerName.getOrDefault(this.name, 0);
+        loggerName.put(this.name, this.subname + 1);
     }
 
     public void print(final Post result) {
@@ -33,19 +50,20 @@ public class Logger {
     }
 
     public void print(final String result) {
-        System.out.println("\n[" + this.testId + "] result: " + prettifyJson(result));
-        this.testId++;
+        System.out.println(
+                "\n[" + this.name + ":" + this.subname + ":" + this.lineId + "] result: " + prettifyJson(result));
+        this.lineId++;
     }
 
     public void print(final String[] results) {
 
-        System.out.println("\n[" + this.testId + "] result: ");
+        System.out.println("\n[" + this.name + ":" + this.subname + ":" + this.lineId + "] result: ");
 
         for (final var result : results) {
             System.out.println(prettifyJson(result));
         }
 
-        this.testId++;
+        this.lineId++;
     }
 
     private static String toString(final byte[] result) {

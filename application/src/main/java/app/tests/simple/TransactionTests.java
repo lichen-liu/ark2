@@ -14,27 +14,24 @@ import app.backend.ContractFactory;
 import app.backend.WalletFactory;
 import app.repository.data.Payment;
 import app.repository.data.PointTransaction;
+import app.tests.Test;
 import app.tests.util.Logger;
 import app.tests.util.TestClient;
 import app.tests.util.TestRunner;
 import app.tests.util.TestVoid;
 import app.util.ByteUtils;
 
-public class TransactionTests {
-    private final Logger logger;
+public class TransactionTests extends Test {
 
     public TransactionTests() {
-        this.logger = new Logger();
+        super("TransactionTests");
     }
 
-    public void benchmark() throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, ContractException {
-        try {
-            singleThreadTests();
-            // multiThreadWithoutDependencyTests();
-            // multiThreadWithDependencyTests();
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void runTest() throws Exception {
+        singleThreadTests();
+        // multiThreadWithoutDependencyTests();
+        // multiThreadWithDependencyTests();
     }
 
     private void singleThreadTests() throws Exception {

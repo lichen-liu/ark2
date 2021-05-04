@@ -4,32 +4,33 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.Wallet;
 
 import app.backend.ContractFactory;
 import app.backend.WalletFactory;
+import app.tests.Test;
 import app.tests.util.TestClient;
 import app.tests.util.TestRunner;
 import app.tests.util.TestVoid;
 
-public class LikeTests {
+public class LikeTests extends Test {
     private final Contract contract;
 
     public LikeTests(final Contract contract) {
+        super();
         this.contract = contract;
     }
 
-    public void benchmark() throws Exception {
-
+    @Override
+    public void runTest() throws Exception {
         singleThreadLikingAPostTest(contract);
         twoThreadLikingTheSamePostTest();
     }
 
-    private void singleThreadLikingAPostTest(Contract contract) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException {
+    private void singleThreadLikingAPostTest(final Contract contract)
+            throws InvalidAlgorithmParameterException, NoSuchAlgorithmException {
         final TestRunner runner = new TestRunner("Runner 1");
         final var client = TestClient.createTestClient(contract);
 
