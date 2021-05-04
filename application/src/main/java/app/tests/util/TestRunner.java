@@ -14,11 +14,11 @@ public class TestRunner implements Runnable {
     private final HashMap<TestVoid, Object> outputs;
     private final String identifier;
 
-    public TestRunner(final String identifier) {
+    public TestRunner(final String identifier, final Logger logger) {
         this.tests = new ArrayList<TestVoid>();
         this.exectutions = new ArrayList<>();
         this.outputs = new HashMap<TestVoid, Object>();
-        this.logger = new Logger();
+        this.logger = logger;
         this.identifier = identifier;
     }
 

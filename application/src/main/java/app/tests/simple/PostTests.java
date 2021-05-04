@@ -24,7 +24,7 @@ public class PostTests implements Test {
     public void runTest(final Logger logger) {
         try {
             singleThreadTests(logger);
-            twoThreadsPublishingNewPostsTests();
+            twoThreadsPublishingNewPostsTests(logger);
         } catch (final Exception e) {
             e.printStackTrace();
         }
@@ -48,7 +48,7 @@ public class PostTests implements Test {
         logger.print(client.fetchPostByPostKey(postKey));
     }
 
-    private void twoThreadsPublishingNewPostsTests() throws Exception {
+    private void twoThreadsPublishingNewPostsTests(final Logger logger) throws Exception {
 
         final Wallet wallet = WalletFactory.GetWallet("admin");
 
@@ -61,8 +61,8 @@ public class PostTests implements Test {
 
         final var contract = ContractFactory.CreateContract(wallet, contractCreation);
 
-        final TestRunner runner1 = new TestRunner("Runner 1");
-        final TestRunner runner2 = new TestRunner("Runner 2");
+        final TestRunner runner1 = new TestRunner("Runner 1", logger);
+        final TestRunner runner2 = new TestRunner("Runner 2", logger);
 
         final var client1 = TestClient.createTestClient(contract);
         final var client2 = TestClient.createTestClient(contract);

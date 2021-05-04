@@ -8,7 +8,7 @@ import app.tests.simple.LikeTests;
 import app.tests.simple.PostTests;
 import app.tests.simple.TransactionTests;
 
-public class TestScheduler {
+public class TestSchedules {
     public static TestSuite getPerformanceTestSuite() {
         return new TestSuite() {
             @Override

@@ -24,18 +24,23 @@ public class LikeTests implements Test {
     }
 
     @Override
+    public Logger initLogger(final Logger.Builder builder) {
+        return builder.build("LikeTests");
+    }
+
+    @Override
     public void runTest(final Logger logger) {
         try {
-            singleThreadLikingAPostTest(contract);
-            twoThreadLikingTheSamePostTest();
+            singleThreadLikingAPostTest(contract, logger);
+            twoThreadLikingTheSamePostTest(logger);
         } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException | IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void singleThreadLikingAPostTest(final Contract contract)
+    private void singleThreadLikingAPostTest(final Contract contract, final Logger logger)
             throws InvalidAlgorithmParameterException, NoSuchAlgorithmException {
-        final TestRunner runner = new TestRunner("Runner 1");
+        final TestRunner runner = new TestRunner("Runner 1", logger);
         final var client = TestClient.createTestClient(contract);
 
         final String postKey = client.publishNewPost("testPost1");
@@ -54,7 +59,7 @@ public class LikeTests implements Test {
         thread.start();
     }
 
-    private void twoThreadLikingTheSamePostTest()
+    private void twoThreadLikingTheSamePostTest(final Logger logger)
             throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, IOException {
         final Wallet wallet = WalletFactory.GetWallet("admin");
 
@@ -67,8 +72,8 @@ public class LikeTests implements Test {
 
         final var contract = ContractFactory.CreateContract(wallet, contractCreation);
 
-        final TestRunner runner1 = new TestRunner("Runner 1");
-        final TestRunner runner2 = new TestRunner("Runner 2");
+        final TestRunner runner1 = new TestRunner("Runner 1", logger);
+        final TestRunner runner2 = new TestRunner("Runner 2", logger);
 
         final var client1 = TestClient.createTestClient(contract);
         final var client2 = TestClient.createTestClient(contract);
