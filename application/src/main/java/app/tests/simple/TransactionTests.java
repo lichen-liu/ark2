@@ -25,7 +25,7 @@ public class TransactionTests implements Test {
 
     @Override
     public Logger initLogger(final Logger.Builder builder) {
-        return builder.build("TransactionTests");
+        return builder.create("TransactionTests");
     }
 
     @Override

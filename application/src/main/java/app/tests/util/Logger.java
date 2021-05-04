@@ -83,7 +83,7 @@ public class Logger {
             this.suiteName = suiteName;
         }
 
-        public Logger build(String name) {
+        public Logger create(String name) {
             if (this.suiteName != null) {
                 name = suiteName + "::" + name;
             }

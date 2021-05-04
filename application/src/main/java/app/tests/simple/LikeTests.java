@@ -25,7 +25,7 @@ public class LikeTests implements Test {
 
     @Override
     public Logger initLogger(final Logger.Builder builder) {
-        return builder.build("LikeTests");
+        return builder.create("LikeTests");
     }
 
     @Override

@@ -17,7 +17,7 @@ public class PostTests implements Test {
 
     @Override
     public Logger initLogger(final Logger.Builder builder) {
-        return builder.build("PostTests");
+        return builder.create("PostTests");
     }
 
     @Override
