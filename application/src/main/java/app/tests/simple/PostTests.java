@@ -8,22 +8,29 @@ import org.hyperledger.fabric.gateway.Wallet;
 import app.backend.ContractFactory;
 import app.backend.WalletFactory;
 import app.tests.Test;
+import app.tests.util.Logger;
 import app.tests.util.TestClient;
 import app.tests.util.TestRunner;
 import app.tests.util.TestVoid;
 
-public class PostTests extends Test {
-    public PostTests() {
-        super("PostTests");
+public class PostTests implements Test {
+
+    @Override
+    public Logger initLogger(final Logger.Builder builder) {
+        return builder.build("PostTests");
     }
 
     @Override
-    public void runTest() throws Exception {
-        singleThreadTests();
-        twoThreadsPublishingNewPostsTests();
+    public void runTest(final Logger logger) {
+        try {
+            singleThreadTests(logger);
+            twoThreadsPublishingNewPostsTests();
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private void singleThreadTests() throws Exception {
+    private void singleThreadTests(final Logger logger) throws Exception {
         final Wallet wallet = WalletFactory.GetWallet("admin");
 
         final var contractCreation = new ContractFactory.Entity();

@@ -1,5 +1,7 @@
 package app.tests;
 
+import java.util.List;
+
 import org.hyperledger.fabric.gateway.Contract;
 
 import app.tests.simple.LikeTests;
@@ -10,8 +12,8 @@ public class TestScheduler {
     public static TestSuite getPerformanceTestSuite() {
         return new TestSuite() {
             @Override
-            public void launch() {
-                System.out.println("Performance Test Suite");
+            protected <T extends Test> List<T> setUpTests() {
+                return null;
             }
         };
     }
@@ -19,8 +21,8 @@ public class TestScheduler {
     public static TestSuite getRewardsTestSuite() {
         return new TestSuite() {
             @Override
-            public void launch() {
-                System.out.println("Rewards Test Suite");
+            protected <T extends Test> List<T> setUpTests() {
+                return null;
             }
         };
     }
@@ -28,15 +30,8 @@ public class TestScheduler {
     public static TestSuite getSimpleTestSuite(final Contract contract) {
         return new TestSuite() {
             @Override
-            public void launch() {
-                try {
-                    new PostTests().runTest();
-                    new LikeTests(contract).runTest();
-                    new TransactionTests().runTest();
-                } catch (final Exception e) {
-                    e.printStackTrace();
-                }
-
+            protected List<Test> setUpTests() {
+                return List.of(new PostTests(), new LikeTests(contract), new TransactionTests());
             }
         };
     }
@@ -44,12 +39,8 @@ public class TestScheduler {
     public static TestSuite getSimulationTestSuite() {
         return new TestSuite() {
             @Override
-            public void launch() {
-                try {
-                    new app.tests.simulation.PostCompetitonSimulationTests().run();
-                } catch (final Exception e) {
-                    e.printStackTrace();
-                }
+            protected <T extends Test> List<T> setUpTests() {
+                return null;
             }
         };
     }

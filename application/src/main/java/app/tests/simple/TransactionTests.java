@@ -21,20 +21,25 @@ import app.tests.util.TestRunner;
 import app.tests.util.TestVoid;
 import app.util.ByteUtils;
 
-public class TransactionTests extends Test {
+public class TransactionTests implements Test {
 
-    public TransactionTests() {
-        super("TransactionTests");
+    @Override
+    public Logger initLogger(final Logger.Builder builder) {
+        return builder.build("TransactionTests");
     }
 
     @Override
-    public void runTest() throws Exception {
-        singleThreadTests();
+    public void runTest(final Logger logger) {
+        try {
+            singleThreadTests(logger);
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
         // multiThreadWithoutDependencyTests();
         // multiThreadWithDependencyTests();
     }
 
-    private void singleThreadTests() throws Exception {
+    private void singleThreadTests(final Logger logger) throws Exception {
 
         final Wallet wallet = WalletFactory.GetWallet("admin");
 
@@ -44,7 +49,6 @@ public class TransactionTests extends Test {
         contractCreation.contractName = "ForumAgreement";
         contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
                 "peerOrganizations", "org1.example.com", "connection-org1.yaml");
-        ;
 
         final var contract = ContractFactory.CreateContract(wallet, contractCreation);
         final TestRunner runner = new TestRunner("Runner 1");
@@ -97,7 +101,7 @@ public class TransactionTests extends Test {
         logger.print(contract.evaluateTransaction("computePointAmountByUserId", client3Id));
     }
 
-    private void multiThreadWithDependencyTests() throws Exception {
+    private void multiThreadWithDependencyTests(final Logger logger) throws Exception {
 
         final Wallet wallet = WalletFactory.GetWallet("admin");
 
@@ -181,11 +185,7 @@ public class TransactionTests extends Test {
         logger.print(contract.evaluateTransaction("computePointAmountByUserId", client2Id));
     }
 
-    public Logger getLogger() {
-        return logger;
-    }
-
-    private void multiThreadWithoutDependencyTests()
+    private void multiThreadWithoutDependencyTests(final Logger logger)
             throws IOException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, ContractException {
         final Wallet wallet = WalletFactory.GetWallet("admin");
 

@@ -11,22 +11,26 @@ import org.hyperledger.fabric.gateway.Wallet;
 import app.backend.ContractFactory;
 import app.backend.WalletFactory;
 import app.tests.Test;
+import app.tests.util.Logger;
 import app.tests.util.TestClient;
 import app.tests.util.TestRunner;
 import app.tests.util.TestVoid;
 
-public class LikeTests extends Test {
+public class LikeTests implements Test {
     private final Contract contract;
 
     public LikeTests(final Contract contract) {
-        super();
         this.contract = contract;
     }
 
     @Override
-    public void runTest() throws Exception {
-        singleThreadLikingAPostTest(contract);
-        twoThreadLikingTheSamePostTest();
+    public void runTest(final Logger logger) {
+        try {
+            singleThreadLikingAPostTest(contract);
+            twoThreadLikingTheSamePostTest();
+        } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void singleThreadLikingAPostTest(final Contract contract)
@@ -97,5 +101,4 @@ public class LikeTests extends Test {
     public Contract getContract() {
         return contract;
     }
-
 }

@@ -2,24 +2,16 @@ package app.tests;
 
 import app.tests.util.Logger;
 
-public abstract class Test {
-    protected final Logger logger;
-
-    protected Test() {
-        this.logger = new Logger();
+public interface Test {
+    public default Logger initLogger(final Logger.Builder builder) {
+        return null;
     }
 
-    protected Test(final String name) {
-        this.logger = new Logger(name);
+    public default void preTest(final Logger logger) {
     }
 
-    protected Test(final String name, final int subname) {
-        this.logger = new Logger(name, subname);
-    }
+    public abstract void runTest(Logger logger);
 
-    protected Test(final Logger logger) {
-        this.logger = logger;
+    public default void postTest(final Logger logger) {
     }
-
-    public abstract void runTest() throws Exception;
 }

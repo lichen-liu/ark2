@@ -17,20 +17,12 @@ public class Logger {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private static Map<String, Integer> loggerName = new HashMap<String, Integer>();
-
     public Logger() {
     }
 
     public Logger(final String name, final int subname) {
         this.name = name;
         this.subname = subname;
-    }
-
-    public Logger(final String name) {
-        this.name = name;
-        this.subname = loggerName.getOrDefault(this.name, 0);
-        loggerName.put(this.name, this.subname + 1);
     }
 
     public void print(final Post result) {
@@ -81,5 +73,23 @@ public class Logger {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static class Builder {
+        private final String suiteName;
+        private final Map<String, Integer> loggerName = new HashMap<String, Integer>();
+
+        public Builder(final String suiteName) {
+            this.suiteName = suiteName;
+        }
+
+        public Logger build(String name) {
+            if (this.suiteName != null) {
+                name = suiteName + "::" + name;
+            }
+            final int subname = loggerName.getOrDefault(name, 0);
+            loggerName.put(name, subname + 1);
+            return new Logger(name, subname);
+        }
     }
 }
