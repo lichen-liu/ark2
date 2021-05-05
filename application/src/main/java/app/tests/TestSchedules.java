@@ -12,6 +12,7 @@ import org.hyperledger.fabric.gateway.Contract;
 
 import app.tests.performance.DislikeKeysFetchingTest;
 import app.tests.performance.DislikePublishingTest;
+import app.tests.performance.DislikesFetchingTest;
 import app.tests.performance.LikeKeysFetchingTest;
 import app.tests.performance.LikePublishingTest;
 import app.tests.performance.LikesFetchingTest;
@@ -65,6 +66,7 @@ public class TestSchedules {
                 // Read and Verification
                 tests.add(new PostsFetchingTest(contract, userKey));
                 tests.add(new LikesFetchingTest(contract, likedPostKeyQueue));
+                tests.add(new DislikesFetchingTest(contract, dislikedPostKeyQueue));
 
                 return tests;
             }
