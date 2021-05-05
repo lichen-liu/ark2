@@ -76,7 +76,7 @@ public abstract class TestSuite {
             System.out.println(testSessionName + ": " + iterations + " Iterations: " + ms + " ms: " + ms / iterations
                     + " ms/iteration");
         }
-        System.out.println("\n===================================================");
+        System.out.println("===================================================\n");
     }
 
     protected abstract List<? extends Test> setUpTests();
