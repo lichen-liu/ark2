@@ -33,7 +33,6 @@ public class LikeRewardingTests implements Test {
         try {
             onePostManyLikeSimulation = new OnePostManyLikeSimulationTests(contract);
         } catch (final Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return false;
         }
@@ -42,7 +41,6 @@ public class LikeRewardingTests implements Test {
 
     @Override
     public boolean runTest(final Logger logger, final int currentIteration) {
-        // TODO Auto-generated method stub
         onePostManyLikeSimulation.runTest();
         return false;
     }

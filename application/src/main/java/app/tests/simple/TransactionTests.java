@@ -95,6 +95,7 @@ public class TransactionTests implements Test {
         logger.print(contract.evaluateTransaction("computePointAmountByUserId", client3Id));
     }
 
+    @SuppressWarnings("unused")
     private void multiThreadWithDependencyTests(final Logger logger) throws Exception {
 
         final TestRunner runner1 = new TestRunner("Runner 1", logger);
@@ -167,6 +168,7 @@ public class TransactionTests implements Test {
         logger.print(contract.evaluateTransaction("computePointAmountByUserId", client2Id));
     }
 
+    @SuppressWarnings("unused")
     private void multiThreadWithoutDependencyTests(final Logger logger)
             throws IOException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, ContractException {
 

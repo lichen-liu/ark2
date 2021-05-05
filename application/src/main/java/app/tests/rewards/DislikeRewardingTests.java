@@ -32,7 +32,6 @@ public class DislikeRewardingTests implements Test {
         try {
             onePostManyDislikeSimulation = new OnePostManyDislikeSimulationTests(contract);
         } catch (final Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return false;
         }
@@ -41,7 +40,6 @@ public class DislikeRewardingTests implements Test {
 
     @Override
     public boolean runTest(final Logger logger, final int currentIteration) {
-        // TODO Auto-generated method stub
         onePostManyDislikeSimulation.runTest();
         return false;
     }
