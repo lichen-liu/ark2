@@ -14,6 +14,7 @@ import app.tests.performance.DislikeKeysFetchingTest;
 import app.tests.performance.DislikePublishingTest;
 import app.tests.performance.LikeKeysFetchingTest;
 import app.tests.performance.LikePublishingTest;
+import app.tests.performance.LikesFetchingTest;
 import app.tests.performance.PointBalanceFetchingTest;
 import app.tests.performance.PointTransactionKeysFetchingTest;
 import app.tests.performance.PostKeysFetchingTest;
@@ -63,6 +64,7 @@ public class TestSchedules {
                 tests.add(new PointBalanceFetchingTest(contract, userKey));
                 // Read and Verification
                 tests.add(new PostsFetchingTest(contract, userKey));
+                tests.add(new LikesFetchingTest(contract, likedPostKeyQueue));
 
                 return tests;
             }
