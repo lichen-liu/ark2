@@ -49,13 +49,12 @@ public class PostPublishingTests implements Test {
 
     @Override
     public boolean runTest(final Logger logger, final int currentIteration) {
-        for (final var content : this.contents) {
-            String postKey = null;
-            do {
-                postKey = this.user.publishNewPost(content);
-                logger.printResult(postKey);
-            } while (postKey == null);
-        }
+        final String content = this.contents.get(currentIteration);
+        final String postKey = null;
+        do {
+            logger.printResult(this.user.publishNewPost(content));
+            logger.printResult(postKey);
+        } while (postKey == null);
 
         return true;
     }
