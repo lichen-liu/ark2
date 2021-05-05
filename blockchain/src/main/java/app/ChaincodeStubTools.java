@@ -1,4 +1,4 @@
-package app.util;
+package app;
 
 import java.util.Base64;
 import java.util.stream.StreamSupport;

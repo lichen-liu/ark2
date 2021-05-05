@@ -18,11 +18,10 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 
+import app.ChaincodeStubTools.Key;
 import app.policy.DislikeRewarding;
 import app.policy.KeyGeneration;
 import app.policy.LikeRewarding;
-import app.util.ChaincodeStubTools;
-import app.util.ChaincodeStubTools.Key;
 
 public class ForumRepositoryCC {
     // private final Genson genson = new

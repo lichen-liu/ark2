@@ -4,7 +4,7 @@ import java.util.function.Predicate;
 
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
-import app.util.ChaincodeStubTools.Key;
+import app.ChaincodeStubTools.Key;
 
 public interface KeyGeneration {
     /**
