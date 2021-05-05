@@ -17,14 +17,16 @@ public class PostPublishingTests implements Test {
     private final Contract contract;
     private NamedService user = null;
     private List<String> contents = null;
+    private int iterations;
 
-    public PostPublishingTests(final Contract contract) {
+    public PostPublishingTests(final Contract contract, int iterations) {
         this.contract = contract;
+        this.iterations = iterations;
     }
 
     @Override
     public int numberIterations() {
-        return 100;
+        return iterations;
     }
 
     @Override

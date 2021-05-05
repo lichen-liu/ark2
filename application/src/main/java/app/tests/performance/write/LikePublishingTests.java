@@ -15,14 +15,21 @@ public class LikePublishingTests implements Test {
     private final Contract contract;
     private String postKey;
     private NamedService user = null;
+    private int iterations;
 
     @Override
     public String testName() {
         return "LikePublishingTests";
     }
 
-    public LikePublishingTests(final Contract contract) {
+    public LikePublishingTests(final Contract contract, int iterations) {
         this.contract = contract;
+        this.iterations = iterations;
+    }
+
+    @Override
+    public int numberIterations() {
+        return this.iterations;
     }
 
     @Override

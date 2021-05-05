@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.tests.performance.write.DislikePublishingTests;
+import app.tests.performance.write.LikePublishingTests;
 import app.tests.performance.write.PostPublishingTests;
 import app.tests.simple.LikeTests;
 import app.tests.simple.PostTests;
@@ -14,7 +16,7 @@ public class TestSchedules {
         return new TestSuite("PerformanceTestSuite") {
             @Override
             protected List<? extends Test> setUpTests() {
-                return List.of(new PostPublishingTests(contract));
+                return List.of(new PostPublishingTests(contract, 100), new LikePublishingTests(contract, 100), new DislikePublishingTests(contract, 100));
             }
         };
     }

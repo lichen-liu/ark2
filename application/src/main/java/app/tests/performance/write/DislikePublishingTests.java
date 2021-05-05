@@ -15,9 +15,16 @@ public class DislikePublishingTests implements Test {
     private final Contract contract;
     private String postKey;
     private NamedService user = null;
+    private int iterations;
 
-    public DislikePublishingTests(final Contract contract) {
+    public DislikePublishingTests(final Contract contract, int iterations) {
         this.contract = contract;
+        this.iterations = iterations;
+    }
+
+    @Override
+    public int numberIterations() {
+        return iterations;
     }
 
     @Override
@@ -46,5 +53,4 @@ public class DislikePublishingTests implements Test {
         return true;
 
     }
-
 }
