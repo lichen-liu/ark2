@@ -23,7 +23,7 @@ public class PostTests implements Test {
     }
 
     @Override
-    public boolean runTest(final Logger logger) {
+    public boolean runTest(final Logger logger, final int currentIteration) {
         try {
             singleThreadTests(logger);
             twoThreadsPublishingNewPostsTests(logger);

@@ -1,7 +1,6 @@
 package app.tests.simple;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class TransactionTests implements Test {
     }
 
     @Override
-    public boolean runTest(final Logger logger) {
+    public boolean runTest(final Logger logger, final int currentIteration) {
         try {
             singleThreadTests(logger);
         } catch (final Exception e) {
@@ -170,7 +169,7 @@ public class TransactionTests implements Test {
 
     private void multiThreadWithoutDependencyTests(final Logger logger)
             throws IOException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, ContractException {
-       
+
         final TestRunner runner1 = new TestRunner("Runner 1", logger);
         final TestRunner runner2 = new TestRunner("Runner 2", logger);
 

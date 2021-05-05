@@ -28,16 +28,35 @@ public abstract class TestSuite {
         final var tests = setUpTests();
         for (final var test : tests) {
             final Logger logger = test.initLogger(loggerBuilder);
-            test.preTest(logger);
+            final int numIterations = test.numberIterations();
 
-            final Stopwatch timer = Stopwatch.createStarted();
+            if (!test.pre(logger)) {
+                return;
+            }
 
-            test.runTest(logger);
+            for (int i = 0; i < numIterations; i++) {
+                if (!test.preTest(logger, i)) {
+                    return;
+                }
 
-            timer.stop();
-            System.out.println(suiteName + ": " + timer.elapsed(TimeUnit.MILLISECONDS));
+                final Stopwatch timer = Stopwatch.createStarted();
 
-            test.postTest(logger);
+                final boolean shouldContinue = test.runTest(logger, i);
+
+                timer.stop();
+                System.out.println(suiteName + ": " + timer.elapsed(TimeUnit.MILLISECONDS));
+                if (!shouldContinue) {
+                    return;
+                }
+
+                if (!test.postTest(logger, i)) {
+                    return;
+                }
+            }
+
+            if (!test.post(logger)) {
+                return;
+            }
         }
     }
 

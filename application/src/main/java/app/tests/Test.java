@@ -14,20 +14,11 @@ public interface Test {
     /**
      * Optional
      * 
-     * @param logger
-     * @return boolean, false to abort
+     * @return
      */
-    public default boolean preTest(final Logger logger) {
-        return true;
+    public default int numberIterations() {
+        return 1;
     }
-
-    /**
-     * Test to run
-     * 
-     * @param logger
-     * @return boolean, false to abort
-     */
-    public abstract boolean runTest(Logger logger);
 
     /**
      * Optional
@@ -35,7 +26,48 @@ public interface Test {
      * @param logger
      * @return boolean, false to abort
      */
-    public default boolean postTest(final Logger logger) {
+    public default boolean pre(final Logger logger) {
+        return true;
+    }
+
+    /**
+     * Optional
+     * 
+     * @param logger
+     * @return boolean, false to abort
+     */
+    public default boolean post(final Logger logger) {
+        return true;
+    }
+
+    /**
+     * Optional
+     * 
+     * @param logger
+     * @param currentIteration
+     * @return boolean, false to abort
+     */
+    public default boolean preTest(final Logger logger, final int currentIteration) {
+        return true;
+    }
+
+    /**
+     * Test to run
+     * 
+     * @param logger
+     * @param currentIteration
+     * @return boolean, false to abort
+     */
+    public abstract boolean runTest(Logger logger, final int currentIteration);
+
+    /**
+     * Optional
+     * 
+     * @param logger
+     * @param currentIteration
+     * @return boolean, false to abort
+     */
+    public default boolean postTest(final Logger logger, final int currentIteration) {
         return true;
     }
 }

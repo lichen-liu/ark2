@@ -29,7 +29,7 @@ public class LikeTests implements Test {
     }
 
     @Override
-    public boolean runTest(final Logger logger) {
+    public boolean runTest(final Logger logger, final int currentIteration) {
         try {
             singleThreadLikingAPostTest(contract, logger);
             twoThreadLikingTheSamePostTest(logger);

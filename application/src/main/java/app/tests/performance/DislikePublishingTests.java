@@ -12,7 +12,7 @@ public class DislikePublishingTests implements Test {
     }
 
     @Override
-    public boolean runTest(final Logger logger) {
+    public boolean runTest(final Logger logger, final int currentIteration) {
         return true;
     }
 
