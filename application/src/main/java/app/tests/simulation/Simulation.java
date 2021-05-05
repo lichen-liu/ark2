@@ -2,7 +2,7 @@ package app.tests.simulation;
 
 public abstract class Simulation {
     private final SimulationWriter writer;
-    private final SimulationState internalState;
+    public final SimulationState internalState;
 
     public Simulation() throws Exception {
         this.writer = new SimulationWriter(this.getClass().getSimpleName());
