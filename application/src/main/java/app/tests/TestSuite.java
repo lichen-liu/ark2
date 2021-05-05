@@ -1,6 +1,9 @@
 package app.tests;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Stopwatch;
@@ -9,6 +12,9 @@ import app.tests.util.Logger;
 
 public abstract class TestSuite {
     private final Logger.Builder loggerBuilder;
+    private final Map<String, Integer> testIterations = new HashMap<String, Integer>();
+    private final Map<String, Long> testElapsedMilliSeconds = new HashMap<String, Long>();
+    private final List<String> testSessionNames = new ArrayList<String>();
 
     protected TestSuite() {
         this("defaultTestSuite");
@@ -19,14 +25,14 @@ public abstract class TestSuite {
     }
 
     public void launchTests() {
-        launchTestsImplementation();
+        runTests();
     }
 
-    protected final void launchTestsImplementation() {
+    protected final void runTests() {
         final var tests = setUpTests();
         for (final var test : tests) {
-            final String testName = test.testName();
-            final Logger logger = this.loggerBuilder.create(testName);
+            final Logger logger = this.loggerBuilder.create(test.testName());
+            final String testSessionName = logger.sessionName();
             final int numIterations = test.numberIterations();
 
             if (!test.pre(logger)) {
@@ -41,8 +47,13 @@ public abstract class TestSuite {
                 shouldContinue = test.runTest(logger, iteration);
             }
             timer.stop();
-            logger.print(iteration + " Iterations / " + numIterations + " Total Iterations: "
-                    + timer.elapsed(TimeUnit.MILLISECONDS) + "ms");
+            final long timeElapsedMS = timer.elapsed(TimeUnit.MILLISECONDS);
+
+            this.testSessionNames.add(testSessionName);
+            this.testIterations.put(testSessionName, iteration);
+            this.testElapsedMilliSeconds.put(testSessionName, timeElapsedMS);
+
+            logger.print(iteration + " Iterations / " + numIterations + " Total Iterations: " + timeElapsedMS + "ms");
 
             if (!shouldContinue) {
                 logger.print("exit in runTest");
@@ -53,6 +64,13 @@ public abstract class TestSuite {
                 logger.print("exit in post");
                 return;
             }
+        }
+    }
+
+    protected final void processRuntimeStats() {
+        for (final var testSessionName : this.testSessionNames) {
+            System.out.println(testSessionName + ": " + this.testIterations.get(testSessionName) + " Iterations: "
+                    + this.testElapsedMilliSeconds.get(testSessionName) + " ms");
         }
     }
 

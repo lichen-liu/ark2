@@ -15,9 +15,9 @@ public class DislikePublishingTests implements Test {
     private final Contract contract;
     private String postKey;
     private NamedService user = null;
-    private int iterations;
+    private final int iterations;
 
-    public DislikePublishingTests(final Contract contract, int iterations) {
+    public DislikePublishingTests(final Contract contract, final int iterations) {
         this.contract = contract;
         this.iterations = iterations;
     }
@@ -47,10 +47,12 @@ public class DislikePublishingTests implements Test {
 
     @Override
     public boolean runTest(final Logger logger, final int currentIteration) {
+        String dislikeKey = null;
+        do {
+            dislikeKey = this.user.publishNewDislike(postKey);
+            logger.printResult(dislikeKey);
+        } while (dislikeKey == null);
 
-        var likeKey = this.user.publishNewDislike(postKey);
-        logger.print(likeKey);
         return true;
-
     }
 }
