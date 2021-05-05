@@ -4,6 +4,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 
+@FunctionalInterface
 public interface ComparableByTimestamp {
     /**
      * 

@@ -1,5 +1,6 @@
 package app.policy;
 
+@FunctionalInterface
 public interface ComparableByRelativeOrder {
     /**
      * 

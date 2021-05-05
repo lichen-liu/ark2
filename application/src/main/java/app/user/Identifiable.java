@@ -4,6 +4,7 @@ import java.security.PublicKey;
 
 import app.util.ByteUtils;
 
+@FunctionalInterface
 public interface Identifiable {
     public abstract PublicKey getPublicKey();
 
