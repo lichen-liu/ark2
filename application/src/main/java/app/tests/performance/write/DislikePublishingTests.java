@@ -48,8 +48,8 @@ public class DislikePublishingTests implements Test {
     @Override
     public boolean runTest(final Logger logger, final int currentIteration) {
 
-        postKey = this.user.publishNewDislike(postKey);
-        logger.print(postKey);
+        var likeKey = this.user.publishNewDislike(postKey);
+        logger.print(likeKey);
         return true;
 
     }

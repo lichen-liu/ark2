@@ -9,23 +9,38 @@ public abstract class Simulation {
         this.internalState = getState();
     }
 
-    public void TriggerALike() {
+    public Boolean TriggerALike() {
         final var postKey = internalState.postPool.draw();
         final var liker = internalState.likerPool.draw();
-        liker.publishNewLike(postKey);
+        if(liker.publishNewLike(postKey) == null) {
+            return false;
+        };
+
+        return true;
     }
 
-    public void TriggerADislike() {
+    public Boolean TriggerADislike() {
         final var postKey = internalState.postPool.draw();
         final var liker = internalState.likerPool.draw();
-        liker.publishNewDislike(postKey);
+        if(liker.publishNewDislike(postKey) == null){
+            return false;
+        };
+
+        return true;
     }
 
-    public void TriggerANewPost(final int postProb) {
+    public Boolean TriggerANewPost(final int postProb) {
         final var author = internalState.authorPool.draw();
         final var postKey = author.publishNewPost("-");
+
+        if(postKey == null){
+            return false;
+        }
+
         internalState.posts.add(postKey);
         internalState.postProbMap.put(postKey, postProb);
+        
+        return true;
     }
 
     public void run() {

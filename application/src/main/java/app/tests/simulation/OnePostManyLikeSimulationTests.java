@@ -17,7 +17,7 @@ public class OnePostManyLikeSimulationTests extends Simulation {
         final var howManyLikesDoYouWantHuh = 1000;
         int i = 0;
         while (i < howManyLikesDoYouWantHuh) {
-            TriggerALike();
+            if(!TriggerALike()) continue;
             ++i;
         }
     }

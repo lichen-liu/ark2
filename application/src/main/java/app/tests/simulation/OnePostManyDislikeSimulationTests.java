@@ -17,7 +17,7 @@ public class OnePostManyDislikeSimulationTests extends Simulation {
         final var howManyLikesDoYouWantHuh = 1000;
         int i = 0;
         while (i < howManyLikesDoYouWantHuh) {
-            TriggerADislike();
+            if(!TriggerADislike()) continue;
             ++i;
         }
     }

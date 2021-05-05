@@ -12,6 +12,8 @@ import app.tests.performance.read.ids.PostIDsFetchingTests;
 import app.tests.performance.write.DislikePublishingTests;
 import app.tests.performance.write.LikePublishingTests;
 import app.tests.performance.write.PostPublishingTests;
+import app.tests.rewards.DislikeRewardingTests;
+import app.tests.rewards.LikeRewardingTests;
 import app.tests.simple.LikeTests;
 import app.tests.simple.PostTests;
 import app.tests.simple.TransactionTests;
@@ -43,10 +45,13 @@ public class TestSchedules {
         };
     }
 
-    public static TestSuite getRewardsTestSuite() {
+    public static TestSuite getRewardsTestSuite(final Contract contract) {
         return new TestSuite() {
             @Override
             protected List<? extends Test> setUpTests() {
+                final List<Test> tests = new ArrayList<Test>();
+                tests.add(new DislikeRewardingTests(contract));
+                tests.add(new LikeRewardingTests(contract));
                 return null;
             }
         };

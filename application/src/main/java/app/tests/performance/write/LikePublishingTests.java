@@ -48,8 +48,8 @@ public class LikePublishingTests implements Test {
     @Override
     public boolean runTest(final Logger logger, final int currentIteration) {
 
-        postKey = this.user.publishNewLike(postKey);
-        logger.print(postKey);
+        var likeKey = this.user.publishNewLike(postKey);
+        logger.print(likeKey);
         return true;
 
     }
