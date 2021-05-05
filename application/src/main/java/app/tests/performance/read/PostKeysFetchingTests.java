@@ -1,4 +1,6 @@
-package app.tests.performance.read.keys;
+package app.tests.performance.read;
+
+import javax.annotation.Nullable;
 
 import org.hyperledger.fabric.gateway.Contract;
 
@@ -7,7 +9,7 @@ import app.tests.util.Logger;
 import app.user.AnonymousService;
 import app.user.ServiceProvider;
 
-public class PointTransactionKeysFetchingTests implements Testable {
+public class PostKeysFetchingTests implements Testable {
     private final Contract contract;
     private AnonymousService user = null;
     private final String userKey;
@@ -15,10 +17,10 @@ public class PointTransactionKeysFetchingTests implements Testable {
 
     @Override
     public String testName() {
-        return "PointTransactionKeysFetchingTests";
+        return "PostKeysFetchingTests";
     }
 
-    public PointTransactionKeysFetchingTests(final Contract contract, final int iterations, final String userKey) {
+    public PostKeysFetchingTests(final Contract contract, final int iterations, final @Nullable String userKey) {
         this.userKey = userKey;
         this.contract = contract;
         this.iterations = iterations;
@@ -38,8 +40,13 @@ public class PointTransactionKeysFetchingTests implements Testable {
 
     @Override
     public boolean runTest(final Logger logger, final int currentIteration) {
-        final var result = this.user.computePointTransactionKeysByUserId(this.userKey);
-        logger.printResult(result != null ? String.valueOf(result.length) : "null");
+        if (this.userKey == null) {
+            final var result = this.user.fetchPostKeys();
+            logger.printResult(result != null ? String.valueOf(result.length) : "null");
+        } else {
+            final var result = this.user.fetchPostKeysByUserId(this.userKey);
+            logger.printResult(result != null ? String.valueOf(result.length) : "null");
+        }
 
         return true;
     }
