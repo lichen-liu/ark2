@@ -33,7 +33,7 @@ public class SimulationState {
 
     private final Contract contract;
 
-    public SimulationState() throws IOException {
+    public SimulationState(Contract contract) throws IOException {
         this.authors = new ArrayList<NamedService>();
         this.likers = new ArrayList<NamedService>();
         this.posts = new ArrayList<String>();
@@ -46,20 +46,7 @@ public class SimulationState {
         this.likerPool = new ProbabilityPool<NamedService>();
         this.postPool = new ProbabilityPool<String>();
 
-        this.contract = getContract();
-    }
-
-    protected Contract getContract() throws IOException {
-        final Wallet wallet = WalletFactory.GetWallet("admin");
-
-        final var contractCreation = new ContractFactory.Entity();
-        contractCreation.userId = "appUser3";
-        contractCreation.channel = "mychannel";
-        contractCreation.contractName = "ForumAgreement";
-        contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
-                "peerOrganizations", "org1.example.com", "connection-org1.yaml");
-
-        return ContractFactory.CreateContract(wallet, contractCreation);
+        this.contract = contract;
     }
 
     protected List<NamedService> createClients(final int clientNum)

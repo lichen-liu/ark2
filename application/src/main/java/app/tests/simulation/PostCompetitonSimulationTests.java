@@ -1,9 +1,14 @@
 package app.tests.simulation;
 
+import org.hyperledger.fabric.gateway.Contract;
+
 public class PostCompetitonSimulationTests extends Simulation {
 
-    public PostCompetitonSimulationTests() throws Exception {
+    private final Contract contract;
+
+    public PostCompetitonSimulationTests(Contract contract) throws Exception {
         super();
+        this.contract = contract;
     };
 
     @Override
@@ -20,7 +25,7 @@ public class PostCompetitonSimulationTests extends Simulation {
     @Override
     protected SimulationState getState() throws Exception {
 
-        final var state = new SimulationState();
+        final var state = new SimulationState(this.contract);
 
         // Build forum state
         state.authors = state.createClients(3);
