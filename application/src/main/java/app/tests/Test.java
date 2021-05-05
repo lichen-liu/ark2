@@ -15,22 +15,27 @@ public interface Test {
      * Optional
      * 
      * @param logger
+     * @return boolean, false to abort
      */
-    public default void preTest(final Logger logger) {
+    public default boolean preTest(final Logger logger) {
+        return true;
     }
 
     /**
      * Test to run
      * 
      * @param logger
+     * @return boolean, false to abort
      */
-    public abstract void runTest(Logger logger);
+    public abstract boolean runTest(Logger logger);
 
     /**
      * Optional
      * 
      * @param logger
+     * @return boolean, false to abort
      */
-    public default void postTest(final Logger logger) {
+    public default boolean postTest(final Logger logger) {
+        return true;
     }
 }

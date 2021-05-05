@@ -12,7 +12,8 @@ public class LikePublishingTests implements Test {
     }
 
     @Override
-    public void runTest(final Logger logger) {
+    public boolean runTest(final Logger logger) {
+        return true;
         // TODO Auto-generated method stub
 
     }

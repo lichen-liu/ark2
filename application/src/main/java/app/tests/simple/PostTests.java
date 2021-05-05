@@ -21,13 +21,15 @@ public class PostTests implements Test {
     }
 
     @Override
-    public void runTest(final Logger logger) {
+    public boolean runTest(final Logger logger) {
         try {
             singleThreadTests(logger);
             twoThreadsPublishingNewPostsTests(logger);
         } catch (final Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     private void singleThreadTests(final Logger logger) throws Exception {
