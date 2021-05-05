@@ -26,6 +26,11 @@ public class PostPublishingTests implements Test {
     }
 
     @Override
+    public int numberIterations() {
+        return 2;
+    }
+
+    @Override
     public Logger initLogger(final Builder builder) {
         return builder.create("PostPublishingTests");
     }
@@ -36,7 +41,7 @@ public class PostPublishingTests implements Test {
             this.user = TestClient.createTestClient(contract);
             this.contents = new ArrayList<String>();
             for (int i = 0; i < this.numPosts; i++) {
-                this.contents.add(ContentGeneration.randomString(200));
+                this.contents.add(ContentGeneration.randomString(100));
             }
         } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -51,6 +56,7 @@ public class PostPublishingTests implements Test {
             String postKey = null;
             do {
                 postKey = this.user.publishNewPost(content);
+                logger.print(postKey);
             } while (postKey == null);
         }
 
