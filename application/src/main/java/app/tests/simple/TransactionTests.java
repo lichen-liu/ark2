@@ -21,13 +21,13 @@ import app.util.ByteUtils;
 public class TransactionTests implements Test {
     private final Contract contract;
 
-    public TransactionTests(final Contract contract) {
-        this.contract = contract;
-    }
-
     @Override
     public String testName() {
         return "TransactionTests";
+    }
+
+    public TransactionTests(final Contract contract) {
+        this.contract = contract;
     }
 
     @Override

@@ -7,24 +7,22 @@ import app.tests.simulation.OnePostManyLikeSimulationTests;
 import app.tests.simulation.Simulation;
 import app.tests.util.Logger;
 
-public class LikeRewardingTests implements Test{
-
+public class LikeRewardingTests implements Test {
     private Simulation onePostManyLikeSimulation;
     private final int iterations;
 
     private final Contract contract;
 
-    public LikeRewardingTests(final Contract contract, final int iterations){
+    @Override
+    public String testName() {
+        return "LikeRewardingTests";
+    }
+
+    public LikeRewardingTests(final Contract contract, final int iterations) {
         this.contract = contract;
         this.iterations = iterations;
     }
 
-    @Override
-    public String testName() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-    
     @Override
     public int numberIterations() {
         return iterations;
@@ -48,5 +46,5 @@ public class LikeRewardingTests implements Test{
         onePostManyLikeSimulation.runTest();
         return false;
     }
-    
+
 }

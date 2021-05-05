@@ -19,6 +19,11 @@ public class PostPublishingTests implements Test {
     private final int iterations;
     private final KeyPair userKeyPair;
 
+    @Override
+    public String testName() {
+        return "PostPublishingTests";
+    }
+
     public PostPublishingTests(final Contract contract, final int iterations, final KeyPair userKeyPair) {
         this.contract = contract;
         this.iterations = iterations;
@@ -28,11 +33,6 @@ public class PostPublishingTests implements Test {
     @Override
     public int numberIterations() {
         return iterations;
-    }
-
-    @Override
-    public String testName() {
-        return "PostPublishingTests";
     }
 
     @Override

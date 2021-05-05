@@ -15,13 +15,13 @@ import app.tests.util.TestVoid;
 public class LikeTests implements Test {
     private final Contract contract;
 
-    public LikeTests(final Contract contract) {
-        this.contract = contract;
-    }
-
     @Override
     public String testName() {
         return "LikeTests";
+    }
+
+    public LikeTests(final Contract contract) {
+        this.contract = contract;
     }
 
     @Override

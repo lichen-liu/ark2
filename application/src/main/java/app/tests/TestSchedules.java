@@ -5,9 +5,12 @@ import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.tests.performance.read.ids.LikeKeysFetchingTests;
 import app.tests.performance.read.ids.PostKeysFetchingTests;
 import app.tests.performance.write.DislikePublishingTests;
 import app.tests.performance.write.LikePublishingTests;
@@ -33,13 +36,17 @@ public class TestSchedules {
                     e.printStackTrace();
                 }
 
+                final BlockingQueue<String> likedPostKeyQueue = new ArrayBlockingQueue<String>(1);
+                final BlockingQueue<String> dislikedPostKeyQueue = new ArrayBlockingQueue<String>(1);
+
                 final List<Test> tests = new ArrayList<Test>();
                 tests.add(new PostPublishingTests(contract, iterations, userKeyPair));
-                tests.add(new LikePublishingTests(contract, iterations));
-                tests.add(new DislikePublishingTests(contract, iterations));
+                tests.add(new LikePublishingTests(contract, iterations, likedPostKeyQueue));
+                tests.add(new DislikePublishingTests(contract, iterations, dislikedPostKeyQueue));
                 tests.add(new PostKeysFetchingTests(contract, iterations, null));
                 tests.add(new PostKeysFetchingTests(contract, iterations,
                         ByteUtils.toAsciiString(userKeyPair.getPublic().getEncoded())));
+                tests.add(new LikeKeysFetchingTests(contract, iterations, likedPostKeyQueue));
 
                 return tests;
             }

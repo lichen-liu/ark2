@@ -15,6 +15,11 @@ public class PostKeysFetchingTests implements Test {
     private final String userKey;
     private final int iterations;
 
+    @Override
+    public String testName() {
+        return "PostKeysFetchingTests";
+    }
+
     public PostKeysFetchingTests(final Contract contract, final int iterations, final @Nullable String userKey) {
         this.userKey = userKey;
         this.contract = contract;
@@ -24,11 +29,6 @@ public class PostKeysFetchingTests implements Test {
     @Override
     public int numberIterations() {
         return this.iterations;
-    }
-
-    @Override
-    public String testName() {
-        return "PostKeysFetchingTests";
     }
 
     @Override

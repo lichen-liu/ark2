@@ -12,15 +12,14 @@ public class DislikeRewardingTests implements Test {
     private final int iterations;
     private final Contract contract;
 
+    @Override
+    public String testName() {
+        return "DislikeRewardingTests";
+    }
+
     public DislikeRewardingTests(final Contract contract, final int iterations) {
         this.contract = contract;
         this.iterations = iterations;
-    }
-
-    @Override
-    public String testName() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     @Override

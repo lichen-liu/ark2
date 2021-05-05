@@ -1,5 +1,7 @@
 package app.tests.performance.read.ids;
 
+import java.util.concurrent.BlockingQueue;
+
 import org.hyperledger.fabric.gateway.Contract;
 
 import app.tests.Test;
@@ -10,13 +12,20 @@ import app.user.ServiceProvider;
 public class LikeKeysFetchingTests implements Test {
     private final Contract contract;
     private AnonymousService user = null;
-    private final String postKey;
     private final int iterations;
+    final BlockingQueue<String> likedPostKeyQueue;
+    private String postKey;
 
-    public LikeKeysFetchingTests(final Contract contract, final int iterations, final String postKey) {
-        this.postKey = postKey;
+    @Override
+    public String testName() {
+        return "LikeKeysFetchingTests";
+    }
+
+    public LikeKeysFetchingTests(final Contract contract, final int iterations,
+            final BlockingQueue<String> likedPostKeyQueue) {
         this.contract = contract;
         this.iterations = iterations;
+        this.likedPostKeyQueue = likedPostKeyQueue;
     }
 
     @Override
@@ -25,26 +34,22 @@ public class LikeKeysFetchingTests implements Test {
     }
 
     @Override
-    public String testName() {
-        return "LikeKeysFetchingTests";
-    }
-
-    @Override
     public boolean pre(final Logger logger) {
         this.user = ServiceProvider.createAnonymousService(this.contract);
+        try {
+            this.postKey = this.likedPostKeyQueue.take();
+        } catch (final InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
 
         return true;
     }
 
     @Override
     public boolean runTest(final Logger logger, final int currentIteration) {
-        if (this.postKey == null) {
-            final var result = this.user.fetchPostKeys();
-            logger.printResult(result != null ? String.valueOf(result.length) : "null");
-        } else {
-            final var result = this.user.fetchPostKeysByUserId(this.postKey);
-            logger.printResult(result != null ? String.valueOf(result.length) : "null");
-        }
+        final var result = this.user.fetchLikeKeysByPostKey(this.postKey);
+        logger.printResult(result != null ? String.valueOf(result.length) : "null");
 
         return true;
     }

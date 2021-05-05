@@ -13,13 +13,13 @@ import app.tests.util.TestVoid;
 public class PostTests implements Test {
     private final Contract contract;
 
-    public PostTests(final Contract contract) {
-        this.contract = contract;
-    }
-
     @Override
     public String testName() {
         return "PostTests";
+    }
+
+    public PostTests(final Contract contract) {
+        this.contract = contract;
     }
 
     @Override
