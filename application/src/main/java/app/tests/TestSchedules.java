@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.tests.performance.read.ids.PostIDsFetchingTests;
+import app.tests.performance.read.ids.PostKeysFetchingTests;
 import app.tests.performance.write.DislikePublishingTests;
 import app.tests.performance.write.LikePublishingTests;
 import app.tests.performance.write.PostPublishingTests;
@@ -37,8 +37,8 @@ public class TestSchedules {
                 tests.add(new PostPublishingTests(contract, iterations, userKeyPair));
                 tests.add(new LikePublishingTests(contract, iterations));
                 tests.add(new DislikePublishingTests(contract, iterations));
-                tests.add(new PostIDsFetchingTests(contract, iterations, null));
-                tests.add(new PostIDsFetchingTests(contract, iterations,
+                tests.add(new PostKeysFetchingTests(contract, iterations, null));
+                tests.add(new PostKeysFetchingTests(contract, iterations,
                         ByteUtils.toAsciiString(userKeyPair.getPublic().getEncoded())));
 
                 return tests;

@@ -9,13 +9,13 @@ import app.tests.util.Logger;
 import app.user.AnonymousService;
 import app.user.ServiceProvider;
 
-public class PostIDsFetchingTests implements Test {
+public class PostKeysFetchingTests implements Test {
     private final Contract contract;
     private AnonymousService user = null;
     private final String userKey;
     private final int iterations;
 
-    public PostIDsFetchingTests(final Contract contract, final int iterations, final @Nullable String userKey) {
+    public PostKeysFetchingTests(final Contract contract, final int iterations, final @Nullable String userKey) {
         this.userKey = userKey;
         this.contract = contract;
         this.iterations = iterations;
@@ -28,7 +28,7 @@ public class PostIDsFetchingTests implements Test {
 
     @Override
     public String testName() {
-        return "PostIDsFetchingTests";
+        return "PostKeysFetchingTests";
     }
 
     @Override
