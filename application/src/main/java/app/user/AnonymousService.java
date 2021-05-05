@@ -15,11 +15,11 @@ import javax.annotation.Nullable;
 
 import org.hyperledger.fabric.gateway.ContractException;
 
+import app.repository.Dislike;
 import app.repository.Hash;
-import app.repository.data.Dislike;
-import app.repository.data.Like;
-import app.repository.data.PointTransaction;
-import app.repository.data.Post;
+import app.repository.Like;
+import app.repository.PointTransaction;
+import app.repository.Post;
 import app.util.ByteUtils;
 import app.util.Cryptography;
 

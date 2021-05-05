@@ -1,6 +1,6 @@
 package app.user;
 
-import app.repository.data.Payment;
+import app.repository.Payment;
 
 public interface NamedWriteableService extends Repository, Signable {
     public default String publishNewPost(final String content) {

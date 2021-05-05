@@ -8,7 +8,6 @@ import java.time.format.DateTimeFormatter;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.repository.data.Post;
 import app.util.ByteUtils;
 import app.util.Cryptography;
 import app.util.GensonDeserializer;

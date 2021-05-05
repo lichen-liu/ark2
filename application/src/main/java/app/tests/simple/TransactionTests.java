@@ -9,8 +9,8 @@ import java.util.Arrays;
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
 
-import app.repository.data.Payment;
-import app.repository.data.PointTransaction;
+import app.repository.Payment;
+import app.repository.PointTransaction;
 import app.tests.Testable;
 import app.tests.util.Logger;
 import app.tests.util.TestClient;

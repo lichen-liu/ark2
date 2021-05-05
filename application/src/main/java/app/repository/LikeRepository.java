@@ -17,8 +17,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
 
-import app.repository.data.Like;
-import app.repository.data.PointTransaction;
 import app.util.ByteUtils;
 import app.util.Cryptography;
 import app.util.GensonDeserializer;

@@ -18,10 +18,10 @@ import javax.swing.text.DefaultCaret;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.repository.data.Dislike;
-import app.repository.data.Like;
-import app.repository.data.PointTransaction;
-import app.repository.data.Post;
+import app.repository.Dislike;
+import app.repository.Like;
+import app.repository.PointTransaction;
+import app.repository.Post;
 import app.user.NamedWriteableService;
 import app.user.ServiceProvider;
 import app.util.ByteUtils;

@@ -1,24 +1,21 @@
-package app.repository.data;
+package app.repository;
 
 import lombok.ToString;
 
 @ToString(includeFieldNames = true)
-public final class Dislike {
-
+public class Like {
     public String timestamp;
 
     public String postKey;
 
     /**
-     * userId who dislikes the post, the public key for the signature
+     * userId who likes the post, the public key for the signature
      */
-
     public String userId;
 
     /**
-     * sign(private, hash(timestamp, postKey, userId))
+     * sign(privateKey, hash(timestamp, postKey, userId))
      */
-
     public String signature;
 
     public String pointTransactionKey;

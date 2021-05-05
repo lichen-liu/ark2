@@ -10,8 +10,6 @@ import java.util.List;
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
 
-import app.repository.data.Payment;
-import app.repository.data.PointTransaction;
 import app.util.ByteUtils;
 import app.util.Cryptography;
 import app.util.GensonDeserializer;

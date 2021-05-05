@@ -3,7 +3,6 @@ package app.repository;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-import app.repository.data.PointTransaction;
 import app.util.ByteUtils;
 
 public class Hash {

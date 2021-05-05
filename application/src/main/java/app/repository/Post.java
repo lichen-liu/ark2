@@ -1,4 +1,4 @@
-package app.repository.data;
+package app.repository;
 
 import lombok.ToString;
 

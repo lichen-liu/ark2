@@ -8,8 +8,6 @@ import java.time.format.DateTimeFormatter;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.repository.data.Dislike;
-import app.repository.data.PointTransaction;
 import app.util.ByteUtils;
 import app.util.Cryptography;
 import app.util.GensonDeserializer;

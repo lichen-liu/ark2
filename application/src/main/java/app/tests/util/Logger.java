@@ -6,9 +6,9 @@ import java.util.Map;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import app.repository.data.Like;
-import app.repository.data.PointTransaction;
-import app.repository.data.Post;
+import app.repository.Like;
+import app.repository.PointTransaction;
+import app.repository.Post;
 
 public class Logger {
     private int lineId = 0;

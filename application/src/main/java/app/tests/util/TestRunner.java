@@ -3,9 +3,9 @@ package app.tests.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import app.repository.data.Like;
-import app.repository.data.PointTransaction;
-import app.repository.data.Post;
+import app.repository.Like;
+import app.repository.PointTransaction;
+import app.repository.Post;
 
 public class TestRunner implements Runnable {
     private final Logger logger;
