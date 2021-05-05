@@ -1,4 +1,4 @@
-package app.tests.performance.write;
+package app.tests.performance;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
@@ -13,24 +13,24 @@ import app.tests.util.TestClient;
 import app.user.NamedService;
 import app.user.ServiceProvider;
 
-public class DislikePublishingTests implements Testable {
+public class LikePublishingTests implements Testable {
     private final Contract contract;
     private String postKey;
     private NamedService user = null;
     private final int iterations;
-    final BlockingQueue<String> dislikedPostKeyQueue;
+    final BlockingQueue<String> likedPostKeyQueue;
     final KeyPair postAuthorKeyPair;
 
     @Override
     public String testName() {
-        return "DislikePublishingTests";
+        return "LikePublishingTests";
     }
 
-    public DislikePublishingTests(final Contract contract, final int iterations,
-            final BlockingQueue<String> dislikedPostKeyQueue, final KeyPair postAuthorKeyPair) {
+    public LikePublishingTests(final Contract contract, final int iterations,
+            final BlockingQueue<String> likedPostKeyQueue, final KeyPair postAuthorKeyPair) {
         this.contract = contract;
         this.iterations = iterations;
-        this.dislikedPostKeyQueue = dislikedPostKeyQueue;
+        this.likedPostKeyQueue = likedPostKeyQueue;
         this.postAuthorKeyPair = postAuthorKeyPair;
     }
 
@@ -45,7 +45,7 @@ public class DislikePublishingTests implements Testable {
             this.postKey = ServiceProvider.createNamedService(contract, this.postAuthorKeyPair.getPublic(),
                     this.postAuthorKeyPair.getPrivate()).publishNewPost("_");
             assert this.postKey != null;
-            final var isSuccessful = this.dislikedPostKeyQueue.offer(this.postKey);
+            final var isSuccessful = this.likedPostKeyQueue.offer(this.postKey);
             assert isSuccessful;
 
             this.user = TestClient.createTestClient(contract);
@@ -58,12 +58,13 @@ public class DislikePublishingTests implements Testable {
 
     @Override
     public boolean runTest(final Logger logger, final int currentIteration) {
-        String dislikeKey = null;
+        String likeKey = null;
         do {
-            dislikeKey = this.user.publishNewDislike(postKey);
-            logger.printResult(dislikeKey);
-        } while (dislikeKey == null);
+            likeKey = this.user.publishNewLike(postKey);
+            logger.printResult(likeKey);
+        } while (likeKey == null);
 
         return true;
     }
+
 }

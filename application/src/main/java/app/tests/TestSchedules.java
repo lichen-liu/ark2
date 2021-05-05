@@ -10,13 +10,13 @@ import java.util.concurrent.BlockingQueue;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.tests.performance.read.DislikeKeysFetchingTests;
-import app.tests.performance.read.LikeKeysFetchingTests;
-import app.tests.performance.read.PointTransactionKeysFetchingTests;
-import app.tests.performance.read.PostKeysFetchingTests;
-import app.tests.performance.write.DislikePublishingTests;
-import app.tests.performance.write.LikePublishingTests;
-import app.tests.performance.write.PostPublishingTests;
+import app.tests.performance.DislikeKeysFetchingTests;
+import app.tests.performance.DislikePublishingTests;
+import app.tests.performance.LikeKeysFetchingTests;
+import app.tests.performance.LikePublishingTests;
+import app.tests.performance.PointTransactionKeysFetchingTests;
+import app.tests.performance.PostKeysFetchingTests;
+import app.tests.performance.PostPublishingTests;
 import app.tests.rewards.DislikeRewardingTests;
 import app.tests.rewards.LikeRewardingTests;
 import app.tests.simple.LikeTests;

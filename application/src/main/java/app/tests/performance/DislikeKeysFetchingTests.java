@@ -1,4 +1,4 @@
-package app.tests.performance.read;
+package app.tests.performance;
 
 import java.util.concurrent.BlockingQueue;
 

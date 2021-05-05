@@ -1,4 +1,4 @@
-package app.tests.performance.write;
+package app.tests.performance;
 
 import java.security.KeyPair;
 import java.util.ArrayList;
