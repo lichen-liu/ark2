@@ -17,8 +17,11 @@ public abstract class BatchTestSuite extends TestSuite {
 
     private Stopwatch timer = null;
 
+    protected BatchTestSuite() {
+    }
+
     protected BatchTestSuite(final String suiteName) {
-        super(suiteName);
+        super(suiteName + "Batch");
     }
 
     @Override
