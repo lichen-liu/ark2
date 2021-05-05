@@ -25,8 +25,6 @@ import app.util.ChaincodeStubTools;
 import app.util.ChaincodeStubTools.Key;
 
 public class ForumRepositoryCC {
-    private static final boolean shouldVerifyIntegrity = false;
-
     // private final Genson genson = new
     // GensonBuilder().failOnMissingProperty(true).create();
     private final Genson genson = new Genson();
@@ -36,12 +34,6 @@ public class ForumRepositoryCC {
         final ChaincodeStub stub = ctx.getStub();
 
         final Post post = new Post(timestamp, content, userId, signature);
-        if (shouldVerifyIntegrity) {
-            if (!post.isMatchingSignature()) {
-                final String errorMessage = genson.serialize(post) + " has non-matching signature";
-                throw new ChaincodeException(errorMessage, errorMessage);
-            }
-        }
         final Key postKey = ChaincodeStubTools.generateKey(stub, post);
 
         ChaincodeStubTools.putStringState(stub, postKey, genson.serialize(post));

@@ -1,6 +1,5 @@
 package app;
 
-import com.owlike.genson.annotation.JsonIgnore;
 import com.owlike.genson.annotation.JsonProperty;
 
 import org.hyperledger.fabric.contract.annotation.DataType;
@@ -9,10 +8,9 @@ import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
 import app.policy.ComparableByTimestamp;
 import app.policy.KeyGeneration;
-import app.policy.SignatureVerification;
 
 @DataType
-public final class Post implements KeyGeneration, ComparableByTimestamp, SignatureVerification {
+public final class Post implements KeyGeneration, ComparableByTimestamp {
     @Property()
     private final String timestamp;
 
@@ -68,24 +66,5 @@ public final class Post implements KeyGeneration, ComparableByTimestamp, Signatu
 
     public static String getObjectTypeName() {
         return Post.class.getSimpleName();
-    }
-
-    @Override
-    @JsonIgnore
-    public String getExpectedSignatureContent() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    @JsonIgnore
-    public String getSignatureForVerification() {
-        return getSignature();
-    }
-
-    @Override
-    @JsonIgnore
-    public String getVerificationKey() {
-        return getUserId();
     }
 }
