@@ -16,17 +16,17 @@ public abstract class TestSuite {
     }
 
     public void launchTests() {
-        init();
+        pre();
 
         run();
 
-        finit();
+        post();
     }
 
-    protected void init() {
+    protected void pre() {
     }
 
-    protected void finit() {
+    protected void post() {
     }
 
     protected void preTestIterations(final Logger logger, final String testSessionName, final int maxNumberIterations) {

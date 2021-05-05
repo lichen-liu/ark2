@@ -43,7 +43,7 @@ public abstract class SampleTestSuite extends TestSuite {
     }
 
     @Override
-    protected void finit() {
+    protected void post() {
         System.out.println("\n===================================================");
         final List<String> csvData = this.testElapsedMilliSeconds.entrySet().stream()
                 .map(entry -> entry.getValue().stream().map(elapsed -> entry.getKey() + "," + elapsed.toString()))

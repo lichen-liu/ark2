@@ -25,7 +25,7 @@ public abstract class BatchTestSuite extends TestSuite {
     }
 
     @Override
-    protected void finit() {
+    protected void post() {
         System.out.println("\n===================================================");
         for (final var testSessionName : this.testSessionNames) {
             final int iterations = this.testIterations.get(testSessionName);
