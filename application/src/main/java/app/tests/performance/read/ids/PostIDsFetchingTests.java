@@ -41,9 +41,11 @@ public class PostIDsFetchingTests implements Test {
     @Override
     public boolean runTest(final Logger logger, final int currentIteration) {
         if (this.userKey == null) {
-            logger.printResult(this.user.fetchPostKeys());
+            final var result = this.user.fetchPostKeys();
+            logger.printResult(result != null ? String.valueOf(result.length) : "null");
         } else {
-            logger.printResult(this.user.fetchPostKeysByUserId(this.userKey));
+            final var result = this.user.fetchPostKeysByUserId(this.userKey);
+            logger.printResult(result != null ? String.valueOf(result.length) : "null");
         }
 
         return true;

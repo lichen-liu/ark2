@@ -15,14 +15,14 @@ public class LikePublishingTests implements Test {
     private final Contract contract;
     private String postKey;
     private NamedService user = null;
-    private int iterations;
+    private final int iterations;
 
     @Override
     public String testName() {
         return "LikePublishingTests";
     }
 
-    public LikePublishingTests(final Contract contract, int iterations) {
+    public LikePublishingTests(final Contract contract, final int iterations) {
         this.contract = contract;
         this.iterations = iterations;
     }
@@ -47,11 +47,13 @@ public class LikePublishingTests implements Test {
 
     @Override
     public boolean runTest(final Logger logger, final int currentIteration) {
+        String likeKey = null;
+        do {
+            likeKey = this.user.publishNewLike(postKey);
+            logger.printResult(likeKey);
+        } while (likeKey == null);
 
-        var likeKey = this.user.publishNewLike(postKey);
-        logger.print(likeKey);
         return true;
-
     }
 
 }

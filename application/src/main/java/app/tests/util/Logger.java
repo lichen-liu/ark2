@@ -25,13 +25,17 @@ public class Logger {
         this.subname = subname;
     }
 
+    public String sessionName() {
+        return this.name + ":" + this.subname;
+    }
+
     public void print(final String string) {
-        System.out.println("\n[" + this.name + ":" + this.subname + " > " + this.lineId + "] " + string);
+        System.out.println("\n[" + sessionName() + " > " + this.lineId + "] " + string);
         this.lineId++;
     }
 
     public void print(final String[] strings) {
-        System.out.println("\n[" + this.name + ":" + this.subname + " > " + this.lineId + "] ");
+        System.out.println("\n[" + sessionName() + " > " + this.lineId + "] ");
 
         for (final var string : strings) {
             System.out.println(string);
@@ -45,7 +49,7 @@ public class Logger {
     }
 
     public void printResult(final String[] results) {
-        System.out.println("\n[" + this.name + ":" + this.subname + " > " + this.lineId + "] RESULT: ");
+        System.out.println("\n[" + sessionName() + " > " + this.lineId + "] RESULT: ");
 
         for (final var result : results) {
             System.out.println(prettifyJson(result));
