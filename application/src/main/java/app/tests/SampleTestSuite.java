@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.google.common.base.Stopwatch;
 
@@ -54,5 +56,13 @@ public abstract class SampleTestSuite extends TestSuite {
                     + totalMs / iterations + " ms/iteration: " + minMs + " min ms: " + maxMs + " max ms");
         }
         System.out.println("===================================================\n");
+
+        final List<String> csvData = this.testElapsedMilliSeconds.entrySet().stream()
+                .map(entry -> entry.getValue().stream().map(elapsed -> entry.getKey() + "," + elapsed.toString()))
+                .flatMap(Function.identity()).collect(Collectors.toList());
+
+        for (final var row : csvData) {
+            System.out.println(row);
+        }
     }
 }
