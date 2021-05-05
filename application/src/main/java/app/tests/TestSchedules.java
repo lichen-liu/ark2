@@ -23,7 +23,7 @@ import app.util.Cryptography;
 public class TestSchedules {
     public static TestSuite getPerformanceTestSuite(final Contract contract) {
         final int iterations = 100;
-        return new TestSuite("PerformanceTestSuite") {
+        return new BatchTestSuite("PerformanceTestSuite") {
             @Override
             protected List<? extends Test> setUpTests() {
                 KeyPair userKeyPair = null;
