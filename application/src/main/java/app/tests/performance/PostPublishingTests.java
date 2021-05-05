@@ -55,7 +55,7 @@ public class PostPublishingTests implements Test {
             String postKey = null;
             do {
                 postKey = this.user.publishNewPost(content);
-                logger.print(postKey);
+                logger.printResult(postKey);
             } while (postKey == null);
         }
 

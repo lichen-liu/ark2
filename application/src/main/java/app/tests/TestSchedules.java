@@ -11,7 +11,7 @@ import app.tests.simple.TransactionTests;
 
 public class TestSchedules {
     public static TestSuite getPerformanceTestSuite(final Contract contract) {
-        return new TestSuite() {
+        return new TestSuite("PerformanceTestSuite") {
             @Override
             protected List<? extends Test> setUpTests() {
                 return List.of(new PostPublishingTests(contract, 20));

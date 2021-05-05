@@ -44,7 +44,7 @@ public abstract class TestSuite {
                 final Stopwatch timer = Stopwatch.createStarted();
                 final boolean shouldContinue = test.runTest(logger, i);
                 timer.stop();
-                logger.print("Iteration " + i + ": " + timer.elapsed(TimeUnit.MILLISECONDS));
+                logger.print("Iteration " + i + ": " + timer.elapsed(TimeUnit.MILLISECONDS) + "ms");
 
                 if (!shouldContinue) {
                     logger.print("Iteration " + i + ": exit in runTest");

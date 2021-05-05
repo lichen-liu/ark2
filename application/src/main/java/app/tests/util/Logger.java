@@ -25,37 +25,49 @@ public class Logger {
         this.subname = subname;
     }
 
-    public void print(final Post result) {
-        print(result.toString());
-    }
-
-    public void print(final Like result) {
-        print(result.toString());
-    }
-
-    public void print(final PointTransaction result) {
-        print(result.toString());
-    }
-
-    public void print(final byte[] result) {
-        this.print(toString(result));
-    }
-
-    public void print(final String result) {
-        System.out.println(
-                "\n[" + this.name + ":" + this.subname + ":" + this.lineId + "] result: " + prettifyJson(result));
+    public void print(final String string) {
+        System.out.println("\n[" + this.name + ":" + this.subname + ":" + this.lineId + "]: " + string);
         this.lineId++;
     }
 
-    public void print(final String[] results) {
+    public void print(final String[] strings) {
+        System.out.println("\n[" + this.name + ":" + this.subname + ":" + this.lineId + "]: ");
 
-        System.out.println("\n[" + this.name + ":" + this.subname + ":" + this.lineId + "] result: ");
+        for (final var string : strings) {
+            System.out.println(string);
+        }
+
+        this.lineId++;
+    }
+
+    public void printResult(final String result) {
+        this.print("RESULT: " + result);
+    }
+
+    public void printResult(final String[] results) {
+        System.out.println("\n[" + this.name + ":" + this.subname + ":" + this.lineId + "]: RESULT: ");
 
         for (final var result : results) {
             System.out.println(prettifyJson(result));
         }
 
         this.lineId++;
+    }
+
+    public void print(final Post result) {
+        printResult(result.toString());
+    }
+
+    public void print(final Like result) {
+        printResult(result.toString());
+    }
+
+    public void print(final PointTransaction result) {
+        printResult(result.toString());
+    }
+
+    public void print(final byte[] result) {
+        this.printResult(toString(result));
     }
 
     private static String toString(final byte[] result) {
