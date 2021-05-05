@@ -1,4 +1,4 @@
-package app.tests.performance.read.ids;
+package app.tests.performance.read.keys;
 
 import java.util.concurrent.BlockingQueue;
 
