@@ -10,6 +10,7 @@ import java.util.concurrent.BlockingQueue;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.tests.performance.read.ids.DislikeKeysFetchingTests;
 import app.tests.performance.read.ids.LikeKeysFetchingTests;
 import app.tests.performance.read.ids.PostKeysFetchingTests;
 import app.tests.performance.write.DislikePublishingTests;
@@ -47,6 +48,7 @@ public class TestSchedules {
                 tests.add(new PostKeysFetchingTests(contract, iterations,
                         ByteUtils.toAsciiString(userKeyPair.getPublic().getEncoded())));
                 tests.add(new LikeKeysFetchingTests(contract, iterations, likedPostKeyQueue));
+                tests.add(new DislikeKeysFetchingTests(contract, iterations, dislikedPostKeyQueue));
 
                 return tests;
             }
