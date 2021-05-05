@@ -31,21 +31,21 @@ public class TestSchedules {
         return new SampleTestSuite("PerformanceTestSuite") {
             @Override
             protected List<? extends Test> setUpTests() {
-                KeyPair userKeyPair = null;
+                KeyPair postAuthorKeyPair = null;
                 try {
-                    userKeyPair = Cryptography.generateRandomKeyPair();
+                    postAuthorKeyPair = Cryptography.generateRandomKeyPair();
                 } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 }
-                final String userKey = ByteUtils.toAsciiString(userKeyPair.getPublic().getEncoded());
+                final String userKey = ByteUtils.toAsciiString(postAuthorKeyPair.getPublic().getEncoded());
 
                 final BlockingQueue<String> likedPostKeyQueue = new ArrayBlockingQueue<String>(1);
                 final BlockingQueue<String> dislikedPostKeyQueue = new ArrayBlockingQueue<String>(1);
 
                 final List<Test> tests = new ArrayList<Test>();
-                tests.add(new PostPublishingTests(contract, iterations, userKeyPair));
-                tests.add(new LikePublishingTests(contract, iterations, likedPostKeyQueue));
-                tests.add(new DislikePublishingTests(contract, iterations, dislikedPostKeyQueue));
+                tests.add(new PostPublishingTests(contract, iterations, postAuthorKeyPair));
+                tests.add(new LikePublishingTests(contract, iterations, likedPostKeyQueue, postAuthorKeyPair));
+                tests.add(new DislikePublishingTests(contract, iterations, dislikedPostKeyQueue, postAuthorKeyPair));
                 tests.add(new PostKeysFetchingTests(contract, iterations, null));
                 tests.add(new PostKeysFetchingTests(contract, iterations, userKey));
                 tests.add(new LikeKeysFetchingTests(contract, iterations, likedPostKeyQueue));
