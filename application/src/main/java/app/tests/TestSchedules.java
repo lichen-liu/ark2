@@ -47,13 +47,15 @@ public class TestSchedules {
     }
 
     public static TestSuite getRewardsTestSuite(final Contract contract) {
+        final int iterations = 100;
+
         return new TestSuite() {
             @Override
             protected List<? extends Test> setUpTests() {
                 final List<Test> tests = new ArrayList<Test>();
-                tests.add(new DislikeRewardingTests(contract));
-                tests.add(new LikeRewardingTests(contract));
-                return null;
+                tests.add(new LikeRewardingTests(contract, iterations));
+                tests.add(new DislikeRewardingTests(contract, iterations));
+                return tests;
             }
         };
     }

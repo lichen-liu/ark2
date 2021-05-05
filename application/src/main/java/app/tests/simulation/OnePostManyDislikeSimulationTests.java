@@ -4,22 +4,18 @@ import org.hyperledger.fabric.gateway.Contract;
 
 public class OnePostManyDislikeSimulationTests extends Simulation {
 
-    private final Contract contract;
-
     public OnePostManyDislikeSimulationTests(Contract contract) throws Exception {
-        super();
-        this.contract = contract;
+        super(contract);
     };
 
     @Override
-    protected void runTest() {
+    public void runTest() {
         // Run tests - Just do a lot of likes to the economic system
-        final var howManyLikesDoYouWantHuh = 1000;
-        int i = 0;
-        while (i < howManyLikesDoYouWantHuh) {
+        while (true) {
             if(!TriggerADislike()) continue;
-            ++i;
+            break;
         }
+
     }
 
     @Override
@@ -33,7 +29,7 @@ public class OnePostManyDislikeSimulationTests extends Simulation {
 
         state.posts.add(state.authors.get(0).publishNewPost("post1"));
         
-        state.postProbMap.put(state.posts.get(0), 1);
+        state.postProbMap.put(state.posts.get(0), 100);
         
         for(var liker : state.likers){
             state.likerProbMap.put(liker, 1);

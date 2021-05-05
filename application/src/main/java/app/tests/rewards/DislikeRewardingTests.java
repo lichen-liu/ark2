@@ -9,17 +9,23 @@ import app.tests.util.Logger;
 
 public class DislikeRewardingTests implements Test {
     private Simulation onePostManyDislikeSimulation;
-
+    private final int iterations;
     private final Contract contract;
 
-    public DislikeRewardingTests(final Contract contract){
+    public DislikeRewardingTests(final Contract contract, int iterations){
         this.contract = contract;
+        this.iterations = iterations;
     }
 
     @Override
     public String testName() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public int numberIterations() {
+        return iterations;
     }
 
     @Override
@@ -37,7 +43,7 @@ public class DislikeRewardingTests implements Test {
     @Override
     public boolean runTest(Logger logger, int currentIteration) {
         // TODO Auto-generated method stub
-        onePostManyDislikeSimulation.run();
+        onePostManyDislikeSimulation.runTest();
         return false;
     }
 }
