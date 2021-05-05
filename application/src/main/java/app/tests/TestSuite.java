@@ -26,6 +26,7 @@ public abstract class TestSuite {
 
     public void launchTests() {
         runTests();
+        processRuntimeStats();
     }
 
     protected final void runTests() {
@@ -68,10 +69,14 @@ public abstract class TestSuite {
     }
 
     protected final void processRuntimeStats() {
+        System.out.println("\n===================================================");
         for (final var testSessionName : this.testSessionNames) {
-            System.out.println(testSessionName + ": " + this.testIterations.get(testSessionName) + " Iterations: "
-                    + this.testElapsedMilliSeconds.get(testSessionName) + " ms");
+            final int iterations = this.testIterations.get(testSessionName);
+            final long ms = this.testElapsedMilliSeconds.get(testSessionName);
+            System.out.println(testSessionName + ": " + iterations + " Iterations: " + ms + " ms: " + ms / iterations
+                    + " ms/iteration");
         }
+        System.out.println("\n===================================================");
     }
 
     protected abstract List<? extends Test> setUpTests();
