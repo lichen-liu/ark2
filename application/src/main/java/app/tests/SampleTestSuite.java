@@ -1,9 +1,8 @@
 package app.tests;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Stopwatch;
@@ -11,8 +10,7 @@ import com.google.common.base.Stopwatch;
 import app.tests.util.Logger;
 
 public abstract class SampleTestSuite extends TestSuite {
-    private final Map<String, List<Long>> testElapsedMilliSeconds = new HashMap<String, List<Long>>();
-    private final List<String> testSessionNames = new ArrayList<String>();
+    private final LinkedHashMap<String, List<Long>> testElapsedMilliSeconds = new LinkedHashMap<String, List<Long>>();
 
     private Stopwatch timer = null;
 
@@ -43,16 +41,11 @@ public abstract class SampleTestSuite extends TestSuite {
     }
 
     @Override
-    protected void postTestIterations(final Logger logger, final String testSessionName, final int maxNumberIterations,
-            final int iteration) {
-        this.testSessionNames.add(testSessionName);
-    }
-
-    @Override
     protected void finit() {
         System.out.println("\n===================================================");
-        for (final var testSessionName : this.testSessionNames) {
-            final var elapseds = this.testElapsedMilliSeconds.get(testSessionName);
+        for (final var testSessionEntry : this.testElapsedMilliSeconds.entrySet()) {
+            final var testSessionName = testSessionEntry.getKey();
+            final var elapseds = testSessionEntry.getValue();
             final int iterations = elapseds.size();
             final long totalMs = elapseds.stream().mapToLong(Long::valueOf).sum();
             final long minMs = elapseds.stream().mapToLong(Long::valueOf).min().orElse(0L);
