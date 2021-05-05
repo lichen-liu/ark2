@@ -10,9 +10,10 @@ import java.util.concurrent.BlockingQueue;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.tests.performance.read.ids.DislikeKeysFetchingTests;
-import app.tests.performance.read.ids.LikeKeysFetchingTests;
-import app.tests.performance.read.ids.PostKeysFetchingTests;
+import app.tests.performance.read.keys.DislikeKeysFetchingTests;
+import app.tests.performance.read.keys.LikeKeysFetchingTests;
+import app.tests.performance.read.keys.PointTransactionKeysFetchingTests;
+import app.tests.performance.read.keys.PostKeysFetchingTests;
 import app.tests.performance.write.DislikePublishingTests;
 import app.tests.performance.write.LikePublishingTests;
 import app.tests.performance.write.PostPublishingTests;
@@ -36,6 +37,7 @@ public class TestSchedules {
                 } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 }
+                final String userKey = ByteUtils.toAsciiString(userKeyPair.getPublic().getEncoded());
 
                 final BlockingQueue<String> likedPostKeyQueue = new ArrayBlockingQueue<String>(1);
                 final BlockingQueue<String> dislikedPostKeyQueue = new ArrayBlockingQueue<String>(1);
@@ -45,10 +47,10 @@ public class TestSchedules {
                 tests.add(new LikePublishingTests(contract, iterations, likedPostKeyQueue));
                 tests.add(new DislikePublishingTests(contract, iterations, dislikedPostKeyQueue));
                 tests.add(new PostKeysFetchingTests(contract, iterations, null));
-                tests.add(new PostKeysFetchingTests(contract, iterations,
-                        ByteUtils.toAsciiString(userKeyPair.getPublic().getEncoded())));
+                tests.add(new PostKeysFetchingTests(contract, iterations, userKey));
                 tests.add(new LikeKeysFetchingTests(contract, iterations, likedPostKeyQueue));
                 tests.add(new DislikeKeysFetchingTests(contract, iterations, dislikedPostKeyQueue));
+                tests.add(new PointTransactionKeysFetchingTests(contract, iterations, userKey));
 
                 return tests;
             }
