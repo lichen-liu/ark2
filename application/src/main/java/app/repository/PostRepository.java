@@ -10,7 +10,6 @@ import org.hyperledger.fabric.gateway.Contract;
 
 import app.util.ByteUtils;
 import app.util.Cryptography;
-import app.util.GensonDeserializer;
 
 public class PostRepository extends ReadableRepository<Post> {
 

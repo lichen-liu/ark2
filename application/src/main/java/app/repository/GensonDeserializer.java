@@ -1,4 +1,4 @@
-package app.util;
+package app.repository;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import app.repository.PointTransaction;
+import app.util.Deserializer;
 
 public class GensonDeserializer implements Deserializer {
     private final ObjectMapper om;
