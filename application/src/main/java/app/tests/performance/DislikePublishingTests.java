@@ -12,9 +12,8 @@ public class DislikePublishingTests implements Test {
     }
 
     @Override
-    public void runTest(final Logger logger) {
-        // TODO Auto-generated method stub
-
+    public boolean runTest(final Logger logger) {
+        return true;
     }
 
 }

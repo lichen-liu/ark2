@@ -29,13 +29,15 @@ public class LikeTests implements Test {
     }
 
     @Override
-    public void runTest(final Logger logger) {
+    public boolean runTest(final Logger logger) {
         try {
             singleThreadLikingAPostTest(contract, logger);
             twoThreadLikingTheSamePostTest(logger);
         } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException | IOException e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     private void singleThreadLikingAPostTest(final Contract contract, final Logger logger)
