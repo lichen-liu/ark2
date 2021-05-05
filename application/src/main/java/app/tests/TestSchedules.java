@@ -22,6 +22,7 @@ import app.util.Cryptography;
 
 public class TestSchedules {
     public static TestSuite getPerformanceTestSuite(final Contract contract) {
+        final int iterations = 100;
         return new TestSuite("PerformanceTestSuite") {
             @Override
             protected List<? extends Test> setUpTests() {
@@ -33,11 +34,11 @@ public class TestSchedules {
                 }
 
                 final List<Test> tests = new ArrayList<Test>();
-                tests.add(new PostPublishingTests(contract, 100, userKeyPair));
-                tests.add(new LikePublishingTests(contract, 100));
-                tests.add(new DislikePublishingTests(contract, 100));
-                tests.add(new PostIDsFetchingTests(contract, 100, null));
-                tests.add(new PostIDsFetchingTests(contract, 100,
+                tests.add(new PostPublishingTests(contract, iterations, userKeyPair));
+                tests.add(new LikePublishingTests(contract, iterations));
+                tests.add(new DislikePublishingTests(contract, iterations));
+                tests.add(new PostIDsFetchingTests(contract, iterations, null));
+                tests.add(new PostIDsFetchingTests(contract, iterations,
                         ByteUtils.toAsciiString(userKeyPair.getPublic().getEncoded())));
 
                 return tests;
