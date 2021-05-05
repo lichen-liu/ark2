@@ -25,7 +25,7 @@ public class LikeTests implements Testable {
     }
 
     @Override
-    public boolean runTest(final Logger logger, final int currentIteration) {
+    public boolean runTest(final Logger logger, final int currentIteration, final int numberIteration) {
         try {
             singleThreadLikingAPostTest(this.contract, logger);
             twoThreadLikingTheSamePostTest(this.contract, logger);

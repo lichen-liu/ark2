@@ -9,7 +9,6 @@ import app.tests.util.Logger;
 
 public class LikeRewardingTests implements Testable {
     private Simulation onePostManyLikeSimulation;
-    private final int iterations;
 
     private final Contract contract;
 
@@ -18,18 +17,12 @@ public class LikeRewardingTests implements Testable {
         return "LikeRewardingTests";
     }
 
-    public LikeRewardingTests(final Contract contract, final int iterations) {
+    public LikeRewardingTests(final Contract contract) {
         this.contract = contract;
-        this.iterations = iterations;
     }
 
     @Override
-    public int numberIterations() {
-        return iterations;
-    }
-
-    @Override
-    public boolean pre(final Logger logger) {
+    public boolean pre(final Logger logger, final int numberIteration) {
         try {
             onePostManyLikeSimulation = new OnePostManyLikeSimulationTests(contract);
         } catch (final Exception e) {
@@ -40,7 +33,7 @@ public class LikeRewardingTests implements Testable {
     }
 
     @Override
-    public boolean runTest(final Logger logger, final int currentIteration) {
+    public boolean runTest(final Logger logger, final int currentIteration, final int numberIteration) {
         onePostManyLikeSimulation.runTest();
         // Why false?
         return false;

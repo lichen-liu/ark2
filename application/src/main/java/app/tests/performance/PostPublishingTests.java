@@ -16,7 +16,6 @@ public class PostPublishingTests implements Testable {
     private final Contract contract;
     private NamedService user = null;
     private List<String> contents = null;
-    private final int iterations;
     private final KeyPair userKeyPair;
 
     @Override
@@ -24,30 +23,24 @@ public class PostPublishingTests implements Testable {
         return "PostPublishingTests";
     }
 
-    public PostPublishingTests(final Contract contract, final int iterations, final KeyPair userKeyPair) {
+    public PostPublishingTests(final Contract contract, final KeyPair userKeyPair) {
         this.contract = contract;
-        this.iterations = iterations;
         this.userKeyPair = userKeyPair;
     }
 
     @Override
-    public int numberIterations() {
-        return iterations;
-    }
-
-    @Override
-    public boolean pre(final Logger logger) {
+    public boolean pre(final Logger logger, final int numberIteration) {
         this.user = ServiceProvider.createNamedService(this.contract, userKeyPair.getPublic(),
                 userKeyPair.getPrivate());
         this.contents = new ArrayList<String>();
-        for (int i = 0; i < numberIterations(); i++) {
+        for (int i = 0; i < numberIteration; i++) {
             this.contents.add(ContentGeneration.randomString(100));
         }
         return true;
     }
 
     @Override
-    public boolean runTest(final Logger logger, final int currentIteration) {
+    public boolean runTest(final Logger logger, final int currentIteration, final int numberIteration) {
         final String content = this.contents.get(currentIteration);
         String postKey = null;
         do {

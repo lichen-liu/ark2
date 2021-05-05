@@ -15,6 +15,10 @@ public abstract class TestSuite {
         this.loggerBuilder = new Logger.Builder(suiteName);
     }
 
+    protected int defaultIterations() {
+        return 1;
+    }
+
     public void launchTests() {
         pre();
 
@@ -49,9 +53,9 @@ public abstract class TestSuite {
         for (final var test : tests) {
             final Logger logger = this.loggerBuilder.create(test.testName());
             final String testSessionName = logger.sessionName();
-            final int numIterations = test.numberIterations();
+            final int numberIterations = test.requestNumberIterations().orElseGet(this::defaultIterations);
 
-            if (!test.pre(logger)) {
+            if (!test.pre(logger, numberIterations)) {
                 logger.print("exit in pre");
                 return;
             }
@@ -59,20 +63,20 @@ public abstract class TestSuite {
             boolean shouldContinue = true;
             int iteration = 0;
 
-            preTestIterations(logger, testSessionName, numIterations);
-            for (; iteration < numIterations && shouldContinue; iteration++) {
-                preTestRun(logger, testSessionName, numIterations, iteration);
-                shouldContinue = test.runTest(logger, iteration);
-                postTestRun(logger, testSessionName, numIterations, iteration);
+            preTestIterations(logger, testSessionName, numberIterations);
+            for (; iteration < numberIterations && shouldContinue; iteration++) {
+                preTestRun(logger, testSessionName, numberIterations, iteration);
+                shouldContinue = test.runTest(logger, iteration, numberIterations);
+                postTestRun(logger, testSessionName, numberIterations, iteration);
             }
-            postTestIterations(logger, testSessionName, numIterations, iteration);
+            postTestIterations(logger, testSessionName, numberIterations, iteration);
 
             if (!shouldContinue) {
                 logger.print("exit in runTest");
                 return;
             }
 
-            if (!test.post(logger)) {
+            if (!test.post(logger, numberIterations)) {
                 logger.print("exit in post");
                 return;
             }

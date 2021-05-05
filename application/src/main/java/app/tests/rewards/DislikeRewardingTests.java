@@ -9,7 +9,6 @@ import app.tests.util.Logger;
 
 public class DislikeRewardingTests implements Testable {
     private Simulation onePostManyDislikeSimulation;
-    private final int iterations;
     private final Contract contract;
 
     @Override
@@ -17,18 +16,12 @@ public class DislikeRewardingTests implements Testable {
         return "DislikeRewardingTests";
     }
 
-    public DislikeRewardingTests(final Contract contract, final int iterations) {
+    public DislikeRewardingTests(final Contract contract) {
         this.contract = contract;
-        this.iterations = iterations;
     }
 
     @Override
-    public int numberIterations() {
-        return iterations;
-    }
-
-    @Override
-    public boolean pre(final Logger logger) {
+    public boolean pre(final Logger logger, final int numberIteration) {
         try {
             onePostManyDislikeSimulation = new OnePostManyDislikeSimulationTests(contract);
         } catch (final Exception e) {
@@ -39,7 +32,7 @@ public class DislikeRewardingTests implements Testable {
     }
 
     @Override
-    public boolean runTest(final Logger logger, final int currentIteration) {
+    public boolean runTest(final Logger logger, final int currentIteration, final int numberIteration) {
         onePostManyDislikeSimulation.runTest();
         // Why false?
         return false;

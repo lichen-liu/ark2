@@ -13,33 +13,26 @@ public class PostKeysFetchingTests implements Testable {
     private final Contract contract;
     private AnonymousService user = null;
     private final String userKey;
-    private final int iterations;
 
     @Override
     public String testName() {
         return "PostKeysFetchingTests";
     }
 
-    public PostKeysFetchingTests(final Contract contract, final int iterations, final @Nullable String userKey) {
+    public PostKeysFetchingTests(final Contract contract, final @Nullable String userKey) {
         this.userKey = userKey;
         this.contract = contract;
-        this.iterations = iterations;
     }
 
     @Override
-    public int numberIterations() {
-        return this.iterations;
-    }
-
-    @Override
-    public boolean pre(final Logger logger) {
+    public boolean pre(final Logger logger, final int numberIteration) {
         this.user = ServiceProvider.createAnonymousService(this.contract);
 
         return true;
     }
 
     @Override
-    public boolean runTest(final Logger logger, final int currentIteration) {
+    public boolean runTest(final Logger logger, final int currentIteration, final int numberIteration) {
         if (this.userKey == null) {
             final var result = this.user.fetchPostKeys();
             logger.printResult(result != null ? String.valueOf(result.length) : "null");

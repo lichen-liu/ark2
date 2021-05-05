@@ -17,7 +17,6 @@ public class DislikePublishingTests implements Testable {
     private final Contract contract;
     private String postKey;
     private NamedService user = null;
-    private final int iterations;
     final BlockingQueue<String> dislikedPostKeyQueue;
     final KeyPair postAuthorKeyPair;
 
@@ -26,21 +25,15 @@ public class DislikePublishingTests implements Testable {
         return "DislikePublishingTests";
     }
 
-    public DislikePublishingTests(final Contract contract, final int iterations,
-            final BlockingQueue<String> dislikedPostKeyQueue, final KeyPair postAuthorKeyPair) {
+    public DislikePublishingTests(final Contract contract, final BlockingQueue<String> dislikedPostKeyQueue,
+            final KeyPair postAuthorKeyPair) {
         this.contract = contract;
-        this.iterations = iterations;
         this.dislikedPostKeyQueue = dislikedPostKeyQueue;
         this.postAuthorKeyPair = postAuthorKeyPair;
     }
 
     @Override
-    public int numberIterations() {
-        return this.iterations;
-    }
-
-    @Override
-    public boolean pre(final Logger logger) {
+    public boolean pre(final Logger logger, final int numberIteration) {
         try {
             this.postKey = ServiceProvider.createNamedService(contract, this.postAuthorKeyPair.getPublic(),
                     this.postAuthorKeyPair.getPrivate()).publishNewPost("_");
@@ -57,7 +50,7 @@ public class DislikePublishingTests implements Testable {
     }
 
     @Override
-    public boolean runTest(final Logger logger, final int currentIteration) {
+    public boolean runTest(final Logger logger, final int currentIteration, final int numberIteration) {
         String dislikeKey = null;
         do {
             dislikeKey = this.user.publishNewDislike(postKey);

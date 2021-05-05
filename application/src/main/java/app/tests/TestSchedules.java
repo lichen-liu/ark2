@@ -32,6 +32,11 @@ public class TestSchedules {
         final int iterations = 100;
         return new SampleTestSuite("Performance") {
             @Override
+            protected int defaultIterations() {
+                return iterations;
+            }
+
+            @Override
             protected List<? extends Testable> setUpTests() {
                 KeyPair postAuthorKeyPair = null;
                 try {
@@ -46,18 +51,18 @@ public class TestSchedules {
 
                 final List<Testable> tests = new ArrayList<Testable>();
                 // Write
-                tests.add(new PostPublishingTests(contract, iterations, postAuthorKeyPair));
-                tests.add(new LikePublishingTests(contract, iterations, likedPostKeyQueue, postAuthorKeyPair));
-                tests.add(new DislikePublishingTests(contract, iterations, dislikedPostKeyQueue, postAuthorKeyPair));
+                tests.add(new PostPublishingTests(contract, postAuthorKeyPair));
+                tests.add(new LikePublishingTests(contract, likedPostKeyQueue, postAuthorKeyPair));
+                tests.add(new DislikePublishingTests(contract, dislikedPostKeyQueue, postAuthorKeyPair));
                 // Pure Read
-                tests.add(new PostKeysFetchingTests(contract, iterations, null));
-                tests.add(new PostKeysFetchingTests(contract, iterations, userKey));
-                tests.add(new LikeKeysFetchingTests(contract, iterations, likedPostKeyQueue));
-                tests.add(new DislikeKeysFetchingTests(contract, iterations, dislikedPostKeyQueue));
-                tests.add(new PointTransactionKeysFetchingTests(contract, iterations, userKey));
-                tests.add(new PointBalanceFetchingTests(contract, iterations, userKey));
+                tests.add(new PostKeysFetchingTests(contract, null));
+                tests.add(new PostKeysFetchingTests(contract, userKey));
+                tests.add(new LikeKeysFetchingTests(contract, likedPostKeyQueue));
+                tests.add(new DislikeKeysFetchingTests(contract, dislikedPostKeyQueue));
+                tests.add(new PointTransactionKeysFetchingTests(contract, userKey));
+                tests.add(new PointBalanceFetchingTests(contract, userKey));
                 // Read and Verification
-                tests.add(new PostsFetchingTests(contract, iterations, userKey));
+                tests.add(new PostsFetchingTests(contract, userKey));
 
                 return tests;
             }
@@ -69,10 +74,15 @@ public class TestSchedules {
 
         return new TestSuite() {
             @Override
+            protected int defaultIterations() {
+                return iterations;
+            }
+
+            @Override
             protected List<? extends Testable> setUpTests() {
                 final List<Testable> tests = new ArrayList<Testable>();
-                tests.add(new LikeRewardingTests(contract, iterations));
-                tests.add(new DislikeRewardingTests(contract, iterations));
+                tests.add(new LikeRewardingTests(contract));
+                tests.add(new DislikeRewardingTests(contract));
                 return tests;
             }
         };

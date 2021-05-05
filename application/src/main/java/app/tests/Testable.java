@@ -1,5 +1,7 @@
 package app.tests;
 
+import java.util.Optional;
+
 import app.tests.util.Logger;
 
 public interface Testable {
@@ -13,14 +15,14 @@ public interface Testable {
     public abstract String testName();
 
     /**
-     * Optional
+     * Optional. Bypass the default number of iterations from Test executioner.
      * 
      * Called once
      * 
-     * @return
+     * @return Optional.empty() if using the default value from the Test executioner
      */
-    public default int numberIterations() {
-        return 1;
+    public default Optional<Integer> requestNumberIterations() {
+        return Optional.empty();
     }
 
     /**
@@ -30,9 +32,10 @@ public interface Testable {
      * Called once
      * 
      * @param logger
+     * @param numberIteration
      * @return boolean, false to abort
      */
-    public default boolean pre(final Logger logger) {
+    public default boolean pre(final Logger logger, final int numberIteration) {
         return true;
     }
 
@@ -42,9 +45,10 @@ public interface Testable {
      * Called once
      * 
      * @param logger
+     * @param numberIteration
      * @return boolean, false to abort
      */
-    public default boolean post(final Logger logger) {
+    public default boolean post(final Logger logger, final int numberIteration) {
         return true;
     }
 
@@ -55,7 +59,8 @@ public interface Testable {
      * 
      * @param logger
      * @param currentIteration
+     * @param numberIteration
      * @return boolean, false to abort
      */
-    public abstract boolean runTest(Logger logger, final int currentIteration);
+    public abstract boolean runTest(Logger logger, final int currentIteration, final int numberIteration);
 }

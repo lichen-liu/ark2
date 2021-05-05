@@ -12,7 +12,6 @@ import app.user.ServiceProvider;
 public class LikeKeysFetchingTests implements Testable {
     private final Contract contract;
     private AnonymousService user = null;
-    private final int iterations;
     final BlockingQueue<String> likedPostKeyQueue;
     private String postKey;
 
@@ -21,20 +20,13 @@ public class LikeKeysFetchingTests implements Testable {
         return "LikeKeysFetchingTests";
     }
 
-    public LikeKeysFetchingTests(final Contract contract, final int iterations,
-            final BlockingQueue<String> likedPostKeyQueue) {
+    public LikeKeysFetchingTests(final Contract contract, final BlockingQueue<String> likedPostKeyQueue) {
         this.contract = contract;
-        this.iterations = iterations;
         this.likedPostKeyQueue = likedPostKeyQueue;
     }
 
     @Override
-    public int numberIterations() {
-        return this.iterations;
-    }
-
-    @Override
-    public boolean pre(final Logger logger) {
+    public boolean pre(final Logger logger, final int numberIteration) {
         this.user = ServiceProvider.createAnonymousService(this.contract);
         try {
             this.postKey = this.likedPostKeyQueue.take();
@@ -49,7 +41,7 @@ public class LikeKeysFetchingTests implements Testable {
     }
 
     @Override
-    public boolean runTest(final Logger logger, final int currentIteration) {
+    public boolean runTest(final Logger logger, final int currentIteration, final int numberIteration) {
         final var result = this.user.fetchLikeKeysByPostKey(this.postKey);
         logger.printResult(result != null ? String.valueOf(result.length) : "null");
 
