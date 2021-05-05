@@ -24,7 +24,8 @@ public interface Test {
     }
 
     /**
-     * Optional
+     * Optional. pre() is invoked much later than the constructor. For delayed
+     * setups
      * 
      * Called once
      * 
