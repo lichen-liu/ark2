@@ -18,8 +18,8 @@ public class PostTests implements Test {
     }
 
     @Override
-    public Logger initLogger(final Logger.Builder builder) {
-        return builder.create("PostTests");
+    public String testName() {
+        return "PostTests";
     }
 
     @Override

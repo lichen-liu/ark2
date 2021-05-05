@@ -10,7 +10,6 @@ import org.hyperledger.fabric.gateway.Contract;
 import app.tests.Test;
 import app.tests.util.ContentGeneration;
 import app.tests.util.Logger;
-import app.tests.util.Logger.Builder;
 import app.tests.util.TestClient;
 import app.user.NamedService;
 
@@ -31,8 +30,8 @@ public class PostPublishingTests implements Test {
     }
 
     @Override
-    public Logger initLogger(final Builder builder) {
-        return builder.create("PostPublishingTests");
+    public String testName() {
+        return "PostPublishingTests";
     }
 
     @Override

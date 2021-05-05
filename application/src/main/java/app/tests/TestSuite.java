@@ -8,7 +8,6 @@ import com.google.common.base.Stopwatch;
 import app.tests.util.Logger;
 
 public abstract class TestSuite {
-    private final String suiteName;
     private final Logger.Builder loggerBuilder;
 
     protected TestSuite() {
@@ -16,7 +15,6 @@ public abstract class TestSuite {
     }
 
     protected TestSuite(final String suiteName) {
-        this.suiteName = suiteName;
         this.loggerBuilder = new Logger.Builder(suiteName);
     }
 
@@ -27,39 +25,40 @@ public abstract class TestSuite {
     protected final void launchTestsImplementation() {
         final var tests = setUpTests();
         for (final var test : tests) {
-            final Logger logger = test.initLogger(loggerBuilder);
+            final String testName = test.testName();
+            final Logger generalLogger = this.loggerBuilder.create(testName + ":general");
             final int numIterations = test.numberIterations();
 
-            if (!test.pre(logger)) {
-                System.out.println(suiteName + ": exit in pre");
+            if (!test.pre(generalLogger)) {
+                generalLogger.print("exit in pre");
                 return;
             }
 
             for (int i = 0; i < numIterations; i++) {
+                final Logger logger = this.loggerBuilder.create(testName);
                 if (!test.preTest(logger, i)) {
-                    System.out.println(suiteName + ": Iteration " + i + ": exit in preTest");
+                    logger.print("Iteration " + i + ": exit in preTest");
                     return;
                 }
 
                 final Stopwatch timer = Stopwatch.createStarted();
-
                 final boolean shouldContinue = test.runTest(logger, i);
-
                 timer.stop();
-                System.out.println(suiteName + ": Iteration " + i + ": " + timer.elapsed(TimeUnit.MILLISECONDS));
+                logger.print("Iteration " + i + ": " + timer.elapsed(TimeUnit.MILLISECONDS));
+
                 if (!shouldContinue) {
-                    System.out.println(suiteName + ": Iteration " + i + ": exit in runTest");
+                    logger.print("Iteration " + i + ": exit in runTest");
                     return;
                 }
 
                 if (!test.postTest(logger, i)) {
-                    System.out.println(suiteName + ": Iteration " + i + ": exit in postTest");
+                    logger.print("Iteration " + i + ": exit in postTest");
                     return;
                 }
             }
 
-            if (!test.post(logger)) {
-                System.out.println(suiteName + ": exit in post");
+            if (!test.post(generalLogger)) {
+                generalLogger.print("exit in post");
                 return;
             }
         }

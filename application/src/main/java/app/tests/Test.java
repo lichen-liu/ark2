@@ -4,15 +4,18 @@ import app.tests.util.Logger;
 
 public interface Test {
     /**
-     * Create a Logger from the Logger.Builder
+     * Required. The name of the test
      * 
-     * @param builder
+     * Called once
+     * 
      * @return
      */
-    public abstract Logger initLogger(final Logger.Builder builder);
+    public abstract String testName();
 
     /**
      * Optional
+     * 
+     * Called once
      * 
      * @return
      */
@@ -22,6 +25,8 @@ public interface Test {
 
     /**
      * Optional
+     * 
+     * Called once
      * 
      * @param logger
      * @return boolean, false to abort
@@ -33,6 +38,8 @@ public interface Test {
     /**
      * Optional
      * 
+     * Called once
+     * 
      * @param logger
      * @return boolean, false to abort
      */
@@ -43,6 +50,8 @@ public interface Test {
     /**
      * Optional
      * 
+     * Called once per iteration
+     * 
      * @param logger
      * @param currentIteration
      * @return boolean, false to abort
@@ -52,7 +61,9 @@ public interface Test {
     }
 
     /**
-     * Test to run
+     * Required. Test to run
+     * 
+     * Called once per iteration
      * 
      * @param logger
      * @param currentIteration
@@ -63,6 +74,8 @@ public interface Test {
     /**
      * Optional
      * 
+     * called once per iteration
+     *
      * @param logger
      * @param currentIteration
      * @return boolean, false to abort
