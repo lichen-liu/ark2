@@ -14,6 +14,7 @@ import app.tests.performance.DislikeKeysFetchingTests;
 import app.tests.performance.DislikePublishingTests;
 import app.tests.performance.LikeKeysFetchingTests;
 import app.tests.performance.LikePublishingTests;
+import app.tests.performance.PointBalanceFetchingTests;
 import app.tests.performance.PointTransactionKeysFetchingTests;
 import app.tests.performance.PostKeysFetchingTests;
 import app.tests.performance.PostPublishingTests;
@@ -43,14 +44,18 @@ public class TestSchedules {
                 final BlockingQueue<String> dislikedPostKeyQueue = new ArrayBlockingQueue<String>(1);
 
                 final List<Testable> tests = new ArrayList<Testable>();
+                // Write
                 tests.add(new PostPublishingTests(contract, iterations, postAuthorKeyPair));
                 tests.add(new LikePublishingTests(contract, iterations, likedPostKeyQueue, postAuthorKeyPair));
                 tests.add(new DislikePublishingTests(contract, iterations, dislikedPostKeyQueue, postAuthorKeyPair));
+                // Pure Read
                 tests.add(new PostKeysFetchingTests(contract, iterations, null));
                 tests.add(new PostKeysFetchingTests(contract, iterations, userKey));
                 tests.add(new LikeKeysFetchingTests(contract, iterations, likedPostKeyQueue));
                 tests.add(new DislikeKeysFetchingTests(contract, iterations, dislikedPostKeyQueue));
                 tests.add(new PointTransactionKeysFetchingTests(contract, iterations, userKey));
+                tests.add(new PointBalanceFetchingTests(contract, iterations, userKey));
+                // Read and Verification
 
                 return tests;
             }
