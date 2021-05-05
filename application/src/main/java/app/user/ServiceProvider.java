@@ -23,47 +23,9 @@ public class ServiceProvider {
             final PrivateKey privateKey) {
         class PublishableAppUser extends SignableHolder implements NamedService {
 
-            // private Integer maxRetries = 5;
-            // private Retry<String[]> stringArrayRetry = new Retry<String[]>(maxRetries,
-            // ContractException.class);
-            // private Retry<String> stringRetry = new Retry<String>(maxRetries,
-            // ContractException.class);
-
             public PublishableAppUser(final Contract contract, final PublicKey publicKey, final PrivateKey privateKey) {
                 super(contract, publicKey, privateKey);
             }
-
-            // @Override
-            // public String[] fetchMyPostKeys(){
-            // return stringArrayRetry.run(() -> NamedService.super.fetchMyPostKeys());
-            // }
-
-            // @Override
-            // public String[] fetchMyPayerPointTransactionKeys() {
-            // return stringArrayRetry.run(() ->
-            // NamedService.super.fetchMyPayerPointTransactionKeys());
-            // }
-
-            // @Override
-            // public String computeMyPointAmount() {
-            // return stringRetry.run(() -> NamedService.super.computeMyPointAmount());
-            // }
-
-            // @Override
-            // public String publishNewPost(final String content) {
-            // return stringRetry.run(() -> NamedService.super.publishNewPost(content));
-            // }
-
-            // @Override
-            // public String publishNewTransaction(final Transaction transaction) {
-            // return stringRetry.run(() ->
-            // NamedService.super.publishNewTransaction(transaction));
-            // }
-
-            // @Override
-            // public String publishNewLike(final String postKey) {
-            // return stringRetry.run(() -> NamedService.super.publishNewLike(postKey));
-            // }
         }
         return new PublishableAppUser(contract, publicKey, privateKey);
     }

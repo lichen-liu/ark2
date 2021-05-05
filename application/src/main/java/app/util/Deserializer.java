@@ -11,7 +11,8 @@ import app.repository.data.PointTransaction;
 public interface Deserializer {
     public abstract String[] toStringArray(String str) throws Exception;
 
-    public abstract String transactionEntriesToJson(Iterable<PointTransaction.Entry> participants) throws JsonProcessingException;
+    public abstract String transactionEntriesToJson(Iterable<PointTransaction.Entry> participants)
+            throws JsonProcessingException;
 
     public abstract String transactionEntryToJson(PointTransaction.Entry participant)
             throws IOException, JsonParseException, JsonMappingException;

@@ -14,7 +14,7 @@ public class LikeRewardingTests implements Test{
 
     private final Contract contract;
 
-    public LikeRewardingTests(final Contract contract, int iterations){
+    public LikeRewardingTests(final Contract contract, final int iterations){
         this.contract = contract;
         this.iterations = iterations;
     }
@@ -34,7 +34,7 @@ public class LikeRewardingTests implements Test{
     public boolean pre(final Logger logger) {
         try {
             onePostManyLikeSimulation = new OnePostManyLikeSimulationTests(contract);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return false;
@@ -43,7 +43,7 @@ public class LikeRewardingTests implements Test{
     }
 
     @Override
-    public boolean runTest(Logger logger, int currentIteration) {
+    public boolean runTest(final Logger logger, final int currentIteration) {
         // TODO Auto-generated method stub
         onePostManyLikeSimulation.runTest();
         return false;

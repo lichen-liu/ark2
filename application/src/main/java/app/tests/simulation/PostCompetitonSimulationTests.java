@@ -4,7 +4,7 @@ import org.hyperledger.fabric.gateway.Contract;
 
 public class PostCompetitonSimulationTests extends Simulation {
 
-    public PostCompetitonSimulationTests(Contract contract) throws Exception {
+    public PostCompetitonSimulationTests(final Contract contract) throws Exception {
         super(contract);
     };
 

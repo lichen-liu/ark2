@@ -24,7 +24,8 @@ public class GensonDeserializer implements Deserializer {
     }
 
     @Override
-    public String transactionEntriesToJson(final Iterable<PointTransaction.Entry> participants) throws JsonProcessingException {
+    public String transactionEntriesToJson(final Iterable<PointTransaction.Entry> participants)
+            throws JsonProcessingException {
         final var list = new ArrayList<Map<String, String>>();
         participants.forEach(p -> {
             try {

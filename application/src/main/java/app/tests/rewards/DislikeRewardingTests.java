@@ -12,7 +12,7 @@ public class DislikeRewardingTests implements Test {
     private final int iterations;
     private final Contract contract;
 
-    public DislikeRewardingTests(final Contract contract, int iterations){
+    public DislikeRewardingTests(final Contract contract, final int iterations) {
         this.contract = contract;
         this.iterations = iterations;
     }
@@ -32,7 +32,7 @@ public class DislikeRewardingTests implements Test {
     public boolean pre(final Logger logger) {
         try {
             onePostManyDislikeSimulation = new OnePostManyDislikeSimulationTests(contract);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return false;
@@ -41,7 +41,7 @@ public class DislikeRewardingTests implements Test {
     }
 
     @Override
-    public boolean runTest(Logger logger, int currentIteration) {
+    public boolean runTest(final Logger logger, final int currentIteration) {
         // TODO Auto-generated method stub
         onePostManyDislikeSimulation.runTest();
         return false;

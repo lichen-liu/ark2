@@ -1,15 +1,11 @@
 package app.tests.simple;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 
 import org.hyperledger.fabric.gateway.Contract;
-import org.hyperledger.fabric.gateway.Wallet;
 
-import app.backend.ContractFactory;
-import app.backend.WalletFactory;
 import app.tests.Test;
 import app.tests.util.Logger;
 import app.tests.util.TestClient;
@@ -31,8 +27,8 @@ public class LikeTests implements Test {
     @Override
     public boolean runTest(final Logger logger, final int currentIteration) {
         try {
-            singleThreadLikingAPostTest(contract, logger);
-            twoThreadLikingTheSamePostTest(logger);
+            singleThreadLikingAPostTest(this.contract, logger);
+            twoThreadLikingTheSamePostTest(this.contract, logger);
         } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException | IOException e) {
             e.printStackTrace();
             return false;
@@ -61,19 +57,8 @@ public class LikeTests implements Test {
         thread.start();
     }
 
-    private void twoThreadLikingTheSamePostTest(final Logger logger)
+    private void twoThreadLikingTheSamePostTest(final Contract contract, final Logger logger)
             throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, IOException {
-        final Wallet wallet = WalletFactory.GetWallet("admin");
-
-        final var contractCreation = new ContractFactory.Entity();
-        contractCreation.userId = "appUser3";
-        contractCreation.channel = "mychannel";
-        contractCreation.contractName = "ForumAgreement";
-        contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
-                "peerOrganizations", "org1.example.com", "connection-org1.yaml");
-
-        final var contract = ContractFactory.CreateContract(wallet, contractCreation);
-
         final TestRunner runner1 = new TestRunner("Runner 1", logger);
         final TestRunner runner2 = new TestRunner("Runner 2", logger);
 

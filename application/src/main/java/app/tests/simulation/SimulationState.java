@@ -1,7 +1,6 @@
 package app.tests.simulation;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -10,10 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.hyperledger.fabric.gateway.Contract;
-import org.hyperledger.fabric.gateway.Wallet;
 
-import app.backend.ContractFactory;
-import app.backend.WalletFactory;
 import app.tests.util.TestClient;
 import app.user.NamedService;
 
@@ -33,7 +29,7 @@ public class SimulationState {
 
     private final Contract contract;
 
-    public SimulationState(Contract contract) throws IOException {
+    public SimulationState(final Contract contract) throws IOException {
         this.authors = new ArrayList<NamedService>();
         this.likers = new ArrayList<NamedService>();
         this.posts = new ArrayList<String>();
