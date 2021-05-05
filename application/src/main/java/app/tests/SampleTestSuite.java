@@ -45,6 +45,16 @@ public abstract class SampleTestSuite extends TestSuite {
     @Override
     protected void finit() {
         System.out.println("\n===================================================");
+        final List<String> csvData = this.testElapsedMilliSeconds.entrySet().stream()
+                .map(entry -> entry.getValue().stream().map(elapsed -> entry.getKey() + "," + elapsed.toString()))
+                .flatMap(Function.identity()).collect(Collectors.toList());
+
+        for (final var row : csvData) {
+            System.out.println(row);
+        }
+        System.out.println("===================================================\n");
+
+        System.out.println("\n===================================================");
         for (final var testSessionEntry : this.testElapsedMilliSeconds.entrySet()) {
             final var testSessionName = testSessionEntry.getKey();
             final var elapseds = testSessionEntry.getValue();
@@ -56,13 +66,5 @@ public abstract class SampleTestSuite extends TestSuite {
                     + totalMs / iterations + " ms/iteration: " + minMs + " min ms: " + maxMs + " max ms");
         }
         System.out.println("===================================================\n");
-
-        final List<String> csvData = this.testElapsedMilliSeconds.entrySet().stream()
-                .map(entry -> entry.getValue().stream().map(elapsed -> entry.getKey() + "," + elapsed.toString()))
-                .flatMap(Function.identity()).collect(Collectors.toList());
-
-        for (final var row : csvData) {
-            System.out.println(row);
-        }
     }
 }
