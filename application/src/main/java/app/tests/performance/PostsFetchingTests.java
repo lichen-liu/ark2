@@ -47,7 +47,7 @@ public class PostsFetchingTests implements Testable {
         }
         logger.printResult(isValid ? "Valid" : "Invalid");
 
-        return false;
+        return true;
     }
 
 }
