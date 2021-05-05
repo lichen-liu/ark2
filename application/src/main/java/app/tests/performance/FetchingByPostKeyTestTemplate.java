@@ -9,18 +9,14 @@ import app.tests.util.Logger;
 import app.user.AnonymousService;
 import app.user.ServiceProvider;
 
-public class LikeKeysFetchingTests implements Testable {
+public abstract class FetchingByPostKeyTestTemplate implements Testable {
     private final Contract contract;
     private AnonymousService user = null;
     final BlockingQueue<String> likedPostKeyQueue;
     private String postKey;
 
-    @Override
-    public String testName() {
-        return "LikeKeysFetchingTests";
-    }
 
-    public LikeKeysFetchingTests(final Contract contract, final BlockingQueue<String> likedPostKeyQueue) {
+    public FetchingByPostKeyTestTemplate(final Contract contract, final BlockingQueue<String> likedPostKeyQueue) {
         this.contract = contract;
         this.likedPostKeyQueue = likedPostKeyQueue;
     }

@@ -9,28 +9,28 @@ import app.tests.util.Logger;
 import app.user.AnonymousService;
 import app.user.ServiceProvider;
 
-public class DislikeKeysFetchingTests implements Testable {
+public class LikeKeysFetchingTest implements Testable {
     private final Contract contract;
     private AnonymousService user = null;
-    final BlockingQueue<String> dislikedPostKeyQueue;
+    final BlockingQueue<String> likedPostKeyQueue;
     private String postKey;
 
     @Override
     public String testName() {
-        return "DislikeKeysFetchingTests";
+        return "LikeKeysFetchingTest";
     }
 
-    public DislikeKeysFetchingTests(final Contract contract, final BlockingQueue<String> dislikedPostKeyQueue) {
+    public LikeKeysFetchingTest(final Contract contract, final BlockingQueue<String> likedPostKeyQueue) {
         this.contract = contract;
-        this.dislikedPostKeyQueue = dislikedPostKeyQueue;
+        this.likedPostKeyQueue = likedPostKeyQueue;
     }
 
     @Override
     public boolean pre(final Logger logger, final int numberIteration) {
         this.user = ServiceProvider.createAnonymousService(this.contract);
         try {
-            this.postKey = this.dislikedPostKeyQueue.take();
-            final var isSuccessful = this.dislikedPostKeyQueue.offer(this.postKey);
+            this.postKey = this.likedPostKeyQueue.take();
+            final var isSuccessful = this.likedPostKeyQueue.offer(this.postKey);
             assert isSuccessful;
         } catch (final InterruptedException e) {
             e.printStackTrace();
@@ -42,7 +42,7 @@ public class DislikeKeysFetchingTests implements Testable {
 
     @Override
     public boolean runTest(final Logger logger, final int currentIteration, final int numberIteration) {
-        final var result = this.user.fetchDislikeKeysByPostKey(this.postKey);
+        final var result = this.user.fetchLikeKeysByPostKey(this.postKey);
         logger.printResult(result != null ? String.valueOf(result.length) : "null");
 
         return true;

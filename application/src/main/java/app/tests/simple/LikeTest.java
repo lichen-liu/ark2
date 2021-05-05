@@ -12,15 +12,15 @@ import app.tests.util.TestClient;
 import app.tests.util.TestRunner;
 import app.tests.util.TestVoid;
 
-public class LikeTests implements Testable {
+public class LikeTest implements Testable {
     private final Contract contract;
 
     @Override
     public String testName() {
-        return "LikeTests";
+        return "LikeTest";
     }
 
-    public LikeTests(final Contract contract) {
+    public LikeTest(final Contract contract) {
         this.contract = contract;
     }
 

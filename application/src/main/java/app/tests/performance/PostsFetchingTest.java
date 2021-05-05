@@ -1,7 +1,5 @@
 package app.tests.performance;
 
-import javax.annotation.Nullable;
-
 import org.hyperledger.fabric.gateway.Contract;
 
 import app.tests.Testable;
@@ -9,19 +7,19 @@ import app.tests.util.Logger;
 import app.user.AnonymousService;
 import app.user.ServiceProvider;
 
-public class PostKeysFetchingTests implements Testable {
+public class PostsFetchingTest implements Testable {
     private final Contract contract;
     private AnonymousService user = null;
     private final String userKey;
 
     @Override
     public String testName() {
-        return "PostKeysFetchingTests";
+        return "PostsFetchingTest";
     }
 
-    public PostKeysFetchingTests(final Contract contract, final @Nullable String userKey) {
-        this.userKey = userKey;
+    public PostsFetchingTest(final Contract contract, final String userKey) {
         this.contract = contract;
+        this.userKey = userKey;
     }
 
     @Override
@@ -33,14 +31,16 @@ public class PostKeysFetchingTests implements Testable {
 
     @Override
     public boolean runTest(final Logger logger, final int currentIteration, final int numberIteration) {
-        if (this.userKey == null) {
-            final var result = this.user.fetchPostKeys();
-            logger.printResult(result != null ? String.valueOf(result.length) : "null");
-        } else {
-            final var result = this.user.fetchPostKeysByUserId(this.userKey);
-            logger.printResult(result != null ? String.valueOf(result.length) : "null");
+        final var userPostKeys = this.user.fetchPostKeysByUserId(this.userKey);
+        boolean isValid = true;
+        for (final var userPostKey : userPostKeys) {
+            if (!this.user.verifyPost(userPostKey, null).isValid()) {
+                isValid = false;
+            }
         }
+        logger.printResult(isValid ? "Valid" : "Invalid");
 
         return true;
     }
+
 }

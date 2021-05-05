@@ -18,15 +18,15 @@ import app.tests.util.TestRunner;
 import app.tests.util.TestVoid;
 import app.util.ByteUtils;
 
-public class TransactionTests implements Testable {
+public class TransactionTest implements Testable {
     private final Contract contract;
 
     @Override
     public String testName() {
-        return "TransactionTests";
+        return "TransactionTest";
     }
 
-    public TransactionTests(final Contract contract) {
+    public TransactionTest(final Contract contract) {
         this.contract = contract;
     }
 

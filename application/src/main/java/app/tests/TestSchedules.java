@@ -10,20 +10,20 @@ import java.util.concurrent.BlockingQueue;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.tests.performance.DislikeKeysFetchingTests;
-import app.tests.performance.DislikePublishingTests;
-import app.tests.performance.LikeKeysFetchingTests;
-import app.tests.performance.LikePublishingTests;
-import app.tests.performance.PointBalanceFetchingTests;
-import app.tests.performance.PointTransactionKeysFetchingTests;
-import app.tests.performance.PostKeysFetchingTests;
-import app.tests.performance.PostPublishingTests;
-import app.tests.performance.PostsFetchingTests;
-import app.tests.rewards.DislikeRewardingTests;
-import app.tests.rewards.LikeRewardingTests;
-import app.tests.simple.LikeTests;
-import app.tests.simple.PostTests;
-import app.tests.simple.TransactionTests;
+import app.tests.performance.DislikeKeysFetchingTest;
+import app.tests.performance.DislikePublishingTest;
+import app.tests.performance.LikeKeysFetchingTest;
+import app.tests.performance.LikePublishingTest;
+import app.tests.performance.PointBalanceFetchingTest;
+import app.tests.performance.PointTransactionKeysFetchingTest;
+import app.tests.performance.PostKeysFetchingTest;
+import app.tests.performance.PostPublishingTest;
+import app.tests.performance.PostsFetchingTest;
+import app.tests.rewards.DislikeRewardingTest;
+import app.tests.rewards.LikeRewardingTest;
+import app.tests.simple.LikeTest;
+import app.tests.simple.PostTest;
+import app.tests.simple.TransactionTest;
 import app.util.ByteUtils;
 import app.util.Cryptography;
 
@@ -51,18 +51,18 @@ public class TestSchedules {
 
                 final List<Testable> tests = new ArrayList<Testable>();
                 // Write
-                tests.add(new PostPublishingTests(contract, postAuthorKeyPair));
-                tests.add(new LikePublishingTests(contract, likedPostKeyQueue, postAuthorKeyPair));
-                tests.add(new DislikePublishingTests(contract, dislikedPostKeyQueue, postAuthorKeyPair));
+                tests.add(new PostPublishingTest(contract, postAuthorKeyPair));
+                tests.add(new LikePublishingTest(contract, likedPostKeyQueue, postAuthorKeyPair));
+                tests.add(new DislikePublishingTest(contract, dislikedPostKeyQueue, postAuthorKeyPair));
                 // Pure Read
-                tests.add(new PostKeysFetchingTests(contract, null));
-                tests.add(new PostKeysFetchingTests(contract, userKey));
-                tests.add(new LikeKeysFetchingTests(contract, likedPostKeyQueue));
-                tests.add(new DislikeKeysFetchingTests(contract, dislikedPostKeyQueue));
-                tests.add(new PointTransactionKeysFetchingTests(contract, userKey));
-                tests.add(new PointBalanceFetchingTests(contract, userKey));
+                tests.add(new PostKeysFetchingTest(contract, null));
+                tests.add(new PostKeysFetchingTest(contract, userKey));
+                tests.add(new LikeKeysFetchingTest(contract, likedPostKeyQueue));
+                tests.add(new DislikeKeysFetchingTest(contract, dislikedPostKeyQueue));
+                tests.add(new PointTransactionKeysFetchingTest(contract, userKey));
+                tests.add(new PointBalanceFetchingTest(contract, userKey));
                 // Read and Verification
-                tests.add(new PostsFetchingTests(contract, userKey));
+                tests.add(new PostsFetchingTest(contract, userKey));
 
                 return tests;
             }
@@ -81,8 +81,8 @@ public class TestSchedules {
             @Override
             protected List<? extends Testable> setUpTests() {
                 final List<Testable> tests = new ArrayList<Testable>();
-                tests.add(new LikeRewardingTests(contract));
-                tests.add(new DislikeRewardingTests(contract));
+                tests.add(new LikeRewardingTest(contract));
+                tests.add(new DislikeRewardingTest(contract));
                 return tests;
             }
         };
@@ -92,7 +92,7 @@ public class TestSchedules {
         return new TestSuite() {
             @Override
             protected List<? extends Testable> setUpTests() {
-                return List.of(new PostTests(contract), new LikeTests(contract), new TransactionTests(contract));
+                return List.of(new PostTest(contract), new LikeTest(contract), new TransactionTest(contract));
             }
         };
     }

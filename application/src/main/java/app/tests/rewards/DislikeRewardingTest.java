@@ -7,16 +7,16 @@ import app.tests.simulation.OnePostManyDislikeSimulationTests;
 import app.tests.simulation.Simulation;
 import app.tests.util.Logger;
 
-public class DislikeRewardingTests implements Testable {
+public class DislikeRewardingTest implements Testable {
     private Simulation onePostManyDislikeSimulation;
     private final Contract contract;
 
     @Override
     public String testName() {
-        return "DislikeRewardingTests";
+        return "DislikeRewardingTest";
     }
 
-    public DislikeRewardingTests(final Contract contract) {
+    public DislikeRewardingTest(final Contract contract) {
         this.contract = contract;
     }
 

@@ -7,17 +7,17 @@ import app.tests.simulation.OnePostManyLikeSimulationTests;
 import app.tests.simulation.Simulation;
 import app.tests.util.Logger;
 
-public class LikeRewardingTests implements Testable {
+public class LikeRewardingTest implements Testable {
     private Simulation onePostManyLikeSimulation;
 
     private final Contract contract;
 
     @Override
     public String testName() {
-        return "LikeRewardingTests";
+        return "LikeRewardingTest";
     }
 
-    public LikeRewardingTests(final Contract contract) {
+    public LikeRewardingTest(final Contract contract) {
         this.contract = contract;
     }
 

@@ -10,15 +10,15 @@ import app.tests.util.TestClient;
 import app.tests.util.TestRunner;
 import app.tests.util.TestVoid;
 
-public class PostTests implements Testable {
+public class PostTest implements Testable {
     private final Contract contract;
 
     @Override
     public String testName() {
-        return "PostTests";
+        return "PostTest";
     }
 
-    public PostTests(final Contract contract) {
+    public PostTest(final Contract contract) {
         this.contract = contract;
     }
 

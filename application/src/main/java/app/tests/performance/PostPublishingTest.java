@@ -12,7 +12,7 @@ import app.tests.util.Logger;
 import app.user.NamedService;
 import app.user.ServiceProvider;
 
-public class PostPublishingTests implements Testable {
+public class PostPublishingTest implements Testable {
     private final Contract contract;
     private NamedService user = null;
     private List<String> contents = null;
@@ -20,10 +20,10 @@ public class PostPublishingTests implements Testable {
 
     @Override
     public String testName() {
-        return "PostPublishingTests";
+        return "PostPublishingTest";
     }
 
-    public PostPublishingTests(final Contract contract, final KeyPair userKeyPair) {
+    public PostPublishingTest(final Contract contract, final KeyPair userKeyPair) {
         this.contract = contract;
         this.userKeyPair = userKeyPair;
     }

@@ -3,11 +3,11 @@ package app.tests.performance;
 import app.tests.Testable;
 import app.tests.util.Logger;
 
-public class DislikesFetchingTests implements Testable {
+public class LikesFetchingTest implements Testable {
 
     @Override
     public String testName() {
-        return "DislikesFetchingTests";
+        return "LikesFetchingTest";
     }
 
     @Override

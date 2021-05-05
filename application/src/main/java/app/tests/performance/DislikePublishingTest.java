@@ -13,22 +13,22 @@ import app.tests.util.TestClient;
 import app.user.NamedService;
 import app.user.ServiceProvider;
 
-public class LikePublishingTests implements Testable {
+public class DislikePublishingTest implements Testable {
     private final Contract contract;
     private String postKey;
     private NamedService user = null;
-    final BlockingQueue<String> likedPostKeyQueue;
+    final BlockingQueue<String> dislikedPostKeyQueue;
     final KeyPair postAuthorKeyPair;
 
     @Override
     public String testName() {
-        return "LikePublishingTests";
+        return "DislikePublishingTest";
     }
 
-    public LikePublishingTests(final Contract contract, final BlockingQueue<String> likedPostKeyQueue,
+    public DislikePublishingTest(final Contract contract, final BlockingQueue<String> dislikedPostKeyQueue,
             final KeyPair postAuthorKeyPair) {
         this.contract = contract;
-        this.likedPostKeyQueue = likedPostKeyQueue;
+        this.dislikedPostKeyQueue = dislikedPostKeyQueue;
         this.postAuthorKeyPair = postAuthorKeyPair;
     }
 
@@ -38,7 +38,7 @@ public class LikePublishingTests implements Testable {
             this.postKey = ServiceProvider.createNamedService(contract, this.postAuthorKeyPair.getPublic(),
                     this.postAuthorKeyPair.getPrivate()).publishNewPost("_");
             assert this.postKey != null;
-            final var isSuccessful = this.likedPostKeyQueue.offer(this.postKey);
+            final var isSuccessful = this.dislikedPostKeyQueue.offer(this.postKey);
             assert isSuccessful;
 
             this.user = TestClient.createTestClient(contract);
@@ -51,13 +51,12 @@ public class LikePublishingTests implements Testable {
 
     @Override
     public boolean runTest(final Logger logger, final int currentIteration, final int numberIteration) {
-        String likeKey = null;
+        String dislikeKey = null;
         do {
-            likeKey = this.user.publishNewLike(postKey);
-            logger.printResult(likeKey);
-        } while (likeKey == null);
+            dislikeKey = this.user.publishNewDislike(postKey);
+            logger.printResult(dislikeKey);
+        } while (dislikeKey == null);
 
         return true;
     }
-
 }
