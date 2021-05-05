@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.tests.performance.PostPublishingTests;
+import app.tests.performance.write.PostPublishingTests;
 import app.tests.simple.LikeTests;
 import app.tests.simple.PostTests;
 import app.tests.simple.TransactionTests;

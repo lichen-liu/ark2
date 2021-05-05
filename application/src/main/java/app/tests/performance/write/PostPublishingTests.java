@@ -1,4 +1,4 @@
-package app.tests.performance;
+package app.tests.performance.write;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;

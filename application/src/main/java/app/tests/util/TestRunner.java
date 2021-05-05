@@ -34,15 +34,15 @@ public class TestRunner implements Runnable {
                 System.out.println(String.format("\n%s output : ", identifier));
 
                 if (output instanceof String) {
-                    logger.print((String) output);
+                    logger.printResult((String) output);
                 } else if (output instanceof String[]) {
-                    logger.print((String[]) output);
+                    logger.printResult((String[]) output);
                 } else if (output instanceof Post || output instanceof Like || output instanceof PointTransaction) {
-                    logger.print(output.toString());
+                    logger.printResult(output.toString());
                 } else if (output instanceof Post[] || output instanceof Like[]
                         || output instanceof PointTransaction[]) {
                     for (final var o : (Object[]) output) {
-                        logger.print(o.toString());
+                        logger.printResult(o.toString());
                     }
                 } else {
                     System.out.println("Unhandled type: " + output);

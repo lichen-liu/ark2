@@ -38,7 +38,7 @@ public class PostTests implements Test {
 
         final var client = TestClient.createTestClient(contract);
         final String postKey = client.publishNewPost("singleThreadTests");
-        logger.print(postKey);
+        logger.printResult(postKey);
         logger.print(client.fetchPostByPostKey(postKey));
 
     }
