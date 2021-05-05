@@ -38,6 +38,8 @@ public class LikeKeysFetchingTests implements Test {
         this.user = ServiceProvider.createAnonymousService(this.contract);
         try {
             this.postKey = this.likedPostKeyQueue.take();
+            final var isSuccessful = this.likedPostKeyQueue.offer(this.postKey);
+            assert isSuccessful;
         } catch (final InterruptedException e) {
             e.printStackTrace();
             return false;

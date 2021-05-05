@@ -38,6 +38,8 @@ public class DislikeKeysFetchingTests implements Test {
         this.user = ServiceProvider.createAnonymousService(this.contract);
         try {
             this.postKey = this.dislikedPostKeyQueue.take();
+            final var isSuccessful = this.dislikedPostKeyQueue.offer(this.postKey);
+            assert isSuccessful;
         } catch (final InterruptedException e) {
             e.printStackTrace();
             return false;
