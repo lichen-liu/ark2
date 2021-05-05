@@ -2,12 +2,12 @@ package app.tests.rewards;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.tests.Test;
+import app.tests.Testable;
 import app.tests.simulation.OnePostManyDislikeSimulationTests;
 import app.tests.simulation.Simulation;
 import app.tests.util.Logger;
 
-public class DislikeRewardingTests implements Test {
+public class DislikeRewardingTests implements Testable {
     private Simulation onePostManyDislikeSimulation;
     private final int iterations;
     private final Contract contract;

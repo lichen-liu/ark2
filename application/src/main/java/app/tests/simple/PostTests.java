@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.tests.Test;
+import app.tests.Testable;
 import app.tests.util.Logger;
 import app.tests.util.TestClient;
 import app.tests.util.TestRunner;
 import app.tests.util.TestVoid;
 
-public class PostTests implements Test {
+public class PostTests implements Testable {
     private final Contract contract;
 
     @Override

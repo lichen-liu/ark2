@@ -2,12 +2,12 @@ package app.tests.performance.read.keys;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.tests.Test;
+import app.tests.Testable;
 import app.tests.util.Logger;
 import app.user.AnonymousService;
 import app.user.ServiceProvider;
 
-public class PointTransactionKeysFetchingTests implements Test {
+public class PointTransactionKeysFetchingTests implements Testable {
     private final Contract contract;
     private AnonymousService user = null;
     private final String userKey;

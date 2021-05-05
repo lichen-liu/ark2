@@ -11,14 +11,14 @@ import org.hyperledger.fabric.gateway.ContractException;
 
 import app.repository.data.Payment;
 import app.repository.data.PointTransaction;
-import app.tests.Test;
+import app.tests.Testable;
 import app.tests.util.Logger;
 import app.tests.util.TestClient;
 import app.tests.util.TestRunner;
 import app.tests.util.TestVoid;
 import app.util.ByteUtils;
 
-public class TransactionTests implements Test {
+public class TransactionTests implements Testable {
     private final Contract contract;
 
     @Override

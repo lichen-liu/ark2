@@ -79,5 +79,5 @@ public abstract class TestSuite {
         }
     }
 
-    protected abstract List<? extends Test> setUpTests();
+    protected abstract List<? extends Testable> setUpTests();
 }

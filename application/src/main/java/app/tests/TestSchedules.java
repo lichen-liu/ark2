@@ -30,7 +30,7 @@ public class TestSchedules {
         final int iterations = 100;
         return new SampleTestSuite("Performance") {
             @Override
-            protected List<? extends Test> setUpTests() {
+            protected List<? extends Testable> setUpTests() {
                 KeyPair postAuthorKeyPair = null;
                 try {
                     postAuthorKeyPair = Cryptography.generateRandomKeyPair();
@@ -42,7 +42,7 @@ public class TestSchedules {
                 final BlockingQueue<String> likedPostKeyQueue = new ArrayBlockingQueue<String>(1);
                 final BlockingQueue<String> dislikedPostKeyQueue = new ArrayBlockingQueue<String>(1);
 
-                final List<Test> tests = new ArrayList<Test>();
+                final List<Testable> tests = new ArrayList<Testable>();
                 tests.add(new PostPublishingTests(contract, iterations, postAuthorKeyPair));
                 tests.add(new LikePublishingTests(contract, iterations, likedPostKeyQueue, postAuthorKeyPair));
                 tests.add(new DislikePublishingTests(contract, iterations, dislikedPostKeyQueue, postAuthorKeyPair));
@@ -62,8 +62,8 @@ public class TestSchedules {
 
         return new TestSuite() {
             @Override
-            protected List<? extends Test> setUpTests() {
-                final List<Test> tests = new ArrayList<Test>();
+            protected List<? extends Testable> setUpTests() {
+                final List<Testable> tests = new ArrayList<Testable>();
                 tests.add(new LikeRewardingTests(contract, iterations));
                 tests.add(new DislikeRewardingTests(contract, iterations));
                 return tests;
@@ -74,7 +74,7 @@ public class TestSchedules {
     public static TestSuite getSimpleTestSuite(final Contract contract) {
         return new TestSuite() {
             @Override
-            protected List<? extends Test> setUpTests() {
+            protected List<? extends Testable> setUpTests() {
                 return List.of(new PostTests(contract), new LikeTests(contract), new TransactionTests(contract));
             }
         };
@@ -83,7 +83,7 @@ public class TestSchedules {
     public static TestSuite getSimulationTestSuite() {
         return new TestSuite() {
             @Override
-            protected List<? extends Test> setUpTests() {
+            protected List<? extends Testable> setUpTests() {
                 return null;
             }
         };

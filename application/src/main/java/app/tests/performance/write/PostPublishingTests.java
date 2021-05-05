@@ -6,13 +6,13 @@ import java.util.List;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.tests.Test;
+import app.tests.Testable;
 import app.tests.util.ContentGeneration;
 import app.tests.util.Logger;
 import app.user.NamedService;
 import app.user.ServiceProvider;
 
-public class PostPublishingTests implements Test {
+public class PostPublishingTests implements Testable {
     private final Contract contract;
     private NamedService user = null;
     private List<String> contents = null;

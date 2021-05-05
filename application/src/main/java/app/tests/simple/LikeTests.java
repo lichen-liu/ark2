@@ -6,13 +6,13 @@ import java.security.NoSuchAlgorithmException;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.tests.Test;
+import app.tests.Testable;
 import app.tests.util.Logger;
 import app.tests.util.TestClient;
 import app.tests.util.TestRunner;
 import app.tests.util.TestVoid;
 
-public class LikeTests implements Test {
+public class LikeTests implements Testable {
     private final Contract contract;
 
     @Override

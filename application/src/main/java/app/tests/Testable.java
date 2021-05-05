@@ -2,7 +2,7 @@ package app.tests;
 
 import app.tests.util.Logger;
 
-public interface Test {
+public interface Testable {
     /**
      * Required. The name of the test
      * 
