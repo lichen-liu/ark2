@@ -41,6 +41,7 @@ public class DislikeRewardingTests implements Test {
     @Override
     public boolean runTest(final Logger logger, final int currentIteration) {
         onePostManyDislikeSimulation.runTest();
+        // Why false?
         return false;
     }
 }

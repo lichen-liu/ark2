@@ -42,6 +42,7 @@ public class LikeRewardingTests implements Test {
     @Override
     public boolean runTest(final Logger logger, final int currentIteration) {
         onePostManyLikeSimulation.runTest();
+        // Why false?
         return false;
     }
 
