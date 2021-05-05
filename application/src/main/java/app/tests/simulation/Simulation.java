@@ -1,11 +1,15 @@
 package app.tests.simulation;
 
+import org.hyperledger.fabric.gateway.Contract;
+
 public abstract class Simulation {
     private final SimulationWriter writer;
     public final SimulationState internalState;
+    public final Contract contract;
 
-    public Simulation() throws Exception {
+    public Simulation(Contract contract) throws Exception {
         this.writer = new SimulationWriter(this.getClass().getSimpleName());
+        this.contract = contract;
         this.internalState = getState();
     }
 
@@ -43,9 +47,7 @@ public abstract class Simulation {
         return true;
     }
 
-    public void run() {
-        runTest();
-
+    public void finish() {
         System.out.println("Test finished, writing benchmark states into the disk...");
         try {
             writer.SetTitle(this.getClass().getSimpleName());
@@ -61,5 +63,5 @@ public abstract class Simulation {
 
     protected abstract SimulationState getState() throws Exception;
 
-    protected abstract void runTest();
+    public abstract void runTest();
 }

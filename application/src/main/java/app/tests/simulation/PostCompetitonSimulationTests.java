@@ -4,15 +4,12 @@ import org.hyperledger.fabric.gateway.Contract;
 
 public class PostCompetitonSimulationTests extends Simulation {
 
-    private final Contract contract;
-
     public PostCompetitonSimulationTests(Contract contract) throws Exception {
-        super();
-        this.contract = contract;
+        super(contract);
     };
 
     @Override
-    protected void runTest() {
+    public void runTest() {
         // Run tests - Just do a lot of likes to the economic system
         final var howManyLikesDoYouWantHuh = 20;
         int i = 0;
