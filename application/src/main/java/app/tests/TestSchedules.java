@@ -14,7 +14,7 @@ public class TestSchedules {
         return new TestSuite("PerformanceTestSuite") {
             @Override
             protected List<? extends Test> setUpTests() {
-                return List.of(new PostPublishingTests(contract, 20));
+                return List.of(new PostPublishingTests(contract));
             }
         };
     }

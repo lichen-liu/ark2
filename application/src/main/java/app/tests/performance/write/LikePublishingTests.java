@@ -26,11 +26,11 @@ public class LikePublishingTests implements Test {
     }
 
     @Override
-    public boolean preTest(final Logger logger, final int currentIteration) {
+    public boolean pre(final Logger logger) {
         try {
             this.user = TestClient.createTestClient(contract);
             this.postKey = user.publishNewPost("_");
-            
+
         } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException e) {
             e.printStackTrace();
             return false;
@@ -40,7 +40,7 @@ public class LikePublishingTests implements Test {
 
     @Override
     public boolean runTest(final Logger logger, final int currentIteration) {
-      
+
         postKey = this.user.publishNewLike(postKey);
         logger.print(postKey);
         return true;

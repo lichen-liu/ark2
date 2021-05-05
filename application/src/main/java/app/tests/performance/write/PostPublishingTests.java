@@ -17,16 +17,14 @@ public class PostPublishingTests implements Test {
     private final Contract contract;
     private NamedService user = null;
     private List<String> contents = null;
-    private final int numPosts;
 
-    public PostPublishingTests(final Contract contract, final int numPosts) {
+    public PostPublishingTests(final Contract contract) {
         this.contract = contract;
-        this.numPosts = numPosts;
     }
 
     @Override
     public int numberIterations() {
-        return 2;
+        return 100;
     }
 
     @Override
@@ -35,11 +33,11 @@ public class PostPublishingTests implements Test {
     }
 
     @Override
-    public boolean preTest(final Logger logger, final int currentIteration) {
+    public boolean pre(final Logger logger) {
         try {
             this.user = TestClient.createTestClient(contract);
             this.contents = new ArrayList<String>();
-            for (int i = 0; i < this.numPosts; i++) {
+            for (int i = 0; i < numberIterations(); i++) {
                 this.contents.add(ContentGeneration.randomString(100));
             }
         } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException e) {

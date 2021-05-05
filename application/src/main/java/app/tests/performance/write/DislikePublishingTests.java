@@ -21,11 +21,11 @@ public class DislikePublishingTests implements Test {
     }
 
     @Override
-    public boolean preTest(final Logger logger, final int currentIteration) {
+    public boolean pre(final Logger logger) {
         try {
             this.user = TestClient.createTestClient(contract);
             this.postKey = user.publishNewPost("_");
-            
+
         } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException e) {
             e.printStackTrace();
             return false;

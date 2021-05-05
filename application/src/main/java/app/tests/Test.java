@@ -48,19 +48,6 @@ public interface Test {
     }
 
     /**
-     * Optional
-     * 
-     * Called once per iteration
-     * 
-     * @param logger
-     * @param currentIteration
-     * @return boolean, false to abort
-     */
-    public default boolean preTest(final Logger logger, final int currentIteration) {
-        return true;
-    }
-
-    /**
      * Required. Test to run
      * 
      * Called once per iteration
@@ -70,17 +57,4 @@ public interface Test {
      * @return boolean, false to abort
      */
     public abstract boolean runTest(Logger logger, final int currentIteration);
-
-    /**
-     * Optional
-     * 
-     * called once per iteration
-     *
-     * @param logger
-     * @param currentIteration
-     * @return boolean, false to abort
-     */
-    public default boolean postTest(final Logger logger, final int currentIteration) {
-        return true;
-    }
 }
