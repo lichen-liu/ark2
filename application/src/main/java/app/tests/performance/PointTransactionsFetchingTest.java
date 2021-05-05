@@ -4,7 +4,6 @@ import app.tests.Testable;
 import app.tests.util.Logger;
 
 public class PointTransactionsFetchingTest implements Testable {
-
     @Override
     public String testName() {
         return "PointTransactionsFetchingTest";

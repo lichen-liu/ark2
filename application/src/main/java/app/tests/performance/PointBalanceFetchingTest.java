@@ -2,36 +2,21 @@ package app.tests.performance;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.tests.Testable;
 import app.tests.util.Logger;
-import app.user.AnonymousService;
-import app.user.ServiceProvider;
 
-public class PointBalanceFetchingTest implements Testable {
-    private final Contract contract;
-    private AnonymousService user = null;
-    private final String userKey;
-
+public class PointBalanceFetchingTest extends FetchingByUserKeyTestTemplate {
     @Override
     public String testName() {
         return "PointBalanceFetchingTest";
     }
 
     public PointBalanceFetchingTest(final Contract contract, final String userKey) {
-        this.contract = contract;
-        this.userKey = userKey;
-    }
-
-    @Override
-    public boolean pre(final Logger logger, final int numberIteration) {
-        this.user = ServiceProvider.createAnonymousService(this.contract);
-
-        return true;
+        super(contract, userKey);
     }
 
     @Override
     public boolean runTest(final Logger logger, final int currentIteration, final int numberIteration) {
-        final var result = this.user.computePointBalanceByUserId(this.userKey);
+        final var result = this.getService().computePointBalanceByUserId(this.getUserKey());
         logger.printResult(result);
 
         return true;

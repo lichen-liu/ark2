@@ -11,22 +11,22 @@ import app.user.ServiceProvider;
 
 public abstract class FetchingByPostKeyTestTemplate implements Testable {
     private final Contract contract;
-    private AnonymousService user = null;
-    final BlockingQueue<String> likedPostKeyQueue;
+    private AnonymousService service = null;
+
+    private final BlockingQueue<String> postKeyQueue;
     private String postKey;
 
-
-    public FetchingByPostKeyTestTemplate(final Contract contract, final BlockingQueue<String> likedPostKeyQueue) {
+    protected FetchingByPostKeyTestTemplate(final Contract contract, final BlockingQueue<String> postKeyQueue) {
         this.contract = contract;
-        this.likedPostKeyQueue = likedPostKeyQueue;
+        this.postKeyQueue = postKeyQueue;
     }
 
     @Override
     public boolean pre(final Logger logger, final int numberIteration) {
-        this.user = ServiceProvider.createAnonymousService(this.contract);
+        this.service = ServiceProvider.createAnonymousService(this.contract);
         try {
-            this.postKey = this.likedPostKeyQueue.take();
-            final var isSuccessful = this.likedPostKeyQueue.offer(this.postKey);
+            this.postKey = this.postKeyQueue.take();
+            final var isSuccessful = this.postKeyQueue.offer(this.postKey);
             assert isSuccessful;
         } catch (final InterruptedException e) {
             e.printStackTrace();
@@ -36,11 +36,11 @@ public abstract class FetchingByPostKeyTestTemplate implements Testable {
         return true;
     }
 
-    @Override
-    public boolean runTest(final Logger logger, final int currentIteration, final int numberIteration) {
-        final var result = this.user.fetchLikeKeysByPostKey(this.postKey);
-        logger.printResult(result != null ? String.valueOf(result.length) : "null");
+    protected AnonymousService getService() {
+        return service;
+    }
 
-        return true;
+    protected String getPostKey() {
+        return postKey;
     }
 }
