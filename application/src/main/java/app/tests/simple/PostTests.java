@@ -1,12 +1,9 @@
 package app.tests.simple;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import org.hyperledger.fabric.gateway.Wallet;
+import org.hyperledger.fabric.gateway.Contract;
 
-import app.backend.ContractFactory;
-import app.backend.WalletFactory;
 import app.tests.Test;
 import app.tests.util.Logger;
 import app.tests.util.TestClient;
@@ -14,6 +11,11 @@ import app.tests.util.TestRunner;
 import app.tests.util.TestVoid;
 
 public class PostTests implements Test {
+    private final Contract contract;
+
+    public PostTests(final Contract contract) {
+        this.contract = contract;
+    }
 
     @Override
     public Logger initLogger(final Logger.Builder builder) {
@@ -31,35 +33,15 @@ public class PostTests implements Test {
     }
 
     private void singleThreadTests(final Logger logger) throws Exception {
-        final Wallet wallet = WalletFactory.GetWallet("admin");
-
-        final var contractCreation = new ContractFactory.Entity();
-        contractCreation.userId = "appUser3";
-        contractCreation.channel = "mychannel";
-        contractCreation.contractName = "ForumAgreement";
-        contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
-                "peerOrganizations", "org1.example.com", "connection-org1.yaml");
-
-        final var contract = ContractFactory.CreateContract(wallet, contractCreation);
 
         final var client = TestClient.createTestClient(contract);
         final String postKey = client.publishNewPost("singleThreadTests");
         logger.print(postKey);
         logger.print(client.fetchPostByPostKey(postKey));
+
     }
 
     private void twoThreadsPublishingNewPostsTests(final Logger logger) throws Exception {
-
-        final Wallet wallet = WalletFactory.GetWallet("admin");
-
-        final var contractCreation = new ContractFactory.Entity();
-        contractCreation.userId = "appUser3";
-        contractCreation.channel = "mychannel";
-        contractCreation.contractName = "ForumAgreement";
-        contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
-                "peerOrganizations", "org1.example.com", "connection-org1.yaml");
-
-        final var contract = ContractFactory.CreateContract(wallet, contractCreation);
 
         final TestRunner runner1 = new TestRunner("Runner 1", logger);
         final TestRunner runner2 = new TestRunner("Runner 2", logger);

@@ -87,7 +87,6 @@ class App {
     }
 
     private void test() {
-        // Tests.getSimpleTestSuite(contract).launch();
         TestSchedules.getSimulationTestSuite().launchTests();
     }
 

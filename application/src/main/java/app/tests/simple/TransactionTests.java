@@ -7,11 +7,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
-import org.hyperledger.fabric.gateway.Wallet;
 
-import app.backend.ContractFactory;
-import app.backend.WalletFactory;
 import app.repository.data.Payment;
 import app.repository.data.PointTransaction;
 import app.tests.Test;
@@ -22,6 +20,11 @@ import app.tests.util.TestVoid;
 import app.util.ByteUtils;
 
 public class TransactionTests implements Test {
+    private final Contract contract;
+
+    public TransactionTests(final Contract contract) {
+        this.contract = contract;
+    }
 
     @Override
     public Logger initLogger(final Logger.Builder builder) {
@@ -41,16 +44,6 @@ public class TransactionTests implements Test {
 
     private void singleThreadTests(final Logger logger) throws Exception {
 
-        final Wallet wallet = WalletFactory.GetWallet("admin");
-
-        final var contractCreation = new ContractFactory.Entity();
-        contractCreation.userId = "appUser3";
-        contractCreation.channel = "mychannel";
-        contractCreation.contractName = "ForumAgreement";
-        contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
-                "peerOrganizations", "org1.example.com", "connection-org1.yaml");
-
-        final var contract = ContractFactory.CreateContract(wallet, contractCreation);
         final TestRunner runner = new TestRunner("Runner 1", logger);
 
         final var client1 = TestClient.createTestClient(contract);
@@ -102,18 +95,6 @@ public class TransactionTests implements Test {
     }
 
     private void multiThreadWithDependencyTests(final Logger logger) throws Exception {
-
-        final Wallet wallet = WalletFactory.GetWallet("admin");
-
-        final var contractCreation = new ContractFactory.Entity();
-        contractCreation.userId = "appUser3";
-        contractCreation.channel = "mychannel";
-        contractCreation.contractName = "ForumAgreement";
-        contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
-                "peerOrganizations", "org1.example.com", "connection-org1.yaml");
-        ;
-
-        final var contract = ContractFactory.CreateContract(wallet, contractCreation);
 
         final TestRunner runner1 = new TestRunner("Runner 1", logger);
         final TestRunner runner2 = new TestRunner("Runner 2", logger);
@@ -187,18 +168,7 @@ public class TransactionTests implements Test {
 
     private void multiThreadWithoutDependencyTests(final Logger logger)
             throws IOException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, ContractException {
-        final Wallet wallet = WalletFactory.GetWallet("admin");
-
-        final var contractCreation = new ContractFactory.Entity();
-        contractCreation.userId = "appUser3";
-        contractCreation.channel = "mychannel";
-        contractCreation.contractName = "ForumAgreement";
-        contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
-                "peerOrganizations", "org1.example.com", "connection-org1.yaml");
-        ;
-
-        final var contract = ContractFactory.CreateContract(wallet, contractCreation);
-
+       
         final TestRunner runner1 = new TestRunner("Runner 1", logger);
         final TestRunner runner2 = new TestRunner("Runner 2", logger);
 
