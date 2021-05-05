@@ -18,6 +18,7 @@ import app.tests.performance.PointBalanceFetchingTests;
 import app.tests.performance.PointTransactionKeysFetchingTests;
 import app.tests.performance.PostKeysFetchingTests;
 import app.tests.performance.PostPublishingTests;
+import app.tests.performance.PostsFetchingTests;
 import app.tests.rewards.DislikeRewardingTests;
 import app.tests.rewards.LikeRewardingTests;
 import app.tests.simple.LikeTests;
@@ -56,6 +57,7 @@ public class TestSchedules {
                 tests.add(new PointTransactionKeysFetchingTests(contract, iterations, userKey));
                 tests.add(new PointBalanceFetchingTests(contract, iterations, userKey));
                 // Read and Verification
+                tests.add(new PostsFetchingTests(contract, iterations, userKey));
 
                 return tests;
             }
