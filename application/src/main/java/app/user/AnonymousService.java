@@ -242,6 +242,10 @@ public interface AnonymousService extends Repository {
         };
     }
 
+    public default VerificationResult verifyPost(final String postKey) {
+        return verifyPost(postKey, null);
+    }
+
     public default VerificationResult verifyLike(final String likeKey) {
         final Like like = fetchLikeByLikeKey(likeKey);
         if (like == null) {

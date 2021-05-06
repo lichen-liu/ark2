@@ -18,6 +18,7 @@ import app.tests.performance.LikePublishingTest;
 import app.tests.performance.LikesFetchingTest;
 import app.tests.performance.PointBalanceFetchingTest;
 import app.tests.performance.PointTransactionKeysFetchingTest;
+import app.tests.performance.PointTransactionsFetchingTest;
 import app.tests.performance.PostKeysFetchingTest;
 import app.tests.performance.PostPublishingTest;
 import app.tests.performance.PostsFetchingTest;
@@ -67,6 +68,7 @@ public class TestSchedules {
                 tests.add(new PostsFetchingTest(contract, userKey));
                 tests.add(new LikesFetchingTest(contract, likedPostKeyQueue));
                 tests.add(new DislikesFetchingTest(contract, dislikedPostKeyQueue));
+                tests.add(new PointTransactionsFetchingTest(contract, userKey));
 
                 return tests;
             }

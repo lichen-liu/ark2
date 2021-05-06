@@ -14,7 +14,7 @@ public class PostsFetchingTest extends FetchingByUserKeyTestTemplate {
         final var userPostKeys = this.getService().fetchPostKeysByUserId(this.getUserKey());
         boolean isValid = true;
         for (final var userPostKey : userPostKeys) {
-            if (!this.getService().verifyPost(userPostKey, null).isValid()) {
+            if (!this.getService().verifyPost(userPostKey).isValid()) {
                 isValid = false;
             }
         }
