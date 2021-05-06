@@ -77,6 +77,18 @@ public class SimulationState {
         return clients;
     }
 
+    public List<Tuple<String, String>> getLikeHistory(){
+        return likeHistory;
+    }
+
+    public List<Tuple<String, String>> getDislikeHistory(){
+        return dislikeHistory;
+    }
+
+    public List<Tuple<String, String>> getPostHistory(){
+        return postHistory;
+    }
+
     static class ProbabilityPool<T> {
         private final List<Tuple<T, Integer>> probAccum;
         private final Random random = new Random();

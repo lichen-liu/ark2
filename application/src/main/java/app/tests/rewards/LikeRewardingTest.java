@@ -42,13 +42,25 @@ public class LikeRewardingTest implements Testable {
     public boolean post(final Logger logger, final int currentIteration) {
         onePostManyLikeSimulation.finish();
 
-        final List<String> worldEconomyCsvData = ServiceProvider.createAnonymousAnalysisService(this.contract)
-                .analyzePointBalanceHistoryByUserId(null).stream().map(PointBalanceSnapshot::toCsvRow)
+        var likeHistory = onePostManyLikeSimulation.internalState.getLikeHistory();
+
+        var OneLiker = (int) Math.ceil(likeHistory.size() * 0.01);
+        var TwentyFiveLiker = (int) Math.ceil(likeHistory.size() * 0.25);
+        var FiftyLiker = (int) Math.ceil(likeHistory.size() * 0.5);
+
+        final List<String> OneLikerCsvData = ServiceProvider.createAnonymousAnalysisService(this.contract)
+                .analyzePointBalanceHistoryByUserId(likeHistory.get(OneLiker).Item1).stream().map(snapshot -> snapshot.toCsvRow())
                 .collect(Collectors.toList());
-        worldEconomyCsvData.add(0, PointBalanceSnapshot.CsvRowTitle());
-        for (final var row : worldEconomyCsvData) {
-            System.out.println(row);
-        }
+
+        final List<String> TwentyFiveCsvData = ServiceProvider.createAnonymousAnalysisService(this.contract)
+                .analyzePointBalanceHistoryByUserId(likeHistory.get(TwentyFiveLiker).Item1).stream().map(snapshot -> snapshot.toCsvRow())
+                .collect(Collectors.toList());
+
+        final List<String> FiftyLikerCsvData = ServiceProvider.createAnonymousAnalysisService(this.contract)
+                .analyzePointBalanceHistoryByUserId(likeHistory.get(FiftyLiker).Item1).stream().map(snapshot -> snapshot.toCsvRow())
+                .collect(Collectors.toList());
+
+        return true;
 
         return true;
     }
