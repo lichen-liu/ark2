@@ -16,12 +16,12 @@ public interface AnonymousAnalysisService extends AnonymousService {
 
         public abstract long getRelativeOrder();
 
-        public abstract String getTimeStamp();
+        public abstract String getTimestamp();
 
         public abstract String getPointTransactionKey();
 
         public default String toCsvRow() {
-            return getRelativeOrder() + "," + getPointTransactionKey() + "," + getTimeStamp() + "," + getBalance() + ","
+            return getRelativeOrder() + "," + getPointTransactionKey() + "," + getTimestamp() + "," + getBalance() + ","
                     + getBalanceChange();
         }
     }
@@ -43,12 +43,12 @@ public interface AnonymousAnalysisService extends AnonymousService {
             double pointBalanceChange = 0.0;
 
             for (final var payerEntry : pointTransaction.payerEntries) {
-                if (userId.equals(payerEntry.userId)) {
+                if (userId == null || userId.equals(payerEntry.userId)) {
                     pointBalanceChange -= payerEntry.pointAmount;
                 }
             }
             for (final var payeeEntry : pointTransaction.payeeEntries) {
-                if (userId.equals(payeeEntry.userId)) {
+                if (userId == null || userId.equals(payeeEntry.userId)) {
                     pointBalanceChange += payeeEntry.pointAmount;
                 }
             }
@@ -75,7 +75,7 @@ public interface AnonymousAnalysisService extends AnonymousService {
                 }
 
                 @Override
-                public String getTimeStamp() {
+                public String getTimestamp() {
                     return pointTransaction.timestamp;
                 }
 
