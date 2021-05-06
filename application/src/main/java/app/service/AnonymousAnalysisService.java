@@ -25,7 +25,7 @@ public interface AnonymousAnalysisService extends AnonymousService {
         }
     }
 
-    public default List<PointTransactionSummary> analyzePointTransactionsByUserId(@Nullable final String userId) {
+    public default List<PointTransactionSummary> analyzePointBalanceHistoryByUserId(@Nullable final String userId) {
         String[] pointTransactionKeys = null;
         if (userId == null) {
             pointTransactionKeys = fetchPointTransactionKeys();
