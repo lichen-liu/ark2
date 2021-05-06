@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import app.repository.PointTransaction;
 
 public interface AnonymousAnalysisService extends AnonymousService {
-    public interface PointTransactionSummary {
+    public interface PointBalanceSnapshot {
         public abstract double getBalance();
 
         public abstract double getBalanceChange();
@@ -25,7 +25,7 @@ public interface AnonymousAnalysisService extends AnonymousService {
         }
     }
 
-    public default List<PointTransactionSummary> analyzePointBalanceHistoryByUserId(@Nullable final String userId) {
+    public default List<PointBalanceSnapshot> analyzePointBalanceHistoryByUserId(@Nullable final String userId) {
         String[] pointTransactionKeys = null;
         if (userId == null) {
             pointTransactionKeys = fetchPointTransactionKeys();
@@ -33,7 +33,7 @@ public interface AnonymousAnalysisService extends AnonymousService {
             pointTransactionKeys = computePointTransactionKeysByUserId(userId);
         }
 
-        final var tracking = new ArrayList<PointTransactionSummary>();
+        final var tracking = new ArrayList<PointBalanceSnapshot>();
         double pointBalance = 0.0;
         for (final String pointTransactionKey : pointTransactionKeys) {
             final PointTransaction pointTransaction = fetchPointTransactionByPointTransactionKey(pointTransactionKey);
@@ -55,7 +55,7 @@ public interface AnonymousAnalysisService extends AnonymousService {
             final double currentPointBalance = pointBalance;
             final double currentPointBalanceChange = pointBalanceChange;
 
-            tracking.add(new PointTransactionSummary() {
+            tracking.add(new PointBalanceSnapshot() {
                 @Override
                 public double getBalance() {
                     return currentPointBalance;
