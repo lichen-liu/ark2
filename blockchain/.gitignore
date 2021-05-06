@@ -7,6 +7,7 @@
 /hlf2-network/organizations/fabric-ca/ordererOrg
 /hlf2-network/organizations/fabric-ca/org1
 /hlf2-network/organizations/fabric-ca/org2
+/hlf2-network/organizations/fabric-ca/org3
 
 # bin folder at the outmost scope
 /bin

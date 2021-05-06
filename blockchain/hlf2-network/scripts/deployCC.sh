@@ -237,11 +237,13 @@ chaincodeQuery() {
 ## at first we package the chaincode
 packageChaincode 1
 
-## Install chaincode on peer0.org1 and peer0.org2
+## Install chaincode on peer0.org1 and peer0.org2 and peer0.org3
 echo "Installing chaincode on peer0.org1..."
 installChaincode 1
-echo "Install chaincode on peer0.org2..."
+echo "Installing chaincode on peer0.org2..."
 installChaincode 2
+echo "Installing chaincode on peer0.org3..."
+installChaincode 3
 
 echo "Query installed.."
 ## query whether the chaincode is installed
@@ -252,11 +254,13 @@ echo "Approve for org1.."
 approveForMyOrg 1
 
 ## check whether the chaincode definition is ready to be committed
-## expect org1 to have approved and org2 not to
+## expect org1 to have approved and org2 and org3 not to
 echo "Commit readiness1.."
-checkCommitReadiness 1 "\"Org1MSP\": true" "\"Org2MSP\": false"
+checkCommitReadiness 1 "\"Org1MSP\": true" "\"Org2MSP\": false" "\"Org3MSP\": false"
 echo "Commit readiness2.."
-checkCommitReadiness 2 "\"Org1MSP\": true" "\"Org2MSP\": false"
+checkCommitReadiness 2 "\"Org1MSP\": true" "\"Org2MSP\": false" "\"Org3MSP\": false"
+echo "Commit readiness3.."
+checkCommitReadiness 3 "\"Org1MSP\": true" "\"Org2MSP\": false" "\"Org3MSP\": false"
 
 echo "Approve for org2.."
 ## now approve also for org2
@@ -265,20 +269,36 @@ approveForMyOrg 2
 ## check whether the chaincode definition is ready to be committed
 ## expect them both to have approved
 echo "Check commit read1.."
-checkCommitReadiness 1 "\"Org1MSP\": true" "\"Org2MSP\": true"
+checkCommitReadiness 1 "\"Org1MSP\": true" "\"Org2MSP\": true" "\"Org3MSP\": false"
 echo "Check commit read2.."
-checkCommitReadiness 2 "\"Org1MSP\": true" "\"Org2MSP\": true"
+checkCommitReadiness 2 "\"Org1MSP\": true" "\"Org2MSP\": true" "\"Org3MSP\": false"
+echo "Check commit read3.."
+checkCommitReadiness 3 "\"Org1MSP\": true" "\"Org2MSP\": true" "\"Org3MSP\": false"
+
+echo "Approve for org3.."
+## now approve also for org3
+approveForMyOrg 3
+
+## check whether the chaincode definition is ready to be committed
+## expect them both to have approved
+echo "Check commit read1.."
+checkCommitReadiness 1 "\"Org1MSP\": true" "\"Org2MSP\": true" "\"Org3MSP\": true"
+echo "Check commit read2.."
+checkCommitReadiness 2 "\"Org1MSP\": true" "\"Org2MSP\": true" "\"Org3MSP\": true"
+echo "Check commit read3.."
+checkCommitReadiness 3 "\"Org1MSP\": true" "\"Org2MSP\": true" "\"Org3MSP\": true"
 
 ## now that we know for sure both orgs have approved, commit the definition
 echo "Commit chaincode definition.."
-commitChaincodeDefinition 1 2
+commitChaincodeDefinition 1 2 3
 
 ## query on both orgs to see that the definition committed successfully
 queryCommitted 1
 queryCommitted 2
+queryCommitted 3
 
 ## Invoke the chaincode
-chaincodeInvokeInit 1 2
+chaincodeInvokeInit 1 2 3
 
 sleep 10
 
