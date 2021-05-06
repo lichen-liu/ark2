@@ -44,7 +44,7 @@ import app.util.Cryptography;
 
 public class TestSchedules {
     public static TestSuite getPerformanceTestSuite(final Contract contract, final Path performanceFileDir) {
-        final int iterations = 500;
+        final int iterations = 300;
         return new SampleTestSuite("Performance") {
             @Override
             protected int defaultIterations() {
