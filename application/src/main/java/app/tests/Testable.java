@@ -4,15 +4,22 @@ import java.util.Optional;
 
 import app.tests.util.Logger;
 
+@FunctionalInterface
 public interface Testable {
     /**
-     * Required. The name of the test
+     * Optional. The name of the test.
      * 
      * Called once
      * 
-     * @return
+     * @return, Default to be the name of the Testable implementation Class
      */
-    public abstract String testName();
+    public default String testName() {
+        String name = this.getClass().getSimpleName();
+        if ("".equals(name)) {
+            name = this.getClass().getName();
+        }
+        return name;
+    }
 
     /**
      * Optional. Bypass the default number of iterations from Test executioner.

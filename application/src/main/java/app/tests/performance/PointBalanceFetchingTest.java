@@ -5,11 +5,6 @@ import org.hyperledger.fabric.gateway.Contract;
 import app.tests.util.Logger;
 
 public class PointBalanceFetchingTest extends FetchingByUserKeyTestTemplate {
-    @Override
-    public String testName() {
-        return "PointBalanceFetchingTest";
-    }
-
     public PointBalanceFetchingTest(final Contract contract, final String userKey) {
         super(contract, userKey);
     }
@@ -21,5 +16,4 @@ public class PointBalanceFetchingTest extends FetchingByUserKeyTestTemplate {
 
         return true;
     }
-
 }

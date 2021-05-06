@@ -20,11 +20,6 @@ public class DislikePublishingTest implements Testable {
     final BlockingQueue<String> dislikedPostKeyQueue;
     final KeyPair postAuthorKeyPair;
 
-    @Override
-    public String testName() {
-        return "DislikePublishingTest";
-    }
-
     public DislikePublishingTest(final Contract contract, final BlockingQueue<String> dislikedPostKeyQueue,
             final KeyPair postAuthorKeyPair) {
         this.contract = contract;

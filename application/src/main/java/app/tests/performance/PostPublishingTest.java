@@ -18,11 +18,6 @@ public class PostPublishingTest implements Testable {
     private List<String> contents = null;
     private final KeyPair userKeyPair;
 
-    @Override
-    public String testName() {
-        return "PostPublishingTest";
-    }
-
     public PostPublishingTest(final Contract contract, final KeyPair userKeyPair) {
         this.contract = contract;
         this.userKeyPair = userKeyPair;
@@ -50,5 +45,4 @@ public class PostPublishingTest implements Testable {
 
         return true;
     }
-
 }

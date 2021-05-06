@@ -13,11 +13,6 @@ import app.tests.util.TestVoid;
 public class PostTest implements Testable {
     private final Contract contract;
 
-    @Override
-    public String testName() {
-        return "PostTest";
-    }
-
     public PostTest(final Contract contract) {
         this.contract = contract;
     }

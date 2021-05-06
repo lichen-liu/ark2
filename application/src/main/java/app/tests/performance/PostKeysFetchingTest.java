@@ -7,11 +7,6 @@ import org.hyperledger.fabric.gateway.Contract;
 import app.tests.util.Logger;
 
 public class PostKeysFetchingTest extends FetchingByUserKeyTestTemplate {
-    @Override
-    public String testName() {
-        return "PostKeysFetchingTest";
-    }
-
     public PostKeysFetchingTest(final Contract contract, final @Nullable String userKey) {
         super(contract, userKey);
     }

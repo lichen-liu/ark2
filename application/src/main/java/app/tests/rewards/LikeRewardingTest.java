@@ -12,11 +12,6 @@ public class LikeRewardingTest implements Testable {
 
     private final Contract contract;
 
-    @Override
-    public String testName() {
-        return "LikeRewardingTest";
-    }
-
     public LikeRewardingTest(final Contract contract) {
         this.contract = contract;
     }
@@ -38,5 +33,4 @@ public class LikeRewardingTest implements Testable {
         // Why false?
         return false;
     }
-
 }

@@ -11,11 +11,6 @@ public class DislikeRewardingTest implements Testable {
     private Simulation onePostManyDislikeSimulation;
     private final Contract contract;
 
-    @Override
-    public String testName() {
-        return "DislikeRewardingTest";
-    }
-
     public DislikeRewardingTest(final Contract contract) {
         this.contract = contract;
     }

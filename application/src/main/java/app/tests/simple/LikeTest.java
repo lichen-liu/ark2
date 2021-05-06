@@ -15,11 +15,6 @@ import app.tests.util.TestVoid;
 public class LikeTest implements Testable {
     private final Contract contract;
 
-    @Override
-    public String testName() {
-        return "LikeTest";
-    }
-
     public LikeTest(final Contract contract) {
         this.contract = contract;
     }

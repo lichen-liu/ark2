@@ -20,11 +20,6 @@ public class LikePublishingTest implements Testable {
     final BlockingQueue<String> likedPostKeyQueue;
     final KeyPair postAuthorKeyPair;
 
-    @Override
-    public String testName() {
-        return "LikePublishingTest";
-    }
-
     public LikePublishingTest(final Contract contract, final BlockingQueue<String> likedPostKeyQueue,
             final KeyPair postAuthorKeyPair) {
         this.contract = contract;
@@ -59,5 +54,4 @@ public class LikePublishingTest implements Testable {
 
         return true;
     }
-
 }

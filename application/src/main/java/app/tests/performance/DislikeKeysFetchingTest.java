@@ -7,11 +7,6 @@ import org.hyperledger.fabric.gateway.Contract;
 import app.tests.util.Logger;
 
 public class DislikeKeysFetchingTest extends FetchingByPostKeyTestTemplate {
-    @Override
-    public String testName() {
-        return "DislikeKeysFetchingTest";
-    }
-
     public DislikeKeysFetchingTest(final Contract contract, final BlockingQueue<String> dislikedPostKeyQueue) {
         super(contract, dislikedPostKeyQueue);
     }

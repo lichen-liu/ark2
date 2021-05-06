@@ -21,11 +21,6 @@ import app.util.ByteUtils;
 public class TransactionTest implements Testable {
     private final Contract contract;
 
-    @Override
-    public String testName() {
-        return "TransactionTest";
-    }
-
     public TransactionTest(final Contract contract) {
         this.contract = contract;
     }
