@@ -39,13 +39,12 @@ import app.tests.rewards.SelfLikeRewardingTest;
 import app.tests.simple.LikeTest;
 import app.tests.simple.PostTest;
 import app.tests.simple.TransactionTest;
-import app.tests.simulation.SelfLikePostSimulationTests;
 import app.util.ByteUtils;
 import app.util.Cryptography;
 
 public class TestSchedules {
     public static TestSuite getPerformanceTestSuite(final Contract contract, final Path performanceFileDir) {
-        final int iterations = 100;
+        final int iterations = 30;
         return new SampleTestSuite("Performance") {
             @Override
             protected int defaultIterations() {
