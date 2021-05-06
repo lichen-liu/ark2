@@ -3,6 +3,7 @@ package app.tests.simulation;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -69,6 +70,10 @@ public class SimulationWriter {
     public FileWriter getWriter(final String fileName) throws IOException {
 
         try {
+
+            var path = Paths.get("simulation");
+            path.toFile().mkdirs();
+
             final File myObj = new File(String.format("simulation/%s.txt", fileName));
             if (myObj.createNewFile()) {
                 System.out.println("File created: " + myObj.getName());
