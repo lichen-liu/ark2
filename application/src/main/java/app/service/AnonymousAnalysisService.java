@@ -2,6 +2,7 @@ package app.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.DoubleConsumer;
 
 import javax.annotation.Nullable;
 
@@ -25,7 +26,8 @@ public interface AnonymousAnalysisService extends AnonymousService {
         }
     }
 
-    public default List<PointBalanceSnapshot> analyzePointBalanceHistoryByUserId(@Nullable final String userId) {
+    public default List<PointBalanceSnapshot> analyzePointBalanceHistoryByUserId(@Nullable final String userId,
+            @Nullable final DoubleConsumer progressCallback) {
         String[] pointTransactionKeys = null;
         if (userId == null) {
             pointTransactionKeys = fetchPointTransactionKeys();
@@ -34,6 +36,7 @@ public interface AnonymousAnalysisService extends AnonymousService {
         }
 
         final var tracking = new ArrayList<PointBalanceSnapshot>();
+
         double pointBalance = 0.0;
         for (final String pointTransactionKey : pointTransactionKeys) {
             final PointTransaction pointTransaction = fetchPointTransactionByPointTransactionKey(pointTransactionKey);
@@ -82,7 +85,14 @@ public interface AnonymousAnalysisService extends AnonymousService {
                 }
             });
 
+            if (progressCallback != null) {
+                progressCallback.accept((tracking.size() - 1) / (double) pointTransactionKeys.length);
+            }
         }
         return tracking;
+    }
+
+    public default List<PointBalanceSnapshot> analyzePointBalanceHistoryByUserId(@Nullable final String userId) {
+        return analyzePointBalanceHistoryByUserId(userId, null);
     }
 }
