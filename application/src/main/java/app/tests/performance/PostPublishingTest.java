@@ -3,6 +3,7 @@ package app.tests.performance;
 import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.hyperledger.fabric.gateway.Contract;
 
@@ -17,10 +18,17 @@ public class PostPublishingTest implements Testable {
     private NamedService user = null;
     private List<String> contents = null;
     private final KeyPair userKeyPair;
+    private final int iterationMultipler;
 
-    public PostPublishingTest(final Contract contract, final KeyPair userKeyPair) {
+    public PostPublishingTest(final Contract contract, final KeyPair userKeyPair, final int iterationMultipler) {
         this.contract = contract;
         this.userKeyPair = userKeyPair;
+        this.iterationMultipler = iterationMultipler;
+    }
+
+    @Override
+    public Optional<Integer> requestNumberIterations(final int plannedNumberIterations) {
+        return Optional.of(plannedNumberIterations * this.iterationMultipler);
     }
 
     @Override

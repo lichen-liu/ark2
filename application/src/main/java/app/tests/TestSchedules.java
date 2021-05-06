@@ -44,7 +44,8 @@ import app.util.Cryptography;
 
 public class TestSchedules {
     public static TestSuite getPerformanceTestSuite(final Contract contract, final Path performanceFileDir) {
-        final int iterations = 300;
+        final int iterations = 100;
+        final int publishingIterationMultipler = 5;
         return new SampleTestSuite("Performance") {
             @Override
             protected int defaultIterations() {
@@ -66,9 +67,11 @@ public class TestSchedules {
 
                 final List<Testable> tests = new ArrayList<Testable>();
                 // Write
-                tests.add(new PostPublishingTest(contract, postAuthorKeyPair));
-                tests.add(new LikePublishingTest(contract, likedPostKeyQueue, postAuthorKeyPair));
-                tests.add(new DislikePublishingTest(contract, dislikedPostKeyQueue, postAuthorKeyPair));
+                tests.add(new PostPublishingTest(contract, postAuthorKeyPair, publishingIterationMultipler));
+                tests.add(new LikePublishingTest(contract, likedPostKeyQueue, postAuthorKeyPair,
+                        publishingIterationMultipler));
+                tests.add(new DislikePublishingTest(contract, dislikedPostKeyQueue, postAuthorKeyPair,
+                        publishingIterationMultipler));
                 // Pure Read
                 tests.add(new PostKeysFetchingTest(contract, null));
                 tests.add(new PostKeysFetchingTest(contract, userKey));

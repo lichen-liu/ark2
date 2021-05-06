@@ -3,6 +3,7 @@ package app.tests.performance;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 
 import org.hyperledger.fabric.gateway.Contract;
@@ -17,14 +18,21 @@ public class LikePublishingTest implements Testable {
     private final Contract contract;
     private String postKey;
     private NamedService user = null;
-    final BlockingQueue<String> likedPostKeyQueue;
-    final KeyPair postAuthorKeyPair;
+    private final BlockingQueue<String> likedPostKeyQueue;
+    private final KeyPair postAuthorKeyPair;
+    private final int iterationMultipler;
 
     public LikePublishingTest(final Contract contract, final BlockingQueue<String> likedPostKeyQueue,
-            final KeyPair postAuthorKeyPair) {
+            final KeyPair postAuthorKeyPair, final int iterationMultipler) {
         this.contract = contract;
         this.likedPostKeyQueue = likedPostKeyQueue;
         this.postAuthorKeyPair = postAuthorKeyPair;
+        this.iterationMultipler = iterationMultipler;
+    }
+
+    @Override
+    public Optional<Integer> requestNumberIterations(final int plannedNumberIterations) {
+        return Optional.of(plannedNumberIterations * this.iterationMultipler);
     }
 
     @Override
