@@ -33,10 +33,13 @@ import app.tests.performance.PostKeysFetchingTest;
 import app.tests.performance.PostPublishingTest;
 import app.tests.performance.PostsFetchingTest;
 import app.tests.rewards.DislikeRewardingTest;
+import app.tests.rewards.HateDislikerRewardingTest;
 import app.tests.rewards.LikeRewardingTest;
+import app.tests.rewards.SelfLikeRewardingTest;
 import app.tests.simple.LikeTest;
 import app.tests.simple.PostTest;
 import app.tests.simple.TransactionTest;
+import app.tests.simulation.SelfLikePostSimulationTests;
 import app.util.ByteUtils;
 import app.util.Cryptography;
 
@@ -113,7 +116,7 @@ public class TestSchedules {
         };
     }
 
-    public static TestSuite getRewardsTestSuite(final Contract contract) {
+    public static TestSuite getLikeRewardsTestSuite(final Contract contract) {
         final int iterations = 100;
 
         return new TestSuite() {
@@ -126,7 +129,60 @@ public class TestSchedules {
             protected List<? extends Testable> setUpTests() {
                 final List<Testable> tests = new ArrayList<Testable>();
                 tests.add(new LikeRewardingTest(contract));
+                return tests;
+            }
+        };
+    }
+
+    public static TestSuite getDislikeRewardsTestSuite(final Contract contract) {
+        final int iterations = 100;
+
+        return new TestSuite() {
+            @Override
+            protected int defaultIterations() {
+                return iterations;
+            }
+
+            @Override
+            protected List<? extends Testable> setUpTests() {
+                final List<Testable> tests = new ArrayList<Testable>();
                 tests.add(new DislikeRewardingTest(contract));
+                return tests;
+            }
+        };
+    }
+
+    public static TestSuite getSelfLikeRewardsTestSuite(final Contract contract) {
+        final int iterations = 100;
+
+        return new TestSuite() {
+            @Override
+            protected int defaultIterations() {
+                return iterations;
+            }
+
+            @Override
+            protected List<? extends Testable> setUpTests() {
+                final List<Testable> tests = new ArrayList<Testable>();
+                tests.add(new SelfLikeRewardingTest(contract));
+                return tests;
+            }
+        };
+    }
+
+    public static TestSuite getHateDisLikeRewardsTestSuite(final Contract contract) {
+        final int iterations = 100;
+
+        return new TestSuite() {
+            @Override
+            protected int defaultIterations() {
+                return iterations;
+            }
+
+            @Override
+            protected List<? extends Testable> setUpTests() {
+                final List<Testable> tests = new ArrayList<Testable>();
+                tests.add(new HateDislikerRewardingTest(contract));
                 return tests;
             }
         };

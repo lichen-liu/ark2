@@ -87,14 +87,14 @@ class App {
     }
 
     private void test() {
-        final int choice = 0;
+        final int choice = 1;
         switch (choice) {
             case 0:
                 TestSchedules.getPerformanceTestSuite(contract, Paths.get("benchmarks", "perf")).launchTests();
                 break;
             case 1:
-                TestSchedules.getRewardsTestSuite(contract).launchTests();
-                break;
+                TestSchedules.getHateDisLikeRewardsTestSuite(contract).launchTests();
+                TestSchedules.getSelfLikeRewardsTestSuite(contract).launchTests();
         }
     }
 
