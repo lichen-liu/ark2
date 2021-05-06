@@ -24,6 +24,7 @@ import app.backend.UserRegistrationService;
 import app.backend.WalletFactory;
 import app.gui.ForumJFrame;
 import app.tests.TestSchedules;
+import app.tests.TestSuite;
 
 class App {
 
@@ -87,15 +88,20 @@ class App {
     }
 
     private void test() {
-        final int choice = 1;
+        TestSuite testSuite = null;
+        final int choice = 0;
         switch (choice) {
             case 0:
-                TestSchedules.getPerformanceTestSuite(contract, Paths.get("benchmarks", "perf")).launchTests();
+                testSuite = TestSchedules.getPerformanceTestSuite(contract, Paths.get("benchmarks", "perf"));
                 break;
             case 1:
-                TestSchedules.getHateDisLikeRewardsTestSuite(contract).launchTests();
-                TestSchedules.getSelfLikeRewardsTestSuite(contract).launchTests();
+                testSuite = TestSchedules.getHateDisLikeRewardsTestSuite(contract);
+                break;
+            case 2:
+                testSuite = TestSchedules.getSelfLikeRewardsTestSuite(contract);
+                break;
         }
+        testSuite.launchTests();
     }
 
     private void gui() {
