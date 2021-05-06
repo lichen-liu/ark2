@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import com.google.common.base.Stopwatch;
 
@@ -42,20 +40,14 @@ public abstract class SampleTestSuite extends TestSuite {
         });
     }
 
+    protected LinkedHashMap<String, List<Long>> getPerformanceSampleData() {
+        return this.testElapsedMilliSeconds;
+    }
+
     @Override
     protected void post() {
         System.out.println("\n===================================================");
-        final List<String> csvData = this.testElapsedMilliSeconds.entrySet().stream()
-                .map(entry -> entry.getValue().stream().map(elapsed -> entry.getKey() + "," + elapsed.toString()))
-                .flatMap(Function.identity()).collect(Collectors.toList());
-
-        for (final var row : csvData) {
-            System.out.println(row);
-        }
-        System.out.println("===================================================\n");
-
-        System.out.println("\n===================================================");
-        for (final var testSessionEntry : this.testElapsedMilliSeconds.entrySet()) {
+        for (final var testSessionEntry : this.getPerformanceSampleData().entrySet()) {
             final var testSessionName = testSessionEntry.getKey();
             final var elapseds = testSessionEntry.getValue();
             final int iterations = elapseds.size();
