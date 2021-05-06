@@ -37,7 +37,6 @@ public class HateDislikerSimulationTests extends Simulation {
         state.postProbMap.put(state.posts.get(0), 100);
 
         state.likerProbMap.put(state.likers.get(0), 1);
-      
 
         final var it = state.postProbMap.entrySet().iterator();
         while (it.hasNext()) {

@@ -46,23 +46,23 @@ public class SimulationState {
         this.likerPool = new ProbabilityPool<NamedService>();
         this.postPool = new ProbabilityPool<String>();
 
-        this.likeHistory = new ArrayList<Tuple<String, String>> ();
-        this.dislikeHistory = new ArrayList<Tuple<String, String>> ();
-        this.postHistory = new ArrayList<Tuple<String, String>> ();
+        this.likeHistory = new ArrayList<Tuple<String, String>>();
+        this.dislikeHistory = new ArrayList<Tuple<String, String>>();
+        this.postHistory = new ArrayList<Tuple<String, String>>();
 
         this.contract = contract;
     }
 
-    public void insertLikeHistory(String liker, String post){
+    public void insertLikeHistory(String liker, String post) {
         this.likeHistory.add(new Tuple<String, String>(liker, post));
     }
 
-    public void insertDislikeHistory(String disliker, String post){
+    public void insertDislikeHistory(String disliker, String post) {
         this.likeHistory.add(new Tuple<String, String>(disliker, post));
 
     }
 
-    public void insertPostHistory(String author, String post){
+    public void insertPostHistory(String author, String post) {
         this.likeHistory.add(new Tuple<String, String>(author, post));
     }
 
@@ -115,7 +115,6 @@ public class SimulationState {
             return null;
         }
 
- 
     }
 
     static class Tuple<T, M> {

@@ -3,7 +3,6 @@ package app.tests.rewards;
 import org.hyperledger.fabric.gateway.Contract;
 
 import app.tests.Testable;
-import app.tests.simulation.OnePostManyDislikeSimulationTests;
 import app.tests.simulation.SelfLikePostSimulationTests;
 import app.tests.simulation.Simulation;
 import app.tests.util.Logger;

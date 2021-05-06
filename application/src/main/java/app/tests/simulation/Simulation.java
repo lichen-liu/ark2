@@ -18,7 +18,8 @@ public abstract class Simulation {
         final var liker = internalState.likerPool.draw();
         if (liker.publishNewLike(postKey) == null) {
             return false;
-        };
+        }
+        ;
 
         internalState.insertLikeHistory(liker.getPublicKeyString(), postKey);
         return true;
@@ -29,7 +30,8 @@ public abstract class Simulation {
         final var liker = internalState.likerPool.draw();
         if (liker.publishNewDislike(postKey) == null) {
             return false;
-        };
+        }
+        ;
 
         internalState.insertDislikeHistory(liker.getPublicKeyString(), postKey);
         return true;
