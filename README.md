@@ -45,6 +45,11 @@ gradle runApp
 gradle runTest
 ```
 
+### To analyze TEST performance
+```
+python -m analyzer performance benchmarks/perf/perf_*.csv
+```
+
 # Project Blockchain
 Hyperledger Fabric blockchain and chaincodes
 

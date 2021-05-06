@@ -46,31 +46,44 @@ def parse_perf(perf_csv_file):
 
 
 def plot_latency_chart(latency_database, run_name=None):
-    plot_line_chart(latency_database, 'Latency', 'Latency', 'Iteration', 'Latency (ms)', run_name)
-    plot_bar_error_chart(latency_database, 'Latency', 'Latency', 'Latency (ms)', run_name)
+    plot_line_chart(latency_database, 'Latency', 'Latency',
+                    'Iteration', 'Latency (ms)', run_name)
+    plot_bar_error_chart(latency_database, 'Latency',
+                         'Latency', 'Latency (ms)', run_name)
 
 
 def plot_throughput_chart(latency_database, run_name=None):
-    throughput_database = dict(map(lambda kv: (kv[0], list(map(lambda latency: 1000.0/latency, kv[1]))), latency_database.items()))
-    plot_line_chart(throughput_database, 'Throughput', 'Throughput', 'Iteration', 'Throughput (op / sec)', run_name)
-    plot_bar_error_chart(throughput_database, 'Throughput', 'Throughput', 'Throughput (op / sec)', run_name)
+    throughput_database = dict(map(lambda kv: (kv[0], list(
+        map(lambda latency: 1000.0/latency, kv[1]))), latency_database.items()))
+    plot_line_chart(throughput_database, 'Throughput', 'Throughput',
+                    'Iteration', 'Throughput (op / sec)', run_name)
+    plot_bar_error_chart(throughput_database, 'Throughput',
+                         'Throughput', 'Throughput (op / sec)', run_name)
 
 
 def plot_bar_error_chart(database, tag, title, ylabel, run_name=None):
-    test_names, means, stddevs = zip(*list(map(lambda kv: (kv[0], statistics.mean(kv[1]), statistics.stdev(kv[1])), database.items())))
+    stats_database = list(map(lambda kv: (kv[0], statistics.mean(
+        kv[1]), statistics.stdev(kv[1])), database.items()))
+    stats_database = sorted(stats_database, key=lambda t: (t[0]))
+    test_names, means, stddevs = zip(*stats_database)
     x_pos = list(range(len(test_names)))
-    
+
     figsize = (16, 8)
     fig = plt.figure(run_name + '_' + tag.lower(), figsize=figsize)
     fig.set_tight_layout(True)
-    
+
     ax = fig.add_subplot(1, 1, 1)
     ax.set_title(title)
-    ax.bar(x_pos, means, yerr=stddevs, align='center', ecolor='black')
+    rects = ax.bar(x_pos, means, yerr=stddevs, align='center', ecolor='red')
     ax.set_ylabel(ylabel)
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(test_names, fontdict={'fontsize':8}, rotation=45)
+    ax.set_xticklabels(test_names, fontdict={'fontsize': 8}, rotation=45)
     ax.yaxis.grid(True)
+
+    for rect in rects:
+        height = rect.get_height()
+        ax.text(rect.get_x() + rect.get_width()/2., 1.05*height, '%d' %
+                int(height), ha='center', va='bottom')
 
     plt.show()
 

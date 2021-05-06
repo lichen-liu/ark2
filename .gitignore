@@ -37,4 +37,6 @@ build
 .settings
 .vscode
 
+__pycache__
+
 /bin
