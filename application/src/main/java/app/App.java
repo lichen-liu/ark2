@@ -87,7 +87,7 @@ class App {
     }
 
     private void test() {
-        TestSchedules.getPerformanceTestSuite(contract).launchTests();
+        TestSchedules.getPerformanceTestSuite(contract, Paths.get("benchmarks", "perf")).launchTests();
         // TestSchedules.getRewardsTestSuite(contract).launchTests();
     }
 
