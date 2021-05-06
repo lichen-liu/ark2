@@ -87,8 +87,8 @@ class App {
     }
 
     private void test() {
-        TestSchedules.getPerformanceTestSuite(contract).launchTests();
-        // TestSchedules.getRewardsTestSuite(contract).launchTests();
+        //TestSchedules.getPerformanceTestSuite(contract).launchTests();
+        TestSchedules.getRewardsTestSuite(contract).launchTests();
     }
 
     private void gui() {

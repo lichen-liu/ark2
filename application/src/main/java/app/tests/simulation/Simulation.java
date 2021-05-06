@@ -8,9 +8,9 @@ public abstract class Simulation {
     public final Contract contract;
 
     public Simulation(final Contract contract) throws Exception {
-        this.writer = new SimulationWriter(this.getClass().getSimpleName());
         this.contract = contract;
         this.internalState = getState();
+        this.writer = new SimulationWriter(this.getClass().getSimpleName(), this.internalState);
     }
 
     public Boolean TriggerALike() {
@@ -18,9 +18,9 @@ public abstract class Simulation {
         final var liker = internalState.likerPool.draw();
         if (liker.publishNewLike(postKey) == null) {
             return false;
-        }
-        ;
+        };
 
+        internalState.insertLikeHistory(liker.getPublicKeyString(), postKey);
         return true;
     }
 
@@ -29,9 +29,9 @@ public abstract class Simulation {
         final var liker = internalState.likerPool.draw();
         if (liker.publishNewDislike(postKey) == null) {
             return false;
-        }
-        ;
+        };
 
+        internalState.insertDislikeHistory(liker.getPublicKeyString(), postKey);
         return true;
     }
 
@@ -46,6 +46,7 @@ public abstract class Simulation {
         internalState.posts.add(postKey);
         internalState.postProbMap.put(postKey, postProb);
 
+        internalState.insertPostHistory(author.getPublicKeyString(), postKey);
         return true;
     }
 
@@ -56,6 +57,9 @@ public abstract class Simulation {
             writer.saveAuthors(internalState.authors, internalState.authorProbMap);
             writer.saveLikers(internalState.likers, internalState.likerProbMap);
             writer.savePosts(internalState.posts, internalState.postProbMap);
+            writer.saveLikeHistory();
+            writer.saveDislikeHistory();
+            writer.savePostHistory();
         } catch (final Exception e) {
             e.printStackTrace();
         }

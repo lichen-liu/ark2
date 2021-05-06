@@ -30,7 +30,12 @@ public class LikeRewardingTest implements Testable {
     @Override
     public boolean runTest(final Logger logger, final int currentIteration, final int numberIteration) {
         onePostManyLikeSimulation.runTest();
-        // Why false?
-        return false;
+        return true;
+    }
+
+    @Override
+    public boolean post(final Logger logger, final int currentIteration) {
+        onePostManyLikeSimulation.finish();
+        return true;
     }
 }

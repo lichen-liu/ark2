@@ -29,7 +29,12 @@ public class DislikeRewardingTest implements Testable {
     @Override
     public boolean runTest(final Logger logger, final int currentIteration, final int numberIteration) {
         onePostManyDislikeSimulation.runTest();
-        // Why false?
-        return false;
+        return true;
+    }
+
+    @Override
+    public boolean post(final Logger logger, final int currentIteration) {
+        onePostManyDislikeSimulation.finish();
+        return true;
     }
 }

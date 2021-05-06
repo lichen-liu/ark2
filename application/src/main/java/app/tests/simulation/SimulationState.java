@@ -27,6 +27,10 @@ public class SimulationState {
     protected ProbabilityPool<NamedService> likerPool;
     protected ProbabilityPool<String> postPool;
 
+    protected List<Tuple<String, String>> likeHistory;
+    protected List<Tuple<String, String>> dislikeHistory;
+    protected List<Tuple<String, String>> postHistory;
+
     private final Contract contract;
 
     public SimulationState(final Contract contract) throws IOException {
@@ -42,7 +46,24 @@ public class SimulationState {
         this.likerPool = new ProbabilityPool<NamedService>();
         this.postPool = new ProbabilityPool<String>();
 
+        this.likeHistory = new ArrayList<Tuple<String, String>> ();
+        this.dislikeHistory = new ArrayList<Tuple<String, String>> ();
+        this.postHistory = new ArrayList<Tuple<String, String>> ();
+
         this.contract = contract;
+    }
+
+    public void insertLikeHistory(String liker, String post){
+        this.likeHistory.add(new Tuple<String, String>(liker, post));
+    }
+
+    public void insertDislikeHistory(String disliker, String post){
+        this.likeHistory.add(new Tuple<String, String>(disliker, post));
+
+    }
+
+    public void insertPostHistory(String author, String post){
+        this.likeHistory.add(new Tuple<String, String>(author, post));
     }
 
     protected List<NamedService> createClients(final int clientNum)
@@ -94,14 +115,16 @@ public class SimulationState {
             return null;
         }
 
-        static class Tuple<T, M> {
-            public Tuple(final T item1, final M item2) {
-                this.Item1 = item1;
-                this.Item2 = item2;
-            }
+ 
+    }
 
-            public T Item1;
-            public M Item2;
+    static class Tuple<T, M> {
+        public Tuple(final T item1, final M item2) {
+            this.Item1 = item1;
+            this.Item2 = item2;
         }
+
+        public T Item1;
+        public M Item2;
     }
 }
