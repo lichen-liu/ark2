@@ -15,6 +15,15 @@ import app.repository.PointTransactionRepository;
 import app.repository.PostRepository;
 
 public class ServiceProvider {
+    public static AnonymousAnalysisService createAnonymousAnalysisService(final Contract contract) {
+        class AnonymousAnalysisAppUser extends RepositoryHolder implements AnonymousAnalysisService {
+            public AnonymousAnalysisAppUser(final Contract contract) {
+                super(contract);
+            }
+        }
+        return new AnonymousAnalysisAppUser(contract);
+    }
+
     public static AnonymousService createAnonymousService(final Contract contract) {
         class AnonymousAppUser extends RepositoryHolder implements AnonymousService {
             public AnonymousAppUser(final Contract contract) {
