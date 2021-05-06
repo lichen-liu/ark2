@@ -1,6 +1,8 @@
 package app.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.DoubleConsumer;
 
@@ -35,6 +37,7 @@ public interface AnonymousAnalysisService extends AnonymousService {
         String[] pointTransactionKeys = null;
         if (userId == null) {
             pointTransactionKeys = fetchPointTransactionKeys();
+            Collections.reverse(Arrays.asList(pointTransactionKeys));
         } else {
             pointTransactionKeys = computePointTransactionKeysByUserId(userId);
         }
