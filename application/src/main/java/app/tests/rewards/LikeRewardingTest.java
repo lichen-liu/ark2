@@ -42,9 +42,8 @@ public class LikeRewardingTest implements Testable {
     public boolean post(final Logger logger, final int currentIteration) {
         onePostManyLikeSimulation.finish();
 
-        final List<PointBalanceSnapshot> worldEconomyData = ServiceProvider
-                .createAnonymousAnalysisService(this.contract).analyzePointBalanceHistoryByUserId(null);
-        final List<String> worldEconomyCsvData = worldEconomyData.stream().map(snapshot -> snapshot.toCsvRow())
+        final List<String> worldEconomyCsvData = ServiceProvider.createAnonymousAnalysisService(this.contract)
+                .analyzePointBalanceHistoryByUserId(null).stream().map(snapshot -> snapshot.toCsvRow())
                 .collect(Collectors.toList());
         worldEconomyCsvData.add(0, PointBalanceSnapshot.CsvRowTitle());
         for (final var row : worldEconomyCsvData) {
