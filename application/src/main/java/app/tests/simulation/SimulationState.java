@@ -10,8 +10,8 @@ import java.util.Random;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.service.NamedService;
 import app.tests.util.TestClient;
-import app.user.NamedService;
 
 public class SimulationState {
 

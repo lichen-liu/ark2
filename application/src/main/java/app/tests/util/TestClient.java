@@ -8,8 +8,8 @@ import java.security.PublicKey;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.user.NamedService;
-import app.user.ServiceProvider;
+import app.service.NamedService;
+import app.service.ServiceProvider;
 import app.util.Cryptography;
 
 public class TestClient {

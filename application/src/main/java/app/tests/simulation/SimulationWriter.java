@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import app.user.NamedService;
+import app.service.NamedService;
 
 public class SimulationWriter {
     private FileWriter writer;

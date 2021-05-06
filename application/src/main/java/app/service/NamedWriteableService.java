@@ -1,4 +1,4 @@
-package app.user;
+package app.service;
 
 import app.repository.Payment;
 

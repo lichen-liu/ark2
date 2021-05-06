@@ -1,4 +1,4 @@
-package app.user;
+package app.service;
 
 public interface NamedReadableService extends AnonymousService, Identifiable {
     public default String[] fetchMyPostKeys() {

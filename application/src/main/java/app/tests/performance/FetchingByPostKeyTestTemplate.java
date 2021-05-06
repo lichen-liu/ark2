@@ -4,10 +4,10 @@ import java.util.concurrent.BlockingQueue;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.service.AnonymousService;
+import app.service.ServiceProvider;
 import app.tests.Testable;
 import app.tests.util.Logger;
-import app.user.AnonymousService;
-import app.user.ServiceProvider;
 
 public abstract class FetchingByPostKeyTestTemplate implements Testable {
     private final Contract contract;

@@ -87,8 +87,15 @@ class App {
     }
 
     private void test() {
-        //TestSchedules.getPerformanceTestSuite(contract).launchTests();
-        TestSchedules.getRewardsTestSuite(contract).launchTests();
+        final int choice = 0;
+        switch (choice) {
+            case 0:
+                TestSchedules.getPerformanceTestSuite(contract, Paths.get("benchmarks", "perf")).launchTests();
+                break;
+            case 1:
+                TestSchedules.getRewardsTestSuite(contract).launchTests();
+                break;
+        }
     }
 
     private void gui() {

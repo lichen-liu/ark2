@@ -22,8 +22,8 @@ import app.repository.Dislike;
 import app.repository.Like;
 import app.repository.PointTransaction;
 import app.repository.Post;
-import app.user.NamedWriteableService;
-import app.user.ServiceProvider;
+import app.service.NamedWriteableService;
+import app.service.ServiceProvider;
 import app.util.ByteUtils;
 import app.util.Cryptography;
 

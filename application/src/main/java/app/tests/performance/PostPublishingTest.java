@@ -6,11 +6,11 @@ import java.util.List;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.service.NamedService;
+import app.service.ServiceProvider;
 import app.tests.Testable;
 import app.tests.util.ContentGeneration;
 import app.tests.util.Logger;
-import app.user.NamedService;
-import app.user.ServiceProvider;
 
 public class PostPublishingTest implements Testable {
     private final Contract contract;

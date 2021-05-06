@@ -7,11 +7,11 @@ import java.util.concurrent.BlockingQueue;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.service.NamedService;
+import app.service.ServiceProvider;
 import app.tests.Testable;
 import app.tests.util.Logger;
 import app.tests.util.TestClient;
-import app.user.NamedService;
-import app.user.ServiceProvider;
 
 public class LikePublishingTest implements Testable {
     private final Contract contract;
