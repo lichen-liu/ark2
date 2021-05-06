@@ -1,7 +1,12 @@
 package app.tests.rewards;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.service.AnonymousAnalysisService.PointBalanceSnapshot;
+import app.service.ServiceProvider;
 import app.tests.Testable;
 import app.tests.simulation.OnePostManyLikeSimulationTests;
 import app.tests.simulation.Simulation;
@@ -36,6 +41,16 @@ public class LikeRewardingTest implements Testable {
     @Override
     public boolean post(final Logger logger, final int currentIteration) {
         onePostManyLikeSimulation.finish();
+
+        final List<PointBalanceSnapshot> worldEconomyData = ServiceProvider
+                .createAnonymousAnalysisService(this.contract).analyzePointBalanceHistoryByUserId(null);
+        final List<String> worldEconomyCsvData = worldEconomyData.stream().map(snapshot -> snapshot.toCsvRow())
+                .collect(Collectors.toList());
+        worldEconomyCsvData.add(0, PointBalanceSnapshot.CsvRowTitle());
+        for (final var row : worldEconomyCsvData) {
+            System.out.println(row);
+        }
+
         return true;
     }
 }

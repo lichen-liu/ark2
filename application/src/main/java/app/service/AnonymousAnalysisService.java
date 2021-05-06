@@ -24,6 +24,10 @@ public interface AnonymousAnalysisService extends AnonymousService {
             return getRelativeOrder() + "," + getPointTransactionKey() + "," + getTimestamp() + "," + getBalance() + ","
                     + getBalanceChange();
         }
+
+        public static String CsvRowTitle() {
+            return "relative_order,point_transaction_key,timestamp,point_balance,balance_change";
+        }
     }
 
     public default List<PointBalanceSnapshot> analyzePointBalanceHistoryByUserId(@Nullable final String userId,
