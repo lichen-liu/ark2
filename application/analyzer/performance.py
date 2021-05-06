@@ -82,8 +82,8 @@ def plot_bar_error_chart(database, tag, title, ylabel, run_name=None):
 
     for rect in rects:
         height = rect.get_height()
-        ax.text(rect.get_x() + rect.get_width()/2., 1.05*height, '%d' %
-                int(height), ha='center', va='bottom')
+        ax.text(rect.get_x() + rect.get_width()/2., 1.05*height, '%6f' %
+                float(height), ha='center', va='bottom')
 
     plt.show()
 
@@ -108,11 +108,15 @@ def plot_line_chart(database, tag, title, xlabel, ylabel, run_name=None):
 
 def init(parser):
     parser.add_argument('csv', type=str, help='csv file')
+    parser.add_argument('--tests', nargs='*', help='Tests to look at')
     parser.add_argument('--nogui', action='store_true', help='Turn off gui')
 
 
 def main(args):
     headers, database = parse_perf(args.csv)
+
+    if args.tests is not None:
+        database = dict(filter(lambda kv: kv[0] in args.tests, database.items()))
 
     print(headers)
     print(database.keys())
