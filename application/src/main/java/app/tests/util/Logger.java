@@ -26,7 +26,7 @@ public class Logger {
     }
 
     public String sessionName() {
-        return this.name + ":" + this.subname;
+        return this.name + "::" + this.subname;
     }
 
     public void print(final String string) {
