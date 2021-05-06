@@ -103,7 +103,8 @@ public class TestSchedules {
                 performanceFileDir.toFile().mkdirs();
                 final String timestamp = ZonedDateTime.now(ZoneOffset.UTC)
                         .format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-                final Path filePath = Paths.get(performanceFileDir.toString(), "perf_" + iteration + "_" + timestamp + ".csv");
+                final Path filePath = Paths.get(performanceFileDir.toString(),
+                        "perf_" + iterations + "_" + timestamp + ".csv");
                 try {
                     Files.write(filePath, csvData, StandardCharsets.UTF_8);
                     System.out.println("Successfully wrote performance results into " + filePath.toString());
