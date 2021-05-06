@@ -53,7 +53,9 @@ public abstract class TestSuite {
         for (final var test : tests) {
             final Logger logger = this.loggerBuilder.create(test.testName());
             final String testSessionName = logger.sessionName();
-            final int numberIterations = test.requestNumberIterations().orElseGet(this::defaultIterations);
+            final int plannedNumberIterations = defaultIterations();
+            final int numberIterations = test.requestNumberIterations(plannedNumberIterations)
+                    .orElse(plannedNumberIterations);
 
             if (!test.pre(logger, numberIterations)) {
                 logger.print("exit in pre");

@@ -26,9 +26,10 @@ public interface Testable {
      * 
      * Called once
      * 
+     * @param plannedNumberIterations
      * @return Optional.empty() if using the default value from the Test executioner
      */
-    public default Optional<Integer> requestNumberIterations() {
+    public default Optional<Integer> requestNumberIterations(final int plannedNumberIterations) {
         return Optional.empty();
     }
 
