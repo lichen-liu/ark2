@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import org.hyperledger.fabric.gateway.Contract;
 
-import app.service.AnonymousAnalysisService.PointBalanceSnapshot;
 import app.service.ServiceProvider;
 import app.tests.Testable;
 import app.tests.simulation.OnePostManyLikeSimulationTests;
@@ -42,25 +41,23 @@ public class LikeRewardingTest implements Testable {
     public boolean post(final Logger logger, final int currentIteration) {
         onePostManyLikeSimulation.finish();
 
-        var likeHistory = onePostManyLikeSimulation.internalState.getLikeHistory();
+        final var likeHistory = onePostManyLikeSimulation.internalState.getLikeHistory();
 
-        var OneLiker = (int) Math.ceil(likeHistory.size() * 0.01);
-        var TwentyFiveLiker = (int) Math.ceil(likeHistory.size() * 0.25);
-        var FiftyLiker = (int) Math.ceil(likeHistory.size() * 0.5);
+        final var OneLiker = (int) Math.ceil(likeHistory.size() * 0.01);
+        final var TwentyFiveLiker = (int) Math.ceil(likeHistory.size() * 0.25);
+        final var FiftyLiker = (int) Math.ceil(likeHistory.size() * 0.5);
 
         final List<String> OneLikerCsvData = ServiceProvider.createAnonymousAnalysisService(this.contract)
-                .analyzePointBalanceHistoryByUserId(likeHistory.get(OneLiker).Item1).stream().map(snapshot -> snapshot.toCsvRow())
-                .collect(Collectors.toList());
+                .analyzePointBalanceHistoryByUserId(likeHistory.get(OneLiker).Item1).stream()
+                .map(snapshot -> snapshot.toCsvRow()).collect(Collectors.toList());
 
         final List<String> TwentyFiveCsvData = ServiceProvider.createAnonymousAnalysisService(this.contract)
-                .analyzePointBalanceHistoryByUserId(likeHistory.get(TwentyFiveLiker).Item1).stream().map(snapshot -> snapshot.toCsvRow())
-                .collect(Collectors.toList());
+                .analyzePointBalanceHistoryByUserId(likeHistory.get(TwentyFiveLiker).Item1).stream()
+                .map(snapshot -> snapshot.toCsvRow()).collect(Collectors.toList());
 
         final List<String> FiftyLikerCsvData = ServiceProvider.createAnonymousAnalysisService(this.contract)
-                .analyzePointBalanceHistoryByUserId(likeHistory.get(FiftyLiker).Item1).stream().map(snapshot -> snapshot.toCsvRow())
-                .collect(Collectors.toList());
-
-        return true;
+                .analyzePointBalanceHistoryByUserId(likeHistory.get(FiftyLiker).Item1).stream()
+                .map(snapshot -> snapshot.toCsvRow()).collect(Collectors.toList());
 
         return true;
     }

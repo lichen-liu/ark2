@@ -53,16 +53,16 @@ public class SimulationState {
         this.contract = contract;
     }
 
-    public void insertLikeHistory(String liker, String post) {
+    public void insertLikeHistory(final String liker, final String post) {
         this.likeHistory.add(new Tuple<String, String>(liker, post));
     }
 
-    public void insertDislikeHistory(String disliker, String post) {
+    public void insertDislikeHistory(final String disliker, final String post) {
         this.likeHistory.add(new Tuple<String, String>(disliker, post));
 
     }
 
-    public void insertPostHistory(String author, String post) {
+    public void insertPostHistory(final String author, final String post) {
         this.likeHistory.add(new Tuple<String, String>(author, post));
     }
 
@@ -77,15 +77,15 @@ public class SimulationState {
         return clients;
     }
 
-    public List<Tuple<String, String>> getLikeHistory(){
+    public List<Tuple<String, String>> getLikeHistory() {
         return likeHistory;
     }
 
-    public List<Tuple<String, String>> getDislikeHistory(){
+    public List<Tuple<String, String>> getDislikeHistory() {
         return dislikeHistory;
     }
 
-    public List<Tuple<String, String>> getPostHistory(){
+    public List<Tuple<String, String>> getPostHistory() {
         return postHistory;
     }
 
@@ -129,7 +129,7 @@ public class SimulationState {
 
     }
 
-    static class Tuple<T, M> {
+    public static class Tuple<T, M> {
         public Tuple(final T item1, final M item2) {
             this.Item1 = item1;
             this.Item2 = item2;
