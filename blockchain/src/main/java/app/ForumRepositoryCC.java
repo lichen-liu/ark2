@@ -10,8 +10,6 @@ import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
 
-import com.owlike.genson.Genson;
-
 import org.hyperledger.fabric.contract.Context;
 import org.hyperledger.fabric.shim.ChaincodeException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
@@ -24,9 +22,6 @@ import app.policy.KeyGeneration;
 import app.policy.LikeRewarding;
 
 public class ForumRepositoryCC {
-    // private final Genson genson = new
-    // GensonBuilder().failOnMissingProperty(true).create();
-    private final Genson genson = new Genson();
 
     public String publishNewPost(final Context ctx, final String timestamp, final String content, final String userId,
             final String signature) throws Exception {
@@ -35,18 +30,16 @@ public class ForumRepositoryCC {
         final Post post = new Post(timestamp, content, userId, signature);
         final Key postKey = ChaincodeStubTools.generateKey(stub, post);
 
-        ChaincodeStubTools.putStringState(stub, postKey, genson.serialize(post));
+        ChaincodeStubTools.putBytesState(stub, postKey, FSTSerde.create(), post);
 
         return postKey.getBase64UrlKeyString();
     }
 
     public String publishNewPointTransaction(final Context ctx, final String timestamp, final String issuerUserId,
-            final String payerEntriesString, final String signature, final String reference,
-            final String payeeEntriesString) throws Exception {
+            final PointTransaction.Entry[] payerEntries, final String signature, final String reference,
+            final PointTransaction.Entry[] payeeEntries) throws Exception {
 
         final ChaincodeStub stub = ctx.getStub();
-        final var payerEntries = genson.deserialize(payerEntriesString, PointTransaction.Entry[].class);
-        final var payeeEntries = genson.deserialize(payeeEntriesString, PointTransaction.Entry[].class);
 
         final PointTransaction.Tracking[] payersPointTransactionTracking = this
                 .determinePointTransactionTrackingForPayerUserIds(ctx, Arrays.asList(payerEntries).stream()
@@ -57,7 +50,7 @@ public class ForumRepositoryCC {
 
         final Key pointTransactionKey = ChaincodeStubTools.generateKey(stub, pointTransaction);
 
-        ChaincodeStubTools.putStringState(stub, pointTransactionKey, genson.serialize(pointTransaction));
+        ChaincodeStubTools.putBytesState(stub, pointTransactionKey, FSTSerde.create(), pointTransaction);
 
         return pointTransactionKey.getBase64UrlKeyString();
     }
@@ -80,25 +73,21 @@ public class ForumRepositoryCC {
             if (!rewarding.isLikerRewarded(likerRank)) {
                 break;
             }
-            final Like currentLike = genson.deserialize(postLikesKeyValue[idx].getStringValue(), Like.class);
+            final Like currentLike = FSTSerde.create().deserialize(postLikesKeyValue[idx].getValue(), Like.class);
             payeeEntries.add(
                     new PointTransaction.Entry(currentLike.getUserId(), rewarding.determineLikerRewarding(likerRank)));
         }
-
-        System.out.println("publishNewLike");
-        System.out.println("payer: " + genson.serialize(payerEntry));
-        System.out.println("payees: " + genson.serialize(payeeEntries));
 
         final var like = new Like(timestamp, postKey, payerEntry.getUserId(), likeSignature, null,
                 this.determineRelativeOrderForLike(ctx, postKey));
         final Key likeKey = ChaincodeStubTools.generateKey(stub, like);
 
         final String pointTransactionKey = this.publishNewPointTransaction(ctx, timestamp, payerEntry.getUserId(),
-                genson.serialize(new PointTransaction.Entry[] { payerEntry }), likePointTransactionSignature,
-                likeKey.getBase64UrlKeyString(), genson.serialize(payeeEntries.toArray(PointTransaction.Entry[]::new)));
+                new PointTransaction.Entry[] { payerEntry }, likePointTransactionSignature,
+                likeKey.getBase64UrlKeyString(), payeeEntries.toArray(PointTransaction.Entry[]::new));
         like.setPointTransactionKey(pointTransactionKey);
 
-        ChaincodeStubTools.putStringState(stub, likeKey, genson.serialize(like));
+        ChaincodeStubTools.putBytesState(stub, likeKey, FSTSerde.create(), like);
 
         return likeKey.getBase64UrlKeyString();
     }
@@ -126,7 +115,7 @@ public class ForumRepositoryCC {
             if (!rewarding.isDislikerRewarded(dislikerRank)) {
                 break;
             }
-            final Dislike currentDisLike = genson.deserialize(postDislikesKeyValue[idx].getStringValue(),
+            final Dislike currentDisLike = FSTSerde.create().deserialize(postDislikesKeyValue[idx].getValue(),
                     Dislike.class);
             dislikePayeeEntries.add(new PointTransaction.Entry(currentDisLike.getUserId(),
                     rewarding.determineDislikerRewarding(dislikerRank)));
@@ -138,13 +127,13 @@ public class ForumRepositoryCC {
 
         final String dislikePointTransactionKey = this.publishNewPointTransaction(ctx, timestamp,
                 dislikePayerEntry.getUserId(),
-                genson.serialize(new PointTransaction.Entry[] { dislikePayerEntry, authorPenaltyPayerEntry }),
+                new PointTransaction.Entry[] { dislikePayerEntry, authorPenaltyPayerEntry },
                 dislikePointTransactionSignature, dislikeKey.getBase64UrlKeyString(),
-                genson.serialize(dislikePayeeEntries.toArray(PointTransaction.Entry[]::new)));
+                dislikePayeeEntries.toArray(PointTransaction.Entry[]::new));
 
         dislike.setPointTransactionKey(dislikePointTransactionKey);
 
-        ChaincodeStubTools.putStringState(stub, dislikeKey, genson.serialize(dislike));
+        ChaincodeStubTools.putBytesState(stub, dislikeKey, FSTSerde.create(), dislike);
 
         return dislikeKey.getBase64UrlKeyString();
     }
@@ -260,8 +249,7 @@ public class ForumRepositoryCC {
         final ChaincodeStub stub = ctx.getStub();
         final Key key = Key.createFromBase64UrlKeyString(keyString);
 
-        final String contentString = ChaincodeStubTools.tryGetStringStateByKey(stub, key);
-        final T content = genson.deserialize(contentString, contentClass);
+        final T content = ChaincodeStubTools.tryGetBytesStateByKey(stub, key, FSTSerde.create(), contentClass);
         if (!content.isMatchingObjectType(key.getObjectTypeString())) {
             throw new ChaincodeException(String.format("getByKey<%s>(): but key is of type %s",
                     contentClass.getSimpleName(), key.getObjectTypeString()));
@@ -284,8 +272,8 @@ public class ForumRepositoryCC {
         final var keyValueIterator = stub.getStateByPartialCompositeKey(partialCompositeKey);
         final List<KeyValue> postKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
                 .sorted((leftKeyValue, rightKeyValue) -> {
-                    final var leftPost = genson.deserialize(leftKeyValue.getStringValue(), Post.class);
-                    final var rightPost = genson.deserialize(rightKeyValue.getStringValue(), Post.class);
+                    final Post leftPost = FSTSerde.create().deserialize(leftKeyValue.getValue(), Post.class);
+                    final Post rightPost = FSTSerde.create().deserialize(rightKeyValue.getValue(), Post.class);
                     return rightPost.compareToByTimestamp(leftPost);
                 }).collect(Collectors.toList());
         keyValueIterator.close();
@@ -305,8 +293,8 @@ public class ForumRepositoryCC {
         final var keyValueIterator = stub.getStateByPartialCompositeKey(Like.getObjectTypeName(), postKey);
         final List<KeyValue> likes = StreamSupport.stream(keyValueIterator.spliterator(), false)
                 .sorted((leftKeyValue, rightKeyValue) -> {
-                    final var leftLike = genson.deserialize(leftKeyValue.getStringValue(), Like.class);
-                    final var rightLike = genson.deserialize(rightKeyValue.getStringValue(), Like.class);
+                    final Like leftLike = FSTSerde.create().deserialize(leftKeyValue.getValue(), Like.class);
+                    final Like rightLike = FSTSerde.create().deserialize(rightKeyValue.getValue(), Like.class);
                     return rightLike.compareToByRelativeOrder(leftLike);
                 }).collect(Collectors.toList());
         keyValueIterator.close();
@@ -326,8 +314,8 @@ public class ForumRepositoryCC {
         final var keyValueIterator = stub.getStateByPartialCompositeKey(Dislike.getObjectTypeName(), postKey);
         final List<KeyValue> dislikes = StreamSupport.stream(keyValueIterator.spliterator(), false)
                 .sorted((leftKeyValue, rightKeyValue) -> {
-                    final var leftDislike = genson.deserialize(leftKeyValue.getStringValue(), Dislike.class);
-                    final var rightDislike = genson.deserialize(rightKeyValue.getStringValue(), Dislike.class);
+                    final Dislike leftDislike = FSTSerde.create().deserialize(leftKeyValue.getValue(), Dislike.class);
+                    final Dislike rightDislike = FSTSerde.create().deserialize(rightKeyValue.getValue(), Dislike.class);
                     return rightDislike.compareToByRelativeOrder(leftDislike);
                 }).collect(Collectors.toList());
         keyValueIterator.close();
@@ -350,10 +338,10 @@ public class ForumRepositoryCC {
         final var keyValueIterator = stub.getStateByPartialCompositeKey(partialCompositeKey);
         final List<KeyValue> pointTransactionKeys = StreamSupport.stream(keyValueIterator.spliterator(), false)
                 .sorted((leftKeyValue, rightKeyValue) -> {
-                    final var leftPointTransaction = genson.deserialize(leftKeyValue.getStringValue(),
+                    final PointTransaction leftPointTransaction = FSTSerde.create().deserialize(leftKeyValue.getValue(),
                             PointTransaction.class);
-                    final var rightPointTransaction = genson.deserialize(rightKeyValue.getStringValue(),
-                            PointTransaction.class);
+                    final PointTransaction rightPointTransaction = FSTSerde.create()
+                            .deserialize(rightKeyValue.getValue(), PointTransaction.class);
                     return rightPointTransaction.compareToByRelativeOrder(leftPointTransaction);
                 }).collect(Collectors.toList());
         keyValueIterator.close();
@@ -406,7 +394,7 @@ public class ForumRepositoryCC {
             final List<String> recentEarningPointTransactionKeys = new ArrayList<String>();
 
             for (final KeyValue pointTransactionKV : allPointTransactions) {
-                final var pointTransaction = genson.deserialize(pointTransactionKV.getStringValue(),
+                final PointTransaction pointTransaction = FSTSerde.create().deserialize(pointTransactionKV.getValue(),
                         PointTransaction.class);
                 final var pointTransactionKeyString = Key.createFromCCKeyString(pointTransactionKV.getKey())
                         .getBase64UrlKeyString();

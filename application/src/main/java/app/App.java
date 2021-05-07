@@ -76,9 +76,16 @@ class App {
             contractCreation.channel = peerInfo.getChannel();
             contractCreation.contractName = peerInfo.getContractName();
             contractCreation.networkConfigPath = Paths.get("..", "blockchain", "hlf2-network", "organizations",
-                    "peerOrganizations", "org1.example.com", "connection-org1.yaml");
+                    "peerOrganizations", "org1.example.com", "connection-org1.json");
 
-            this.contract = ContractFactory.CreateContract(wallet, contractCreation);
+            try {
+                this.contract = ContractFactory.CreateContract(wallet, contractCreation);
+            } catch (final Exception e) {
+                System.out.println("An error occurred with ContractFactory.CreateContract");
+                e.printStackTrace();
+                System.exit(-1);
+            }
+
             // final var appClient = new PublishableAppUser(wallet, contract,
             // peerInfo.getUserId());
         } catch (final Exception e) {

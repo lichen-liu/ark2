@@ -343,7 +343,7 @@ Channel: &ChannelDefaults
 ################################################################################
 Profiles:
 
-    TwoOrgsOrdererGenesis:
+    ThreeOrgsOrdererGenesis:
         <<: *ChannelDefaults
         Orderer:
             <<: *OrdererDefaults
@@ -357,7 +357,7 @@ Profiles:
                     - *Org1
                     - *Org2
                     - *Org3
-    TwoOrgsChannel:
+    ThreeOrgsChannel:
         Consortium: SampleConsortium
         <<: *ChannelDefaults
         Application:

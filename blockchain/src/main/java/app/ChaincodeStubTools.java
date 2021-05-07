@@ -7,21 +7,24 @@ import org.hyperledger.fabric.shim.ChaincodeException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
+import app.policy.BytesState;
 import app.policy.KeyGeneration;
+import app.policy.Serde;
 
 public class ChaincodeStubTools {
     public static boolean isKeyExisted(final ChaincodeStub stub, final Key key) {
-        return !stub.getStringState(key.getCCKeyString()).isEmpty();
+        return stub.getState(key.getCCKeyString()).length != 0;
     }
 
-    public static String tryGetStringStateByKey(final ChaincodeStub stub, final Key key) {
-        final String state = stub.getStringState(key.getCCKeyString());
-        if (state.isEmpty()) {
+    public static <T> T tryGetBytesStateByKey(final ChaincodeStub stub, final Key key, final Serde serde,
+            final Class<T> stateType) {
+        final byte[] stateBytes = stub.getState(key.getCCKeyString());
+        if (stateBytes.length == 0) {
             final String errorMessage = String.format("State %s does not exist", key);
             System.out.println(errorMessage);
             throw new ChaincodeException(errorMessage, errorMessage);
         }
-        return state;
+        return serde.deserialize(stateBytes, stateType);
     }
 
     public static long getNumberStatesByPartialCompositeKey(final ChaincodeStub stub,
@@ -34,8 +37,9 @@ public class ChaincodeStubTools {
         return object.generateKey(key -> ChaincodeStubTools.isKeyExisted(stub, key));
     }
 
-    public static void putStringState(final ChaincodeStub stub, final Key key, final String object) {
-        stub.putStringState(key.getCCKeyString(), object);
+    public static void putBytesState(final ChaincodeStub stub, final Key key, final Serde serde,
+            final BytesState object) {
+        stub.putState(key.getCCKeyString(), serde.serialize(object));
     }
 
     public static class Key {

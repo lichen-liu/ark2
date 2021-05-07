@@ -6,11 +6,12 @@ import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
+import app.policy.BytesState;
 import app.policy.ComparableByTimestamp;
 import app.policy.KeyGeneration;
 
 @DataType
-public final class Post implements KeyGeneration, ComparableByTimestamp {
+public final class Post implements KeyGeneration, ComparableByTimestamp, BytesState {
     @Property()
     private final String timestamp;
 
