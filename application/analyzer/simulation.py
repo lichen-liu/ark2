@@ -96,16 +96,19 @@ def plot_line_chart(database, tag, title, xlabel, ylabel, run_name=None):
 
 
 def init(parser):
-    parser.add_argument('csv', type=str, help='csv file')
+    parser.add_argument('reward', type=str, help='reward path for csv files')
     parser.add_argument('--tests', nargs='*', help='Tests to look at')
     parser.add_argument('--nogui', action='store_true', help='Turn off gui')
 
 
 def main(args):
+    users = [o for o in os.listdir(args.reward) if os.path.isfile(os.path.join(args.rewards, o))]
+    print(users)
+    assert False
+
     headers, database = parse_perf(args.csv)
 
-    if args.tests is not None:
-        database = dict(filter(lambda kv: kv[0] in args.tests, database.items()))
+
 
     print(headers)
     print(database.keys())
