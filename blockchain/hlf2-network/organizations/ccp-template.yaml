@@ -23,9 +23,7 @@ peers:
     grpcOptions:
       ssl-target-name-override: peer0.org${ORG}.example.com
       hostnameOverride: peer0.org${ORG}.example.com
-      grpc.max_receive_message_length: 104857600
-      grpc.max_send_message_length: 104857600
-      grpc.NettyChannelBuilderOption.maxInboundMessageSize: 104857600
+      grpc.NettyChannelBuilderOption.maxInboundMessageSize: '100000000'
 certificateAuthorities:
   ca.org${ORG}.example.com:
     url: https://localhost:${CAPORT}
