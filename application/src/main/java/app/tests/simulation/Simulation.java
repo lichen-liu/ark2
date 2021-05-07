@@ -26,11 +26,17 @@ public abstract class Simulation {
     public Simulation(final Contract contract) throws Exception {
         this.contract = contract;
         this.internalState = getState();
-        this.writer = new SimulationWriter(this.getClass().getSimpleName() + ".txt", this.internalState);
 
-        this.csvDirPath = Paths.get("benchmarks", "simulation", "rewards",
-                ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")));
+        final String timestamp = ZonedDateTime.now(ZoneOffset.UTC)
+                .format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+
+        this.csvDirPath = Paths.get("benchmarks", "simulation", "rewards", timestamp);
         this.csvDirPath.toFile().mkdirs();
+
+        final var stateDirPath = Paths.get("benchmarks", "simulation", timestamp);
+        stateDirPath.toFile().mkdirs();
+        this.writer = new SimulationWriter(stateDirPath.resolve(this.getClass().getSimpleName() + ".txt"),
+                this.internalState);
     }
 
     public String TriggerALike() {

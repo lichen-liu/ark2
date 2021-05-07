@@ -3,7 +3,7 @@ package app.tests.simulation;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -13,9 +13,9 @@ public class SimulationWriter {
     private FileWriter writer;
     private final SimulationState state;
 
-    public SimulationWriter(final String fileName, final SimulationState state) {
+    public SimulationWriter(final Path filePath, final SimulationState state) {
         try {
-            this.writer = getWriter(fileName);
+            this.writer = getWriter(filePath);
         } catch (final IOException e) {
             e.printStackTrace();
         }
@@ -67,13 +67,7 @@ public class SimulationWriter {
                         client.getPrivateKeyString(), prob.toString(), client.computeMyPointBalance())));
     }
 
-    public FileWriter getWriter(final String fileName) throws IOException {
-        // final String timestamp = ZonedDateTime.now(ZoneOffset.UTC)
-        // .format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-        final var path = Paths.get("benchmarks", "simulation");
-        path.toFile().mkdirs();
-
-        final var filePath = path.resolve(fileName);
+    public FileWriter getWriter(final Path filePath) throws IOException {
         final File f = filePath.toFile();
         if (f.createNewFile()) {
             System.out.println("File created: " + filePath.toString());
