@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import app.service.NamedService;
+import app.service.ServiceProvider;
 
 public class SimulationWriter {
     private FileWriter writer;
@@ -118,6 +120,10 @@ public class SimulationWriter {
             writer.append((String.format("Author Key: %s, Post Key: %s \n", hist.Item1, hist.Item2)));
         }
         writer.append("=== Post History Infomation End === \n");
+    }
+
+    public void writeLikerPercentile(){
+ 
     }
 
     public void finish() {
