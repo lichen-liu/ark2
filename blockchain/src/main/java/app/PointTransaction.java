@@ -1,5 +1,7 @@
 package app;
 
+import java.io.Serializable;
+
 import javax.annotation.Nullable;
 
 import com.owlike.genson.annotation.JsonProperty;
@@ -8,12 +10,14 @@ import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
+import app.policy.BytesState;
 import app.policy.ComparableByRelativeOrder;
 import app.policy.ComparableByTimestamp;
 import app.policy.KeyGeneration;
 
 @DataType
-public final class PointTransaction implements KeyGeneration, ComparableByTimestamp, ComparableByRelativeOrder {
+public final class PointTransaction
+        implements KeyGeneration, ComparableByTimestamp, ComparableByRelativeOrder, BytesState {
     @Property
     private final String timestamp;
 
@@ -52,7 +56,7 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
     private final Tracking[] payersPointTransactionTracking;
 
     @DataType
-    public static class Entry {
+    public static class Entry implements Serializable {
         @Property
         private final String userId;
 
@@ -75,7 +79,7 @@ public final class PointTransaction implements KeyGeneration, ComparableByTimest
     }
 
     @DataType
-    public static class Tracking {
+    public static class Tracking implements Serializable {
         /**
          * With respect to the payerEntry.getUserId(), the key to the most recent
          * spending PointTransaction (appears in payerEntry).

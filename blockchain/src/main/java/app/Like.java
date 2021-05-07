@@ -8,12 +8,13 @@ import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
 import org.hyperledger.fabric.shim.ledger.CompositeKey;
 
+import app.policy.BytesState;
 import app.policy.ComparableByRelativeOrder;
 import app.policy.ComparableByTimestamp;
 import app.policy.KeyGeneration;
 
 @DataType
-public final class Like implements KeyGeneration, ComparableByTimestamp, ComparableByRelativeOrder {
+public final class Like implements KeyGeneration, ComparableByTimestamp, ComparableByRelativeOrder, BytesState {
     @Property
     private final String timestamp;
 

@@ -2,6 +2,8 @@ package app;
 
 import java.util.Arrays;
 
+import com.owlike.genson.Genson;
+
 import org.hyperledger.fabric.contract.Context;
 import org.hyperledger.fabric.contract.ContractInterface;
 import org.hyperledger.fabric.contract.annotation.Contract;
@@ -14,6 +16,7 @@ import org.hyperledger.fabric.shim.ChaincodeException;
 
 @Default
 public final class ForumRepository implements ContractInterface {
+    private final Genson genson = new Genson();
     private final ForumRepositoryCC cc = new ForumRepositoryCC();
 
     @Transaction(intent = Transaction.TYPE.SUBMIT)
@@ -79,8 +82,10 @@ public final class ForumRepository implements ContractInterface {
             final String payerEntriesString, final String signature, final String reference,
             final String payeeEntriesString) {
         try {
-            return this.cc.publishNewPointTransaction(ctx, timestamp, issuerUserId, payerEntriesString, signature,
-                    reference, payeeEntriesString);
+            final var payerEntries = genson.deserialize(payerEntriesString, PointTransaction.Entry[].class);
+            final var payeeEntries = genson.deserialize(payeeEntriesString, PointTransaction.Entry[].class);
+            return this.cc.publishNewPointTransaction(ctx, timestamp, issuerUserId, payerEntries, signature, reference,
+                    payeeEntries);
         } catch (final Exception e) {
             throw new ChaincodeException(toString(e));
         }
