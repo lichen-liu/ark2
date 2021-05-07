@@ -2,6 +2,8 @@ package app.tests.simulation;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.tests.util.Logger;
+
 public class HateDislikerSimulationTests extends Simulation {
 
     public HateDislikerSimulationTests(final Contract contract) throws Exception {
@@ -9,13 +11,13 @@ public class HateDislikerSimulationTests extends Simulation {
     };
 
     @Override
-    public void runTest() {
+    public void runTest(final Logger logger) {
         // Run tests - Just do a lot of likes to the economic system
-        while (true) {
-            if (!TriggerADislike())
-                continue;
-            break;
-        }
+        String key = null;
+        do {
+            key = TriggerADislike();
+            logger.printResult(key);
+        } while (key == null);
     }
 
     @Override

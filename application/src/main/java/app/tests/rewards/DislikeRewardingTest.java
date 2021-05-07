@@ -28,14 +28,14 @@ public class DislikeRewardingTest implements Testable {
 
     @Override
     public boolean runTest(final Logger logger, final int currentIteration, final int numberIteration) {
-        onePostManyDislikeSimulation.runTest();
+        onePostManyDislikeSimulation.runTest(logger);
         return true;
     }
 
     @Override
     public boolean post(final Logger logger, final int currentIteration) {
-        //onePostManyDislikeSimulation.finish();
-        onePostManyDislikeSimulation.saveDisLikePercentile();
+        // onePostManyDislikeSimulation.finish();
+        onePostManyDislikeSimulation.saveDislikerPointBalanceHistory();
         return true;
     }
 }

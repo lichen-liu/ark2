@@ -6,10 +6,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import app.service.NamedService;
-import app.service.ServiceProvider;
 
 public class SimulationWriter {
     private FileWriter writer;
@@ -70,24 +68,19 @@ public class SimulationWriter {
     }
 
     public FileWriter getWriter(final String fileName) throws IOException {
+        // final String timestamp = ZonedDateTime.now(ZoneOffset.UTC)
+        // .format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+        final var path = Paths.get("benchmarks", "simulation");
+        path.toFile().mkdirs();
 
-        try {
-
-            var path = Paths.get("simulation");
-            path.toFile().mkdirs();
-
-            final File myObj = new File(String.format("simulation/%s.txt", fileName));
-            if (myObj.createNewFile()) {
-                System.out.println("File created: " + myObj.getName());
-            } else {
-                System.out.println("File already exists.");
-            }
-        } catch (final IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+        final var filePath = path.resolve(fileName);
+        final File f = filePath.toFile();
+        if (f.createNewFile()) {
+            System.out.println("File created: " + filePath.toString());
+        } else {
+            System.out.println("File already existed: " + filePath.toString());
         }
-
-        return new FileWriter(String.format("simulation/%s.txt", fileName));
+        return new FileWriter(f);
     }
 
     public void SetTitle(final String title) {
@@ -122,8 +115,8 @@ public class SimulationWriter {
         writer.append("=== Post History Infomation End === \n");
     }
 
-    public void writeLikerPercentile(){
- 
+    public void writeLikerPercentile() {
+
     }
 
     public void finish() {

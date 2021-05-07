@@ -2,6 +2,8 @@ package app.tests.simulation;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.tests.util.Logger;
+
 public class PostCompetitonSimulationTests extends Simulation {
 
     public PostCompetitonSimulationTests(final Contract contract) throws Exception {
@@ -9,7 +11,7 @@ public class PostCompetitonSimulationTests extends Simulation {
     };
 
     @Override
-    public void runTest() {
+    public void runTest(final Logger logger) {
         // Run tests - Just do a lot of likes to the economic system
         final var howManyLikesDoYouWantHuh = 20;
         int i = 0;

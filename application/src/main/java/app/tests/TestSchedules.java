@@ -138,7 +138,7 @@ public class TestSchedules {
     }
 
     public static TestSuite getDislikeRewardsTestSuite(final Contract contract) {
-        final int iterations =100;
+        final int iterations = 100;
 
         return new TestSuite() {
             @Override

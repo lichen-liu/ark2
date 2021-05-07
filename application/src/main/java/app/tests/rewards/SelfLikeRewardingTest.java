@@ -28,7 +28,7 @@ public class SelfLikeRewardingTest implements Testable {
 
     @Override
     public boolean runTest(final Logger logger, final int currentIteration, final int numberIteration) {
-        selfLikePostSimulationTests.runTest();
+        selfLikePostSimulationTests.runTest(logger);
         return true;
     }
 

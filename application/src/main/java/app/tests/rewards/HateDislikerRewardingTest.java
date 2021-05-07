@@ -28,7 +28,7 @@ public class HateDislikerRewardingTest implements Testable {
 
     @Override
     public boolean runTest(final Logger logger, final int currentIteration, final int numberIteration) {
-        hateDislikerSimulationTests.runTest();
+        hateDislikerSimulationTests.runTest(logger);
         return true;
     }
 
