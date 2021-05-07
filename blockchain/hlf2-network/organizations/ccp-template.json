@@ -30,8 +30,7 @@
             },
             "grpcOptions": {
                 "ssl-target-name-override": "peer0.org${ORG}.example.com",
-                "hostnameOverride": "peer0.org${ORG}.example.com",
-                "grpc.NettyChannelBuilderOption.maxInboundMessageSize": "100000000"
+                "hostnameOverride": "peer0.org${ORG}.example.com"
             }
         }
     },
