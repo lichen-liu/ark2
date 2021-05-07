@@ -7,12 +7,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.hyperledger.fabric.gateway.Contract;
 
 import app.service.ServiceProvider;
+import app.service.AnonymousAnalysisService.PointBalanceSnapshot;
 
 public abstract class Simulation {
     private final SimulationWriter writer;
@@ -82,72 +84,179 @@ public abstract class Simulation {
     };
 
     public void saveDisLikePercentile(){
-        final var dislikeHistory = internalState.getDislikeHistory();
+        final var disikeHistory = internalState.getDislikeHistory();
+        var percentiles = new ArrayList<Double> () {
+            {
+                add(0.01);
+                add(0.25);
+                add(0.5);
+            }
+        };
 
-        final var OneDisliker = (int) Math.ceil(dislikeHistory.size() * 0.01);
-        final var TwentyFiveDisliker  = (int) Math.ceil(dislikeHistory.size() * 0.25);
-        final var FiftyDisliker  = (int) Math.ceil(dislikeHistory.size() * 0.5);
+        var wealthEntries = new ArrayList<String> ();
+        var wealthDeltaEntries = new ArrayList<String> ();
+        String wealthHeader = "";
 
-        final List<String> OneLikerCsvData = ServiceProvider.createAnonymousAnalysisService(this.contract)
-                .analyzePointBalanceHistoryByUserId(dislikeHistory.get(OneDisliker).Item1).stream()
-                .map(snapshot -> snapshot.toCsvRow()).collect(Collectors.toList());
+        for(var percentile : percentiles) {
+            var percentileLiker = (int) Math.ceil(disikeHistory.size() * percentile);
+            var likerCsvData = ServiceProvider.createAnonymousAnalysisService(this.contract)
+            .analyzePointBalanceHistoryByUserId(disikeHistory.get(percentileLiker).Item1);
 
-        final List<String> TwentyFiveCsvData = ServiceProvider.createAnonymousAnalysisService(this.contract)
-                .analyzePointBalanceHistoryByUserId(dislikeHistory.get(TwentyFiveDisliker).Item1).stream()
-                .map(snapshot -> snapshot.toCsvRow()).collect(Collectors.toList());
+            var wealthDatas = readWealth(likerCsvData);
+            var wealthDeltaDatas = readWealthDelta(likerCsvData);
 
-        final List<String> FiftyLikerCsvData = ServiceProvider.createAnonymousAnalysisService(this.contract)
-                .analyzePointBalanceHistoryByUserId(dislikeHistory.get(FiftyDisliker).Item1).stream()
-                .map(snapshot -> snapshot.toCsvRow()).collect(Collectors.toList());
+            if(wealthHeader.isEmpty()){
+                wealthHeader = percentile.toString() + "PercentileUser";
+            } else {
+                wealthHeader += "," + percentile.toString() + "PercentileUser";
+            }   
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
-        LocalDateTime now = LocalDateTime.now();  
+            if(wealthEntries.size() == 0){
+                for(var wealthData : wealthDatas){
+                    wealthEntries.add(wealthData);
+                }
+            } else {
+                if(wealthDatas.size() < wealthEntries.size()){
+                    var gap = wealthEntries.size() - wealthDatas.size();
+                    while(gap > 0) wealthDatas.add(0, "0");
+                }
 
-        var path = prepareDirs();
+                for(int i=0; i < wealthDatas.size() ; ++i){
+                    wealthEntries.set(i, wealthEntries.get(i) + "," + wealthDatas.get(i));
+                }
+            }
 
-        var fileName = String.format("OnePercDislikerCsvData_%s.csv",dtf.format(now));
-        saveCSV(path, fileName, OneLikerCsvData);
+            if(wealthDeltaEntries.size() == 0){
+                for(var wealthDeltaData : wealthDeltaDatas){
+                    wealthDeltaEntries.add(wealthDeltaData);
+                }
+            } else {
+                if(wealthDeltaDatas.size() < wealthDeltaEntries.size()){
+                    var gap = wealthDeltaEntries.size() - wealthDeltaDatas.size();
+                    while(gap > 0) wealthDatas.add(0, "0");
+                }
 
-        fileName = String.format("TwentyFivePercDislikerCsvData_%s.csv",dtf.format(now));
-        saveCSV(path, fileName, TwentyFiveCsvData);
-
-        fileName = String.format("FiftyPercDislikerCsvData_%s.csv",dtf.format(now));
-        saveCSV(path, fileName, FiftyLikerCsvData);
-    }
-
-    public void saveLikePercentile(){
-        final var likeHistory = internalState.getLikeHistory();
-
-        final var OneLiker = (int) Math.ceil(likeHistory.size() * 0.01);
-        final var TwentyFiveLiker = (int) Math.ceil(likeHistory.size() * 0.25);
-        final var FiftyLiker = (int) Math.ceil(likeHistory.size() * 0.5);
-
-        final List<String> OneLikerCsvData = ServiceProvider.createAnonymousAnalysisService(this.contract)
-                .analyzePointBalanceHistoryByUserId(likeHistory.get(OneLiker).Item1).stream()
-                .map(snapshot -> snapshot.toCsvRow()).collect(Collectors.toList());
-
-        final List<String> TwentyFiveCsvData = ServiceProvider.createAnonymousAnalysisService(this.contract)
-                .analyzePointBalanceHistoryByUserId(likeHistory.get(TwentyFiveLiker).Item1).stream()
-                .map(snapshot -> snapshot.toCsvRow()).collect(Collectors.toList());
-
-        final List<String> FiftyLikerCsvData = ServiceProvider.createAnonymousAnalysisService(this.contract)
-                .analyzePointBalanceHistoryByUserId(likeHistory.get(FiftyLiker).Item1).stream()
-                .map(snapshot -> snapshot.toCsvRow()).collect(Collectors.toList());
+                for(int i=0; i < wealthDeltaDatas.size() ; ++i){
+                    wealthDeltaEntries.set(i, wealthDeltaEntries.get(i) + "," + wealthDeltaDatas.get(i));
+                }
+            }
+        }
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss");  
         LocalDateTime now = LocalDateTime.now();  
         var datePostfix = dtf.format(now);
-
         var path = prepareDirs();
 
-        var fileName = String.format("OnePercLikerCsvData_%s.csv",datePostfix);
-        saveCSV(path.resolve(fileName), fileName, OneLikerCsvData);
+        wealthEntries.add(0, wealthHeader);
+        wealthDeltaEntries.add(0, wealthHeader);
 
-        fileName = String.format("TwentyFivePercLikerCsvData_%s.csv",datePostfix);
-        saveCSV(path.resolve(fileName), fileName, TwentyFiveCsvData);
+        var fileName = String.format("Disliker_Wealth_%s.csv",datePostfix);
+        saveCSV(path.resolve(fileName), wealthEntries);
 
-        fileName = String.format("FiftyPercLikerCsvData_%s.csv",datePostfix);
-        saveCSV(path.resolve(fileName), fileName, FiftyLikerCsvData);
+        fileName = String.format("Disliker_WealthDelta_%s.csv",datePostfix);
+        saveCSV(path.resolve(fileName), wealthDeltaEntries);
+    }
+
+    public void saveLikePercentile(){
+        final var likeHistory = internalState.getLikeHistory();
+        var percentiles = new ArrayList<Double> () {
+            {
+                add(0.01);
+                add(0.10);
+                add(0.25);
+                add(0.35);
+                add(0.5);
+            }
+        };
+
+        var wealthEntries = new ArrayList<String> ();
+        var wealthDeltaEntries = new ArrayList<String> ();
+        String wealthHeader = "";
+
+        for(var percentile : percentiles) {
+            var percentileLiker = (int) Math.ceil(likeHistory.size() * percentile);
+            var likerCsvData = ServiceProvider.createAnonymousAnalysisService(this.contract)
+            .analyzePointBalanceHistoryByUserId(likeHistory.get(percentileLiker).Item1);
+
+            var wealthDatas = readWealth(likerCsvData);
+            var wealthDeltaDatas = readWealthDelta(likerCsvData);
+
+            if(wealthHeader.isEmpty()){
+                wealthHeader = percentile.toString() + "PercentileUser";
+            } else {
+                wealthHeader += "," + percentile.toString() + "PercentileUser";
+            }   
+
+            if(wealthEntries.size() == 0){
+                for(var wealthData : wealthDatas){
+                    wealthEntries.add(wealthData);
+                }
+            } else {
+                if(wealthDatas.size() < wealthEntries.size()){
+                    var gap = wealthEntries.size() - wealthDatas.size();
+                    while(gap > 0)  {
+                        wealthDatas.add(0, "0.0");
+                        -- gap;
+                    }
+                }
+
+                for(int i=0; i < wealthEntries.size() ; ++i){
+                    wealthEntries.set(i, wealthEntries.get(i) + "," + wealthDatas.get(i));
+                }
+            }
+
+            if(wealthDeltaEntries.size() == 0){
+                for(var wealthDeltaData : wealthDeltaDatas){
+                    wealthDeltaEntries.add(wealthDeltaData);
+                }
+            } else {
+                if(wealthDeltaDatas.size() < wealthDeltaEntries.size()){
+                    var gap = wealthDeltaEntries.size() - wealthDeltaDatas.size();
+                    while(gap > 0) {
+                        wealthDeltaDatas.add(0, "0.0");
+                        -- gap;
+                    }
+                }
+
+                for(int i=0; i < wealthDeltaEntries.size() ; ++i){
+                    wealthDeltaEntries.set(i, wealthDeltaEntries.get(i) + "," + wealthDeltaDatas.get(i));
+                }
+            }
+        }
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss");  
+        LocalDateTime now = LocalDateTime.now();  
+        var datePostfix = dtf.format(now);
+        var path = prepareDirs();
+
+        wealthEntries.add(0, wealthHeader);
+        wealthDeltaEntries.add(0, wealthHeader);
+
+        var fileName = String.format("Liker_Wealth_%s.csv",datePostfix);
+        saveCSV(path.resolve(fileName), wealthEntries);
+
+        fileName = String.format("Liker_WealthDelta_%s.csv",datePostfix);
+        saveCSV(path.resolve(fileName), wealthDeltaEntries);
+    }
+
+    private List<String> readWealth(List<PointBalanceSnapshot> snapshots){
+        return snapshots
+        .stream()
+        .map(snapshot -> {
+            var cols = snapshot.toCsvRow().split(",");
+            System.out.println(snapshot.toCsvRow());
+            return String.format(cols[3]);
+        }).collect(Collectors.toList());
+    }
+
+    private List<String> readWealthDelta(List<PointBalanceSnapshot> snapshots){
+        return snapshots
+        .stream()
+        .map(snapshot -> {
+            var cols = snapshot.toCsvRow().split(",");
+            System.out.println(snapshot.toCsvRow());
+            return String.format(cols[4]);
+        }).collect(Collectors.toList());
     }
 
     private Path prepareDirs(){
@@ -157,13 +266,14 @@ public abstract class Simulation {
         return path;
     }
 
-    private void saveCSV(Path path, String header, List<String> entries){
+    private void saveCSV(Path path, List<String> entries){
         try {
 
             FileWriter csvWriter = new FileWriter(path.toString());
-            csvWriter.append(header);
+
             for(var entry : entries){
                 csvWriter.append(entry);
+                csvWriter.append(System.getProperty( "line.separator" ));
             }
 
             csvWriter.flush();

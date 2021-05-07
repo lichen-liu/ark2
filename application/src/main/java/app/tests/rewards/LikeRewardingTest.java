@@ -43,7 +43,7 @@ public class LikeRewardingTest implements Testable {
 
     @Override
     public boolean post(final Logger logger, final int currentIteration) {
-        onePostManyLikeSimulation.finish();
+        //onePostManyLikeSimulation.finish();
         onePostManyLikeSimulation.saveLikePercentile();
         return true;
     }

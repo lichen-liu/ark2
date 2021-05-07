@@ -34,7 +34,7 @@ public class DislikeRewardingTest implements Testable {
 
     @Override
     public boolean post(final Logger logger, final int currentIteration) {
-        onePostManyDislikeSimulation.finish();
+        //onePostManyDislikeSimulation.finish();
         onePostManyDislikeSimulation.saveDisLikePercentile();
         return true;
     }
