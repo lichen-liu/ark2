@@ -28,7 +28,7 @@ public abstract class Simulation {
         this.internalState = getState();
         this.writer = new SimulationWriter(this.getClass().getSimpleName() + ".txt", this.internalState);
 
-        this.csvDirPath = Paths.get("benchmarks", "simulation", "reward",
+        this.csvDirPath = Paths.get("benchmarks", "simulation", "rewards",
                 ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")));
         this.csvDirPath.toFile().mkdirs();
     }
