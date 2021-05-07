@@ -119,7 +119,6 @@ def main(args):
         database = dict(filter(lambda kv: kv[0] in args.tests, database.items()))
 
     print(headers)
-    print(database.keys())
     for dataline_name, latency_dataline in database.items():
         print(dataline_name, len(latency_dataline))
 
