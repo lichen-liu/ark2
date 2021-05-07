@@ -18,7 +18,7 @@ public class PointTransactionsFetchingTest extends FetchingByUserKeyTestTemplate
                 isValid = false;
             }
         }
-        logger.printResult(isValid ? "Valid" : "Invalid");
+        logger.printResult(userPointTransactionKeys.length + ". " + (isValid ? "Valid" : "Invalid"));
 
         return true;
     }

@@ -89,7 +89,7 @@ public interface AnonymousService extends Repository {
 
     public default PointTransaction fetchPointTransactionByPointTransactionKey(final String key) {
         try {
-            return getPointTransactionRepository().selectObjectsByKeys(key).get(0);
+            return getPointTransactionRepository().selectObjectByKey(key);
         } catch (final Exception e) {
         }
         return null;
@@ -97,7 +97,7 @@ public interface AnonymousService extends Repository {
 
     public default Post fetchPostByPostKey(final String key) {
         try {
-            return getPostRepository().selectObjectsByKeys(key).get(0);
+            return getPostRepository().selectObjectByKey(key);
         } catch (final Exception e) {
         }
         return null;
@@ -105,7 +105,7 @@ public interface AnonymousService extends Repository {
 
     public default Like fetchLikeByLikeKey(final String likeKey) {
         try {
-            return getLikeRepository().selectObjectsByKeys(likeKey).get(0);
+            return getLikeRepository().selectObjectByKey(likeKey);
         } catch (final Exception e) {
         }
         return null;
@@ -113,7 +113,7 @@ public interface AnonymousService extends Repository {
 
     public default Dislike fetchDislikeByDislikeKey(final String dislikeKey) {
         try {
-            return getDislikeRepository().selectObjectsByKeys(dislikeKey).get(0);
+            return getDislikeRepository().selectObjectByKey(dislikeKey);
         } catch (final Exception e) {
         }
         return null;

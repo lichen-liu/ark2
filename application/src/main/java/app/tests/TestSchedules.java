@@ -44,8 +44,8 @@ import app.util.Cryptography;
 
 public class TestSchedules {
     public static TestSuite getPerformanceTestSuite(final Contract contract, final Path performanceFileDir) {
-        final int iterations = 100;
-        final int publishingIterationMultipler = 5;
+        final int iterations = 50;
+        final int publishingIterationMultipler = 12;
         return new SampleTestSuite("Performance") {
             @Override
             protected int defaultIterations() {
@@ -105,9 +105,9 @@ public class TestSchedules {
 
                 performanceFileDir.toFile().mkdirs();
                 final String timestamp = ZonedDateTime.now(ZoneOffset.UTC)
-                        .format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+                        .format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
                 final Path filePath = Paths.get(performanceFileDir.toString(),
-                        "perf_" + iterations + "_" + timestamp + ".csv");
+                        "perf_" + iterations + "x" + publishingIterationMultipler + "_" + timestamp + ".csv");
                 try {
                     Files.write(filePath, csvData, StandardCharsets.UTF_8);
                     System.out.println("Successfully wrote performance results into " + filePath.toString());

@@ -20,7 +20,7 @@ public class DislikesFetchingTest extends FetchingByPostKeyTestTemplate {
                 isValid = false;
             }
         }
-        logger.printResult(isValid ? "Valid" : "Invalid");
+        logger.printResult(postDislikeKeys.length + ". " + (isValid ? "Valid" : "Invalid"));
 
         return true;
     }

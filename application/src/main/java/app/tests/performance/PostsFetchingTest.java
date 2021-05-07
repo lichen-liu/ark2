@@ -18,7 +18,7 @@ public class PostsFetchingTest extends FetchingByUserKeyTestTemplate {
                 isValid = false;
             }
         }
-        logger.printResult(isValid ? "Valid" : "Invalid");
+        logger.printResult(userPostKeys.length + ". " + (isValid ? "Valid" : "Invalid"));
 
         return true;
     }

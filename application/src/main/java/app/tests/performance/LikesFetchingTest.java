@@ -20,7 +20,7 @@ public class LikesFetchingTest extends FetchingByPostKeyTestTemplate {
                 isValid = false;
             }
         }
-        logger.printResult(isValid ? "Valid" : "Invalid");
+        logger.printResult(postLikeKeys.length + ". " + (isValid ? "Valid" : "Invalid"));
 
         return true;
     }

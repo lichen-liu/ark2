@@ -47,16 +47,18 @@ public abstract class ReadableRepository<T> {
         return usersPostKeys.toArray(String[]::new);
     }
 
+    public T selectObjectByKey(final String key)
+            throws ContractException, JsonParseException, JsonMappingException, IOException {
+        final String raw = new String(contract.evaluateTransaction(getObjectByKeyQuery(), key));
+        return om.readValue(raw, dataType);
+    }
+
     public List<T> selectObjectsByKeys(final String... keys)
             throws ContractException, JsonParseException, JsonMappingException, IOException {
-
         final var objects = new ArrayList<T>();
         for (final var key : keys) {
-            final String raw = new String(contract.evaluateTransaction(getObjectByKeyQuery(), key));
-            final T data = om.readValue(raw, dataType);
-            objects.add(data);
+            objects.add(selectObjectByKey(key));
         }
-
         return objects;
     }
 
