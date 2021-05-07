@@ -96,16 +96,16 @@ class App {
 
     private void test() {
         TestSuite testSuite = null;
-        final int choice = 0;
+        final int choice = 2;
         switch (choice) {
             case 0:
                 testSuite = TestSchedules.getPerformanceTestSuite(contract, Paths.get("benchmarks", "perf"));
                 break;
             case 1:
-                testSuite = TestSchedules.getHateDisLikeRewardsTestSuite(contract);
+                testSuite = TestSchedules.getDislikeRewardsTestSuite(contract);
                 break;
             case 2:
-                testSuite = TestSchedules.getSelfLikeRewardsTestSuite(contract);
+                testSuite = TestSchedules.getLikeRewardsTestSuite(contract);
                 break;
         }
         testSuite.launchTests();

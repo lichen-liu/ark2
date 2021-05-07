@@ -1,5 +1,9 @@
 package app.tests.rewards;
 
+import java.io.File;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,25 +44,7 @@ public class LikeRewardingTest implements Testable {
     @Override
     public boolean post(final Logger logger, final int currentIteration) {
         onePostManyLikeSimulation.finish();
-
-        final var likeHistory = onePostManyLikeSimulation.internalState.getLikeHistory();
-
-        final var OneLiker = (int) Math.ceil(likeHistory.size() * 0.01);
-        final var TwentyFiveLiker = (int) Math.ceil(likeHistory.size() * 0.25);
-        final var FiftyLiker = (int) Math.ceil(likeHistory.size() * 0.5);
-
-        final List<String> OneLikerCsvData = ServiceProvider.createAnonymousAnalysisService(this.contract)
-                .analyzePointBalanceHistoryByUserId(likeHistory.get(OneLiker).Item1).stream()
-                .map(snapshot -> snapshot.toCsvRow()).collect(Collectors.toList());
-
-        final List<String> TwentyFiveCsvData = ServiceProvider.createAnonymousAnalysisService(this.contract)
-                .analyzePointBalanceHistoryByUserId(likeHistory.get(TwentyFiveLiker).Item1).stream()
-                .map(snapshot -> snapshot.toCsvRow()).collect(Collectors.toList());
-
-        final List<String> FiftyLikerCsvData = ServiceProvider.createAnonymousAnalysisService(this.contract)
-                .analyzePointBalanceHistoryByUserId(likeHistory.get(FiftyLiker).Item1).stream()
-                .map(snapshot -> snapshot.toCsvRow()).collect(Collectors.toList());
-
+        onePostManyLikeSimulation.saveLikePercentile();
         return true;
     }
 }
