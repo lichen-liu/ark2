@@ -33,7 +33,7 @@ public abstract class Simulation {
         this.csvDirPath = Paths.get("benchmarks", "simulation", "rewards", timestamp);
         this.csvDirPath.toFile().mkdirs();
 
-        final var stateDirPath = Paths.get("benchmarks", "simulation", timestamp);
+        final var stateDirPath = Paths.get("benchmarks", "simulation", "states", timestamp);
         stateDirPath.toFile().mkdirs();
         this.writer = new SimulationWriter(stateDirPath.resolve(this.getClass().getSimpleName() + ".txt"),
                 this.internalState);
