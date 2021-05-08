@@ -50,6 +50,11 @@ gradle runTest
 python -m analyzer performance benchmarks/perf/perf_*.csv
 ```
 
+### To analyze SIMULATION TEST reward modelling
+```
+python -m analyzer simulation benchmarks/simulation/rewards/*/
+```
+
 # Project Blockchain
 Hyperledger Fabric blockchain and chaincodes
 
