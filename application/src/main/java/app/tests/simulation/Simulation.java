@@ -32,7 +32,7 @@ public abstract class Simulation {
 
         final String simulationName = this.getClass().getSimpleName().toLowerCase();
 
-        this.csvDirPath = Paths.get("benchmarks", "simulation", "rewards", simulationName + +"_" + timestamp);
+        this.csvDirPath = Paths.get("benchmarks", "simulation", "rewards", simulationName + "_" + timestamp);
         this.csvDirPath.toFile().mkdirs();
 
         final var stateDirPath = Paths.get("benchmarks", "simulation", "states");
