@@ -34,7 +34,7 @@ public class RealisticLikeDislikeSimulation extends Simulation {
         super(contract);
     };
 
-    public List<String> getInterestingAuthorKeys(final int numberTopAuthors, final int numberLowAuthors) {
+    public List<String> getAuthorKeysByPointBalance(final int numberTopAuthors, final int numberLowAuthors) {
         final AnonymousService service = ServiceProvider.createAnonymousService(this.getContract());
         final LinkedList<SimulationState.Tuple<String, Double>> sortedAuthors = super.getPostHistory().stream()
                 .map(authorPost -> {

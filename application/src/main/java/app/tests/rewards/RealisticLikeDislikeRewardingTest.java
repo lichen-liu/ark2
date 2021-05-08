@@ -1,5 +1,7 @@
 package app.tests.rewards;
 
+import java.util.List;
+
 import org.hyperledger.fabric.gateway.Contract;
 
 import app.tests.Testable;
@@ -34,14 +36,9 @@ public class RealisticLikeDislikeRewardingTest implements Testable {
     @Override
     public boolean post(final Logger logger, final int currentIteration) {
         // realisticLikeDislikeSimulation.finish();
-
-        final var authorKeys = realisticLikeDislikeSimulation.getInterestingAuthorKeys(3, 3);
-        int count = 0;
-        for (final var authorKey : authorKeys) {
-            realisticLikeDislikeSimulation.saveCSVUserPointBalanceHistory("author" + count + ".csv", authorKey);
-            count++;
-        }
-
+        realisticLikeDislikeSimulation.saveAuthorPointBalanceHistory(List.of(2, 7, 12, 17));
+        realisticLikeDislikeSimulation.saveLikerPointBalanceHistory(List.of(1, 6, 11, 16));
+        realisticLikeDislikeSimulation.saveDislikerPointBalanceHistory(List.of(0, 5, 10, 15));
         realisticLikeDislikeSimulation.saveWorldPointBalanceHistory();
         return true;
     }
