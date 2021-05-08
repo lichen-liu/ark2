@@ -122,7 +122,7 @@ public abstract class Simulation {
     public final void finish() {
         System.out.println("Test finished, writing benchmark states into the disk...");
         try {
-            writer.SetTitle(this.getClass().getSimpleName());
+            writer.setTitle(this.getClass().getSimpleName());
             writer.saveAuthors(internalState.authors, internalState.authorProbMap);
             writer.saveLikers(internalState.likers, internalState.likerProbMap);
             writer.savePosts(internalState.posts, internalState.postProbMap);

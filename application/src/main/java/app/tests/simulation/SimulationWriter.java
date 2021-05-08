@@ -77,7 +77,7 @@ public class SimulationWriter {
         return new FileWriter(f);
     }
 
-    public void SetTitle(final String title) {
+    public void setTitle(final String title) {
         try {
             writer.append(String.format("=== Benchmark: %s === \n", title));
         } catch (final IOException e) {
