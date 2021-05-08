@@ -97,9 +97,10 @@ public abstract class Simulation {
 
     public void saveDislikerPointBalanceHistory() {
         final var dislikeHistory = internalState.getDislikeHistory();
-        final var percentiles = List.of(1, 25, 50);
+        final var percentiles = List.of(1, 5, 10, 25, 50);
         for (final var percentile : percentiles) {
-            final var percentileUser = (int) Math.ceil(dislikeHistory.size() * percentile / 100.0);
+            final var percentileUser = Math.min(dislikeHistory.size() - 1,
+                    Math.max(0, (int) (dislikeHistory.size() * percentile / 100.0) - 1));
 
             final String fileName = String.format("disliker_%dpercentile.csv", percentile);
             saveCSVUserPointBalanceHistory(this.csvDirPath.resolve(fileName), dislikeHistory.get(percentileUser).Item1);
@@ -108,11 +109,12 @@ public abstract class Simulation {
 
     public void saveLikerPointBalanceHistory() {
         final var likeHistory = internalState.getLikeHistory();
-        final var percentiles = List.of(1, 25, 50);
+        final var percentiles = List.of(1, 5, 10, 25, 50);
         for (final var percentile : percentiles) {
-            final var percentileUser = (int) Math.ceil(likeHistory.size() * percentile / 100.0);
+            final var percentileUser = Math.min(likeHistory.size() - 1,
+                    Math.max(0, (int) (likeHistory.size() * percentile / 100.0) - 1));
 
-            final String fileName = String.format("disliker_%dpercentile.csv", percentile);
+            final String fileName = String.format("liker_%dpercentile.csv", percentile);
             saveCSVUserPointBalanceHistory(this.csvDirPath.resolve(fileName), likeHistory.get(percentileUser).Item1);
         }
     }
