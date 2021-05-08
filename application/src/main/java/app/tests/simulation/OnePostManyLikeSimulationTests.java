@@ -2,6 +2,7 @@ package app.tests.simulation;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.tests.simulation.SimulationState.Tuple;
 import app.tests.util.Logger;
 
 public class OnePostManyLikeSimulationTests extends Simulation {
@@ -33,6 +34,8 @@ public class OnePostManyLikeSimulationTests extends Simulation {
 
         if (thepost == null)
             throw new Exception("post is null");
+
+        state.postHistory.add(new Tuple<String, String>(state.authors.get(0).getPublicKeyString(), thepost));
 
         state.posts.add(thepost);
 

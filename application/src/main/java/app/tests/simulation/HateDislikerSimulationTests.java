@@ -2,6 +2,7 @@ package app.tests.simulation;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.tests.simulation.SimulationState.Tuple;
 import app.tests.util.Logger;
 
 public class HateDislikerSimulationTests extends Simulation {

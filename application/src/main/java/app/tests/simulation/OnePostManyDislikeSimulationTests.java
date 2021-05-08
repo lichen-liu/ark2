@@ -2,6 +2,7 @@ package app.tests.simulation;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.tests.simulation.SimulationState.Tuple;
 import app.tests.util.Logger;
 
 public class OnePostManyDislikeSimulationTests extends Simulation {
@@ -29,7 +30,10 @@ public class OnePostManyDislikeSimulationTests extends Simulation {
         state.authors = state.createClients(1);
         state.likers = state.createClients(1000);
 
-        state.posts.add(state.authors.get(0).publishNewPost("post1"));
+        var thepost = state.authors.get(0).publishNewPost("post1");
+        state.posts.add(thepost);
+
+        state.postHistory.add(new Tuple<String, String>(state.authors.get(0).getPublicKeyString(), thepost));
 
         state.postProbMap.put(state.posts.get(0), 100);
 

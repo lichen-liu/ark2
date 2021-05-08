@@ -58,12 +58,12 @@ public class SimulationState {
     }
 
     public void insertDislikeHistory(final String disliker, final String post) {
-        this.likeHistory.add(new Tuple<String, String>(disliker, post));
+        this.dislikeHistory.add(new Tuple<String, String>(disliker, post));
 
     }
 
     public void insertPostHistory(final String author, final String post) {
-        this.likeHistory.add(new Tuple<String, String>(author, post));
+        this.postHistory.add(new Tuple<String, String>(author, post));
     }
 
     protected List<NamedService> createClients(final int clientNum)
