@@ -115,6 +115,8 @@ class App {
                 put(0, TestSchedules.getPerformanceTestSuite(contract, Paths.get("benchmarks", "perf")));
                 put(1, TestSchedules.getLikeRewardsTestSuite(contract));
                 put(2, TestSchedules.getDislikeRewardsTestSuite(contract));
+                put(3, TestSchedules.getSelfLikeRewardsTestSuite(contract));
+                put(4, TestSchedules.getHateDisLikeRewardsTestSuite(contract));
             }
         };
 

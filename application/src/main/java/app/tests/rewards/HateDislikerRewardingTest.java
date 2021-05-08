@@ -1,5 +1,7 @@
 package app.tests.rewards;
 
+import java.util.List;
+
 import org.hyperledger.fabric.gateway.Contract;
 
 import app.tests.Testable;
@@ -35,6 +37,9 @@ public class HateDislikerRewardingTest implements Testable {
     @Override
     public boolean post(final Logger logger, final int currentIteration) {
         hateDislikerSimulationTests.finish();
+        hateDislikerSimulationTests.saveAuthorPointBalanceHistory(List.of(0));
+        hateDislikerSimulationTests.saveDislikerPointBalanceHistory(List.of(0));
+        hateDislikerSimulationTests.saveWorldPointBalanceHistory();
         return true;
     }
 }

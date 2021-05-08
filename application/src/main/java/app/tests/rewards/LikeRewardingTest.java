@@ -37,7 +37,7 @@ public class LikeRewardingTest implements Testable {
 
     @Override
     public boolean post(final Logger logger, final int currentIteration) {
-        // onePostManyLikeSimulation.finish();
+        onePostManyLikeSimulation.finish();
         onePostManyLikeSimulation.saveLikerPointBalanceHistory(List.of(1, 5, 10, 25, 50));
         onePostManyLikeSimulation.saveAuthorPointBalanceHistory(List.of(0));
         onePostManyLikeSimulation.saveWorldPointBalanceHistory();
