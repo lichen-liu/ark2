@@ -2,12 +2,13 @@ package app.tests.simulation;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.tests.simulation.SimulationState.Policy;
 import app.tests.simulation.SimulationState.Tuple;
 import app.tests.util.Logger;
 
 public class OnePostManyDislikeSimulationTests extends Simulation {
     public OnePostManyDislikeSimulationTests(final Contract contract) throws Exception {
-        super(contract);
+        super(contract, Policy.RoundRobin);
     };
 
     @Override
