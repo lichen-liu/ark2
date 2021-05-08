@@ -36,7 +36,7 @@ public class DislikeRewardingTest implements Testable {
 
     @Override
     public boolean post(final Logger logger, final int currentIteration) {
-        onePostManyDislikeSimulation.finish();
+        // onePostManyDislikeSimulation.finish();
         onePostManyDislikeSimulation.saveDislikerPointBalanceHistory(List.of(1, 5, 10, 25, 50));
         onePostManyDislikeSimulation.saveAuthorPointBalanceHistory(List.of(0));
         onePostManyDislikeSimulation.saveWorldPointBalanceHistory();
