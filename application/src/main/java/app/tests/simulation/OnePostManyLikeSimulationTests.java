@@ -2,6 +2,7 @@ package app.tests.simulation;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.tests.simulation.SimulationState.Policy;
 import app.tests.simulation.SimulationState.Tuple;
 import app.tests.util.Logger;
 
@@ -24,7 +25,7 @@ public class OnePostManyLikeSimulationTests extends Simulation {
     @Override
     protected SimulationState getState() throws Exception {
 
-        final var state = new SimulationState(this.contract);
+        final var state = new SimulationState(this.contract, Policy.RoundRobin);
 
         // Build forum state
         state.authors = state.createClients(1);
@@ -39,10 +40,10 @@ public class OnePostManyLikeSimulationTests extends Simulation {
 
         state.posts.add(thepost);
 
-        state.postProbMap.put(state.posts.get(0), 100);
+        state.postProbMap.put(state.posts.get(0), 0);
 
         for (final var liker : state.likers) {
-            state.likerProbMap.put(liker, 1);
+            state.likerProbMap.put(liker, 0);
         }
 
         final var it = state.postProbMap.entrySet().iterator();

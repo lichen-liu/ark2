@@ -23,9 +23,9 @@ public class SimulationState {
     protected HashMap<NamedService, Integer> likerProbMap;
     protected HashMap<String, Integer> postProbMap;
 
-    protected ProbabilityPool<NamedService> authorPool;
-    protected ProbabilityPool<NamedService> likerPool;
-    protected ProbabilityPool<String> postPool;
+    protected Pool<NamedService> authorPool;
+    protected Pool<NamedService> likerPool;
+    protected Pool<String> postPool;
 
     protected List<Tuple<String, String>> likeHistory;
     protected List<Tuple<String, String>> dislikeHistory;
@@ -34,6 +34,10 @@ public class SimulationState {
     private final Contract contract;
 
     public SimulationState(final Contract contract) throws IOException {
+        this(contract, Policy.ProbBased);
+    }
+
+    public SimulationState(final Contract contract, Policy policy) throws IOException {
         this.authors = new ArrayList<NamedService>();
         this.likers = new ArrayList<NamedService>();
         this.posts = new ArrayList<String>();
@@ -42,10 +46,20 @@ public class SimulationState {
         this.likerProbMap = new HashMap<NamedService, Integer>();
         this.postProbMap = new HashMap<String, Integer>();
 
-        this.authorPool = new ProbabilityPool<NamedService>();
-        this.likerPool = new ProbabilityPool<NamedService>();
-        this.postPool = new ProbabilityPool<String>();
-
+        switch (policy) {
+            case RoundRobin:
+                this.authorPool = new RoundRobinPool<NamedService>();
+                this.likerPool = new RoundRobinPool<NamedService>();
+                this.postPool = new RoundRobinPool<String>();
+            break;
+            case ProbBased:
+                this.authorPool = new ProbabilityPool<NamedService>();
+                this.likerPool = new ProbabilityPool<NamedService>();
+                this.postPool = new ProbabilityPool<String>();
+            break;
+            default:
+        }
+      
         this.likeHistory = new ArrayList<Tuple<String, String>>();
         this.dislikeHistory = new ArrayList<Tuple<String, String>>();
         this.postHistory = new ArrayList<Tuple<String, String>>();
@@ -89,7 +103,25 @@ public class SimulationState {
         return postHistory;
     }
 
-    static class ProbabilityPool<T> {
+    static class RoundRobinPool<T> implements Pool<T>{
+        private final List<T> items;
+        private int index = 0;
+
+        RoundRobinPool() {
+            this.items = new ArrayList<T>();
+        }
+
+        public void addItem(final T item, final Integer prob) {
+            items.add(item);
+        }
+
+        public T draw() {
+           var item = items.get(index++);
+           index = index % items.size();
+           return item;
+        }
+    }
+    static class ProbabilityPool<T> implements Pool<T>{
         private final List<Tuple<T, Integer>> probAccum;
         private final Random random = new Random();
 
@@ -137,5 +169,10 @@ public class SimulationState {
 
         public T Item1;
         public M Item2;
+    }
+
+    public enum Policy {
+        ProbBased,
+        RoundRobin,
     }
 }
