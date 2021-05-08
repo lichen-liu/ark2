@@ -1,5 +1,7 @@
 package app.tests.rewards;
 
+import java.util.List;
+
 import org.hyperledger.fabric.gateway.Contract;
 
 import app.tests.Testable;
@@ -35,6 +37,8 @@ public class SelfLikeRewardingTest implements Testable {
     @Override
     public boolean post(final Logger logger, final int currentIteration) {
         selfLikePostSimulationTests.finish();
+        selfLikePostSimulationTests.saveAuthorPointBalanceHistory(List.of(0));
+        selfLikePostSimulationTests.saveWorldPointBalanceHistory();
         return true;
     }
 }
