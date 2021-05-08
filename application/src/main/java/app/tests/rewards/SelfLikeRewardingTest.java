@@ -36,7 +36,7 @@ public class SelfLikeRewardingTest implements Testable {
 
     @Override
     public boolean post(final Logger logger, final int currentIteration) {
-        selfLikePostSimulationTests.finish();
+        // selfLikePostSimulationTests.finish();
         selfLikePostSimulationTests.saveAuthorPointBalanceHistory(List.of(0));
         selfLikePostSimulationTests.saveWorldPointBalanceHistory();
         return true;
