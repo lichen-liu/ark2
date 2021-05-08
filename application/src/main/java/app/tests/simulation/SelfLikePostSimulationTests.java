@@ -2,6 +2,7 @@ package app.tests.simulation;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.tests.simulation.SimulationState.Tuple;
 import app.tests.util.Logger;
 
 public class SelfLikePostSimulationTests extends Simulation {
@@ -35,6 +36,8 @@ public class SelfLikePostSimulationTests extends Simulation {
             throw new Exception("post is null");
 
         state.posts.add(thepost);
+
+        state.postHistory.add(new Tuple<String, String>(state.authors.get(0).getPublicKeyString(), thepost));
 
         state.postProbMap.put(state.posts.get(0), 100);
 

@@ -117,6 +117,7 @@ class App {
                 put(2, TestSchedules.getDislikeRewardsTestSuite(contract));
                 put(3, TestSchedules.getSelfLikeRewardsTestSuite(contract));
                 put(4, TestSchedules.getHateDisLikeRewardsTestSuite(contract));
+                put(5, TestSchedules.getRealisticLikeDislikeRewardsTestSuite(contract));
             }
         };
 

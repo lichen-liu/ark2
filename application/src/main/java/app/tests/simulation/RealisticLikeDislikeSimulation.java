@@ -29,7 +29,7 @@ public class RealisticLikeDislikeSimulation extends Simulation {
     };
 
     private Random r = new Random();
-    private Integer standardDeviation = 100;
+    private double standardDeviation = 100.0;
 
     @Override
     public void runTest(final Logger logger) {
@@ -38,7 +38,8 @@ public class RealisticLikeDislikeSimulation extends Simulation {
         do {
 
             if(triggerPost.contains(currentDice)){
-                key = TriggerANewPost((int)(r.nextGaussian() * standardDeviation));
+                Double pick = Math.abs(r.nextGaussian() * standardDeviation);
+                key = TriggerANewPost(pick.intValue());
                 logger.printResult(key);
             }else if(triggerDislike.contains(currentDice)) {
                 key = TriggerADislike();
@@ -62,7 +63,21 @@ public class RealisticLikeDislikeSimulation extends Simulation {
         state.authors = state.createClients(100);
         state.likers = state.createClients(100);
 
-        state.likerProbMap.put(state.likers.get(0), 1);
+        Random r = new Random();
+        for (final var author : state.authors) {
+            state.authorProbMap.put(author, 1);
+        }
+
+        final var it = state.authorProbMap.entrySet().iterator();
+        while (it.hasNext()) {
+            final var pair = it.next();
+            state.authorPool.addItem(pair.getKey(), pair.getValue());
+        }
+
+        for (final var liker : state.likers) {
+            Double pick = Math.abs(r.nextGaussian() * standardDeviation);
+            state.likerProbMap.put(liker, pick.intValue());
+        }
 
         final var it2 = state.likerProbMap.entrySet().iterator();
         while (it2.hasNext()) {

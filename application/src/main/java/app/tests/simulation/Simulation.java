@@ -51,6 +51,8 @@ public abstract class Simulation {
             return null;
         }
 
+        System.out.println("Trigger a new like " + postKey);
+
         internalState.insertLikeHistory(liker.getPublicKeyString(), postKey);
         return likeKey;
     }
@@ -62,6 +64,8 @@ public abstract class Simulation {
         if (dislikeKey == null) {
             return null;
         }
+
+        System.out.println("Trigger a new dislike " + postKey);
 
         internalState.insertDislikeHistory(disliker.getPublicKeyString(), postKey);
         return dislikeKey;
@@ -75,7 +79,10 @@ public abstract class Simulation {
             return null;
         }
 
+        System.out.println("Trigger a new post postkey: " + postKey);
+
         internalState.posts.add(postKey);
+        internalState.postPool.addItem(postKey, postProb);
         internalState.postProbMap.put(postKey, postProb);
 
         internalState.insertPostHistory(author.getPublicKeyString(), postKey);
