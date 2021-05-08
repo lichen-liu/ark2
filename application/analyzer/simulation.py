@@ -28,26 +28,21 @@ class OpenAnyFile():
         self.fd.close()
 
 
-def parse_perf(perf_csv_file):
+def parse_user_point_balance_history(user_rewards_file_path):
     '''
-    (headers, {test: [ms]})
+    (user, [(relative_order,point_transaction_key,timestamp,point_balance,balance_change)])
     '''
-    with OpenAnyFile(perf_csv_file) as csv_f:
+    with OpenAnyFile(user_rewards_file_path) as csv_f:
         csv_reader = csv.reader(csv_f)
         headers = next(csv_reader)
-        test_datas = list(csv_reader)
+        user_rewards_datas = list(csv_reader)
+        return (os.path.splitext(os.path.basename(user_rewards_file_path))[0], user_rewards_datas)
+    return None
 
-    test_names = headers
-    database = collections.defaultdict(list)
-    for data_row in test_datas:
-        print(data_row)
-        [database[test_names[i]].append(float(data_row[i])) for i in range(len(test_names))]
-    return (headers, database)
-
-
-def plot_total_wealth_chart(db, run_name=None):
-    plot_line_chart(db, 'Wealth', 'Wealth',
-                    'Transaction', 'Money', run_name)
+def plot_point_balance_chart(db, run_name=None):
+    # {user: (xs, ys)}
+    filtered_db = dict(map(lambda kv: (kv[0], (list(map(lambda row: int(row[0]), kv[1])), list(map(lambda row: float(row[3]), kv[1])))), db.items()))
+    plot_line_chart(filtered_db, 'point_balance_history', 'Point Balance History', 'Transaction', 'Point Balance', run_name)
 
 def plot_bar_error_chart(database, tag, title, ylabel, run_name=None):
     stats_database = list(map(lambda kv: (kv[0], statistics.mean(
@@ -77,15 +72,15 @@ def plot_bar_error_chart(database, tag, title, ylabel, run_name=None):
 
 
 def plot_line_chart(database, tag, title, xlabel, ylabel, run_name=None):
+    # {user: (xs, ys)}
     figsize = (16, 8)
     fig = plt.figure(run_name + '_' + tag.lower(), figsize=figsize)
     fig.set_tight_layout(True)
 
     ax = fig.add_subplot(1, 1, 1)
     ax.set_title(title)
-    for dataline_name, dataline in database.items():
-        print(dataline)
-        ax.plot(dataline, label=dataline_name)
+    for user, xsys in database.items():
+        ax.plot(xsys[0], xsys[1], label=user)
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
 
@@ -96,29 +91,23 @@ def plot_line_chart(database, tag, title, xlabel, ylabel, run_name=None):
 
 
 def init(parser):
-    parser.add_argument('reward', type=str, help='reward path for csv files')
+    parser.add_argument('rewards', type=str, help='rewards path for csv files')
     parser.add_argument('--tests', nargs='*', help='Tests to look at')
     parser.add_argument('--nogui', action='store_true', help='Turn off gui')
 
 
 def main(args):
-    users = [o for o in os.listdir(args.reward) if os.path.isfile(os.path.join(args.rewards, o))]
-    print(users)
-    assert False
+    user_files = [o for o in os.listdir(args.rewards) if os.path.isfile(os.path.join(args.rewards, o))]
+    # {user: [(relative_order,point_transaction_key,timestamp,point_balance,balance_change)]}
+    database = dict(map(lambda user_file: parse_user_point_balance_history(os.path.join(args.rewards, user_file)), user_files))
 
-    headers, database = parse_perf(args.csv)
-
-
-
-    print(headers)
     print(database.keys())
-    for dataline_name, latency_dataline in database.items():
-        print(dataline_name, len(latency_dataline))
-
+    for user, user_point_balance_history in database.items():
+        print(user, len(user_point_balance_history))
 
     if not args.nogui:
         # Plot
-        plot_total_wealth_chart(database, args.csv)
+        plot_point_balance_chart(database, args.rewards)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
