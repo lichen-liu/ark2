@@ -30,12 +30,14 @@ public abstract class Simulation {
         final String timestamp = ZonedDateTime.now(ZoneOffset.UTC)
                 .format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
 
-        this.csvDirPath = Paths.get("benchmarks", "simulation", "rewards", timestamp);
+        final String simulationName = this.getClass().getSimpleName().toLowerCase();
+
+        this.csvDirPath = Paths.get("benchmarks", "simulation", "rewards", simulationName + timestamp);
         this.csvDirPath.toFile().mkdirs();
 
-        final var stateDirPath = Paths.get("benchmarks", "simulation", "states", timestamp);
+        final var stateDirPath = Paths.get("benchmarks", "simulation", "states");
         stateDirPath.toFile().mkdirs();
-        this.writer = new SimulationWriter(stateDirPath.resolve(this.getClass().getSimpleName() + ".txt"),
+        this.writer = new SimulationWriter(stateDirPath.resolve(simulationName + timestamp + ".txt"),
                 this.internalState);
     }
 
