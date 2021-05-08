@@ -137,7 +137,7 @@ public class TestSchedules {
     }
 
     public static TestSuite getLikeRewardsTestSuite(final Contract contract) {
-        return new TestSuite("LikeRewards") {
+        return new BatchTestSuite("LikeRewards") {
             @Override
             protected int defaultIterations() {
                 return 500;
@@ -153,7 +153,7 @@ public class TestSchedules {
     }
 
     public static TestSuite getDislikeRewardsTestSuite(final Contract contract) {
-        return new TestSuite("DislikeRewards") {
+        return new BatchTestSuite("DislikeRewards") {
             @Override
             protected int defaultIterations() {
                 return 500;
@@ -169,7 +169,7 @@ public class TestSchedules {
     }
 
     public static TestSuite getSelfLikeRewardsTestSuite(final Contract contract) {
-        return new TestSuite("SelfLikerRewards") {
+        return new BatchTestSuite("SelfLikerRewards") {
             @Override
             protected int defaultIterations() {
                 return 500;
@@ -185,7 +185,7 @@ public class TestSchedules {
     }
 
     public static TestSuite getHateDisLikeRewardsTestSuite(final Contract contract) {
-        return new TestSuite("HateDislikerRewards") {
+        return new BatchTestSuite("HateDislikerRewards") {
             @Override
             protected int defaultIterations() {
                 return 500;
@@ -201,7 +201,7 @@ public class TestSchedules {
     }
 
     public static TestSuite getRealisticLikeDislikeRewardsTestSuite(final Contract contract) {
-        return new TestSuite("RealisticsLikeDislikeRewards") {
+        return new BatchTestSuite("RealisticsLikeDislikeRewards") {
             @Override
             protected int defaultIterations() {
                 return 500;
@@ -217,7 +217,7 @@ public class TestSchedules {
     }
 
     public static TestSuite getSimpleTestSuite(final Contract contract) {
-        return new TestSuite("Simple") {
+        return new BatchTestSuite("Simple") {
             @Override
             protected List<? extends Testable> setUpTests() {
                 return List.of(new PostTest(contract), new LikeTest(contract), new TransactionTest(contract));
