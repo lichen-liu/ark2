@@ -35,6 +35,7 @@ import app.tests.performance.PostsFetchingTest;
 import app.tests.rewards.DislikeRewardingTest;
 import app.tests.rewards.HateDislikerRewardingTest;
 import app.tests.rewards.LikeRewardingTest;
+import app.tests.rewards.RealisticLikeDislikeRewardingTest;
 import app.tests.rewards.SelfLikeRewardingTest;
 import app.tests.simple.LikeTest;
 import app.tests.simple.PostTest;
@@ -186,6 +187,24 @@ public class TestSchedules {
             protected List<? extends Testable> setUpTests() {
                 final List<Testable> tests = new ArrayList<Testable>();
                 tests.add(new HateDislikerRewardingTest(contract));
+                return tests;
+            }
+        };
+    }
+
+    public static TestSuite getRealisticLikeDislikeRewardsTestSuite(final Contract contract) {
+        final int iterations = 200;
+
+        return new TestSuite() {
+            @Override
+            protected int defaultIterations() {
+                return iterations;
+            }
+
+            @Override
+            protected List<? extends Testable> setUpTests() {
+                final List<Testable> tests = new ArrayList<Testable>();
+                tests.add(new RealisticLikeDislikeRewardingTest(contract));
                 return tests;
             }
         };

@@ -37,6 +37,8 @@ public class HateDislikerSimulationTests extends Simulation {
 
         state.posts.add(thepost);
 
+        state.postHistory.add(new Tuple<String, String>(state.authors.get(0).getPublicKeyString(), thepost));
+
         state.postProbMap.put(state.posts.get(0), 100);
 
         state.likerProbMap.put(state.likers.get(0), 1);
