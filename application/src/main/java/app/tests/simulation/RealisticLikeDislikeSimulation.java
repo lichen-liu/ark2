@@ -69,21 +69,19 @@ public class RealisticLikeDislikeSimulation extends Simulation {
         // Run tests - Just do a lot of likes to the economic system
         String key = null;
         do {
-
             if (triggerPost.contains(currentDice)) {
                 final Double pick = Math.abs(r.nextGaussian() * standardDeviation);
                 key = triggerANewPost(pick.intValue());
-                logger.printResult(key);
+                logger.printResult("POST: " + key);
             } else if (triggerDislike.contains(currentDice)) {
                 key = triggerADislike();
-                logger.printResult(key);
+                logger.printResult("DISLIKE: " + key);
             } else {
                 key = triggerALike();
-                logger.printResult(key);
+                logger.printResult("LIKE: " + key);
             }
 
             currentDice = (++currentDice) % dice;
-
         } while (key == null);
     }
 
