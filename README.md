@@ -48,13 +48,13 @@ gradle runApp -Pargs="test 1"
 
 ### To analyze TEST performance
 ```
-# Input the performance run Name
+# Input the performance run name
 python -m analyzer performance benchmarks/perf/perf_*.csv
 ```
 
 ### To analyze SIMULATION TEST reward modelling
 ```
-# Input the rewards run Name
+# Input the rewards run name
 python -m analyzer simulation benchmarks/simulation/rewards/*/
 ```
 
