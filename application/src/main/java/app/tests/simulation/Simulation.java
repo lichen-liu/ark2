@@ -32,12 +32,12 @@ public abstract class Simulation {
 
         final String simulationName = this.getClass().getSimpleName().toLowerCase();
 
-        this.csvDirPath = Paths.get("benchmarks", "simulation", "rewards", simulationName + timestamp);
+        this.csvDirPath = Paths.get("benchmarks", "simulation", "rewards", simulationName + +"_" + timestamp);
         this.csvDirPath.toFile().mkdirs();
 
         final var stateDirPath = Paths.get("benchmarks", "simulation", "states");
         stateDirPath.toFile().mkdirs();
-        this.writer = new SimulationWriter(stateDirPath.resolve(simulationName + timestamp + ".txt"),
+        this.writer = new SimulationWriter(stateDirPath.resolve(simulationName + "_" + timestamp + ".txt"),
                 this.internalState);
     }
 
