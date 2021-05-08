@@ -11,6 +11,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
+
 import org.hyperledger.fabric.gateway.Contract;
 
 import app.service.AnonymousAnalysisService.PointBalanceSnapshot;
@@ -97,9 +99,23 @@ public abstract class Simulation {
         writer.finish();
     };
 
-    public void saveDislikerPointBalanceHistory() {
+    public void saveWorldPointBalanceHistory() {
+        saveCSVUserPointBalanceHistory(this.csvDirPath.resolve("world.csv"), null);
+    }
+
+    public void saveAuthorPointBalanceHistory(final List<Integer> percentiles) {
+        final var postHistory = internalState.getPostHistory();
+        for (final var percentile : percentiles) {
+            final var percentileUser = Math.min(postHistory.size() - 1,
+                    Math.max(0, (int) (postHistory.size() * percentile / 100.0) - 1));
+
+            final String fileName = String.format("author_%dpercentile.csv", percentile);
+            saveCSVUserPointBalanceHistory(this.csvDirPath.resolve(fileName), postHistory.get(percentileUser).Item1);
+        }
+    }
+
+    public void saveDislikerPointBalanceHistory(final List<Integer> percentiles) {
         final var dislikeHistory = internalState.getDislikeHistory();
-        final var percentiles = List.of(1, 5, 10, 25, 50);
         for (final var percentile : percentiles) {
             final var percentileUser = Math.min(dislikeHistory.size() - 1,
                     Math.max(0, (int) (dislikeHistory.size() * percentile / 100.0) - 1));
@@ -109,9 +125,8 @@ public abstract class Simulation {
         }
     }
 
-    public void saveLikerPointBalanceHistory() {
+    public void saveLikerPointBalanceHistory(final List<Integer> percentiles) {
         final var likeHistory = internalState.getLikeHistory();
-        final var percentiles = List.of(1, 5, 10, 25, 50);
         for (final var percentile : percentiles) {
             final var percentileUser = Math.min(likeHistory.size() - 1,
                     Math.max(0, (int) (likeHistory.size() * percentile / 100.0) - 1));
@@ -121,7 +136,7 @@ public abstract class Simulation {
         }
     }
 
-    private void saveCSVUserPointBalanceHistory(final Path filePath, final String userKey) {
+    private void saveCSVUserPointBalanceHistory(final Path filePath, final @Nullable String userKey) {
         final List<PointBalanceSnapshot> worldEconomyData = ServiceProvider
                 .createAnonymousAnalysisService(this.contract).analyzePointBalanceHistoryByUserId(userKey);
         final List<String> pointBalanceCsvData = worldEconomyData.stream().map(snapshot -> snapshot.toCsvRow())

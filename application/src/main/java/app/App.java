@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.security.PrivateKey;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,10 +47,17 @@ class App {
 
     public static void main(final String[] args) throws Exception {
         final App app = new App();
+        final var argsList = Arrays.asList(args);
 
-        if (Arrays.asList(args).contains("test")) {
+        if (argsList.contains("test")) {
             System.out.println(">> test");
-            app.test();
+
+            final int testSuiteArgIndex = argsList.indexOf("test") + 1;
+            if (testSuiteArgIndex == argsList.size()) {
+                System.out.println("ERROR - Missing testSuite argument");
+                System.exit(-1);
+            }
+            app.test(Integer.parseInt(argsList.get(testSuiteArgIndex)));
         } else {
             System.out.println(">> gui");
             app.gui();
@@ -94,20 +102,17 @@ class App {
         }
     }
 
-    private void test() {
-        TestSuite testSuite = null;
-        final int choice = 2;
-        switch (choice) {
-            case 0:
-                testSuite = TestSchedules.getPerformanceTestSuite(contract, Paths.get("benchmarks", "perf"));
-                break;
-            case 1:
-                testSuite = TestSchedules.getDislikeRewardsTestSuite(contract);
-                break;
-            case 2:
-                testSuite = TestSchedules.getLikeRewardsTestSuite(contract);
-                break;
-        }
+    private void test(final int choice) {
+        final var testSuites = new HashMap<Integer, TestSuite>() {
+            {
+                put(0, TestSchedules.getPerformanceTestSuite(contract, Paths.get("benchmarks", "perf")));
+                put(1, TestSchedules.getDislikeRewardsTestSuite(contract));
+                put(2, TestSchedules.getLikeRewardsTestSuite(contract));
+            }
+        };
+
+        final TestSuite testSuite = testSuites.get(choice);
+        System.out.println("Launching: " + choice + " " + testSuite.getSuiteName());
         testSuite.launchTests();
     }
 

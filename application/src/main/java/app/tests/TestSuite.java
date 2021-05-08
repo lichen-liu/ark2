@@ -6,13 +6,19 @@ import app.tests.util.Logger;
 
 public abstract class TestSuite {
     private final Logger.Builder loggerBuilder;
+    private final String suiteName;
 
     protected TestSuite() {
         this("defaultTestSuite");
     }
 
     protected TestSuite(final String suiteName) {
+        this.suiteName = suiteName;
         this.loggerBuilder = new Logger.Builder(suiteName);
+    }
+
+    public String getSuiteName() {
+        return this.suiteName;
     }
 
     protected int defaultIterations() {
