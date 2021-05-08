@@ -88,8 +88,9 @@ public class RealisticLikeDislikeSimulation extends Simulation {
     @Override
     protected void buildState(final SimulationState state) throws Exception {
         // Build forum state
-        state.authors = state.createClients(100);
-        state.likers = state.createClients(100);
+        final var users = state.createClients(100);
+        state.authors = users;
+        state.likers = users;
 
         final Random r = new Random();
         for (final var author : state.authors) {

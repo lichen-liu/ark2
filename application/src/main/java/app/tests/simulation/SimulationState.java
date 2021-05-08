@@ -87,10 +87,8 @@ public class SimulationState {
     protected List<NamedService> createClients(final int clientNum)
             throws InvalidAlgorithmParameterException, NoSuchAlgorithmException {
         final var clients = new ArrayList<NamedService>();
-        int i = 0;
-        while (i < clientNum) {
+        for (int i = 0; i < clientNum; i++) {
             clients.add(TestClient.createTestClient(contract));
-            ++i;
         }
         return clients;
     }

@@ -36,9 +36,9 @@ public class RealisticLikeDislikeRewardingTest implements Testable {
     @Override
     public boolean post(final Logger logger, final int currentIteration) {
         // realisticLikeDislikeSimulation.finish();
-        realisticLikeDislikeSimulation.saveAuthorPointBalanceHistory(List.of(2, 7, 12, 17));
-        realisticLikeDislikeSimulation.saveLikerPointBalanceHistory(List.of(1, 6, 11, 16));
-        realisticLikeDislikeSimulation.saveDislikerPointBalanceHistory(List.of(0, 5, 10, 15));
+        realisticLikeDislikeSimulation.saveAuthorPointBalanceHistory(List.of(0, 10));
+        realisticLikeDislikeSimulation.saveLikerPointBalanceHistory(List.of(1, 11));
+        realisticLikeDislikeSimulation.saveDislikerPointBalanceHistory(List.of(2, 12));
         realisticLikeDislikeSimulation.saveWorldPointBalanceHistory();
         return true;
     }
