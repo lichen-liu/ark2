@@ -36,12 +36,12 @@ cd application
 ```
 
 ### To run GUI
-```
+```bash
 gradle runApp
 ```
 
 ### To run TEST
-```
+```bash
 # Input the test ID
 gradle runApp -Pargs="test 1"
 ```
