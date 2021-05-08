@@ -44,6 +44,11 @@ def plot_point_balance_chart(db, run_name=None):
     filtered_db = dict(map(lambda kv: (kv[0], (list(map(lambda row: int(row[0]), kv[1])), list(map(lambda row: float(row[3]), kv[1])))), db.items()))
     plot_line_chart(filtered_db, 'point_balance_history', 'Point Balance History', 'Transaction', 'Point Balance', run_name)
 
+def plot_point_balance_changes_chart(db, run_name=None):
+    # {user: (xs, ys)}
+    filtered_db = dict(map(lambda kv: (kv[0], (list(map(lambda row: int(row[0]), kv[1])), list(map(lambda row: float(row[4]), kv[1])))), db.items()))
+    plot_line_chart(filtered_db, 'point_balance_changes_history', 'Point Balance Changes History', 'Transaction', 'Point Balance Changes', run_name)
+
 def plot_bar_error_chart(database, tag, title, ylabel, run_name=None):
     stats_database = list(map(lambda kv: (kv[0], statistics.mean(
         kv[1]), statistics.stdev(kv[1])), database.items()))
@@ -92,7 +97,7 @@ def plot_line_chart(database, tag, title, xlabel, ylabel, run_name=None):
 
 def init(parser):
     parser.add_argument('rewards', type=str, help='rewards path for csv files')
-    parser.add_argument('--tests', nargs='*', help='Tests to look at')
+    parser.add_argument('--users', nargs='*', help='Users to look at')
     parser.add_argument('--nogui', action='store_true', help='Turn off gui')
 
 
@@ -100,6 +105,9 @@ def main(args):
     user_files = [o for o in os.listdir(args.rewards) if os.path.isfile(os.path.join(args.rewards, o))]
     # {user: [(relative_order,point_transaction_key,timestamp,point_balance,balance_change)]}
     database = dict(map(lambda user_file: parse_user_point_balance_history(os.path.join(args.rewards, user_file)), user_files))
+    
+    if args.users is not None:
+        database = dict(filter(lambda kv: kv[0] in args.users, database.items()))
 
     print(database.keys())
     for user, user_point_balance_history in database.items():
@@ -107,7 +115,9 @@ def main(args):
 
     if not args.nogui:
         # Plot
-        plot_point_balance_chart(database, args.rewards)
+        run_name = os.path.basename(os.path.dirname(args.rewards))
+        plot_point_balance_chart(database, run_name)
+        plot_point_balance_changes_chart(database, run_name)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
