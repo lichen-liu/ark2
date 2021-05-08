@@ -38,16 +38,16 @@ repositories {
     }
 }
 
+if (project.hasProperty("args")) {
+    ext.cmdargs = project.getProperty("args")
+} else { 
+    ext.cmdargs = ""
+}
+
 task runApp(type: Exec) {
     dependsOn build
     group = "Execution"
     description = "Run the main class (App) with ExecTask"
-    commandLine "java", "-classpath", sourceSets.main.runtimeClasspath.getAsPath(), javaMainClass
-}
 
-task runTest(type: Exec) {
-    dependsOn build
-    group = "Execution"
-    description = "Run the main class (Test) with ExecTask"
-    commandLine "java", "-classpath", sourceSets.main.runtimeClasspath.getAsPath(), javaMainClass, "test"
+    commandLine "java", "-classpath", sourceSets.main.runtimeClasspath.getAsPath(), javaMainClass, cmdargs
 }

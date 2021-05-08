@@ -42,7 +42,7 @@ gradle runApp
 
 ### To run TEST
 ```
-gradle runTest
+gradle runApp -Pargs="test 1"
 ```
 
 ### To analyze TEST performance

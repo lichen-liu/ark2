@@ -6,6 +6,7 @@ import java.security.PrivateKey;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -47,7 +48,13 @@ class App {
 
     public static void main(final String[] args) throws Exception {
         final App app = new App();
-        final var argsList = Arrays.asList(args);
+        final var argsList = Arrays.stream(args).flatMap(string -> Arrays.stream(string.split(" ")))
+                .collect(Collectors.toList());
+
+        System.out.println("ARGS:");
+        for (final var arg : argsList) {
+            System.out.println(arg);
+        }
 
         if (argsList.contains("test")) {
             System.out.println(">> test");
@@ -106,8 +113,8 @@ class App {
         final var testSuites = new HashMap<Integer, TestSuite>() {
             {
                 put(0, TestSchedules.getPerformanceTestSuite(contract, Paths.get("benchmarks", "perf")));
-                put(1, TestSchedules.getDislikeRewardsTestSuite(contract));
-                put(2, TestSchedules.getLikeRewardsTestSuite(contract));
+                put(1, TestSchedules.getLikeRewardsTestSuite(contract));
+                put(2, TestSchedules.getDislikeRewardsTestSuite(contract));
             }
         };
 
