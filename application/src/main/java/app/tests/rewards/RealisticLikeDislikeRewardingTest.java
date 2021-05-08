@@ -38,7 +38,7 @@ public class RealisticLikeDislikeRewardingTest implements Testable {
         final var authorKeys = realisticLikeDislikeSimulation.getInterestingAuthorKeys(3, 3);
         int count = 0;
         for (final var authorKey : authorKeys) {
-            realisticLikeDislikeSimulation.saveCSVUserPointBalanceHistory("author.csv" + count, authorKey);
+            realisticLikeDislikeSimulation.saveCSVUserPointBalanceHistory("author" + count + ".csv", authorKey);
             count++;
         }
 
