@@ -17,17 +17,25 @@ import org.hyperledger.fabric.gateway.Contract;
 
 import app.service.AnonymousAnalysisService.PointBalanceSnapshot;
 import app.service.ServiceProvider;
+import app.tests.simulation.SimulationState.Policy;
+import app.tests.simulation.SimulationState.Tuple;
 import app.tests.util.Logger;
 
 public abstract class Simulation {
     private final SimulationWriter writer;
-    public final SimulationState internalState;
-    public final Contract contract;
+    private final SimulationState internalState;
     private final Path csvDirPath;
+    private final Contract contract;
+    private final boolean debug = false;
 
     public Simulation(final Contract contract) throws Exception {
+        this(contract, Policy.ProbBased);
+    }
+
+    public Simulation(final Contract contract, final Policy policy) throws Exception {
+        this.internalState = new SimulationState(contract, policy);
+        buildState(this.internalState);
         this.contract = contract;
-        this.internalState = getState();
 
         final String timestamp = ZonedDateTime.now(ZoneOffset.UTC)
                 .format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
@@ -43,7 +51,23 @@ public abstract class Simulation {
                 this.internalState);
     }
 
-    public String TriggerALike() {
+    public final Contract getContract() {
+        return this.contract;
+    }
+
+    public final List<Tuple<String, String>> getLikeHistory() {
+        return internalState.likeHistory;
+    }
+
+    public final List<Tuple<String, String>> getDislikeHistory() {
+        return internalState.dislikeHistory;
+    }
+
+    public final List<Tuple<String, String>> getPostHistory() {
+        return internalState.postHistory;
+    }
+
+    public final String triggerALike() {
         final var postKey = internalState.postPool.draw();
         final var liker = internalState.likerPool.draw();
         final var likeKey = liker.publishNewLike(postKey);
@@ -51,13 +75,15 @@ public abstract class Simulation {
             return null;
         }
 
-        System.out.println("Trigger a new like " + postKey);
+        if (this.debug) {
+            System.out.println("Trigger a new like on " + postKey);
+        }
 
         internalState.insertLikeHistory(liker.getPublicKeyString(), postKey);
         return likeKey;
     }
 
-    public String TriggerADislike() {
+    public final String triggerADislike() {
         final var postKey = internalState.postPool.draw();
         final var disliker = internalState.likerPool.draw();
         final var dislikeKey = disliker.publishNewDislike(postKey);
@@ -65,13 +91,15 @@ public abstract class Simulation {
             return null;
         }
 
-        System.out.println("Trigger a new dislike " + postKey);
+        if (this.debug) {
+            System.out.println("Trigger a new dislike on " + postKey);
+        }
 
         internalState.insertDislikeHistory(disliker.getPublicKeyString(), postKey);
         return dislikeKey;
     }
 
-    public String TriggerANewPost(final int postProb) {
+    public final String triggerANewPost(final int postProb) {
         final var author = internalState.authorPool.draw();
         final var postKey = author.publishNewPost("-");
 
@@ -79,7 +107,9 @@ public abstract class Simulation {
             return null;
         }
 
-        System.out.println("Trigger a new post postkey: " + postKey);
+        if (this.debug) {
+            System.out.println("Trigger a new post " + postKey + " by " + author);
+        }
 
         internalState.posts.add(postKey);
         internalState.postPool.addItem(postKey, postProb);
@@ -89,7 +119,7 @@ public abstract class Simulation {
         return postKey;
     }
 
-    public void finish() {
+    public final void finish() {
         System.out.println("Test finished, writing benchmark states into the disk...");
         try {
             writer.SetTitle(this.getClass().getSimpleName());
@@ -106,50 +136,53 @@ public abstract class Simulation {
         writer.finish();
     };
 
-    public void saveWorldPointBalanceHistory() {
-        saveCSVUserPointBalanceHistory(this.csvDirPath.resolve("world.csv"), null);
+    public final void saveWorldPointBalanceHistory() {
+        saveCSVUserPointBalanceHistory("world.csv", null);
     }
 
-    public void saveAuthorPointBalanceHistory(final List<Integer> percentiles) {
+    public final void saveAuthorPointBalanceHistory(final List<Integer> percentiles) {
         final var postHistory = internalState.getPostHistory();
+
         for (final var percentile : percentiles) {
             final var percentileUser = Math.min(postHistory.size() - 1,
                     Math.max(0, (int) (postHistory.size() * percentile / 100.0) - 1));
 
             final String fileName = String.format("author_%dpercentile.csv", percentile);
-            saveCSVUserPointBalanceHistory(this.csvDirPath.resolve(fileName), postHistory.get(percentileUser).Item1);
+            saveCSVUserPointBalanceHistory(fileName, postHistory.get(percentileUser).item1);
         }
     }
 
-    public void saveDislikerPointBalanceHistory(final List<Integer> percentiles) {
+    public final void saveDislikerPointBalanceHistory(final List<Integer> percentiles) {
         final var dislikeHistory = internalState.getDislikeHistory();
         for (final var percentile : percentiles) {
             final var percentileUser = Math.min(dislikeHistory.size() - 1,
                     Math.max(0, (int) (dislikeHistory.size() * percentile / 100.0) - 1));
 
             final String fileName = String.format("disliker_%dpercentile.csv", percentile);
-            saveCSVUserPointBalanceHistory(this.csvDirPath.resolve(fileName), dislikeHistory.get(percentileUser).Item1);
+            saveCSVUserPointBalanceHistory(fileName, dislikeHistory.get(percentileUser).item1);
         }
     }
 
-    public void saveLikerPointBalanceHistory(final List<Integer> percentiles) {
+    public final void saveLikerPointBalanceHistory(final List<Integer> percentiles) {
         final var likeHistory = internalState.getLikeHistory();
         for (final var percentile : percentiles) {
             final var percentileUser = Math.min(likeHistory.size() - 1,
                     Math.max(0, (int) (likeHistory.size() * percentile / 100.0) - 1));
 
             final String fileName = String.format("liker_%dpercentile.csv", percentile);
-            saveCSVUserPointBalanceHistory(this.csvDirPath.resolve(fileName), likeHistory.get(percentileUser).Item1);
+            saveCSVUserPointBalanceHistory(fileName, likeHistory.get(percentileUser).item1);
         }
     }
 
-    private void saveCSVUserPointBalanceHistory(final Path filePath, final @Nullable String userKey) {
+    public final void saveCSVUserPointBalanceHistory(final String fileName, final @Nullable String userKey) {
         final List<PointBalanceSnapshot> worldEconomyData = ServiceProvider
-                .createAnonymousAnalysisService(this.contract).analyzePointBalanceHistoryByUserId(userKey);
+                .createAnonymousAnalysisService(this.internalState.getContract())
+                .analyzePointBalanceHistoryByUserId(userKey);
         final List<String> pointBalanceCsvData = worldEconomyData.stream().map(snapshot -> snapshot.toCsvRow())
                 .collect(Collectors.toList());
         pointBalanceCsvData.add(0, PointBalanceSnapshot.CsvRowTitle());
 
+        final Path filePath = this.csvDirPath.resolve(fileName);
         try {
             Files.write(filePath, pointBalanceCsvData, StandardCharsets.UTF_8);
             System.out
@@ -160,7 +193,7 @@ public abstract class Simulation {
         }
     }
 
-    protected abstract SimulationState getState() throws Exception;
+    protected abstract void buildState(SimulationState simulationState) throws Exception;
 
     public abstract void runTest(Logger logger);
 }

@@ -1,16 +1,13 @@
 package app.tests.rewards;
 
-import java.util.List;
-
 import org.hyperledger.fabric.gateway.Contract;
 
 import app.tests.Testable;
 import app.tests.simulation.RealisticLikeDislikeSimulation;
-import app.tests.simulation.Simulation;
 import app.tests.util.Logger;
 
 public class RealisticLikeDislikeRewardingTest implements Testable {
-    private Simulation realisticLikeDislikeSimulation;
+    private RealisticLikeDislikeSimulation realisticLikeDislikeSimulation;
     private final Contract contract;
 
     public RealisticLikeDislikeRewardingTest(final Contract contract) {
@@ -36,9 +33,15 @@ public class RealisticLikeDislikeRewardingTest implements Testable {
 
     @Override
     public boolean post(final Logger logger, final int currentIteration) {
-        realisticLikeDislikeSimulation.finish();
-        realisticLikeDislikeSimulation.saveLikerPointBalanceHistory(List.of(1, 5, 10, 25, 50));
-        realisticLikeDislikeSimulation.saveAuthorPointBalanceHistory(List.of(0));
+        // realisticLikeDislikeSimulation.finish();
+
+        final var authorKeys = realisticLikeDislikeSimulation.getInterestingAuthorKeys(3, 3);
+        int count = 0;
+        for (final var authorKey : authorKeys) {
+            realisticLikeDislikeSimulation.saveCSVUserPointBalanceHistory("author.csv" + count, authorKey);
+            count++;
+        }
+
         realisticLikeDislikeSimulation.saveWorldPointBalanceHistory();
         return true;
     }

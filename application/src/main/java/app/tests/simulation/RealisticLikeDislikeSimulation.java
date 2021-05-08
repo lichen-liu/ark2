@@ -1,35 +1,68 @@
 package app.tests.simulation;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.hyperledger.fabric.gateway.Contract;
 
+import app.service.AnonymousService;
+import app.service.ServiceProvider;
 import app.tests.util.Logger;
 
 public class RealisticLikeDislikeSimulation extends Simulation {
-    
-    private Integer dice = 10;
+
+    private final Integer dice = 10;
     private Integer currentDice = 0;
-    private Set<Integer> triggerPost = new HashSet<Integer> () {
+    private final Set<Integer> triggerPost = new HashSet<Integer>() {
         {
             add(0);
         }
-    } ;
-    private Set<Integer> triggerDislike = new HashSet<Integer> () {
+    };
+    private final Set<Integer> triggerDislike = new HashSet<Integer>() {
         {
             add(4);
             add(7);
         }
-    } ;
+    };
 
     public RealisticLikeDislikeSimulation(final Contract contract) throws Exception {
         super(contract);
     };
 
-    private Random r = new Random();
-    private double standardDeviation = 100.0;
+    public List<String> getInterestingAuthorKeys(final int numberTopAuthors, final int numberLowAuthors) {
+        final AnonymousService service = ServiceProvider.createAnonymousService(this.getContract());
+        final LinkedList<SimulationState.Tuple<String, Double>> sortedAuthors = super.getPostHistory().stream()
+                .map(authorPost -> {
+                    final String[] pointTransactionKeys = service.computePointTransactionKeysByUserId(authorPost.item1);
+                    if (pointTransactionKeys == null || pointTransactionKeys.length == 0) {
+                        return null;
+                    }
+                    final double points = Double.parseDouble(service.computePointBalanceByUserId(authorPost.item1));
+                    return new SimulationState.Tuple<String, Double>(authorPost.item1, points);
+                }).filter(x -> x != null).sorted((authorPointsLeft, authorPointsRight) -> Double
+                        .compare(authorPointsLeft.item2, authorPointsRight.item2))
+                .collect(Collectors.toCollection(LinkedList::new));
+
+        final var candidates = new ArrayList<SimulationState.Tuple<String, Double>>();
+        for (int i = 0; i < numberLowAuthors && !sortedAuthors.isEmpty(); i++) {
+            candidates.add(sortedAuthors.removeFirst());
+        }
+        for (int i = 0; i < numberTopAuthors && !sortedAuthors.isEmpty(); i++) {
+            candidates.add(sortedAuthors.removeLast());
+        }
+
+        return candidates.stream().sorted((authorPointsLeft, authorPointsRight) -> Double
+                .compare(authorPointsRight.item2, authorPointsLeft.item2)).map(authorPoints -> authorPoints.item1)
+                .collect(Collectors.toList());
+    }
+
+    private final Random r = new Random();
+    private final double standardDeviation = 100.0;
 
     @Override
     public void runTest(final Logger logger) {
@@ -37,33 +70,30 @@ public class RealisticLikeDislikeSimulation extends Simulation {
         String key = null;
         do {
 
-            if(triggerPost.contains(currentDice)){
-                Double pick = Math.abs(r.nextGaussian() * standardDeviation);
-                key = TriggerANewPost(pick.intValue());
+            if (triggerPost.contains(currentDice)) {
+                final Double pick = Math.abs(r.nextGaussian() * standardDeviation);
+                key = triggerANewPost(pick.intValue());
                 logger.printResult(key);
-            }else if(triggerDislike.contains(currentDice)) {
-                key = TriggerADislike();
+            } else if (triggerDislike.contains(currentDice)) {
+                key = triggerADislike();
                 logger.printResult(key);
             } else {
-                key = TriggerALike();
+                key = triggerALike();
                 logger.printResult(key);
-            } 
+            }
 
-            currentDice = (++currentDice)%dice;
+            currentDice = (++currentDice) % dice;
 
         } while (key == null);
     }
 
     @Override
-    protected SimulationState getState() throws Exception {
-
-        final var state = new SimulationState(this.contract);
-
+    protected void buildState(final SimulationState state) throws Exception {
         // Build forum state
         state.authors = state.createClients(100);
         state.likers = state.createClients(100);
 
-        Random r = new Random();
+        final Random r = new Random();
         for (final var author : state.authors) {
             state.authorProbMap.put(author, 1);
         }
@@ -75,7 +105,7 @@ public class RealisticLikeDislikeSimulation extends Simulation {
         }
 
         for (final var liker : state.likers) {
-            Double pick = Math.abs(r.nextGaussian() * standardDeviation);
+            final Double pick = Math.abs(r.nextGaussian() * standardDeviation);
             state.likerProbMap.put(liker, pick.intValue());
         }
 
@@ -84,7 +114,5 @@ public class RealisticLikeDislikeSimulation extends Simulation {
             final var pair = it2.next();
             state.likerPool.addItem(pair.getKey(), pair.getValue());
         }
-
-        return state;
     }
 }

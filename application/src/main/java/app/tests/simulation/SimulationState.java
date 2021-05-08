@@ -37,7 +37,7 @@ public class SimulationState {
         this(contract, Policy.ProbBased);
     }
 
-    public SimulationState(final Contract contract, Policy policy) throws IOException {
+    public SimulationState(final Contract contract, final Policy policy) throws IOException {
         this.authors = new ArrayList<NamedService>();
         this.likers = new ArrayList<NamedService>();
         this.posts = new ArrayList<String>();
@@ -51,20 +51,24 @@ public class SimulationState {
                 this.authorPool = new RoundRobinPool<NamedService>();
                 this.likerPool = new RoundRobinPool<NamedService>();
                 this.postPool = new RoundRobinPool<String>();
-            break;
+                break;
             case ProbBased:
                 this.authorPool = new ProbabilityPool<NamedService>();
                 this.likerPool = new ProbabilityPool<NamedService>();
                 this.postPool = new ProbabilityPool<String>();
-            break;
+                break;
             default:
         }
-      
+
         this.likeHistory = new ArrayList<Tuple<String, String>>();
         this.dislikeHistory = new ArrayList<Tuple<String, String>>();
         this.postHistory = new ArrayList<Tuple<String, String>>();
 
         this.contract = contract;
+    }
+
+    public Contract getContract() {
+        return this.contract;
     }
 
     public void insertLikeHistory(final String liker, final String post) {
@@ -103,7 +107,7 @@ public class SimulationState {
         return postHistory;
     }
 
-    static class RoundRobinPool<T> implements Pool<T>{
+    static class RoundRobinPool<T> implements Pool<T> {
         private final List<T> items;
         private int index = 0;
 
@@ -116,12 +120,13 @@ public class SimulationState {
         }
 
         public T draw() {
-           var item = items.get(index++);
-           index = index % items.size();
-           return item;
+            final var item = items.get(index++);
+            index = index % items.size();
+            return item;
         }
     }
-    static class ProbabilityPool<T> implements Pool<T>{
+
+    static class ProbabilityPool<T> implements Pool<T> {
         private final List<Tuple<T, Integer>> probAccum;
         private final Random random = new Random();
 
@@ -135,19 +140,19 @@ public class SimulationState {
             if (last == null) {
                 probAccum.add(new Tuple<>(item, prob));
             } else {
-                probAccum.add(new Tuple<>(item, last.Item2 + prob));
+                probAccum.add(new Tuple<>(item, last.item2 + prob));
             }
         }
 
         public T draw() {
             final var last = getLast();
             if (last != null) {
-                final var upperBound = last.Item2 + 1;
+                final var upperBound = last.item2 + 1;
                 final var pick = random.nextInt(upperBound);
                 for (final Tuple<T, Integer> step : probAccum) {
-                    if (step.Item2 < pick)
+                    if (step.item2 < pick)
                         continue;
-                    return step.Item1;
+                    return step.item1;
                 }
             }
             return null;
@@ -163,16 +168,15 @@ public class SimulationState {
 
     public static class Tuple<T, M> {
         public Tuple(final T item1, final M item2) {
-            this.Item1 = item1;
-            this.Item2 = item2;
+            this.item1 = item1;
+            this.item2 = item2;
         }
 
-        public T Item1;
-        public M Item2;
+        public T item1;
+        public M item2;
     }
 
     public enum Policy {
-        ProbBased,
-        RoundRobin,
+        ProbBased, RoundRobin,
     }
 }

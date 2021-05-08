@@ -12,6 +12,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -44,6 +45,21 @@ import app.util.ByteUtils;
 import app.util.Cryptography;
 
 public class TestSchedules {
+    public static TestSuite get(final Contract contract, final int choice) {
+        final var testSuites = new HashMap<Integer, TestSuite>() {
+            {
+                put(0, TestSchedules.getPerformanceTestSuite(contract, Paths.get("benchmarks", "perf")));
+                put(1, TestSchedules.getLikeRewardsTestSuite(contract));
+                put(2, TestSchedules.getDislikeRewardsTestSuite(contract));
+                put(3, TestSchedules.getSelfLikeRewardsTestSuite(contract));
+                put(4, TestSchedules.getHateDisLikeRewardsTestSuite(contract));
+                put(5, TestSchedules.getRealisticLikeDislikeRewardsTestSuite(contract));
+            }
+        };
+
+        return testSuites.get(choice);
+    }
+
     public static TestSuite getPerformanceTestSuite(final Contract contract, final Path performanceFileDir) {
         final int iterations = 50;
         final int publishingIterationMultipler = 13;
@@ -121,12 +137,10 @@ public class TestSchedules {
     }
 
     public static TestSuite getLikeRewardsTestSuite(final Contract contract) {
-        final int iterations = 100;
-
-        return new TestSuite() {
+        return new TestSuite("LikeRewards") {
             @Override
             protected int defaultIterations() {
-                return iterations;
+                return 500;
             }
 
             @Override
@@ -139,12 +153,10 @@ public class TestSchedules {
     }
 
     public static TestSuite getDislikeRewardsTestSuite(final Contract contract) {
-        final int iterations = 100;
-
-        return new TestSuite() {
+        return new TestSuite("DislikeRewards") {
             @Override
             protected int defaultIterations() {
-                return iterations;
+                return 500;
             }
 
             @Override
@@ -157,12 +169,10 @@ public class TestSchedules {
     }
 
     public static TestSuite getSelfLikeRewardsTestSuite(final Contract contract) {
-        final int iterations = 5;
-
-        return new TestSuite() {
+        return new TestSuite("SelfLikerRewards") {
             @Override
             protected int defaultIterations() {
-                return iterations;
+                return 500;
             }
 
             @Override
@@ -175,12 +185,10 @@ public class TestSchedules {
     }
 
     public static TestSuite getHateDisLikeRewardsTestSuite(final Contract contract) {
-        final int iterations = 100;
-
-        return new TestSuite() {
+        return new TestSuite("HateDislikerRewards") {
             @Override
             protected int defaultIterations() {
-                return iterations;
+                return 500;
             }
 
             @Override
@@ -193,12 +201,10 @@ public class TestSchedules {
     }
 
     public static TestSuite getRealisticLikeDislikeRewardsTestSuite(final Contract contract) {
-        final int iterations = 200;
-
-        return new TestSuite() {
+        return new TestSuite("RealisticsLikeDislikeRewards") {
             @Override
             protected int defaultIterations() {
-                return iterations;
+                return 500;
             }
 
             @Override
@@ -211,19 +217,10 @@ public class TestSchedules {
     }
 
     public static TestSuite getSimpleTestSuite(final Contract contract) {
-        return new TestSuite() {
+        return new TestSuite("Simple") {
             @Override
             protected List<? extends Testable> setUpTests() {
                 return List.of(new PostTest(contract), new LikeTest(contract), new TransactionTest(contract));
-            }
-        };
-    }
-
-    public static TestSuite getSimulationTestSuite() {
-        return new TestSuite() {
-            @Override
-            protected List<? extends Testable> setUpTests() {
-                return null;
             }
         };
     }

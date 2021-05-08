@@ -5,7 +5,6 @@ import org.hyperledger.fabric.gateway.Contract;
 import app.tests.util.Logger;
 
 public class PostCompetitonSimulationTests extends Simulation {
-
     public PostCompetitonSimulationTests(final Contract contract) throws Exception {
         super(contract);
     };
@@ -16,16 +15,13 @@ public class PostCompetitonSimulationTests extends Simulation {
         final var howManyLikesDoYouWantHuh = 20;
         int i = 0;
         while (i < howManyLikesDoYouWantHuh) {
-            TriggerALike();
+            triggerALike();
             ++i;
         }
     }
 
     @Override
-    protected SimulationState getState() throws Exception {
-
-        final var state = new SimulationState(this.contract);
-
+    protected void buildState(final SimulationState state) throws Exception {
         // Build forum state
         state.authors = state.createClients(3);
         state.likers = state.createClients(7);
@@ -57,7 +53,5 @@ public class PostCompetitonSimulationTests extends Simulation {
             final var pair = it2.next();
             state.likerPool.addItem(pair.getKey(), pair.getValue());
         }
-
-        return state;
     }
 }

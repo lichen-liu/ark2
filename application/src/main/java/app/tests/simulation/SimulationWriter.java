@@ -88,7 +88,7 @@ public class SimulationWriter {
     public void saveLikeHistory() throws IOException {
         writer.append("=== Like History Begin === \n");
         for (final var hist : state.likeHistory) {
-            writer.append((String.format("Liker Key: %s, Post Key: %s \n", hist.Item1, hist.Item2)));
+            writer.append((String.format("Liker Key: %s, Post Key: %s \n", hist.item1, hist.item2)));
         }
         writer.append("=== Like History Infomation End === \n");
     }
@@ -96,7 +96,7 @@ public class SimulationWriter {
     public void saveDislikeHistory() throws IOException {
         writer.append("=== Dislike History Begin === \n");
         for (final var hist : state.dislikeHistory) {
-            writer.append((String.format("Dislike Key: %s, Post Key: %s \n", hist.Item1, hist.Item2)));
+            writer.append((String.format("Dislike Key: %s, Post Key: %s \n", hist.item1, hist.item2)));
         }
         writer.append("=== Dislike History Infomation End === \n");
     }
@@ -104,7 +104,7 @@ public class SimulationWriter {
     public void savePostHistory() throws IOException {
         writer.append("=== Post History Begin === \n");
         for (final var hist : state.postHistory) {
-            writer.append((String.format("Author Key: %s, Post Key: %s \n", hist.Item1, hist.Item2)));
+            writer.append((String.format("Author Key: %s, Post Key: %s \n", hist.item1, hist.item2)));
         }
         writer.append("=== Post History Infomation End === \n");
     }

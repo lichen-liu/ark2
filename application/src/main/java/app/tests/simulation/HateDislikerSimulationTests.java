@@ -6,7 +6,6 @@ import app.tests.simulation.SimulationState.Tuple;
 import app.tests.util.Logger;
 
 public class HateDislikerSimulationTests extends Simulation {
-
     public HateDislikerSimulationTests(final Contract contract) throws Exception {
         super(contract);
     };
@@ -16,16 +15,13 @@ public class HateDislikerSimulationTests extends Simulation {
         // Run tests - Just do a lot of likes to the economic system
         String key = null;
         do {
-            key = TriggerADislike();
+            key = triggerADislike();
             logger.printResult(key);
         } while (key == null);
     }
 
     @Override
-    protected SimulationState getState() throws Exception {
-
-        final var state = new SimulationState(this.contract);
-
+    protected void buildState(final SimulationState state) throws Exception {
         // Build forum state
         state.authors = state.createClients(1);
         state.likers = state.createClients(1);
@@ -54,7 +50,5 @@ public class HateDislikerSimulationTests extends Simulation {
             final var pair = it2.next();
             state.likerPool.addItem(pair.getKey(), pair.getValue());
         }
-
-        return state;
     }
 }

@@ -4,7 +4,6 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.security.PrivateKey;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -110,18 +109,7 @@ class App {
     }
 
     private void test(final int choice) {
-        final var testSuites = new HashMap<Integer, TestSuite>() {
-            {
-                put(0, TestSchedules.getPerformanceTestSuite(contract, Paths.get("benchmarks", "perf")));
-                put(1, TestSchedules.getLikeRewardsTestSuite(contract));
-                put(2, TestSchedules.getDislikeRewardsTestSuite(contract));
-                put(3, TestSchedules.getSelfLikeRewardsTestSuite(contract));
-                put(4, TestSchedules.getHateDisLikeRewardsTestSuite(contract));
-                put(5, TestSchedules.getRealisticLikeDislikeRewardsTestSuite(contract));
-            }
-        };
-
-        final TestSuite testSuite = testSuites.get(choice);
+        final TestSuite testSuite = TestSchedules.get(contract, choice);
         System.out.println("Launching: " + choice + " " + testSuite.getSuiteName());
         testSuite.launchTests();
     }
