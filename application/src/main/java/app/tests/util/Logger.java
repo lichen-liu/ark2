@@ -30,16 +30,18 @@ public class Logger {
     }
 
     public void print(final String string) {
-        System.out.println("\n[" + sessionName() + " > " + this.lineId + "] " + string);
+        System.out.println("[" + sessionName() + " > " + this.lineId + "] " + string);
+        System.out.println(" ");
         this.lineId++;
     }
 
     public void print(final String[] strings) {
-        System.out.println("\n[" + sessionName() + " > " + this.lineId + "] ");
+        System.out.println("[" + sessionName() + " > " + this.lineId + "] ");
 
         for (final var string : strings) {
             System.out.println(string);
         }
+        System.out.println(" ");
 
         this.lineId++;
     }
@@ -49,11 +51,12 @@ public class Logger {
     }
 
     public void printResult(final String[] results) {
-        System.out.println("\n[" + sessionName() + " > " + this.lineId + "] RESULT: ");
+        System.out.println("[" + sessionName() + " > " + this.lineId + "] RESULT: ");
 
         for (final var result : results) {
             System.out.println(prettifyJson(result));
         }
+        System.out.println(" ");
 
         this.lineId++;
     }
